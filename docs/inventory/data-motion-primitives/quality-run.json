@@ -1,0 +1,25 @@
+{
+  "revision": "75271f0ae536520ff9179f33b4309e7950b7aab4",
+  "runs": [
+    {
+      "command": "pnpm exec eslint scripts/inventory --max-warnings=0",
+      "outcome": "passed",
+      "output": "ESLint passed with no warnings on the inventory scripts."
+    },
+    {
+      "command": "pnpm exec prettier --check docs/inventory/data-motion-primitives docs/inventory/README.md scripts/inventory",
+      "outcome": "passed",
+      "output": "All matched files used Prettier code style."
+    },
+    {
+      "command": "pnpm --filter @ultimate/uix-utils build && pnpm --filter @ultimate/uix-data typecheck && pnpm --filter @ultimate/uix-motion typecheck",
+      "outcome": "passed",
+      "output": "tsc --noEmit passed for both packages after building the ignored @ultimate/uix-utils dist declarations they resolve through package exports. Without that build the check fails with TS2307 for '@ultimate/uix-utils/object'."
+    },
+    {
+      "command": "pnpm test",
+      "outcome": "not-run",
+      "output": "Product behavior and type tests were intentionally not run for this source inventory; no product source was changed."
+    }
+  ]
+}

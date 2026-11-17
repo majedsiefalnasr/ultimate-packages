@@ -1,0 +1,823 @@
+{
+  "version": 1,
+  "scope": "uix-utils-values-144",
+  "revision": "7a06beb32487f04ccd84a765f7722ac606825c74",
+  "ownership": {
+    "ticket": 144,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.uix-utils.classnames",
+      "record": "uixutils.classnames"
+    },
+    {
+      "id": "package.ultimate.uix-utils.object",
+      "record": "uixutils.object"
+    },
+    {
+      "id": "package.ultimate.uix-utils.mergeprops",
+      "record": "uixutils.mergeprops"
+    },
+    {
+      "id": "package.ultimate.uix-utils.eventbus",
+      "record": "uixutils.eventbus"
+    },
+    {
+      "id": "package.ultimate.uix-utils.escape",
+      "record": "uixutils.escape"
+    },
+    {
+      "id": "package.ultimate.uix-utils.uuid",
+      "record": "uixutils.uuid"
+    },
+    {
+      "id": "package.ultimate.uix-utils.scroll-lock",
+      "record": "uixutils.scroll-lock"
+    },
+    {
+      "id": "package.ultimate.uix-utils.zindex",
+      "record": "uixutils.zindex"
+    }
+  ],
+  "packages": [
+    {
+      "path": "packages/uix-utils",
+      "roots": [
+        "packages/uix-utils/src/classnames",
+        "packages/uix-utils/src/object",
+        "packages/uix-utils/src/mergeprops",
+        "packages/uix-utils/src/eventbus",
+        "packages/uix-utils/src/escape",
+        "packages/uix-utils/src/uuid",
+        "packages/uix-utils/src/scroll-lock",
+        "packages/uix-utils/src/zindex"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/uix-utils/src/classnames/index.ts"
+        },
+        {
+          "subpath": "./classnames",
+          "source": "packages/uix-utils/src/classnames/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/uix-utils/src/object/index.ts"
+        },
+        {
+          "subpath": "./object",
+          "source": "packages/uix-utils/src/object/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/uix-utils/src/mergeprops/index.ts"
+        },
+        {
+          "subpath": "./mergeprops",
+          "source": "packages/uix-utils/src/mergeprops/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/uix-utils/src/eventbus/index.ts"
+        },
+        {
+          "subpath": "./eventbus",
+          "source": "packages/uix-utils/src/eventbus/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/uix-utils/src/escape/index.ts"
+        },
+        {
+          "subpath": "./escape",
+          "source": "packages/uix-utils/src/escape/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/uix-utils/src/uuid/index.ts"
+        },
+        {
+          "subpath": "./uuid",
+          "source": "packages/uix-utils/src/uuid/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/uix-utils/src/scroll-lock/index.ts"
+        },
+        {
+          "subpath": "./scroll-lock",
+          "source": "packages/uix-utils/src/scroll-lock/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/uix-utils/src/zindex/index.ts"
+        },
+        {
+          "subpath": "./zindex",
+          "source": "packages/uix-utils/src/zindex/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "uixutils.classnames",
+      "name": "UIX classname utilities",
+      "framework": "shared",
+      "purpose": "Build conditional CSS class strings; expose cn and the deprecated classNames alias.",
+      "surface": "See [authored signatures and interpretation](README.md). cn(...args: any[]): string | undefined recursively includes truthy strings, numbers, arrays, and object keys whose values are truthy. classNames(...args: any[]): string | undefined forwards to cn and is marked deprecated. The module has no direct DOM access. Both package-root and ./classnames source exports are evidenced; installed artifact resolution is not exercised.",
+      "files": ["packages/uix-utils/src/classnames/index.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-utils#classNames",
+        "@ultimate/uix-utils#cn",
+        "@ultimate/uix-utils/classnames#classNames",
+        "@ultimate/uix-utils/classnames#cn"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-utils/src/classnames/index.ts",
+          "contains": "export function cn(...args: any[]): string | undefined {"
+        },
+        {
+          "path": "packages/uix-utils/src/index.ts",
+          "contains": "export * from \"./classnames\";"
+        },
+        {
+          "path": "packages/uix-utils/package.json",
+          "contains": "\"./*\": {"
+        },
+        {
+          "path": "packages/uix-utils/tsup.config.ts",
+          "contains": "...Object.fromEntries(submodules.map((name) => [`${name}/index`, `src/${name}/index.ts`]))"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "import { cn } from \"@ultimate/uix-utils/classnames\";"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for UIX classname utilities is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product runtime behavior tests were not run for this documentation-only inventory; no product source was changed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/uix-utils-values.json --out docs/inventory/uix-utils-values (run twice; authored README SHA-256 checked before and after)",
+          "revision": "7a06beb32487f04ccd84a765f7722ac606825c74",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 55 source files, 64 named symbols, 128 root/subpath export identities, 8 records, no problems; the authored README SHA-256 was unchanged. The #143 DOM relationship remains in the pending cross-scope ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; the #143 cross-scope relationship remains pending in the pilot, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/uix-utils-values/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash. The cross-scope #143 relationship is transparently retained in the pending ledger."
+        }
+      ]
+    },
+    {
+      "id": "uixutils.object",
+      "name": "UIX object utilities",
+      "framework": "shared",
+      "purpose": "Provide comparison, inspection, field resolution, object merge/filter and string conversion helpers.",
+      "surface": "See [authored signatures and interpretation](README.md). The object barrel exports 43 named utilities; each signature, source file, and source-supported behavior is listed in the authored README. The barrel maps to package root exports and the ./object wildcard subpath. These utilities have no direct browser or DOM dependency in the inspected implementations. The exact methods are owned individually in this record's export list.",
+      "files": [
+        "packages/uix-utils/src/object/index.ts",
+        "packages/uix-utils/src/object/methods/compare.ts",
+        "packages/uix-utils/src/object/methods/contains.ts",
+        "packages/uix-utils/src/object/methods/deepEquals.ts",
+        "packages/uix-utils/src/object/methods/deepMerge.ts",
+        "packages/uix-utils/src/object/methods/equals.ts",
+        "packages/uix-utils/src/object/methods/filter.ts",
+        "packages/uix-utils/src/object/methods/findIndexInList.ts",
+        "packages/uix-utils/src/object/methods/findLast.ts",
+        "packages/uix-utils/src/object/methods/findLastIndex.ts",
+        "packages/uix-utils/src/object/methods/getKeyValue.ts",
+        "packages/uix-utils/src/object/methods/insertIntoOrderedArray.ts",
+        "packages/uix-utils/src/object/methods/isArray.ts",
+        "packages/uix-utils/src/object/methods/isDate.ts",
+        "packages/uix-utils/src/object/methods/isEmpty.ts",
+        "packages/uix-utils/src/object/methods/isFunction.ts",
+        "packages/uix-utils/src/object/methods/isLetter.ts",
+        "packages/uix-utils/src/object/methods/isNotEmpty.ts",
+        "packages/uix-utils/src/object/methods/isNumber.ts",
+        "packages/uix-utils/src/object/methods/isObject.ts",
+        "packages/uix-utils/src/object/methods/isPrintableCharacter.ts",
+        "packages/uix-utils/src/object/methods/isScalar.ts",
+        "packages/uix-utils/src/object/methods/isString.ts",
+        "packages/uix-utils/src/object/methods/localeComparator.ts",
+        "packages/uix-utils/src/object/methods/matchRegex.ts",
+        "packages/uix-utils/src/object/methods/mergeKeys.ts",
+        "packages/uix-utils/src/object/methods/minifyCSS.ts",
+        "packages/uix-utils/src/object/methods/nestedKeys.ts",
+        "packages/uix-utils/src/object/methods/omit.ts",
+        "packages/uix-utils/src/object/methods/removeAccents.ts",
+        "packages/uix-utils/src/object/methods/reorderArray.ts",
+        "packages/uix-utils/src/object/methods/resolve.ts",
+        "packages/uix-utils/src/object/methods/resolveFieldData.ts",
+        "packages/uix-utils/src/object/methods/shallowEqualProps.ts",
+        "packages/uix-utils/src/object/methods/shallowEquals.ts",
+        "packages/uix-utils/src/object/methods/sort.ts",
+        "packages/uix-utils/src/object/methods/stringify.ts",
+        "packages/uix-utils/src/object/methods/toCamelCase.ts",
+        "packages/uix-utils/src/object/methods/toCapitalCase.ts",
+        "packages/uix-utils/src/object/methods/toFlatCase.ts",
+        "packages/uix-utils/src/object/methods/toKebabCase.ts",
+        "packages/uix-utils/src/object/methods/toMs.ts",
+        "packages/uix-utils/src/object/methods/toTokenKey.ts",
+        "packages/uix-utils/src/object/methods/toValue.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-utils#compare",
+        "@ultimate/uix-utils#contains",
+        "@ultimate/uix-utils#deepEquals",
+        "@ultimate/uix-utils#deepMerge",
+        "@ultimate/uix-utils#equals",
+        "@ultimate/uix-utils#filter",
+        "@ultimate/uix-utils#findIndexInList",
+        "@ultimate/uix-utils#findLast",
+        "@ultimate/uix-utils#findLastIndex",
+        "@ultimate/uix-utils#getKeyValue",
+        "@ultimate/uix-utils#insertIntoOrderedArray",
+        "@ultimate/uix-utils#isArray",
+        "@ultimate/uix-utils#isDate",
+        "@ultimate/uix-utils#isEmpty",
+        "@ultimate/uix-utils#isFunction",
+        "@ultimate/uix-utils#isLetter",
+        "@ultimate/uix-utils#isNotEmpty",
+        "@ultimate/uix-utils#isNumber",
+        "@ultimate/uix-utils#isObject",
+        "@ultimate/uix-utils#isPrintableCharacter",
+        "@ultimate/uix-utils#isScalar",
+        "@ultimate/uix-utils#isString",
+        "@ultimate/uix-utils#localeComparator",
+        "@ultimate/uix-utils#matchRegex",
+        "@ultimate/uix-utils#mergeKeys",
+        "@ultimate/uix-utils#minifyCSS",
+        "@ultimate/uix-utils#nestedKeys",
+        "@ultimate/uix-utils#omit",
+        "@ultimate/uix-utils#removeAccents",
+        "@ultimate/uix-utils#reorderArray",
+        "@ultimate/uix-utils#resolve",
+        "@ultimate/uix-utils#resolveFieldData",
+        "@ultimate/uix-utils#shallowEqualProps",
+        "@ultimate/uix-utils#shallowEquals",
+        "@ultimate/uix-utils#sort",
+        "@ultimate/uix-utils#stringify",
+        "@ultimate/uix-utils#toCamelCase",
+        "@ultimate/uix-utils#toCapitalCase",
+        "@ultimate/uix-utils#toFlatCase",
+        "@ultimate/uix-utils#toKebabCase",
+        "@ultimate/uix-utils#toMs",
+        "@ultimate/uix-utils#toTokenKey",
+        "@ultimate/uix-utils#toValue",
+        "@ultimate/uix-utils/object#compare",
+        "@ultimate/uix-utils/object#contains",
+        "@ultimate/uix-utils/object#deepEquals",
+        "@ultimate/uix-utils/object#deepMerge",
+        "@ultimate/uix-utils/object#equals",
+        "@ultimate/uix-utils/object#filter",
+        "@ultimate/uix-utils/object#findIndexInList",
+        "@ultimate/uix-utils/object#findLast",
+        "@ultimate/uix-utils/object#findLastIndex",
+        "@ultimate/uix-utils/object#getKeyValue",
+        "@ultimate/uix-utils/object#insertIntoOrderedArray",
+        "@ultimate/uix-utils/object#isArray",
+        "@ultimate/uix-utils/object#isDate",
+        "@ultimate/uix-utils/object#isEmpty",
+        "@ultimate/uix-utils/object#isFunction",
+        "@ultimate/uix-utils/object#isLetter",
+        "@ultimate/uix-utils/object#isNotEmpty",
+        "@ultimate/uix-utils/object#isNumber",
+        "@ultimate/uix-utils/object#isObject",
+        "@ultimate/uix-utils/object#isPrintableCharacter",
+        "@ultimate/uix-utils/object#isScalar",
+        "@ultimate/uix-utils/object#isString",
+        "@ultimate/uix-utils/object#localeComparator",
+        "@ultimate/uix-utils/object#matchRegex",
+        "@ultimate/uix-utils/object#mergeKeys",
+        "@ultimate/uix-utils/object#minifyCSS",
+        "@ultimate/uix-utils/object#nestedKeys",
+        "@ultimate/uix-utils/object#omit",
+        "@ultimate/uix-utils/object#removeAccents",
+        "@ultimate/uix-utils/object#reorderArray",
+        "@ultimate/uix-utils/object#resolve",
+        "@ultimate/uix-utils/object#resolveFieldData",
+        "@ultimate/uix-utils/object#shallowEqualProps",
+        "@ultimate/uix-utils/object#shallowEquals",
+        "@ultimate/uix-utils/object#sort",
+        "@ultimate/uix-utils/object#stringify",
+        "@ultimate/uix-utils/object#toCamelCase",
+        "@ultimate/uix-utils/object#toCapitalCase",
+        "@ultimate/uix-utils/object#toFlatCase",
+        "@ultimate/uix-utils/object#toKebabCase",
+        "@ultimate/uix-utils/object#toMs",
+        "@ultimate/uix-utils/object#toTokenKey",
+        "@ultimate/uix-utils/object#toValue"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-utils/src/object/index.ts",
+          "contains": "export { default as compare } from \"./methods/compare\";"
+        },
+        {
+          "path": "packages/uix-utils/src/index.ts",
+          "contains": "export * from \"./object\";"
+        },
+        {
+          "path": "packages/uix-utils/package.json",
+          "contains": "\"./*\": {"
+        },
+        {
+          "path": "packages/uix-utils/tsup.config.ts",
+          "contains": "...Object.fromEntries(submodules.map((name) => [`${name}/index`, `src/${name}/index.ts`]))"
+        },
+        {
+          "path": "packages/uix-data/src/identity/index.ts",
+          "contains": "export { equals } from \"@ultimate/uix-utils/object\";"
+        },
+        {
+          "path": "packages/ng-core/src/bind/bind.ts",
+          "contains": "import { equals } from \"@ultimate/uix-utils/object\";"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for UIX object utilities is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product runtime behavior tests were not run for this documentation-only inventory; no product source was changed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/uix-utils-values.json --out docs/inventory/uix-utils-values (run twice; authored README SHA-256 checked before and after)",
+          "revision": "7a06beb32487f04ccd84a765f7722ac606825c74",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 55 source files, 64 named symbols, 128 root/subpath export identities, 8 records, no problems; the authored README SHA-256 was unchanged. The #143 DOM relationship remains in the pending cross-scope ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; the #143 cross-scope relationship remains pending in the pilot, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/uix-utils-values/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash. The cross-scope #143 relationship is transparently retained in the pending ledger."
+        }
+      ]
+    },
+    {
+      "id": "uixutils.mergeprops",
+      "name": "UIX prop merging utilities",
+      "framework": "shared",
+      "purpose": "Merge prop objects, including class/style composition and ordered callback chaining.",
+      "surface": "See [authored signatures and interpretation](README.md). mergeProps(...props: any[]): object | undefined performs a left-to-right merge; styles merge shallowly, class/className use cn, and function-valued properties chain the prior callback before the later callback. mergeDefaultProps(...props: any[]): object | undefined applies the same rules while skipping later undefined values. It imports cn and isFunction. No production imports were found in the packages/ source scan; the package's own mergeprops test is a consumer. Package root and ./mergeprops mappings are source/configuration evidence only.",
+      "files": ["packages/uix-utils/src/mergeprops/index.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-utils#mergeDefaultProps",
+        "@ultimate/uix-utils#mergeProps",
+        "@ultimate/uix-utils/mergeprops#mergeDefaultProps",
+        "@ultimate/uix-utils/mergeprops#mergeProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-utils/src/mergeprops/index.ts",
+          "contains": "export function mergeProps(...props: any[]): object | undefined {"
+        },
+        {
+          "path": "packages/uix-utils/src/index.ts",
+          "contains": "export * from \"./mergeprops\";"
+        },
+        {
+          "path": "packages/uix-utils/package.json",
+          "contains": "\"./*\": {"
+        },
+        {
+          "path": "packages/uix-utils/tsup.config.ts",
+          "contains": "...Object.fromEntries(submodules.map((name) => [`${name}/index`, `src/${name}/index.ts`]))"
+        },
+        {
+          "path": "packages/uix-utils/test/mergeprops.test.ts",
+          "contains": "import { mergeProps, mergeDefaultProps } from \"../src/mergeprops\";"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.uix-utils.classnames",
+        "package.ultimate.uix-utils.object"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for UIX prop merging utilities is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product runtime behavior tests were not run for this documentation-only inventory; no product source was changed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/uix-utils-values.json --out docs/inventory/uix-utils-values (run twice; authored README SHA-256 checked before and after)",
+          "revision": "7a06beb32487f04ccd84a765f7722ac606825c74",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 55 source files, 64 named symbols, 128 root/subpath export identities, 8 records, no problems; the authored README SHA-256 was unchanged. The #143 DOM relationship remains in the pending cross-scope ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; the #143 cross-scope relationship remains pending in the pilot, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/uix-utils-values/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash. The cross-scope #143 relationship is transparently retained in the pending ledger."
+        }
+      ]
+    },
+    {
+      "id": "uixutils.eventbus",
+      "name": "UIX event bus",
+      "framework": "shared",
+      "purpose": "Provide a small per-instance synchronous event bus with subscribe, unsubscribe, emit, and clear operations.",
+      "surface": "See [authored signatures and interpretation](README.md). Handler = (evt: unknown) => void. EventBusOptions declares on(type: string, handler: Handler): void; off(type: string, handler: Handler): void; emit(type: string, evt?: unknown): void; clear(): void. EventBus(): EventBusOptions stores handlers in a per-instance Map and invokes emit handlers synchronously. Runtime on/off return this although the public interface declares void. No direct DOM dependency is present. Root and ./eventbus availability is supported by source barrels and package configuration, not an installed-package resolution test.",
+      "files": ["packages/uix-utils/src/eventbus/index.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-utils#EventBus",
+        "@ultimate/uix-utils#EventBusOptions",
+        "@ultimate/uix-utils#Handler",
+        "@ultimate/uix-utils/eventbus#EventBus",
+        "@ultimate/uix-utils/eventbus#EventBusOptions",
+        "@ultimate/uix-utils/eventbus#Handler"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-utils/src/eventbus/index.ts",
+          "contains": "export type Handler = (evt: unknown) => void;"
+        },
+        {
+          "path": "packages/uix-utils/src/index.ts",
+          "contains": "export * from \"./eventbus\";"
+        },
+        {
+          "path": "packages/uix-utils/package.json",
+          "contains": "\"./*\": {"
+        },
+        {
+          "path": "packages/uix-utils/tsup.config.ts",
+          "contains": "...Object.fromEntries(submodules.map((name) => [`${name}/index`, `src/${name}/index.ts`]))"
+        },
+        {
+          "path": "packages/uix-styled/src/service/index.ts",
+          "contains": "import { EventBus } from \"@ultimate/uix-utils/eventbus\";"
+        },
+        {
+          "path": "packages/vue-core/src/service/toast-service.ts",
+          "contains": "import { EventBus } from \"@ultimate/uix-utils/eventbus\";"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for UIX event bus is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product runtime behavior tests were not run for this documentation-only inventory; no product source was changed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/uix-utils-values.json --out docs/inventory/uix-utils-values (run twice; authored README SHA-256 checked before and after)",
+          "revision": "7a06beb32487f04ccd84a765f7722ac606825c74",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 55 source files, 64 named symbols, 128 root/subpath export identities, 8 records, no problems; the authored README SHA-256 was unchanged. The #143 DOM relationship remains in the pending cross-scope ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; the #143 cross-scope relationship remains pending in the pilot, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/uix-utils-values/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash. The cross-scope #143 relationship is transparently retained in the pending ledger."
+        }
+      ]
+    },
+    {
+      "id": "uixutils.escape",
+      "name": "UIX Escape and display-order registries",
+      "framework": "shared",
+      "purpose": "Coordinate global Escape handling by priority and track display order within named groups.",
+      "surface": "See [authored signatures and interpretation](README.md). Exports ESCAPE_PRIORITIES; EscapeRegistry/createEscapeRegistry/escapeRegistry; EscapeListener; and DisplayOrderRegistry/createDisplayOrderRegistry/displayOrderRegistry. EscapeRegistry registers and unregisters primary/secondary numeric priorities; an Escape key invokes only the callback with the greatest primary and then greatest secondary value. The document keydown listener is guarded and installed only while handlers exist. DisplayOrderRegistry records number IDs by group. Constants are SIDEBAR 100, DIALOG 300, IMAGE 400, MENU 500, OVERLAY_PANEL 600, TOOLTIP 1200. Root and ./escape mappings are source/configuration evidence; no blanket SSR guarantee is claimed.",
+      "files": [
+        "packages/uix-utils/src/escape/display-order-registry.ts",
+        "packages/uix-utils/src/escape/index.ts",
+        "packages/uix-utils/src/escape/priorities.ts",
+        "packages/uix-utils/src/escape/registry.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-utils#DisplayOrderRegistry",
+        "@ultimate/uix-utils#ESCAPE_PRIORITIES",
+        "@ultimate/uix-utils#EscapeListener",
+        "@ultimate/uix-utils#EscapeRegistry",
+        "@ultimate/uix-utils#createDisplayOrderRegistry",
+        "@ultimate/uix-utils#createEscapeRegistry",
+        "@ultimate/uix-utils#displayOrderRegistry",
+        "@ultimate/uix-utils#escapeRegistry",
+        "@ultimate/uix-utils/escape#DisplayOrderRegistry",
+        "@ultimate/uix-utils/escape#ESCAPE_PRIORITIES",
+        "@ultimate/uix-utils/escape#EscapeListener",
+        "@ultimate/uix-utils/escape#EscapeRegistry",
+        "@ultimate/uix-utils/escape#createDisplayOrderRegistry",
+        "@ultimate/uix-utils/escape#createEscapeRegistry",
+        "@ultimate/uix-utils/escape#displayOrderRegistry",
+        "@ultimate/uix-utils/escape#escapeRegistry"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-utils/src/escape/index.ts",
+          "contains": "export { ESCAPE_PRIORITIES } from \"./priorities\";"
+        },
+        {
+          "path": "packages/uix-utils/src/index.ts",
+          "contains": "export * from \"./escape\";"
+        },
+        {
+          "path": "packages/uix-utils/package.json",
+          "contains": "\"./*\": {"
+        },
+        {
+          "path": "packages/uix-utils/tsup.config.ts",
+          "contains": "...Object.fromEntries(submodules.map((name) => [`${name}/index`, `src/${name}/index.ts`]))"
+        },
+        {
+          "path": "packages/react-core/src/escape/use-global-escape-key.ts",
+          "contains": "import { escapeRegistry } from \"@ultimate/uix-utils/escape\";"
+        },
+        {
+          "path": "packages/vue-core/src/escape/use-display-order.ts",
+          "contains": "import { displayOrderRegistry } from \"@ultimate/uix-utils/escape\";"
+        },
+        {
+          "path": "packages/uix-utils/src/escape/priorities.ts",
+          "contains": "TOOLTIP: 1200"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for UIX Escape and display-order registries is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product runtime behavior tests were not run for this documentation-only inventory; no product source was changed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/uix-utils-values.json --out docs/inventory/uix-utils-values (run twice; authored README SHA-256 checked before and after)",
+          "revision": "7a06beb32487f04ccd84a765f7722ac606825c74",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 55 source files, 64 named symbols, 128 root/subpath export identities, 8 records, no problems; the authored README SHA-256 was unchanged. The #143 DOM relationship remains in the pending cross-scope ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; the #143 cross-scope relationship remains pending in the pilot, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/uix-utils-values/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash. The cross-scope #143 relationship is transparently retained in the pending ledger."
+        }
+      ]
+    },
+    {
+      "id": "uixutils.uuid",
+      "name": "UIX prefixed ID counter",
+      "framework": "shared",
+      "purpose": "Create incrementing module-local IDs with caller-selected prefixes.",
+      "surface": "See [authored signatures and interpretation](README.md). uuid(prefix: string = \"pui_id_\"): string increments a module-local counter independently per prefix. It is deterministic and not random or cryptographic; it has no direct DOM dependency. Package-root and ./uuid source/configuration mappings are recorded; installed artifact resolution is unverified.",
+      "files": ["packages/uix-utils/src/uuid/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-utils#uuid", "@ultimate/uix-utils/uuid#uuid"],
+      "evidence": [
+        {
+          "path": "packages/uix-utils/src/uuid/index.ts",
+          "contains": "export function uuid(prefix: string = \"pui_id_\"): string {"
+        },
+        {
+          "path": "packages/uix-utils/src/index.ts",
+          "contains": "export * from \"./uuid\";"
+        },
+        {
+          "path": "packages/uix-utils/package.json",
+          "contains": "\"./*\": {"
+        },
+        {
+          "path": "packages/uix-utils/tsup.config.ts",
+          "contains": "...Object.fromEntries(submodules.map((name) => [`${name}/index`, `src/${name}/index.ts`]))"
+        },
+        {
+          "path": "packages/ng/src/fieldset/fieldset.ts",
+          "contains": "import { uuid } from \"@ultimate/uix-utils/uuid\";"
+        },
+        {
+          "path": "packages/vue/src/tooltip/tooltip.ts",
+          "contains": "import { uuid } from \"@ultimate/uix-utils/uuid\";"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for UIX prefixed ID counter is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product runtime behavior tests were not run for this documentation-only inventory; no product source was changed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/uix-utils-values.json --out docs/inventory/uix-utils-values (run twice; authored README SHA-256 checked before and after)",
+          "revision": "7a06beb32487f04ccd84a765f7722ac606825c74",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 55 source files, 64 named symbols, 128 root/subpath export identities, 8 records, no problems; the authored README SHA-256 was unchanged. The #143 DOM relationship remains in the pending cross-scope ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; the #143 cross-scope relationship remains pending in the pilot, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/uix-utils-values/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash. The cross-scope #143 relationship is transparently retained in the pending ledger."
+        }
+      ]
+    },
+    {
+      "id": "uixutils.scroll-lock",
+      "name": "UIX shared scroll-lock registry",
+      "framework": "shared",
+      "purpose": "Keep body scrolling locked while at least one registered overlay ID remains active.",
+      "surface": "See [authored signatures and interpretation](README.md). ScrollLockRegistry declares register(id: string): void and unregister(id: string): void. createScrollLockRegistry(): ScrollLockRegistry returns an instance-local Set-backed registry; the first registration calls blockBodyScroll with className u-overflow-hidden and variableName --u-scrollbar-width; removing the last existing ID calls unblockBodyScroll. The singleton scrollLockRegistry is module-scoped. Its implementation imports body-scroll helpers from the DOM utility family and requires browser body access when the first lock is added; no blanket SSR safety is claimed. Root and ./scroll-lock mappings are source/configuration evidence only.",
+      "files": [
+        "packages/uix-utils/src/scroll-lock/index.ts",
+        "packages/uix-utils/src/scroll-lock/registry.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-utils#ScrollLockRegistry",
+        "@ultimate/uix-utils#createScrollLockRegistry",
+        "@ultimate/uix-utils#scrollLockRegistry",
+        "@ultimate/uix-utils/scroll-lock#ScrollLockRegistry",
+        "@ultimate/uix-utils/scroll-lock#createScrollLockRegistry",
+        "@ultimate/uix-utils/scroll-lock#scrollLockRegistry"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-utils/src/scroll-lock/index.ts",
+          "contains": "export { createScrollLockRegistry, scrollLockRegistry } from \"./registry\";"
+        },
+        {
+          "path": "packages/uix-utils/src/index.ts",
+          "contains": "export * from \"./scroll-lock\";"
+        },
+        {
+          "path": "packages/uix-utils/package.json",
+          "contains": "\"./*\": {"
+        },
+        {
+          "path": "packages/uix-utils/tsup.config.ts",
+          "contains": "...Object.fromEntries(submodules.map((name) => [`${name}/index`, `src/${name}/index.ts`]))"
+        },
+        {
+          "path": "packages/ng/src/dialog/dialog.ts",
+          "contains": "import { scrollLockRegistry } from \"@ultimate/uix-utils/scroll-lock\";"
+        },
+        {
+          "path": "packages/react-core/src/scroll-lock/use-scroll-lock.ts",
+          "contains": "import { scrollLockRegistry } from \"@ultimate/uix-utils/scroll-lock\";"
+        },
+        {
+          "path": "packages/uix-utils/src/scroll-lock/registry.ts",
+          "contains": "if (blockingIds.size === 0) unblockBodyScroll(SCROLL_LOCK_OPTIONS);"
+        }
+      ],
+      "relationships": ["package.ultimate.uix-utils.dom"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for UIX shared scroll-lock registry is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product runtime behavior tests were not run for this documentation-only inventory; no product source was changed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/uix-utils-values.json --out docs/inventory/uix-utils-values (run twice; authored README SHA-256 checked before and after)",
+          "revision": "7a06beb32487f04ccd84a765f7722ac606825c74",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 55 source files, 64 named symbols, 128 root/subpath export identities, 8 records, no problems; the authored README SHA-256 was unchanged. The #143 DOM relationship remains in the pending cross-scope ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; the #143 cross-scope relationship remains pending in the pilot, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/uix-utils-values/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash. The cross-scope #143 relationship is transparently retained in the pending ledger."
+        }
+      ]
+    },
+    {
+      "id": "uixutils.zindex",
+      "name": "UIX z-index manager",
+      "framework": "shared",
+      "purpose": "Assign and clear inline z-index values while tracking the module-local stack.",
+      "surface": "See [authored signatures and interpretation](README.md). ZIndexOptions declares get(element?: HTMLElement): number; set(key: string, element: HTMLElement, baseZIndex?: number): void; clear(element: HTMLElement): void; getCurrent(key: string): number. The singleton ZIndex uses a module-local stack and default base index 999, reading/writing HTMLElement.style. The implementation accepts omitted elements for set/clear although the interface requires them; this declaration/runtime discrepancy is documented without repair. Root and ./zindex mappings are source/configuration evidence; HTMLElement use means no blanket SSR claim.",
+      "files": ["packages/uix-utils/src/zindex/index.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-utils#ZIndex",
+        "@ultimate/uix-utils#ZIndexOptions",
+        "@ultimate/uix-utils/zindex#ZIndex",
+        "@ultimate/uix-utils/zindex#ZIndexOptions"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-utils/src/zindex/index.ts",
+          "contains": "export interface ZIndexOptions {"
+        },
+        {
+          "path": "packages/uix-utils/src/index.ts",
+          "contains": "export * from \"./zindex\";"
+        },
+        {
+          "path": "packages/uix-utils/package.json",
+          "contains": "\"./*\": {"
+        },
+        {
+          "path": "packages/uix-utils/tsup.config.ts",
+          "contains": "...Object.fromEntries(submodules.map((name) => [`${name}/index`, `src/${name}/index.ts`]))"
+        },
+        {
+          "path": "packages/ng-core/src/overlay/overlay.ts",
+          "contains": "import { ZIndex } from \"@ultimate/uix-utils/zindex\";"
+        },
+        {
+          "path": "packages/vue-core/src/zindex/use-z-index.ts",
+          "contains": "import { ZIndex } from \"@ultimate/uix-utils/zindex\";"
+        },
+        {
+          "path": "packages/uix-utils/src/zindex/index.ts",
+          "contains": "set: (key: string, element?: HTMLElement, baseZIndex?: number) => {"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for UIX z-index manager is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product runtime behavior tests were not run for this documentation-only inventory; no product source was changed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/uix-utils-values.json --out docs/inventory/uix-utils-values (run twice; authored README SHA-256 checked before and after)",
+          "revision": "7a06beb32487f04ccd84a765f7722ac606825c74",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 55 source files, 64 named symbols, 128 root/subpath export identities, 8 records, no problems; the authored README SHA-256 was unchanged. The #143 DOM relationship remains in the pending cross-scope ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; the #143 cross-scope relationship remains pending in the pilot, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/uix-utils-values/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash. The cross-scope #143 relationship is transparently retained in the pending ledger."
+        }
+      ]
+    }
+  ],
+  "dispositions": [],
+  "pending": [
+    {
+      "id": "package.ultimate.uix-utils.dom",
+      "batch": "UIX DOM utilities (#143)",
+      "reason": "The DOM body-scroll helpers and the #144 scroll-lock dependency are documented in #143. This pilot validates references within one inventory input, so the cross-scope relationship is kept in the pending-reference ledger rather than resolved by this run."
+    }
+  ]
+}

@@ -1,0 +1,1017 @@
+{
+  "version": 1,
+  "scope": "angular-core-148",
+  "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+  "ownership": {
+    "ticket": 148,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.ng-core",
+      "record": "ngcore.root"
+    },
+    {
+      "id": "package.ultimate.ng-core.root",
+      "record": "ngcore.root"
+    },
+    {
+      "id": "package.ultimate.ng-core.api",
+      "record": "ngcore.api"
+    },
+    {
+      "id": "package.ultimate.ng-core.base-editable-holder",
+      "record": "ngcore.base-editable-holder"
+    },
+    {
+      "id": "package.ultimate.ng-core.base-input",
+      "record": "ngcore.base-input"
+    },
+    {
+      "id": "package.ultimate.ng-core.basecomponent",
+      "record": "ngcore.basecomponent"
+    },
+    {
+      "id": "package.ultimate.ng-core.bind",
+      "record": "ngcore.bind"
+    },
+    {
+      "id": "package.ultimate.ng-core.config",
+      "record": "ngcore.config"
+    },
+    {
+      "id": "package.ultimate.ng-core.confirmation",
+      "record": "ngcore.confirmation"
+    },
+    {
+      "id": "package.ultimate.ng-core.dialog-service",
+      "record": "ngcore.dialog-service"
+    },
+    {
+      "id": "package.ultimate.ng-core.focus-trap",
+      "record": "ngcore.focus-trap"
+    },
+    {
+      "id": "package.ultimate.ng-core.icons",
+      "record": "ngcore.icons"
+    },
+    {
+      "id": "package.ultimate.ng-core.id",
+      "record": "ngcore.id"
+    },
+    {
+      "id": "package.ultimate.ng-core.model-holder",
+      "record": "ngcore.model-holder"
+    },
+    {
+      "id": "package.ultimate.ng-core.overlay",
+      "record": "ngcore.overlay"
+    },
+    {
+      "id": "package.ultimate.ng-core.terminal-service",
+      "record": "ngcore.terminal-service"
+    },
+    {
+      "id": "package.ultimate.ng-core.toast-service",
+      "record": "ngcore.toast-service"
+    }
+  ],
+  "packages": [
+    {
+      "path": "packages/ng-core",
+      "roots": ["packages/ng-core/src", "packages/ng-core/angular.json"],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/ng-core/src/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "ngcore.root",
+      "name": "Angular core entry",
+      "framework": "angular",
+      "purpose": "The package entry barrel that selects which core primitives are public.",
+      "surface": "See [authored signatures and interpretation](README.md). src/index.ts star re-exports fifteen modules (basecomponent, base-editable-holder, base-input, overlay, focus-trap, config, bind, icons, api, id/component-id-generator, model-holder, confirmation, dialog-service, terminal-service, toast-service). packages/ng-core/package.json has no exports map and points main and module at the ng-packagr bundle. Availability is recorded as internal because this barrel owns no export identities of its own; the identities it forwards are attributed to the module records that define them.",
+      "files": ["packages/ng-core/src/index.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/index.ts",
+          "contains": "export * from \"./basecomponent\";"
+        },
+        {
+          "path": "packages/ng-core/src/index.ts",
+          "contains": "export * from \"./toast-service\";"
+        }
+      ],
+      "relationships": [
+        "ngcore.basecomponent",
+        "ngcore.model-holder",
+        "ngcore.base-editable-holder",
+        "ngcore.base-input",
+        "ngcore.overlay",
+        "ngcore.focus-trap",
+        "ngcore.config",
+        "ngcore.bind",
+        "ngcore.icons",
+        "ngcore.api",
+        "ngcore.id",
+        "ngcore.confirmation",
+        "ngcore.dialog-service",
+        "ngcore.terminal-service",
+        "ngcore.toast-service"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Angular core entry is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "ngcore.basecomponent",
+      "name": "Base component directive",
+      "framework": "angular",
+      "purpose": "Abstract directive base that every Angular component inherits for theme style registration, class composition and the dt and unstyled inputs.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export UBaseComponent only; basecomponent/index.ts forwards that single class. style-sheet.ts also declares NG_CORE_STYLE_KEY_ATTR, ngCoreStyleSheetFor and ngCoreStyleSheet, which the module barrel does not re-export, so they are source-only helpers. Dependency: @ultimate/uix-styled and @ultimate/uix-utils.",
+      "files": [
+        "packages/ng-core/src/basecomponent/index.ts",
+        "packages/ng-core/src/basecomponent/base-component.ts",
+        "packages/ng-core/src/basecomponent/style-sheet.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/ng-core#UBaseComponent"],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "export abstract class UBaseComponent {"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/style-sheet.ts",
+          "contains": "export function ngCoreStyleSheetFor(doc: Document | undefined): StyleSheet<HTMLStyleElement> {"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/index.ts",
+          "contains": "export { UBaseComponent } from \"./base-component\";"
+        }
+      ],
+      "relationships": [
+        "ngcore.config",
+        "package.ultimate.uix-styled.stylesheet",
+        "package.ultimate.uix-styled.service",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Base component directive is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "ngcore.model-holder",
+      "name": "Model holder base",
+      "framework": "angular",
+      "purpose": "Abstract base that holds a model value signal and a filled state for value-bearing components.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export UModelHolder, an abstract class extending UBaseComponent.",
+      "files": [
+        "packages/ng-core/src/model-holder/index.ts",
+        "packages/ng-core/src/model-holder/model-holder.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/ng-core#UModelHolder"],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/model-holder/model-holder.ts",
+          "contains": "export abstract class UModelHolder extends UBaseComponent {"
+        },
+        {
+          "path": "packages/ng-core/src/model-holder/index.ts",
+          "contains": "export { UModelHolder } from \"./model-holder\";"
+        }
+      ],
+      "relationships": ["ngcore.basecomponent"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Model holder base is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "ngcore.base-editable-holder",
+      "name": "Editable holder base",
+      "framework": "angular",
+      "purpose": "Abstract ControlValueAccessor base that adds a disabled input and control value writing on top of the model holder.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export UBaseEditableHolder, an abstract class extending UModelHolder and implementing ControlValueAccessor. The writeControlValue hook has an empty body in the base.",
+      "files": [
+        "packages/ng-core/src/base-editable-holder/index.ts",
+        "packages/ng-core/src/base-editable-holder/base-editable-holder.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/ng-core#UBaseEditableHolder"],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/base-editable-holder/base-editable-holder.ts",
+          "contains": "export abstract class UBaseEditableHolder extends UModelHolder implements ControlValueAccessor {"
+        },
+        {
+          "path": "packages/ng-core/src/base-editable-holder/index.ts",
+          "contains": "export { UBaseEditableHolder } from \"./base-editable-holder\";"
+        }
+      ],
+      "relationships": ["ngcore.model-holder"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Editable holder base is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "ngcore.base-input",
+      "name": "Input base and fluid ancestor token",
+      "framework": "angular",
+      "purpose": "Abstract base for text-like inputs that carries fluid, variant, size and native constraint inputs, plus the injection token that lets an ancestor make descendants fluid.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports UBaseInput (abstract class extending UBaseEditableHolder) and U_FLUID_ANCESTOR (InjectionToken<true>). Fluid state reads the optional token from the host with skipSelf.",
+      "files": [
+        "packages/ng-core/src/base-input/index.ts",
+        "packages/ng-core/src/base-input/base-input.ts",
+        "packages/ng-core/src/base-input/fluid-ancestor.token.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/ng-core#UBaseInput", "@ultimate/ng-core#U_FLUID_ANCESTOR"],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/base-input/base-input.ts",
+          "contains": "export abstract class UBaseInput extends UBaseEditableHolder {"
+        },
+        {
+          "path": "packages/ng-core/src/base-input/fluid-ancestor.token.ts",
+          "contains": "export const U_FLUID_ANCESTOR = new InjectionToken<true>(\"U_FLUID_ANCESTOR\");"
+        }
+      ],
+      "relationships": ["ngcore.base-editable-holder"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Input base and fluid ancestor token is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "ngcore.bind",
+      "name": "Bind directive",
+      "framework": "angular",
+      "purpose": "Attribute directive that applies a map of attributes, classes, styles and event listeners to its host element.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export UBind, selector [uBind] with an input of the same name. Event listeners are registered once per event name and null attributes are removed.",
+      "files": ["packages/ng-core/src/bind/index.ts", "packages/ng-core/src/bind/bind.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/ng-core#UBind"],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/bind/bind.ts",
+          "contains": "selector: \"[uBind]\","
+        },
+        {
+          "path": "packages/ng-core/src/bind/index.ts",
+          "contains": "export { UBind } from \"./bind\";"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Bind directive is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "ngcore.config",
+      "name": "Ultimate configuration service",
+      "framework": "angular",
+      "purpose": "Root-provided configuration holder with global unstyled and ripple signals.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export UltimateConfig, providedIn root, with unstyled defaulting to false and ripple defaulting to true.",
+      "files": [
+        "packages/ng-core/src/config/index.ts",
+        "packages/ng-core/src/config/ultimate-config.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/ng-core#UltimateConfig"],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/config/ultimate-config.ts",
+          "contains": "export class UltimateConfig {"
+        },
+        {
+          "path": "packages/ng-core/src/config/index.ts",
+          "contains": "export { UltimateConfig } from \"./ultimate-config\";"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Ultimate configuration service is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "ngcore.overlay",
+      "name": "Overlay directive",
+      "framework": "angular",
+      "purpose": "Directive that moves its host element to an append target and assigns an overlay z-index while visible.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export UOverlay, selector [uOverlay], inputs visible and appendTo (body or an element), output visibleChange. It sets the overlay z-index base 1000 through the uix-utils z-index utility and restores the host afterwards.",
+      "files": ["packages/ng-core/src/overlay/index.ts", "packages/ng-core/src/overlay/overlay.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/ng-core#UOverlay"],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/overlay/overlay.ts",
+          "contains": "selector: \"[uOverlay]\","
+        },
+        {
+          "path": "packages/ng-core/src/overlay/index.ts",
+          "contains": "export { UOverlay } from \"./overlay\";"
+        }
+      ],
+      "relationships": ["package.ultimate.uix-utils.zindex"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Overlay directive is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "ngcore.focus-trap",
+      "name": "Focus trap directive",
+      "framework": "angular",
+      "purpose": "Directive that wraps Tab and Shift+Tab focus inside its host element.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export UFocusTrap, selector [uFocusTrap], input uFocusTrapDisabled. It uses the focusable element query from the uix-utils DOM utilities.",
+      "files": [
+        "packages/ng-core/src/focus-trap/index.ts",
+        "packages/ng-core/src/focus-trap/focus-trap.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/ng-core#UFocusTrap"],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/focus-trap/focus-trap.ts",
+          "contains": "selector: \"[uFocusTrap]\","
+        },
+        {
+          "path": "packages/ng-core/src/focus-trap/index.ts",
+          "contains": "export { UFocusTrap } from \"./focus-trap\";"
+        }
+      ],
+      "relationships": ["package.ultimate.uix-utils.dom"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Focus trap directive is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "ngcore.icons",
+      "name": "Icon primitives",
+      "framework": "angular",
+      "purpose": "Abstract icon base and the spinner, times and window maximize and minimize icon components used by composite components.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports UBaseIcon (abstract, with aria-label alias input and spin flag), USpinnerIcon, UTimesIcon, UWindowMaximizeIcon and UWindowMinimizeIcon with selectors u-spinner-icon, u-times-icon, u-window-maximize-icon and u-window-minimize-icon. The spinner builds a path id with crypto.randomUUID.",
+      "files": [
+        "packages/ng-core/src/icons/index.ts",
+        "packages/ng-core/src/icons/base-icon.ts",
+        "packages/ng-core/src/icons/spinner-icon.ts",
+        "packages/ng-core/src/icons/times-icon.ts",
+        "packages/ng-core/src/icons/window-maximize-icon.ts",
+        "packages/ng-core/src/icons/window-minimize-icon.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/ng-core#UBaseIcon",
+        "@ultimate/ng-core#USpinnerIcon",
+        "@ultimate/ng-core#UTimesIcon",
+        "@ultimate/ng-core#UWindowMaximizeIcon",
+        "@ultimate/ng-core#UWindowMinimizeIcon"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/icons/base-icon.ts",
+          "contains": "export abstract class UBaseIcon {"
+        },
+        {
+          "path": "packages/ng-core/src/icons/spinner-icon.ts",
+          "contains": "selector: \"u-spinner-icon\","
+        },
+        {
+          "path": "packages/ng-core/src/icons/times-icon.ts",
+          "contains": "export class UTimesIcon extends UBaseIcon {}"
+        },
+        {
+          "path": "packages/ng-core/src/icons/window-maximize-icon.ts",
+          "contains": "export class UWindowMaximizeIcon extends UBaseIcon {"
+        },
+        {
+          "path": "packages/ng-core/src/icons/window-minimize-icon.ts",
+          "contains": "export class UWindowMinimizeIcon extends UBaseIcon {"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Icon primitives is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "ngcore.api",
+      "name": "Shared API types",
+      "framework": "angular",
+      "purpose": "Type-only contracts for menu items and tooltip options shared by component packages.",
+      "surface": "See [authored signatures and interpretation](README.md). Root type exports UMenuItem and UTooltipOptions; neither exists at runtime.",
+      "files": ["packages/ng-core/src/api/index.ts", "packages/ng-core/src/api/types.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/ng-core#UMenuItem", "@ultimate/ng-core#UTooltipOptions"],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/api/types.ts",
+          "contains": "export interface UMenuItem {"
+        },
+        {
+          "path": "packages/ng-core/src/api/types.ts",
+          "contains": "export interface UTooltipOptions {"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Shared API types is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "ngcore.id",
+      "name": "Component id generator",
+      "framework": "angular",
+      "purpose": "Injectable that yields incrementing prefixed ids for component elements.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export ComponentIdGenerator; @Injectable() without providedIn, so consumers must provide it. next(prefix) returns prefix_N. id/ has no index file; the root barrel re-exports the file directly.",
+      "files": ["packages/ng-core/src/id/component-id-generator.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/ng-core#ComponentIdGenerator"],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/id/component-id-generator.ts",
+          "contains": "export class ComponentIdGenerator {"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Component id generator is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "ngcore.confirmation",
+      "name": "Confirmation service",
+      "framework": "angular",
+      "purpose": "Service that publishes confirmation requests and close signals for confirmation UI.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports UConfirmationService and the UConfirmation type. The service exposes confirm and close and an observable of confirmation requests.",
+      "files": [
+        "packages/ng-core/src/confirmation/index.ts",
+        "packages/ng-core/src/confirmation/confirmation-service.ts",
+        "packages/ng-core/src/confirmation/confirmation.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/ng-core#UConfirmationService", "@ultimate/ng-core#UConfirmation"],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/confirmation/confirmation-service.ts",
+          "contains": "export class UConfirmationService {"
+        },
+        {
+          "path": "packages/ng-core/src/confirmation/confirmation.ts",
+          "contains": "export interface UConfirmation {"
+        }
+      ],
+      "relationships": ["package.ultimate.ng.dialog"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Confirmation service is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "ngcore.dialog-service",
+      "name": "Dialog service",
+      "framework": "angular",
+      "purpose": "Service and reference object for opening dynamic dialogs and receiving their results.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports UDialogService, UDynamicDialogRef and the types UDynamicDialogConfig and UDynamicDialogOpenRequest. open(component, config) emits an open request; close(ref, result) completes it.",
+      "files": [
+        "packages/ng-core/src/dialog-service/index.ts",
+        "packages/ng-core/src/dialog-service/dialog-service.ts",
+        "packages/ng-core/src/dialog-service/dynamic-dialog-ref.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/ng-core#UDialogService",
+        "@ultimate/ng-core#UDynamicDialogRef",
+        "@ultimate/ng-core#UDynamicDialogConfig",
+        "@ultimate/ng-core#UDynamicDialogOpenRequest"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/dialog-service/dialog-service.ts",
+          "contains": "export class UDialogService {"
+        },
+        {
+          "path": "packages/ng-core/src/dialog-service/dynamic-dialog-ref.ts",
+          "contains": "export class UDynamicDialogRef<T = unknown> {"
+        },
+        {
+          "path": "packages/ng-core/src/dialog-service/dialog-service.ts",
+          "contains": "export interface UDynamicDialogConfig<"
+        }
+      ],
+      "relationships": ["package.ultimate.ng.dialog"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Dialog service is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "ngcore.terminal-service",
+      "name": "Terminal service",
+      "framework": "angular",
+      "purpose": "Service that relays commands and responses between a terminal component and its host.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export UTerminalService with sendCommand and sendResponse, which ignore empty values.",
+      "files": [
+        "packages/ng-core/src/terminal-service/index.ts",
+        "packages/ng-core/src/terminal-service/terminal-service.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/ng-core#UTerminalService"],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/terminal-service/terminal-service.ts",
+          "contains": "export class UTerminalService {"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Terminal service is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "ngcore.toast-service",
+      "name": "Toast service",
+      "framework": "angular",
+      "purpose": "Service that publishes toast messages and clear requests.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports UToastService (add, addAll, clear) and the UToastMessageOptions type.",
+      "files": [
+        "packages/ng-core/src/toast-service/index.ts",
+        "packages/ng-core/src/toast-service/toast-service.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/ng-core#UToastService", "@ultimate/ng-core#UToastMessageOptions"],
+      "evidence": [
+        {
+          "path": "packages/ng-core/src/toast-service/toast-service.ts",
+          "contains": "export class UToastService {"
+        },
+        {
+          "path": "packages/ng-core/src/toast-service/toast-service.ts",
+          "contains": "export interface UToastMessageOptions {"
+        }
+      ],
+      "relationships": ["package.ultimate.ng.toast"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Toast service is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/ng-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/angular-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/ng-core/src/base-editable-holder/base-editable-holder.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/src/base-input/base-input.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/src/basecomponent/base-component.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/src/basecomponent/style-sheet.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/src/bind/bind.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/src/config/ultimate-config.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/src/confirmation/confirmation-service.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/src/dialog-service/dialog-service.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/src/focus-trap/focus-trap.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/src/icons/icons.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/src/id/component-id-generator.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/src/model-holder/model-holder.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/src/overlay/overlay.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/src/terminal-service/terminal-service.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/src/toast-service/toast-service.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng-core/angular.json",
+      "reason": "Angular CLI workspace configuration for the ng-core library project (ng-packagr build and unit-test builders); build and test tooling, not a product item."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.ng.dialog",
+      "batch": "Angular overlays and notifications (#122)",
+      "reason": "Dialog component consumer is owned by a component inventory."
+    },
+    {
+      "id": "package.ultimate.ng.toast",
+      "batch": "Angular overlays and notifications (#122)",
+      "reason": "Toast component consumer is owned by a component inventory."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "Themes (#151)",
+      "reason": "Theme presets are owned by the themes inventory."
+    },
+    {
+      "id": "package.ultimate.uix-styled.service",
+      "batch": "UIX styled (#145)",
+      "reason": "Theme style service is owned by the uix-styled inventory."
+    },
+    {
+      "id": "package.ultimate.uix-styled.stylesheet",
+      "batch": "UIX styled (#145)",
+      "reason": "Style sheet registration is owned by the uix-styled inventory."
+    },
+    {
+      "id": "package.ultimate.uix-utils.dom",
+      "batch": "UIX utilities (#143, #144)",
+      "reason": "DOM utilities are owned by the uix-utils inventory."
+    },
+    {
+      "id": "package.ultimate.uix-utils.zindex",
+      "batch": "UIX utilities (#143, #144)",
+      "reason": "z-index utility is owned by the uix-utils inventory."
+    }
+  ]
+}

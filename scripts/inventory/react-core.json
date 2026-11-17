@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "scope": "react-core-149",
+  "revision": "bc2ea64ece059085cc26dbc0e72e983b12f16cd1",
+  "ownership": {
+    "ticket": 149,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.react-core",
+      "record": "reactcore.root"
+    },
+    {
+      "id": "package.ultimate.react-core.root",
+      "record": "reactcore.root"
+    },
+    {
+      "id": "package.ultimate.react-core.base",
+      "record": "reactcore.base"
+    },
+    {
+      "id": "package.ultimate.react-core.confirmation",
+      "record": "reactcore.confirmation"
+    },
+    {
+      "id": "package.ultimate.react-core.escape",
+      "record": "reactcore.escape"
+    },
+    {
+      "id": "package.ultimate.react-core.focus-trap",
+      "record": "reactcore.focus-trap"
+    },
+    {
+      "id": "package.ultimate.react-core.hooks",
+      "record": "reactcore.hooks"
+    },
+    {
+      "id": "package.ultimate.react-core.icons",
+      "record": "reactcore.icons"
+    },
+    {
+      "id": "package.ultimate.react-core.motion",
+      "record": "reactcore.motion"
+    },
+    {
+      "id": "package.ultimate.react-core.overlay",
+      "record": "reactcore.overlay"
+    },
+    {
+      "id": "package.ultimate.react-core.scroll-lock",
+      "record": "reactcore.scroll-lock"
+    },
+    {
+      "id": "package.ultimate.react-core.styling",
+      "record": "reactcore.styling"
+    },
+    {
+      "id": "package.ultimate.react-core.zindex",
+      "record": "reactcore.zindex"
+    }
+  ],
+  "packages": [
+    {
+      "path": "packages/react-core",
+      "roots": ["packages/react-core/src"],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/react-core/src/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "reactcore.root",
+      "name": "React core entry",
+      "framework": "react",
+      "purpose": "The package entry barrel that selects which React core primitives are public.",
+      "surface": "See [authored signatures and interpretation](README.md). src/index.ts star re-exports eleven modules (base, confirmation, escape, focus-trap, hooks, icons, motion, overlay, scroll-lock, styling, zindex). Availability is internal because the barrel owns no export identities; the identities it forwards are attributed to the module records.",
+      "files": ["packages/react-core/src/index.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/react-core/src/index.ts",
+          "contains": "export * from \"./base\";"
+        },
+        {
+          "path": "packages/react-core/src/index.ts",
+          "contains": "export * from \"./zindex\";"
+        }
+      ],
+      "relationships": [
+        "reactcore.base",
+        "reactcore.confirmation",
+        "reactcore.escape",
+        "reactcore.focus-trap",
+        "reactcore.hooks",
+        "reactcore.icons",
+        "reactcore.motion",
+        "reactcore.overlay",
+        "reactcore.scroll-lock",
+        "reactcore.styling",
+        "reactcore.zindex"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for React core entry is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/react-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bc2ea64ece059085cc26dbc0e72e983b12f16cd1",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 37 source files accounted for, 39 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/react-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "reactcore.base",
+      "name": "Component base hook",
+      "framework": "react",
+      "purpose": "Hook that registers a component style module and returns a cx resolver turning style-module class entries into class strings.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports useComponentBase and the types ClassValue, StyleModule and ComponentBaseOptions. cx(key, params) resolves a function or string entry of styleModule.classes through classNames and returns undefined for unknown keys.",
+      "files": [
+        "packages/react-core/src/base/index.ts",
+        "packages/react-core/src/base/component-base.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/react-core#useComponentBase",
+        "@ultimate/react-core#ClassValue",
+        "@ultimate/react-core#StyleModule",
+        "@ultimate/react-core#ComponentBaseOptions"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "export function useComponentBase({ componentName, styleModule }: ComponentBaseOptions): {"
+        },
+        {
+          "path": "packages/react-core/src/base/index.ts",
+          "contains": "export { useComponentBase } from \"./component-base\";"
+        }
+      ],
+      "relationships": ["reactcore.styling", "package.ultimate.uix-utils.classnames"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Component base hook is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/react-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bc2ea64ece059085cc26dbc0e72e983b12f16cd1",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 37 source files accounted for, 39 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/react-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "reactcore.confirmation",
+      "name": "Confirmation event bus",
+      "framework": "react",
+      "purpose": "Event-bus based imperative API for requesting confirm dialogs and confirm popups.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports confirmationEventBus, confirmDialog, confirmPopup and the type UConfirmationOptions. Both functions emit with visible defaulting to true; no renderer is provided here, so a consumer component must subscribe.",
+      "files": [
+        "packages/react-core/src/confirmation/index.ts",
+        "packages/react-core/src/confirmation/confirmation-event-bus.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/react-core#confirmationEventBus",
+        "@ultimate/react-core#confirmDialog",
+        "@ultimate/react-core#confirmPopup",
+        "@ultimate/react-core#UConfirmationOptions"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react-core/src/confirmation/confirmation-event-bus.ts",
+          "contains": "export function confirmDialog(options: UConfirmationOptions = {}): void {"
+        },
+        {
+          "path": "packages/react-core/src/confirmation/confirmation-event-bus.ts",
+          "contains": "export function confirmPopup(options: UConfirmationOptions = {}): void {"
+        }
+      ],
+      "relationships": ["package.ultimate.uix-utils.eventbus"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Confirmation event bus is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/react-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bc2ea64ece059085cc26dbc0e72e983b12f16cd1",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 37 source files accounted for, 39 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/react-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "reactcore.escape",
+      "name": "Escape and display order",
+      "framework": "react",
+      "purpose": "Hooks that register the Escape key handlers with priorities and track display order of visible overlay groups.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports ESCAPE_PRIORITIES (re-exported from @ultimate/uix-utils/escape), useDisplayOrder, useGlobalEscapeKey and the type UseGlobalEscapeKeyOptions. useGlobalEscapeKey registers only while when is true and the secondary priority is defined.",
+      "files": [
+        "packages/react-core/src/escape/index.ts",
+        "packages/react-core/src/escape/priorities.ts",
+        "packages/react-core/src/escape/use-display-order.ts",
+        "packages/react-core/src/escape/use-global-escape-key.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/react-core#ESCAPE_PRIORITIES",
+        "@ultimate/react-core#useDisplayOrder",
+        "@ultimate/react-core#useGlobalEscapeKey",
+        "@ultimate/react-core#UseGlobalEscapeKeyOptions"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react-core/src/escape/use-display-order.ts",
+          "contains": "export function useDisplayOrder("
+        },
+        {
+          "path": "packages/react-core/src/escape/use-global-escape-key.ts",
+          "contains": "export function useGlobalEscapeKey({ callback, when, priority }: UseGlobalEscapeKeyOptions): void {"
+        },
+        {
+          "path": "packages/react-core/src/escape/priorities.ts",
+          "contains": "export { ESCAPE_PRIORITIES } from \"@ultimate/uix-utils/escape\";"
+        }
+      ],
+      "relationships": ["package.ultimate.uix-utils.escape"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Escape and display order is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/react-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bc2ea64ece059085cc26dbc0e72e983b12f16cd1",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 37 source files accounted for, 39 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/react-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "reactcore.focus-trap",
+      "name": "Focus trap component",
+      "framework": "react",
+      "purpose": "Component that wraps children with hidden sentinel elements to keep tab focus inside and optionally auto-focuses on mount.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports FocusTrap and the type FocusTrapProps (children, autoFocus, disabled, autoFocusSelector, firstFocusableSelector). Hidden focusable elements are excluded through the u-hidden-focusable selector.",
+      "files": [
+        "packages/react-core/src/focus-trap/index.ts",
+        "packages/react-core/src/focus-trap/focus-trap.tsx"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/react-core#FocusTrap", "@ultimate/react-core#FocusTrapProps"],
+      "evidence": [
+        {
+          "path": "packages/react-core/src/focus-trap/focus-trap.tsx",
+          "contains": "export function FocusTrap({"
+        },
+        {
+          "path": "packages/react-core/src/focus-trap/focus-trap.tsx",
+          "contains": "export interface FocusTrapProps {"
+        }
+      ],
+      "relationships": ["reactcore.hooks", "package.ultimate.uix-utils.dom"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Focus trap component is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/react-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bc2ea64ece059085cc26dbc0e72e983b12f16cd1",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 37 source files accounted for, 39 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/react-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "reactcore.hooks",
+      "name": "Lifecycle, event, resize and merge-props hooks",
+      "framework": "react",
+      "purpose": "General-purpose hooks for mount, unmount and update effects, previous value, event and resize listeners, and merging prop sets.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports useMergeProps, useMountEffect, useUnmountEffect, useUpdateEffect, usePrevious, useEventListener, UseEventListenerOptions and useResizeListener. useEventListener returns a [bind, unbind] pair and binds only once; useResizeListener is a window resize wrapper; useMergeProps concatenates className and chains on* handlers.",
+      "files": [
+        "packages/react-core/src/hooks/index.ts",
+        "packages/react-core/src/hooks/use-event-listener.ts",
+        "packages/react-core/src/hooks/use-merge-props.ts",
+        "packages/react-core/src/hooks/use-mount-effect.ts",
+        "packages/react-core/src/hooks/use-previous.ts",
+        "packages/react-core/src/hooks/use-resize-listener.ts",
+        "packages/react-core/src/hooks/use-unmount-effect.ts",
+        "packages/react-core/src/hooks/use-update-effect.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/react-core#useMergeProps",
+        "@ultimate/react-core#useMountEffect",
+        "@ultimate/react-core#useUnmountEffect",
+        "@ultimate/react-core#useUpdateEffect",
+        "@ultimate/react-core#usePrevious",
+        "@ultimate/react-core#useEventListener",
+        "@ultimate/react-core#UseEventListenerOptions",
+        "@ultimate/react-core#useResizeListener"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react-core/src/hooks/use-event-listener.ts",
+          "contains": "export function useEventListener({"
+        },
+        {
+          "path": "packages/react-core/src/hooks/use-merge-props.ts",
+          "contains": "export function useMergeProps()"
+        },
+        {
+          "path": "packages/react-core/src/hooks/use-mount-effect.ts",
+          "contains": "export function useMountEffect(effect: () => void): void {"
+        },
+        {
+          "path": "packages/react-core/src/hooks/use-previous.ts",
+          "contains": "export function usePrevious<T>(value: T): T | undefined {"
+        },
+        {
+          "path": "packages/react-core/src/hooks/use-update-effect.ts",
+          "contains": "export function useUpdateEffect(effect: () => void, deps: unknown[]): void {"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Lifecycle, event, resize and merge-props hooks is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/react-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bc2ea64ece059085cc26dbc0e72e983b12f16cd1",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 37 source files accounted for, 39 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/react-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "reactcore.icons",
+      "name": "Base icons",
+      "framework": "react",
+      "purpose": "Small SVG icon components shared by React components.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports USpinnerIcon, UTimesIcon, UWindowMaximizeIcon, UWindowMinimizeIcon, UCheckIcon and the type IconProps (className, label, spin). USpinnerIcon sets role img, aria-label and the u-icon-spin class.",
+      "files": [
+        "packages/react-core/src/icons/index.ts",
+        "packages/react-core/src/icons/check-icon.tsx",
+        "packages/react-core/src/icons/spinner-icon.tsx",
+        "packages/react-core/src/icons/times-icon.tsx",
+        "packages/react-core/src/icons/window-maximize-icon.tsx",
+        "packages/react-core/src/icons/window-minimize-icon.tsx"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/react-core#USpinnerIcon",
+        "@ultimate/react-core#UTimesIcon",
+        "@ultimate/react-core#UWindowMaximizeIcon",
+        "@ultimate/react-core#UWindowMinimizeIcon",
+        "@ultimate/react-core#UCheckIcon",
+        "@ultimate/react-core#IconProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react-core/src/icons/spinner-icon.tsx",
+          "contains": "export function USpinnerIcon("
+        },
+        {
+          "path": "packages/react-core/src/icons/check-icon.tsx",
+          "contains": "export function UCheckIcon("
+        },
+        {
+          "path": "packages/react-core/src/icons/times-icon.tsx",
+          "contains": "export function UTimesIcon("
+        },
+        {
+          "path": "packages/react-core/src/icons/window-maximize-icon.tsx",
+          "contains": "export function UWindowMaximizeIcon("
+        },
+        {
+          "path": "packages/react-core/src/icons/window-minimize-icon.tsx",
+          "contains": "export function UWindowMinimizeIcon("
+        }
+      ],
+      "relationships": ["package.ultimate.uix-utils.classnames"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Base icons is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/react-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bc2ea64ece059085cc26dbc0e72e983b12f16cd1",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 37 source files accounted for, 39 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/react-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "reactcore.motion",
+      "name": "Motion hook",
+      "framework": "react",
+      "purpose": "Hook that creates a motion instance for an element and runs enter or leave when visibility changes.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export useMotion(elementRef, visible, options?, ready?). The effect depends only on visible and ready, so option changes do not re-run it; it cancels the motion on cleanup.",
+      "files": [
+        "packages/react-core/src/motion/index.ts",
+        "packages/react-core/src/motion/use-motion.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/react-core#useMotion"],
+      "evidence": [
+        {
+          "path": "packages/react-core/src/motion/use-motion.ts",
+          "contains": "export function useMotion("
+        }
+      ],
+      "relationships": ["package.ultimate.uix-motion.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Motion hook is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/react-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bc2ea64ece059085cc26dbc0e72e983b12f16cd1",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 37 source files accounted for, 39 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/react-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "reactcore.overlay",
+      "name": "Overlay portal and listeners",
+      "framework": "react",
+      "purpose": "Portal component and a hook that reports outside clicks and viewport changes for overlays.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports Portal, PortalProps, useOverlayListener, UseOverlayListenerOptions and OverlayListenerMeta. Portal renders nothing until mounted on the client and defaults to document.body; appendTo accepts an element, a function or self. useOverlayListener returns [bind, unbind] and reports outside, resize, orientationchange and scroll events.",
+      "files": [
+        "packages/react-core/src/overlay/index.ts",
+        "packages/react-core/src/overlay/portal.tsx",
+        "packages/react-core/src/overlay/use-overlay-listener.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/react-core#Portal",
+        "@ultimate/react-core#PortalProps",
+        "@ultimate/react-core#useOverlayListener",
+        "@ultimate/react-core#UseOverlayListenerOptions",
+        "@ultimate/react-core#OverlayListenerMeta"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react-core/src/overlay/portal.tsx",
+          "contains": "export function Portal({"
+        },
+        {
+          "path": "packages/react-core/src/overlay/use-overlay-listener.ts",
+          "contains": "export function useOverlayListener({"
+        }
+      ],
+      "relationships": ["reactcore.hooks"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Overlay portal and listeners is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/react-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bc2ea64ece059085cc26dbc0e72e983b12f16cd1",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 37 source files accounted for, 39 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/react-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "reactcore.scroll-lock",
+      "name": "Scroll lock hook",
+      "framework": "react",
+      "purpose": "Hook exposing register and unregister functions backed by the shared scroll lock registry.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export useScrollLock returning stable register(id) and unregister(id) callbacks.",
+      "files": [
+        "packages/react-core/src/scroll-lock/index.ts",
+        "packages/react-core/src/scroll-lock/use-scroll-lock.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/react-core#useScrollLock"],
+      "evidence": [
+        {
+          "path": "packages/react-core/src/scroll-lock/use-scroll-lock.ts",
+          "contains": "export function useScrollLock(): {"
+        }
+      ],
+      "relationships": ["package.ultimate.uix-utils.scroll-lock"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Scroll lock hook is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/react-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bc2ea64ece059085cc26dbc0e72e983b12f16cd1",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 37 source files accounted for, 39 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/react-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "reactcore.styling",
+      "name": "Style sheet and component style hook",
+      "framework": "react",
+      "purpose": "SSR-guarded style sheet instance and a hook that registers theme variables, hidden-accessible, box-model and component CSS on mount.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports reactCoreStyleSheet and useComponentStyle. The sheet creates style elements in document.head and returns undefined when document is unavailable. useComponentStyle registers once on mount and adds component css only if the sheet has no entry for the name.",
+      "files": [
+        "packages/react-core/src/styling/index.ts",
+        "packages/react-core/src/styling/react-style-sheet.ts",
+        "packages/react-core/src/styling/use-component-style.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/react-core#reactCoreStyleSheet",
+        "@ultimate/react-core#useComponentStyle"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react-core/src/styling/react-style-sheet.ts",
+          "contains": "export const reactCoreStyleSheet = new ReactStyleSheet();"
+        },
+        {
+          "path": "packages/react-core/src/styling/use-component-style.ts",
+          "contains": "export function useComponentStyle("
+        }
+      ],
+      "relationships": [
+        "reactcore.hooks",
+        "package.ultimate.uix-styled.stylesheet",
+        "package.ultimate.uix-styled.helpers",
+        "package.ultimate.uix-utils.dom"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Style sheet and component style hook is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/react-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bc2ea64ece059085cc26dbc0e72e983b12f16cd1",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 37 source files accounted for, 39 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/react-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "reactcore.zindex",
+      "name": "Z-index hook",
+      "framework": "react",
+      "purpose": "Hook that sets and clears stacked z-index values using named bucket bases.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports useZIndex and Z_INDEX_BUCKETS (modal 1100, overlay 1000, menu 1000, tooltip 1100, toast 1200). set ignores null elements and accepts an optional base override.",
+      "files": [
+        "packages/react-core/src/zindex/index.ts",
+        "packages/react-core/src/zindex/use-z-index.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/react-core#useZIndex", "@ultimate/react-core#Z_INDEX_BUCKETS"],
+      "evidence": [
+        {
+          "path": "packages/react-core/src/zindex/use-z-index.ts",
+          "contains": "export function useZIndex(): {"
+        },
+        {
+          "path": "packages/react-core/src/zindex/use-z-index.ts",
+          "contains": "export const Z_INDEX_BUCKETS = {"
+        }
+      ],
+      "relationships": ["package.ultimate.uix-utils.zindex"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Z-index hook is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/react-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "bc2ea64ece059085cc26dbc0e72e983b12f16cd1",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 37 source files accounted for, 39 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/react-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/react-core/src/base/component-base.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/react-core/src/confirmation/confirmation-event-bus.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/react-core/src/escape/escape.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/react-core/src/focus-trap/focus-trap.spec.tsx",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/react-core/src/hooks/hooks.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/react-core/src/icons/icons.spec.tsx",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/react-core/src/motion/motion.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/react-core/src/overlay/portal.spec.tsx",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/react-core/src/overlay/use-overlay-listener.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/react-core/src/scroll-lock/scroll-lock.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/react-core/src/styling/hidden-accessible.spec.tsx",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/react-core/src/styling/ssr-contract.spec.tsx",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/react-core/src/styling/styling.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/react-core/src/zindex/zindex.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.uix-motion.root",
+      "batch": "Data and motion primitives (#147)",
+      "reason": "Motion primitives are owned by the data-motion inventory."
+    },
+    {
+      "id": "package.ultimate.uix-styled.helpers",
+      "batch": "UIX styled (#145)",
+      "reason": "Style registration helpers are owned by the uix-styled inventory."
+    },
+    {
+      "id": "package.ultimate.uix-styled.stylesheet",
+      "batch": "UIX styled (#145)",
+      "reason": "Style sheet registration is owned by the uix-styled inventory."
+    },
+    {
+      "id": "package.ultimate.uix-utils.classnames",
+      "batch": "UIX utilities (#143, #144)",
+      "reason": "Class name utility is owned by the uix-utils inventory."
+    },
+    {
+      "id": "package.ultimate.uix-utils.dom",
+      "batch": "UIX utilities (#143, #144)",
+      "reason": "DOM utilities are owned by the uix-utils inventory."
+    },
+    {
+      "id": "package.ultimate.uix-utils.escape",
+      "batch": "UIX utilities (#143, #144)",
+      "reason": "Escape registries are owned by the uix-utils inventory."
+    },
+    {
+      "id": "package.ultimate.uix-utils.eventbus",
+      "batch": "UIX utilities (#143, #144)",
+      "reason": "Event bus utility is owned by the uix-utils inventory."
+    },
+    {
+      "id": "package.ultimate.uix-utils.scroll-lock",
+      "batch": "UIX utilities (#143, #144)",
+      "reason": "Scroll lock registry is owned by the uix-utils inventory."
+    },
+    {
+      "id": "package.ultimate.uix-utils.zindex",
+      "batch": "UIX utilities (#143, #144)",
+      "reason": "z-index utility is owned by the uix-utils inventory."
+    }
+  ]
+}

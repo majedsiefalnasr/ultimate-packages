@@ -1,0 +1,8 @@
+{
+  "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/data-view src/order-list src/organization-chart src/pick-list src/timeline --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+  "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+  "outcome": "passed",
+  "output": "Vitest 2.1.9, Node v24.15.0: Test Files 5 passed (5); Tests 52 passed (52): pick-list 22, order-list 14, data-view 6, organization-chart 5, timeline 5.",
+  "preparation": "PATH=\"$HOME/.nvm/versions/node/v24.15.0/bin:$PATH\"; workspace dependency artifacts were already built, so no dependency build or failed first attempt was needed. The in-repository scripts/inventory/vue-disclosure-vitest.config.mjs was used from the start because the same host limitation was recorded in #133.",
+  "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence."
+}

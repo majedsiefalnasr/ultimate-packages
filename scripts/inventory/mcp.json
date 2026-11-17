@@ -1,0 +1,576 @@
+{
+  "version": 1,
+  "scope": "mcp-155",
+  "revision": "642e7e27996c29dc6cca009f93a84e76ee74c9b8",
+  "ownership": {
+    "ticket": 155,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.mcp",
+      "record": "mcp.root"
+    },
+    {
+      "id": "package.ultimate.mcp.root",
+      "record": "mcp.root"
+    },
+    {
+      "id": "package.ultimate.mcp.tools",
+      "record": "mcp.server"
+    }
+  ],
+  "packages": [
+    {
+      "path": "packages/mcp",
+      "roots": ["packages/mcp/src", "packages/mcp/scripts"],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/mcp/src/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "mcp.root",
+      "name": "MCP package entry",
+      "framework": "shared",
+      "purpose": "The package root barrel that selects the public server factory, five tool functions with their types, the manifest reader and the error constructors.",
+      "surface": "See [authored signatures and interpretation](README.md). src/index.ts re-exports 24 identities: createMcpServer; searchComponents, getComponentApi, getComponent, getComponentAccessibility and checkFrameworkCompatibility with their Input and Result types; readCompatibilityManifest and CompatibilityManifestEntry; the McpToolError type and the five error constructors. Availability is internal because the barrel owns no export identities; they are attributed to the records that implement them.",
+      "files": ["packages/mcp/src/index.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/mcp/src/index.ts",
+          "contains": "export { createMcpServer } from \"./server\";"
+        },
+        {
+          "path": "packages/mcp/src/index.ts",
+          "contains": "  internalError,"
+        }
+      ],
+      "relationships": [
+        "mcp.server",
+        "mcp.tool-search-components",
+        "mcp.tool-get-component",
+        "mcp.tool-get-component-api",
+        "mcp.tool-get-component-accessibility",
+        "mcp.tool-check-framework-compatibility",
+        "mcp.manifest",
+        "mcp.errors"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for MCP package entry is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/mcp/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The MCP boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/mcp.json --out docs/inventory/mcp (run twice; authored README SHA-256 checked before and after)",
+          "revision": "642e7e27996c29dc6cca009f93a84e76ee74c9b8",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 12 source files accounted for, 24 root export identities attributed to public records, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, stdio server execution and product behavior are not asserted.",
+          "run": "docs/inventory/mcp/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "mcp.bin",
+      "name": "MCP stdio binary entry",
+      "framework": "shared",
+      "purpose": "The executable entry declared as the `ultimate-mcp` bin that connects the server to the stdio transport.",
+      "surface": "See [authored signatures and interpretation](README.md). src/bin.ts is the only module that creates a StdioServerTransport. It builds the server with createMcpServer(), awaits server.connect(transport), writes a startup line to stderr and exits with code 1 on a fatal startup error. Nothing in it writes to stdout, which is the protocol wire. It is built by tsup as a separate bundle with a node shebang and is not a root export.",
+      "files": ["packages/mcp/src/bin.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/mcp/src/bin.ts",
+          "contains": "const transport = new StdioServerTransport();"
+        },
+        {
+          "path": "packages/mcp/src/bin.ts",
+          "contains": "process.exit(1);"
+        }
+      ],
+      "relationships": ["mcp.server"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for MCP stdio binary entry is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/mcp/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The MCP boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/mcp.json --out docs/inventory/mcp (run twice; authored README SHA-256 checked before and after)",
+          "revision": "642e7e27996c29dc6cca009f93a84e76ee74c9b8",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 12 source files accounted for, 24 root export identities attributed to public records, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, stdio server execution and product behavior are not asserted.",
+          "run": "docs/inventory/mcp/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "mcp.server",
+      "name": "MCP server factory",
+      "framework": "shared",
+      "purpose": "Constructs the McpServer and registers the five tools with their zod input schemas, wrapping every handler so results and errors share one response shape.",
+      "surface": "See [authored signatures and interpretation](README.md). `createMcpServer(): McpServer` creates a server named @ultimate/mcp with the hard-coded version 0.1.0 and registers search_components, get_component, get_component_api, get_component_accessibility and check_framework_compatibility. Framework arguments use the vocabulary ng, react, vue for the four component tools and angular, react, vue for check_framework_compatibility. A result object carrying a `code` field becomes an isError response with {code, message}; any thrown exception is logged to stderr and replaced by a generic internal_error. Responses are JSON text content.",
+      "files": ["packages/mcp/src/server.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/mcp#createMcpServer"],
+      "evidence": [
+        {
+          "path": "packages/mcp/src/server.ts",
+          "contains": "export function createMcpServer(): McpServer {"
+        },
+        {
+          "path": "packages/mcp/src/server.ts",
+          "contains": "const FRAMEWORK_ENUM_ANGULAR = z.enum([\"angular\", \"react\", \"vue\"]);"
+        }
+      ],
+      "relationships": [
+        "mcp.errors",
+        "mcp.tool-search-components",
+        "mcp.tool-get-component",
+        "mcp.tool-get-component-api",
+        "mcp.tool-get-component-accessibility",
+        "mcp.tool-check-framework-compatibility"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for MCP server factory is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/mcp/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The MCP boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/mcp.json --out docs/inventory/mcp (run twice; authored README SHA-256 checked before and after)",
+          "revision": "642e7e27996c29dc6cca009f93a84e76ee74c9b8",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 12 source files accounted for, 24 root export identities attributed to public records, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, stdio server execution and product behavior are not asserted.",
+          "run": "docs/inventory/mcp/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "mcp.errors",
+      "name": "MCP tool error contract",
+      "framework": "shared",
+      "purpose": "The shared five-case error taxonomy and constructors used by every tool.",
+      "surface": "See [authored signatures and interpretation](README.md). `McpToolError { code: invalid_input | not_found | manifest_unreadable | facet_not_recorded | internal_error; message }` and `invalidInputError(field, reason)`, `notFoundError(name, knownNames)`, `manifestUnreadableError(_detail)`, `absentFacetError(facetName)` and `internalError()`. manifestUnreadableError ignores its detail so no filesystem path reaches the response; internalError takes no arguments.",
+      "files": ["packages/mcp/src/errors.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/mcp#McpToolError",
+        "@ultimate/mcp#invalidInputError",
+        "@ultimate/mcp#notFoundError",
+        "@ultimate/mcp#manifestUnreadableError",
+        "@ultimate/mcp#absentFacetError",
+        "@ultimate/mcp#internalError"
+      ],
+      "evidence": [
+        {
+          "path": "packages/mcp/src/errors.ts",
+          "contains": "export function internalError(): McpToolError {"
+        },
+        {
+          "path": "packages/mcp/src/errors.ts",
+          "contains": "export interface McpToolError {"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for MCP tool error contract is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/mcp/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The MCP boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/mcp.json --out docs/inventory/mcp (run twice; authored README SHA-256 checked before and after)",
+          "revision": "642e7e27996c29dc6cca009f93a84e76ee74c9b8",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 12 source files accounted for, 24 root export identities attributed to public records, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, stdio server execution and product behavior are not asserted.",
+          "run": "docs/inventory/mcp/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "mcp.manifest",
+      "name": "Compatibility manifest reader",
+      "framework": "shared",
+      "purpose": "A minimal independent reader of the compatibility manifest copy shipped in the package dist, plus the module that holds its resolved path.",
+      "surface": "See [authored signatures and interpretation](README.md). `readCompatibilityManifest(): CompatibilityManifestEntry[] | McpToolError` and `CompatibilityManifestEntry { framework: angular | react | vue; frameworkVersionRange: string }`. It reads only those two fields, returns manifest_unreadable on read, parse, non-array or malformed-entry failure, and never falls back to an empty result. `COMPATIBILITY_MANIFEST_PATH` in src/manifest-path.ts is source-only and resolves to dist/compatibility-manifest.json under the nearest package.json directory, with no fallback to docs/.",
+      "files": ["packages/mcp/src/manifest.ts", "packages/mcp/src/manifest-path.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/mcp#readCompatibilityManifest",
+        "@ultimate/mcp#CompatibilityManifestEntry"
+      ],
+      "evidence": [
+        {
+          "path": "packages/mcp/src/manifest.ts",
+          "contains": "export function readCompatibilityManifest(): CompatibilityManifestEntry[] | McpToolError {"
+        },
+        {
+          "path": "packages/mcp/src/manifest-path.ts",
+          "contains": "export const COMPATIBILITY_MANIFEST_PATH = join("
+        }
+      ],
+      "relationships": ["mcp.errors", "mcp.tool-check-framework-compatibility"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Compatibility manifest reader is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/mcp/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The MCP boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/mcp.json --out docs/inventory/mcp (run twice; authored README SHA-256 checked before and after)",
+          "revision": "642e7e27996c29dc6cca009f93a84e76ee74c9b8",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 12 source files accounted for, 24 root export identities attributed to public records, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, stdio server execution and product behavior are not asserted.",
+          "run": "docs/inventory/mcp/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "mcp.tool-search-components",
+      "name": "search_components tool",
+      "framework": "shared",
+      "purpose": "Case-insensitive substring search over component name, category and description, optionally limited to components with a package for one framework.",
+      "surface": "See [authored signatures and interpretation](README.md). `searchComponents(input: SearchComponentsInput): SearchComponentsResult | McpToolError` with input {query: string; framework?: ng | react | vue} and result {matches: {name, category, description}[]}. Matches keep ALL_COMPONENTS order and are unranked; there is no fuzzy matching. The component set is the metadata registry's eight records.",
+      "files": ["packages/mcp/src/tools/search-components.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/mcp#searchComponents",
+        "@ultimate/mcp#SearchComponentsInput",
+        "@ultimate/mcp#SearchComponentsResult"
+      ],
+      "evidence": [
+        {
+          "path": "packages/mcp/src/tools/search-components.ts",
+          "contains": "export function searchComponents("
+        },
+        {
+          "path": "packages/mcp/src/tools/search-components.ts",
+          "contains": "component.name.toLowerCase().includes(needle)"
+        }
+      ],
+      "relationships": ["mcp.errors", "mcp.server", "package.ultimate.component-metadata.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for search_components tool is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/mcp/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The MCP boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/mcp.json --out docs/inventory/mcp (run twice; authored README SHA-256 checked before and after)",
+          "revision": "642e7e27996c29dc6cca009f93a84e76ee74c9b8",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 12 source files accounted for, 24 root export identities attributed to public records, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, stdio server execution and product behavior are not asserted.",
+          "run": "docs/inventory/mcp/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "mcp.tool-get-component",
+      "name": "get_component tool",
+      "framework": "shared",
+      "purpose": "Returns a component's metadata record, optionally narrowed to one framework's package and api entries.",
+      "surface": "See [authored signatures and interpretation](README.md). `getComponent(input: GetComponentInput): GetComponentResult | McpToolError` with input {name: string; framework?: ng | react | vue} and result ComponentMetadata. Without a framework the record is returned unmodified; with one, framework-neutral facets are kept and packages and api are narrowed to that framework, omitting api when absent. Unknown names return not_found listing the known components.",
+      "files": ["packages/mcp/src/tools/get-component.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/mcp#getComponent",
+        "@ultimate/mcp#GetComponentInput",
+        "@ultimate/mcp#GetComponentResult"
+      ],
+      "evidence": [
+        {
+          "path": "packages/mcp/src/tools/get-component.ts",
+          "contains": "export function getComponent(input: GetComponentInput): GetComponentResult | McpToolError {"
+        },
+        {
+          "path": "packages/mcp/src/tools/get-component.ts",
+          "contains": "const narrowedApi = component.api?.[input.framework];"
+        }
+      ],
+      "relationships": [
+        "mcp.errors",
+        "mcp.server",
+        "package.ultimate.component-metadata.root",
+        "package.ultimate.component-schema.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for get_component tool is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/mcp/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The MCP boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/mcp.json --out docs/inventory/mcp (run twice; authored README SHA-256 checked before and after)",
+          "revision": "642e7e27996c29dc6cca009f93a84e76ee74c9b8",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 12 source files accounted for, 24 root export identities attributed to public records, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, stdio server execution and product behavior are not asserted.",
+          "run": "docs/inventory/mcp/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "mcp.tool-get-component-api",
+      "name": "get_component_api tool",
+      "framework": "shared",
+      "purpose": "Returns a component's props and events for one framework exactly as recorded.",
+      "surface": "See [authored signatures and interpretation](README.md). `getComponentApi(input: GetComponentApiInput): GetComponentApiResult | McpToolError` with input {name: string; framework: ng | react | vue} and result {props: PropFact[]; events: EventFact[]}. A missing api entry for the framework returns facet_not_recorded rather than an empty result.",
+      "files": ["packages/mcp/src/tools/get-component-api.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/mcp#getComponentApi",
+        "@ultimate/mcp#GetComponentApiInput",
+        "@ultimate/mcp#GetComponentApiResult"
+      ],
+      "evidence": [
+        {
+          "path": "packages/mcp/src/tools/get-component-api.ts",
+          "contains": "export function getComponentApi(input: GetComponentApiInput): GetComponentApiResult | McpToolError {"
+        },
+        {
+          "path": "packages/mcp/src/tools/get-component-api.ts",
+          "contains": "return absentFacetError(`api.${input.framework}`);"
+        }
+      ],
+      "relationships": [
+        "mcp.errors",
+        "mcp.server",
+        "package.ultimate.component-metadata.root",
+        "package.ultimate.component-schema.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for get_component_api tool is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/mcp/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The MCP boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/mcp.json --out docs/inventory/mcp (run twice; authored README SHA-256 checked before and after)",
+          "revision": "642e7e27996c29dc6cca009f93a84e76ee74c9b8",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 12 source files accounted for, 24 root export identities attributed to public records, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, stdio server execution and product behavior are not asserted.",
+          "run": "docs/inventory/mcp/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "mcp.tool-get-component-accessibility",
+      "name": "get_component_accessibility tool",
+      "framework": "shared",
+      "purpose": "Returns a component's recorded accessibility facts, or an explicit not-recorded error.",
+      "surface": "See [authored signatures and interpretation](README.md). `getComponentAccessibility(input: GetComponentAccessibilityInput): GetComponentAccessibilityResult | McpToolError` with input {name: string} and result AccessibilityFacts. When the optional accessibility facet is absent it returns facet_not_recorded. In the current source only the Table record under packages/component-metadata/src/records declares an accessibility facet, so the other seven components return that error.",
+      "files": ["packages/mcp/src/tools/get-component-accessibility.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/mcp#getComponentAccessibility",
+        "@ultimate/mcp#GetComponentAccessibilityInput",
+        "@ultimate/mcp#GetComponentAccessibilityResult"
+      ],
+      "evidence": [
+        {
+          "path": "packages/mcp/src/tools/get-component-accessibility.ts",
+          "contains": "export function getComponentAccessibility("
+        },
+        {
+          "path": "packages/mcp/src/tools/get-component-accessibility.ts",
+          "contains": "return absentFacetError(\"accessibility\");"
+        }
+      ],
+      "relationships": [
+        "mcp.errors",
+        "mcp.server",
+        "package.ultimate.component-metadata.root",
+        "package.ultimate.component-schema.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for get_component_accessibility tool is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/mcp/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The MCP boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/mcp.json --out docs/inventory/mcp (run twice; authored README SHA-256 checked before and after)",
+          "revision": "642e7e27996c29dc6cca009f93a84e76ee74c9b8",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 12 source files accounted for, 24 root export identities attributed to public records, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, stdio server execution and product behavior are not asserted.",
+          "run": "docs/inventory/mcp/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "mcp.tool-check-framework-compatibility",
+      "name": "check_framework_compatibility tool",
+      "framework": "shared",
+      "purpose": "A single-axis check of a caller-supplied framework version against the manifest's frameworkVersionRange; not a full multi-axis compatibility verdict.",
+      "surface": "See [authored signatures and interpretation](README.md). `checkFrameworkCompatibility(input: CheckFrameworkCompatibilityInput): CheckFrameworkCompatibilityResult | McpToolError` with input {framework: angular | react | vue; frameworkVersion: string} and result {compatible: boolean; reason?: string}. It evaluates only frameworkVersionRange with a private caret, `||` and exact range matcher that duplicates, rather than imports, the CLI matcher; unsupported grammar fails closed. It makes no claim about the Ultimate framework package, UIX, theme, schema or CLI version axes. Note the vocabulary difference: this tool takes `angular`, while the other four tools take `ng`.",
+      "files": ["packages/mcp/src/tools/check-framework-compatibility.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/mcp#checkFrameworkCompatibility",
+        "@ultimate/mcp#CheckFrameworkCompatibilityInput",
+        "@ultimate/mcp#CheckFrameworkCompatibilityResult"
+      ],
+      "evidence": [
+        {
+          "path": "packages/mcp/src/tools/check-framework-compatibility.ts",
+          "contains": "export function checkFrameworkCompatibility("
+        },
+        {
+          "path": "packages/mcp/src/tools/check-framework-compatibility.ts",
+          "contains": "not imported from @ultimate/cli"
+        }
+      ],
+      "relationships": ["mcp.errors", "mcp.manifest", "mcp.server"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for check_framework_compatibility tool is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/mcp/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck, product tests and the installed-package smoke step are skipped for docs-only changes. The MCP boundary validation step has no docs-only condition in the workflow, but it was not executed for this inventory, so no result is claimed.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/mcp.json --out docs/inventory/mcp (run twice; authored README SHA-256 checked before and after)",
+          "revision": "642e7e27996c29dc6cca009f93a84e76ee74c9b8",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 12 source files accounted for, 24 root export identities attributed to public records, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution, stdio server execution and product behavior are not asserted.",
+          "run": "docs/inventory/mcp/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/mcp/scripts/rename-dts.mjs",
+      "reason": "Build tooling that renames emitted declaration files; supporting context, not an independent MCP item."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.component-metadata.root",
+      "batch": "Metadata registry (#153)",
+      "reason": "The registry ALL_COMPONENTS read by the four component tools is owned by the metadata registry inventory."
+    },
+    {
+      "id": "package.ultimate.component-schema.root",
+      "batch": "Component schema (#152)",
+      "reason": "The ComponentMetadata, PropFact, EventFact and AccessibilityFacts types are owned by the component-schema inventory."
+    }
+  ]
+}

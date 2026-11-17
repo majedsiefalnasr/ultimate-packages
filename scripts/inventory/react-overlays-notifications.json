@@ -1,0 +1,1215 @@
+{
+  "version": 1,
+  "scope": "react-overlays-notifications",
+  "revision": "7b296258f469ba37ed2367cafbf3f2dbf95398f0",
+  "packages": [
+    {
+      "path": "packages/react",
+      "roots": [
+        "packages/react/src/dialog",
+        "packages/react/src/drawer",
+        "packages/react/src/popover",
+        "packages/react/src/confirm-dialog",
+        "packages/react/src/confirm-popup",
+        "packages/react/src/tooltip",
+        "packages/react/src/toast",
+        "packages/react/src/message",
+        "packages/react/src/block-ui"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/react/src/dialog/index.ts"
+        },
+        {
+          "subpath": "./dialog",
+          "source": "packages/react/src/dialog/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/drawer/index.ts"
+        },
+        {
+          "subpath": "./drawer",
+          "source": "packages/react/src/drawer/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/popover/index.ts"
+        },
+        {
+          "subpath": "./popover",
+          "source": "packages/react/src/popover/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/confirm-dialog/index.ts"
+        },
+        {
+          "subpath": "./confirm-dialog",
+          "source": "packages/react/src/confirm-dialog/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/confirm-popup/index.ts"
+        },
+        {
+          "subpath": "./confirm-popup",
+          "source": "packages/react/src/confirm-popup/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/tooltip/index.ts"
+        },
+        {
+          "subpath": "./tooltip",
+          "source": "packages/react/src/tooltip/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/toast/index.ts"
+        },
+        {
+          "subpath": "./toast",
+          "source": "packages/react/src/toast/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/message/index.ts"
+        },
+        {
+          "subpath": "./message",
+          "source": "packages/react/src/message/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/block-ui/index.ts"
+        },
+        {
+          "subpath": "./block-ui",
+          "source": "packages/react/src/block-ui/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/react/src/dialog/dialog.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/dialog/dialog.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/drawer/drawer.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/drawer/drawer.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/popover/popover.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/popover/popover.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/confirm-dialog/confirm-dialog.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/confirm-dialog/confirm-dialog.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/confirm-popup/confirm-popup.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/confirm-popup/confirm-popup.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/tooltip/tooltip.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/tooltip/tooltip.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/toast/toast.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/toast/toast.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/message/message.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/message/message.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/block-ui/block-ui.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/block-ui/block-ui.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/dialog/dialog.api.mdx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/tooltip/tooltip.api.mdx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.react-core.base",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.styling",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.overlay",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.escape",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.focus-trap",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.zindex",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.scroll-lock",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.motion",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.confirmation",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.icons",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.hooks",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react.button",
+      "batch": "ticket-108",
+      "reason": "Detailed inventory remains owned by [#108](https://github.com/majedsiefalnasr/ultimate-packages/issues/108). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.component-metadata.records",
+      "batch": "ticket-153",
+      "reason": "Detailed inventory remains owned by [#153](https://github.com/majedsiefalnasr/ultimate-packages/issues/153). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.react.dialog",
+      "record": "react.dialog"
+    },
+    {
+      "id": "package.ultimate.react.drawer",
+      "record": "react.drawer"
+    },
+    {
+      "id": "package.ultimate.react.popover",
+      "record": "react.popover"
+    },
+    {
+      "id": "package.ultimate.react.confirm-dialog",
+      "record": "react.confirm-dialog"
+    },
+    {
+      "id": "package.ultimate.react.confirm-popup",
+      "record": "react.confirm-popup"
+    },
+    {
+      "id": "package.ultimate.react.tooltip",
+      "record": "react.tooltip"
+    },
+    {
+      "id": "package.ultimate.react.toast",
+      "record": "react.toast"
+    },
+    {
+      "id": "package.ultimate.react.message",
+      "record": "react.message"
+    },
+    {
+      "id": "package.ultimate.react.block-ui",
+      "record": "react.block-ui"
+    }
+  ],
+  "ownership": {
+    "ticket": 123,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "records": [
+    {
+      "id": "react.dialog",
+      "name": "React UDialog",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Modal dialog with header, footer, escape and mask dismissal, optional scroll lock, z-index stacking, leave motion and focus restore, rendered into a portal.",
+      "surface": "UDialog is a plain function component, not a forwardRef, rendered through Portal with the appendTo prop forwarded and onMount flipping an internal portalReady flag. Barrel exports: UDialog and type UDialogProps. UDialogProps: visible and onHide are required (onHide receives an optional event); header, footer and children are nodes; modal (default true), closable (true), showCloseIcon (true), closeOnEscape (false), dismissableMask (false), blockScroll (false), focusOnShow (true); baseZIndex, appendTo (an element or a function returning one), className, style and id. State: containerVisible starts from visible, gates mounting, and stays true through the leave motion, so UDialog returns null only when containerVisible is false. Escape: useGlobalEscapeKey is registered with priority [ESCAPE_PRIORITIES.DIALOG, displayOrder] only while closable && closeOnEscape && visible, and calls onHide. Mask: the mask element is rendered whether or not modal is set; its onPointerUp calls onHide only when dismissableMask && modal && the mask itself is the event target. The content sits inside a FocusTrap with autoFocus={focusOnShow}. Accessibility: the root has role=\"dialog\" and aria-modal={modal}; aria-labelledby (id plus _header) and aria-describedby (id plus _content) are always set, so aria-labelledby points at an id that does not exist when header is undefined. The header block is rendered only when header !== undefined, and the close button (hard-coded aria-label \"Close\", UTimesIcon) lives inside that block and is rendered only when closable && showCloseIcon, so without a header there is no close button whatever closable is. The footer is rendered only when footer !== undefined. Motion and side effects: a useUpdateEffect (it skips the first run) records document.activeElement when visible becomes true, so a dialog that is visible on first render records no element to restore. A second useUpdateEffect on [visible, containerVisible, portalReady] sets the \"modal\" z-index on the mask and registers a scroll lock when blockScroll is set. useMotion (name u-dialog) runs onAfterLeave, which clears the z-index, unregisters the lock, resets containerVisible and portalReady, and restores focus. onAfterLeave does not call onHide; the metadata record text for onHide (packages/component-metadata/src/records/dialog.ts, repeated in dialog.api.mdx) says onHide also fires when the leave motion completes, which the source does not do. Cleanup: the useUnmountEffect cleanup is the first-render closure and calls clearZIndex(maskRef.current) and, if blockScroll was set on the first render, unregisters the lock for the first-render id; refs are detached before passive unmount cleanups run, so the unmount cleanup receives null for the mask ref and ZIndex.clear does nothing. Closing through the motion path reverts the stack; unmounting while open does not. Style: classes mask, root, header, headerTitle, headerIcons, closeButton, closeButtonIcon, content and footer; CSS rules exist for u-dialog-mask, u-dialog, u-dialog-header, u-dialog-content and u-dialog-footer, and no rule exists for u-dialog-header-title, u-dialog-header-icons, u-dialog-close-button or u-dialog-close-icon. Links: @ultimate/component-metadata has a Dialog record (source map points at dialog.tsx) and @ultimate/uix-styles has a dialog entry; this source imports neither. dialog.api.mdx is generated documentation and is excluded. componentName dialog is passed to useComponentBase together with dialogStyleModule; the theme preset lookup uses that name as given and the Aura registry key dialog matches it. dialogStyleModule is a typed StyleModule exported from dialog-style.ts and is not part of the package barrels.",
+      "files": [
+        "packages/react/src/dialog/index.ts",
+        "packages/react/src/dialog/dialog.tsx",
+        "packages/react/src/dialog/dialog-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UDialog",
+        "@ultimate/react/dialog#UDialog",
+        "@ultimate/react#UDialogProps",
+        "@ultimate/react/dialog#UDialogProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/dialog/index.ts",
+          "contains": "export { UDialog } from"
+        },
+        {
+          "path": "packages/react/src/dialog/dialog.tsx",
+          "contains": "export function UDialog("
+        },
+        {
+          "path": "packages/react/src/dialog/dialog.tsx",
+          "contains": "useGlobalEscapeKey({"
+        },
+        {
+          "path": "packages/react/src/dialog/dialog.tsx",
+          "contains": "aria-labelledby={headerId}"
+        },
+        {
+          "path": "packages/react/src/dialog/dialog.tsx",
+          "contains": "header !== undefined &&"
+        },
+        {
+          "path": "packages/react/src/dialog/dialog.tsx",
+          "contains": "closable && showCloseIcon &&"
+        },
+        {
+          "path": "packages/react/src/dialog/dialog.tsx",
+          "contains": "dismissableMask && modal && maskRef.current === event.target"
+        },
+        {
+          "path": "packages/react/src/dialog/dialog.tsx",
+          "contains": "onAfterLeave: () => {"
+        },
+        {
+          "path": "packages/react/src/dialog/dialog.tsx",
+          "contains": "useUnmountEffect(() => {"
+        },
+        {
+          "path": "packages/react/src/dialog/dialog-style.ts",
+          "contains": "export const dialogStyleModule: StyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    dialog,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./dialog\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./dialog\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.dialog",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.react-core.overlay",
+        "package.ultimate.react-core.escape",
+        "package.ultimate.react-core.focus-trap",
+        "package.ultimate.react-core.zindex",
+        "package.ultimate.react-core.scroll-lock",
+        "package.ultimate.react-core.motion",
+        "package.ultimate.react-core.icons",
+        "package.ultimate.react-core.hooks",
+        "package.ultimate.themes.presets",
+        "package.ultimate.component-metadata.records"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/tooltip/ src/toast/ src/message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "7b296258f469ba37ed2367cafbf3f2dbf95398f0",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.drawer",
+      "name": "React UDrawer",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Edge-anchored panel with five positions, mask dismissal, escape handling, focus trap and z-index stacking, rendered into a portal.",
+      "surface": "UDrawer is a plain function component, not a forwardRef, rendered through Portal without appendTo. Barrel exports: UDrawer and type UDrawerProps. UDrawerProps: visible and onHide are required; header, children; position (\"left\" default, right, top, bottom, full); modal (default true), dismissible (true), closable (true), closeOnEscape (true); baseZIndex. There is no footer prop, scroll lock, appendTo or motion. Rendering: UDrawer returns null when visible is false. The mask is rendered whether or not modal is set (its CSS is position: fixed; inset: 0). Mask dismissal needs onMouseDown and onMouseUp on the mask itself with the same target, and dismissible && modal. Escape: useGlobalEscapeKey with priority [ESCAPE_PRIORITIES.SIDEBAR, displayOrder] while visible && closeOnEscape, calling onHide. The content is wrapped in a FocusTrap without autoFocus. The root has role=\"complementary\" and no accessible name. Structure: the header div is always rendered; the title span only when header !== undefined; the close button (aria-label \"Close\", UTimesIcon) whenever closable is set, with or without a header; an empty footer div is always rendered. Z-index: a useUpdateEffect on [visible, portalReady] sets the \"modal\" z-index on the mask when visible and calls clearZIndex(maskRef.current) otherwise; portalReady is set true by Portal onMount and is never reset. The mask is created by Portal one render after the effect runs, so the effect that runs when visible changes sees a null ref and only the re-run caused by portalReady turning true on the first open sets a z-index; later opens leave the mask without an inline z-index. When visible turns false the mask is already removed, so the clear receives null and the ZIndex entry is never reverted. The unmount cleanup receives null for the mask ref for the same reason. Style: classes mask, root, header, title, closeButton, content and footer; CSS rules exist for u-drawer-mask, u-drawer, the five u-drawer-position-* classes, u-drawer-header, u-drawer-content and u-drawer-footer, where the footer rule is an empty rule; no rule exists for u-drawer-title or u-drawer-close-button. componentName drawer is passed to useComponentBase together with drawerStyleModule; the theme preset lookup uses that name as given and the Aura registry key drawer matches it. drawerStyleModule is a typed StyleModule exported from drawer-style.ts and is not part of the package barrels.",
+      "files": [
+        "packages/react/src/drawer/index.ts",
+        "packages/react/src/drawer/drawer.tsx",
+        "packages/react/src/drawer/drawer-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UDrawer",
+        "@ultimate/react/drawer#UDrawer",
+        "@ultimate/react#UDrawerProps",
+        "@ultimate/react/drawer#UDrawerProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/drawer/index.ts",
+          "contains": "export { UDrawer } from"
+        },
+        {
+          "path": "packages/react/src/drawer/drawer.tsx",
+          "contains": "export function UDrawer("
+        },
+        {
+          "path": "packages/react/src/drawer/drawer.tsx",
+          "contains": "role=\"complementary\""
+        },
+        {
+          "path": "packages/react/src/drawer/drawer.tsx",
+          "contains": "onMouseUp={onMaskMouseUp}"
+        },
+        {
+          "path": "packages/react/src/drawer/drawer.tsx",
+          "contains": "<div className={cx(\"footer\")}></div>"
+        },
+        {
+          "path": "packages/react/src/drawer/drawer.tsx",
+          "contains": "const closeButton = closable && ("
+        },
+        {
+          "path": "packages/react/src/drawer/drawer-style.ts",
+          "contains": "export const drawerStyleModule: StyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    drawer,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./drawer\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./drawer\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.drawer",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.react-core.overlay",
+        "package.ultimate.react-core.escape",
+        "package.ultimate.react-core.focus-trap",
+        "package.ultimate.react-core.zindex",
+        "package.ultimate.react-core.icons",
+        "package.ultimate.react-core.hooks",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/tooltip/ src/toast/ src/message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "7b296258f469ba37ed2367cafbf3f2dbf95398f0",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.popover",
+      "name": "React UPopover",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Anchored popover controlled through an imperative handle, positioned below its target and dismissed by outside click, resize or Escape.",
+      "surface": "UPopover is React.forwardRef<UPopoverHandle, UPopoverProps>, rendered through Portal without appendTo. Barrel exports: UPopover and types UPopoverProps and UPopoverHandle. UPopoverProps: dismissable (default true), onShow, onHide, children. UPopoverHandle: toggle(event, target?), show(event, target?) and hide(), exposed through useImperativeHandle without a dependency array. show calls event.stopPropagation(), sets the target to target ?? event.currentTarget ?? event.target, then sets visible and calls onShow; toggle branches on the current visible; hide sets visible false and calls onHide, so hide() calls onHide even when already hidden. Dismissal: Escape hides regardless of dismissable (useGlobalEscapeKey with priority [ESCAPE_PRIORITIES.OVERLAY_PANEL, displayOrder] while visible); useOverlayListener hides on an outside click only when dismissable and on window resize always. Placement: align() computes top and left from the target rectangle plus scroll offsets and sets the \"overlay\" z-index, but align() returns early because contentRef.current is null when the effect runs: Portal is remounted on every open and renders its children one render after the effect, so no inline top, left or z-index is ever set by UPopover (the effect depends only on visible and stable callbacks and does not re-run once the panel exists). The effect cleanup calls clearZIndex only in the cleanup of an effect run made while hidden, which runs when the popover opens and still sees a null ref, so no clear ever reaches the panel element. The panel is positioned only by the CSS rule position: absolute; top: 0; left: 0. Accessibility: the panel has role=\"dialog\" and aria-modal={visible}, which is always true while rendered, and has no accessible name, focus trap or focus restore. Style: classes root and content; CSS rules exist for both u-popover and u-popover-content. componentName popover is passed to useComponentBase together with popoverStyleModule; the theme preset lookup uses that name as given and the Aura registry key popover matches it. popoverStyleModule is a typed StyleModule exported from popover-style.ts and is not part of the package barrels.",
+      "files": [
+        "packages/react/src/popover/index.ts",
+        "packages/react/src/popover/popover.tsx",
+        "packages/react/src/popover/popover-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UPopover",
+        "@ultimate/react/popover#UPopover",
+        "@ultimate/react#UPopoverProps",
+        "@ultimate/react/popover#UPopoverProps",
+        "@ultimate/react#UPopoverHandle",
+        "@ultimate/react/popover#UPopoverHandle"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/popover/index.ts",
+          "contains": "export { UPopover } from"
+        },
+        {
+          "path": "packages/react/src/popover/popover.tsx",
+          "contains": "React.forwardRef<UPopoverHandle, UPopoverProps>"
+        },
+        {
+          "path": "packages/react/src/popover/popover.tsx",
+          "contains": "React.useImperativeHandle(ref, () => ({ toggle, show, hide }));"
+        },
+        {
+          "path": "packages/react/src/popover/popover.tsx",
+          "contains": "if (!content || !target) return;"
+        },
+        {
+          "path": "packages/react/src/popover/popover.tsx",
+          "contains": "if (!visible) clearZIndex(contentRef.current);"
+        },
+        {
+          "path": "packages/react/src/popover/popover.tsx",
+          "contains": "meta.type === \"resize\" || dismissable"
+        },
+        {
+          "path": "packages/react/src/popover/popover.tsx",
+          "contains": "role=\"dialog\" aria-modal={visible}"
+        },
+        {
+          "path": "packages/react/src/popover/popover-style.ts",
+          "contains": "export const popoverStyleModule: StyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    popover,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./popover\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./popover\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.popover",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.react-core.overlay",
+        "package.ultimate.react-core.escape",
+        "package.ultimate.react-core.zindex",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/tooltip/ src/toast/ src/message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "7b296258f469ba37ed2367cafbf3f2dbf95398f0",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.confirm-dialog",
+      "name": "React UConfirmDialog",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Event-bus driven confirmation dialog composed from the dialog and button families, matched by group.",
+      "surface": "UConfirmDialog is a plain function component, not a forwardRef. Barrel exports: UConfirmDialog and type UConfirmDialogProps (group?: string). The component subscribes to confirmationEventBus \"confirm-dialog\" in an effect and unsubscribes on cleanup. The handler sets confirmation to null when options.visible === false for any group, otherwise stores the options only when options.group === group. The callbacks accept and reject come from the stored options; onAccept calls accept then hides, onReject calls reject then hides. It always renders the composed UDialog (from ../dialog/dialog) with visible={confirmation !== null}, onHide set to hide, header from options.header, modal from options.modal ?? true, closeOnEscape from options.closeOnEscape ?? true and className cx(\"root\"); dismissableMask, closable, showCloseIcon, blockScroll, appendTo, focusOnShow and baseZIndex are not passed. Escape handling and the close icon come from the composed UDialog and call hide, so the reject callback is not called; without options.header the composed dialog renders no header and therefore no close icon. The footer holds two UButton elements from ../button/button: reject (default label \"No\", severity secondary, text) unless rejectVisible === false, and accept (default label \"Yes\") unless acceptVisible === false. Because the footer reads confirmation?.… the labels fall back to \"No\" and \"Yes\" and the body empties while the composed dialog finishes its leave motion after hide. The icon option is rendered raw before a span with cx(\"message\"); cx(\"icon\") is never called although the style module defines the icon class. The options target is not read. Style: classes root, icon, message and footer; CSS rules exist for \".u-confirmdialog .u-dialog-content\", u-confirmdialog-icon, u-confirmdialog-message and u-confirmdialog-footer. The confirmDialog() helper that emits the event lives in @ultimate/react-core, not in this family. componentName confirm-dialog is passed to useComponentBase together with confirmDialogStyleModule; the theme preset lookup uses that name as given and the Aura registry key confirmdialog differs from the componentName confirm-dialog, so the preset lookup by name does not resolve to the registry entry. confirmDialogStyleModule is a typed StyleModule exported from confirm-dialog-style.ts and is not part of the package barrels.",
+      "files": [
+        "packages/react/src/confirm-dialog/index.ts",
+        "packages/react/src/confirm-dialog/confirm-dialog.tsx",
+        "packages/react/src/confirm-dialog/confirm-dialog-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UConfirmDialog",
+        "@ultimate/react/confirm-dialog#UConfirmDialog",
+        "@ultimate/react#UConfirmDialogProps",
+        "@ultimate/react/confirm-dialog#UConfirmDialogProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/confirm-dialog/index.ts",
+          "contains": "export { UConfirmDialog } from"
+        },
+        {
+          "path": "packages/react/src/confirm-dialog/confirm-dialog.tsx",
+          "contains": "export function UConfirmDialog("
+        },
+        {
+          "path": "packages/react/src/confirm-dialog/confirm-dialog.tsx",
+          "contains": "options.visible === false"
+        },
+        {
+          "path": "packages/react/src/confirm-dialog/confirm-dialog.tsx",
+          "contains": "options.group === group"
+        },
+        {
+          "path": "packages/react/src/confirm-dialog/confirm-dialog.tsx",
+          "contains": "closeOnEscape={confirmation?.closeOnEscape ?? true}"
+        },
+        {
+          "path": "packages/react/src/confirm-dialog/confirm-dialog.tsx",
+          "contains": "confirmation?.rejectLabel ?? \"No\""
+        },
+        {
+          "path": "packages/react/src/confirm-dialog/confirm-dialog.tsx",
+          "contains": "<span className={cx(\"message\")}>"
+        },
+        {
+          "path": "packages/react/src/confirm-dialog/confirm-dialog-style.ts",
+          "contains": "export const confirmDialogStyleModule: StyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    confirmdialog: confirmDialog,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./confirm-dialog\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./confirm-dialog\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.confirm-dialog",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.react-core.confirmation",
+        "package.ultimate.react.button",
+        "package.ultimate.react.dialog",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/tooltip/ src/toast/ src/message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "7b296258f469ba37ed2367cafbf3f2dbf95398f0",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.confirm-popup",
+      "name": "React UConfirmPopup",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Event-bus driven confirmation popup anchored to a target element, matched by group, with accept and reject buttons.",
+      "surface": "UConfirmPopup is a plain function component, not a forwardRef, rendered through Portal without appendTo. Barrel exports: UConfirmPopup and type UConfirmPopupProps (group?: string). It subscribes to confirmationEventBus \"confirm-popup\" like UConfirmDialog: visible === false hides for any group, otherwise the options are stored only when options.group === group. It reads message, icon, accept, reject, acceptLabel, rejectLabel, acceptVisible, rejectVisible and target, and ignores header, modal and closeOnEscape. Behaviour: Escape calls the reject callback, focuses the target and hides (useGlobalEscapeKey with priority [ESCAPE_PRIORITIES.OVERLAY_PANEL, displayOrder] while a confirmation is shown); onAccept calls accept, focuses the target and hides; outside click or resize hides without calling reject or restoring focus, and an outside click is ignored when the confirmation has no target because useOverlayListener treats a missing target as not outside. Placement: align() returns early while contentRef.current is null, which is the case when the effect runs for a first confirmation because Portal renders its children one render later; the effect re-runs with the panel attached, and align() positions the panel only when a new confirmation replaces an open one (top and left from the target rectangle plus scroll offsets, \"overlay\" z-index). That ZIndex entry is never reverted: the cleanup guard if (!confirmation) clearZIndex(...) belongs to the run that was made with a confirmation, so it does not clear when the confirmation is hidden or replaced. Structure: role=\"alertdialog\" without accessible name or description, no focus trap or initial focus; the icon is rendered raw and cx(\"icon\") is never called; footer buttons are the same UButton reject (\"No\", secondary, text) and accept (\"Yes\") pair as UConfirmDialog. Style: classes root, content, icon, message and footer; CSS rules exist for u-confirmpopup, u-confirmpopup-content and u-confirmpopup-footer, and none for u-confirmpopup-icon or u-confirmpopup-message. componentName confirm-popup is passed to useComponentBase together with confirmPopupStyleModule; the theme preset lookup uses that name as given and the Aura registry key confirmpopup differs from the componentName confirm-popup, so the preset lookup by name does not resolve to the registry entry. confirmPopupStyleModule is a typed StyleModule exported from confirm-popup-style.ts and is not part of the package barrels.",
+      "files": [
+        "packages/react/src/confirm-popup/index.ts",
+        "packages/react/src/confirm-popup/confirm-popup.tsx",
+        "packages/react/src/confirm-popup/confirm-popup-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UConfirmPopup",
+        "@ultimate/react/confirm-popup#UConfirmPopup",
+        "@ultimate/react#UConfirmPopupProps",
+        "@ultimate/react/confirm-popup#UConfirmPopupProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/confirm-popup/index.ts",
+          "contains": "export { UConfirmPopup } from"
+        },
+        {
+          "path": "packages/react/src/confirm-popup/confirm-popup.tsx",
+          "contains": "export function UConfirmPopup("
+        },
+        {
+          "path": "packages/react/src/confirm-popup/confirm-popup.tsx",
+          "contains": "callback: () => onReject(),"
+        },
+        {
+          "path": "packages/react/src/confirm-popup/confirm-popup.tsx",
+          "contains": "if (meta.valid) hide();"
+        },
+        {
+          "path": "packages/react/src/confirm-popup/confirm-popup.tsx",
+          "contains": "if (!confirmation) clearZIndex(contentRef.current);"
+        },
+        {
+          "path": "packages/react/src/confirm-popup/confirm-popup.tsx",
+          "contains": "role=\"alertdialog\""
+        },
+        {
+          "path": "packages/react/src/confirm-popup/confirm-popup.tsx",
+          "contains": "confirmation.rejectLabel ?? \"No\""
+        },
+        {
+          "path": "packages/react/src/confirm-popup/confirm-popup-style.ts",
+          "contains": "export const confirmPopupStyleModule: StyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    confirmpopup: confirmPopup,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./confirm-popup\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./confirm-popup\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.confirm-popup",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.react-core.overlay",
+        "package.ultimate.react-core.escape",
+        "package.ultimate.react-core.zindex",
+        "package.ultimate.react-core.confirmation",
+        "package.ultimate.react.button",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/tooltip/ src/toast/ src/message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "7b296258f469ba37ed2367cafbf3f2dbf95398f0",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.tooltip",
+      "name": "React UTooltip",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Tooltip bound to a target element or selector with hover or focus triggers, delays, aria-describedby wiring and escape handling.",
+      "surface": "UTooltip is a plain function component, not a forwardRef returning a ReactElement or null, rendered through Portal without appendTo. Barrel exports: UTooltip and type UTooltipProps. UTooltipProps: target (a ref, an element, a selector string or an array of selectors) is required; content, position (\"right\" default, left, top, bottom), event (\"hover\" default, focus, both), showDelay (0), hideDelay (0), disabled (false), closeOnEscape (false), autoZIndex (true), baseZIndex, id, className. The array form uses only target[0]. Listeners: listeners are attached once on mount (useMountEffect) to the target resolved at that time, using the show and hide functions of the first render, so later changes of target, event, disabled, content and the delays are not rebound; the unmount cleanup removes the same listeners, clears both timers, removes aria-describedby and calls clearZIndex(panelRef.current). Behaviour: show returns when disabled or content is empty, otherwise clears the hide timer and sets visible after showDelay; hide clears the show timer and sets visible false after hideDelay. Escape hides while visible && closeOnEscape (priority [ESCAPE_PRIORITIES.TOOLTIP, displayOrder], via useGlobalEscapeKey). A useUpdateEffect on [visible] adds or removes the panel id in the target aria-describedby and sets the \"tooltip\" z-index when autoZIndex, or clears it. The component returns null when content is empty. Panel: role=\"tooltip\" with aria-hidden={!visible}, which is always false because Portal renders the panel only while visible; the id comes from id or useId. When visible turns false the panel is already removed, so the clear receives null and the ZIndex entry is never reverted; the unmount cleanup receives null for the same reason when unmounted while visible. Placement: no code in tooltip.tsx assigns top or left; the stylesheet rule .u-tooltip is position: absolute with top: -9999px; left: -9999px, and no rule exists for u-tooltip-right, u-tooltip-left, u-tooltip-top and u-tooltip-bottom, which the position prop adds as a class. u-tooltip-text has a rule. Links: @ultimate/component-metadata has a Tooltip record and @ultimate/uix-styles has a tooltip entry; this source imports neither. tooltip.api.mdx is generated documentation and is excluded. componentName tooltip is passed to useComponentBase together with tooltipStyleModule; the theme preset lookup uses that name as given and the Aura registry key tooltip matches it. tooltipStyleModule is a typed StyleModule exported from tooltip-style.ts and is not part of the package barrels.",
+      "files": [
+        "packages/react/src/tooltip/index.ts",
+        "packages/react/src/tooltip/tooltip.tsx",
+        "packages/react/src/tooltip/tooltip-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UTooltip",
+        "@ultimate/react/tooltip#UTooltip",
+        "@ultimate/react#UTooltipProps",
+        "@ultimate/react/tooltip#UTooltipProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/tooltip/index.ts",
+          "contains": "export { UTooltip } from"
+        },
+        {
+          "path": "packages/react/src/tooltip/tooltip.tsx",
+          "contains": "export function UTooltip("
+        },
+        {
+          "path": "packages/react/src/tooltip/tooltip.tsx",
+          "contains": "document.querySelector<HTMLElement>(target[0])"
+        },
+        {
+          "path": "packages/react/src/tooltip/tooltip.tsx",
+          "contains": "useMountEffect(() => {"
+        },
+        {
+          "path": "packages/react/src/tooltip/tooltip.tsx",
+          "contains": "clearZIndex(panelRef.current);"
+        },
+        {
+          "path": "packages/react/src/tooltip/tooltip.tsx",
+          "contains": "role=\"tooltip\""
+        },
+        {
+          "path": "packages/react/src/tooltip/tooltip.tsx",
+          "contains": "aria-hidden={!visible}"
+        },
+        {
+          "path": "packages/react/src/tooltip/tooltip-style.ts",
+          "contains": "export const tooltipStyleModule: StyleModule"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    tooltip,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./tooltip\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./tooltip\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.tooltip",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.react-core.overlay",
+        "package.ultimate.react-core.escape",
+        "package.ultimate.react-core.zindex",
+        "package.ultimate.react-core.hooks",
+        "package.ultimate.themes.presets",
+        "package.ultimate.component-metadata.records"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/tooltip/ src/toast/ src/message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "7b296258f469ba37ed2367cafbf3f2dbf95398f0",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.toast",
+      "name": "React UToast",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Imperative toast stack with seven positions, severities and timed or sticky messages.",
+      "surface": "UToast is React.forwardRef<UToastHandle, UToastProps> and is not rendered through a portal. Barrel exports: UToast and types UToastProps, UToastHandle and UToastMessageOptions. UToastProps: position (top-right default, top-left, bottom-right, bottom-left, top-center, bottom-center, center), life (3000), className. UToastHandle: show(message or array) and clear(), created with useImperativeHandle and dependency [push]. UToastMessageOptions: severity (success, info, warn, error, secondary, contrast), summary, detail, life, sticky, closable and a string index signature; extra keys are accepted but never read, and an id key is overwritten by the generated id. There is no context, provider, hook or service; the handle is the only API. State: a module-level counter nextId is shared by every UToast instance and is never reset. push appends an entry, and unless sticky schedules a timer for entry.life ?? life, so life 0 schedules a zero-delay timeout; remove and clear cancel timers and the unmount effect clears them all. There are no onShow or onRemove callbacks. Rendering: the container div is always rendered (class u-toast plus the position class), carries no role and does not use useZIndex; each message has role=\"alert\", aria-live=\"assertive\" and aria-atomic=\"true\"; summary and detail are rendered only when truthy; the close button (hard-coded aria-label \"Close\", text ×) is rendered unless closable === false. Style: the stylesheet gives .u-toast position: fixed and z-index 1200, seven position rules, the u-toast-message rule, six severity rules using var(--u-toast-<severity>-bg) and var(--u-toast-<severity>-color) with fallbacks, and rules for content, summary, detail and close button. Classes: root, message, messageContent, summary, detail, closeButton. componentName toast is passed to useComponentBase together with toastStyleModule; the theme preset lookup uses that name as given and the Aura registry key toast matches it. toastStyleModule is an untyped style module (a plain { css, classes } object) exported from toast-style.ts and is not part of the package barrels. No @ultimate/uix-styles entry exists for toast; the style file says so in a comment and no source file in this family imports @ultimate/uix-styles.",
+      "files": [
+        "packages/react/src/toast/index.ts",
+        "packages/react/src/toast/toast.tsx",
+        "packages/react/src/toast/toast-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UToast",
+        "@ultimate/react/toast#UToast",
+        "@ultimate/react#UToastProps",
+        "@ultimate/react/toast#UToastProps",
+        "@ultimate/react#UToastHandle",
+        "@ultimate/react/toast#UToastHandle",
+        "@ultimate/react#UToastMessageOptions",
+        "@ultimate/react/toast#UToastMessageOptions"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/toast/index.ts",
+          "contains": "export { UToast } from"
+        },
+        {
+          "path": "packages/react/src/toast/toast.tsx",
+          "contains": "let nextId = 0;"
+        },
+        {
+          "path": "packages/react/src/toast/toast.tsx",
+          "contains": "React.forwardRef<UToastHandle, UToastProps>"
+        },
+        {
+          "path": "packages/react/src/toast/toast.tsx",
+          "contains": "entry.life ?? life"
+        },
+        {
+          "path": "packages/react/src/toast/toast.tsx",
+          "contains": "aria-live=\"assertive\""
+        },
+        {
+          "path": "packages/react/src/toast/toast.tsx",
+          "contains": "message.closable !== false"
+        },
+        {
+          "path": "packages/react/src/toast/toast-style.ts",
+          "contains": "export const toastStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    toast,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./toast\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./toast\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.toast",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/tooltip/ src/toast/ src/message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "7b296258f469ba37ed2367cafbf3f2dbf95398f0",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.message",
+      "name": "React UMessage",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Inline severity message with optional icon, close button and timed dismissal.",
+      "surface": "UMessage is React.forwardRef<HTMLDivElement, UMessageProps> and is not rendered through a portal. Barrel exports: UMessage and type UMessageProps. UMessageProps: severity (success, info, warn, error, secondary, contrast; default \"info\"), closable (false), icon, closeIcon, life, closeAriaLabel (\"Close\"), onClose({ originalEvent }), children, className. The forwarded ref is the root div. State: visible starts true and is never set back to true. An effect on [life] returns immediately when life is falsy, otherwise hides after life milliseconds and clears the timer on cleanup; timer dismissal does not call onClose, while the close button calls onClose with the click event after hiding. Hidden returns null. Icons: a default icon class is mapped for info (pi pi-info-circle), success (pi pi-check), warn (pi pi-exclamation-triangle) and error (pi pi-times-circle); secondary and contrast have no default icon, and an icon prop replaces the default. The pi classes are only referenced as class names; the style module defines no rule for them. Accessibility: root role=\"alert\", aria-live=\"polite\" and data-severity; the close button label comes from closeAriaLabel and the default close content is ×. Style: classes root, content, icon, text, closeButton; rules for u-message, u-message-content, u-message-icon, u-message-text, u-message-close-button and six severity rules using var(--u-message-<severity>-bg) and var(--u-message-<severity>-color) with fallbacks. componentName message is passed to useComponentBase together with messageStyleModule; the theme preset lookup uses that name as given and the Aura registry key message matches it. messageStyleModule is an untyped style module (a plain { css, classes } object) exported from message-style.ts and is not part of the package barrels. No @ultimate/uix-styles entry exists for message; the style file says so in a comment and no source file in this family imports @ultimate/uix-styles.",
+      "files": [
+        "packages/react/src/message/index.ts",
+        "packages/react/src/message/message.tsx",
+        "packages/react/src/message/message-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UMessage",
+        "@ultimate/react/message#UMessage",
+        "@ultimate/react#UMessageProps",
+        "@ultimate/react/message#UMessageProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/message/index.ts",
+          "contains": "export { UMessage } from"
+        },
+        {
+          "path": "packages/react/src/message/message.tsx",
+          "contains": "React.forwardRef<HTMLDivElement, UMessageProps>"
+        },
+        {
+          "path": "packages/react/src/message/message.tsx",
+          "contains": "if (!life) return;"
+        },
+        {
+          "path": "packages/react/src/message/message.tsx",
+          "contains": "onClose?.({ originalEvent: event });"
+        },
+        {
+          "path": "packages/react/src/message/message.tsx",
+          "contains": "aria-live=\"polite\""
+        },
+        {
+          "path": "packages/react/src/message/message.tsx",
+          "contains": "warn: \"pi pi-exclamation-triangle\""
+        },
+        {
+          "path": "packages/react/src/message/message-style.ts",
+          "contains": "export const messageStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    message,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./message\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./message\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.message",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/tooltip/ src/toast/ src/message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "7b296258f469ba37ed2367cafbf3f2dbf95398f0",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.block-ui",
+      "name": "React UBlockUI",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Wrapper that overlays its content with a blocking mask, optionally full screen with a body scroll lock.",
+      "surface": "UBlockUI is React.forwardRef<HTMLDivElement, UBlockUIProps> and is not rendered through a portal. Barrel exports: UBlockUI and type UBlockUIProps. UBlockUIProps: blocked (default false), autoZIndex (true), baseZIndex (0), fullScreen (false), onBlocked, onUnblocked, children, className, style. The forwarded ref is the root div. State: a module-level counter instanceCount is incremented inside the useRef initial-value expression, which is evaluated on every render, so the counter advances on every render while only the first id is kept. An effect keyed on [blocked] (the hooks dependency rule is not satisfied) returns when blocked equals the previous value, so blocked on first render runs the block branch on mount: it registers a scroll lock when fullScreen, sets the \"modal\" z-index on the mask when autoZIndex, and calls onBlocked. The unblock branch unregisters the lock when fullScreen, clears the z-index and calls onUnblocked. The unmount cleanup unregisters the lock only when it was blocked and when fullScreen was set on the first render; it does not call clearZIndex. Z-index: baseZIndex defaults to 0 and is forwarded as the base value, so the modal bucket value of useZIndex is not used. The mask is removed on unblock before the effect runs, so the clear receives null and the ZIndex entry is never reverted. Rendering: the root div has aria-busy={blocked}; when blocked it renders a mask div after the children with no role, no aria-hidden and no content; children are not made inert. Style: CSS has exactly three rules, .u-blockui-container (position: relative), .u-blockui-mask (flex layout and a translucent background) and .u-blockui-mask-document (position: fixed covering the viewport); no CSS rule gives the non-fullScreen mask a position, so it follows the children in normal flow. Classes: root, mask. componentName block-ui is passed to useComponentBase together with blockUiStyleModule; the theme preset lookup uses that name as given and the Aura registry key blockui differs from the componentName block-ui, so the preset lookup by name does not resolve to the registry entry. blockUiStyleModule is an untyped style module (a plain { css, classes } object) exported from block-ui-style.ts and is not part of the package barrels. No @ultimate/uix-styles entry exists for block-ui; the style file says so in a comment and no source file in this family imports @ultimate/uix-styles.",
+      "files": [
+        "packages/react/src/block-ui/index.ts",
+        "packages/react/src/block-ui/block-ui.tsx",
+        "packages/react/src/block-ui/block-ui-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UBlockUI",
+        "@ultimate/react/block-ui#UBlockUI",
+        "@ultimate/react#UBlockUIProps",
+        "@ultimate/react/block-ui#UBlockUIProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/block-ui/index.ts",
+          "contains": "export { UBlockUI } from"
+        },
+        {
+          "path": "packages/react/src/block-ui/block-ui.tsx",
+          "contains": "let instanceCount = 0;"
+        },
+        {
+          "path": "packages/react/src/block-ui/block-ui.tsx",
+          "contains": "`u-block-ui-${++instanceCount}`"
+        },
+        {
+          "path": "packages/react/src/block-ui/block-ui.tsx",
+          "contains": "if (blocked === wasBlockedRef.current) {"
+        },
+        {
+          "path": "packages/react/src/block-ui/block-ui.tsx",
+          "contains": "aria-busy={blocked}"
+        },
+        {
+          "path": "packages/react/src/block-ui/block-ui.tsx",
+          "contains": "setZIndex(\"modal\", maskRef.current, baseZIndex);"
+        },
+        {
+          "path": "packages/react/src/block-ui/block-ui-style.ts",
+          "contains": "export const blockUiStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    blockui: blockUI,"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./block-ui\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./block-ui\": {"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"test\": \"vitest run\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.block-ui",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.react-core.zindex",
+        "package.ultimate.react-core.scroll-lock",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded React product specs for the overlay and notification families were not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/dialog/ src/drawer/ src/popover/ src/confirm-dialog/ src/confirm-popup/ src/tooltip/ src/toast/ src/message/ src/block-ui/",
+          "outcome": "not-run",
+          "revision": "7b296258f469ba37ed2367cafbf3f2dbf95398f0",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    }
+  ]
+}

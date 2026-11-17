@@ -1,0 +1,8 @@
+{
+  "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/data-view src/order-list src/organization-chart src/pick-list src/timeline --config vitest-react135.tmp.config.mjs --maxWorkers=1 --no-file-parallelism",
+  "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+  "outcome": "passed",
+  "output": "Vitest 2.1.9, Node v24.15.0: Test Files 5 passed (5); Tests 63 passed (63): pick-list 30, order-list 13, data-view 10, organization-chart 5, timeline 5.",
+  "preparation": "PATH=\"$HOME/.nvm/versions/node/v24.15.0/bin:$PATH\"; workspace dependency artifacts were already built, so no dependency build or failed first attempt was needed. The temporary PostCSS override was used because the same host limitation was recorded for #132.",
+  "limitations": "Temporary config vitest-react135.tmp.config.mjs (copied into packages/react for the run, then removed; not committed) set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence."
+}

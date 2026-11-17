@@ -1,0 +1,969 @@
+{
+  "version": 1,
+  "scope": "angular-menu-navigation",
+  "revision": "e661ec4539053d25da39594441225520e5dd07ab",
+  "packages": [
+    {
+      "path": "packages/ng",
+      "roots": [
+        "packages/ng/src/menu",
+        "packages/ng/src/context-menu",
+        "packages/ng/src/breadcrumb",
+        "packages/ng/src/mega-menu",
+        "packages/ng/src/menubar",
+        "packages/ng/src/panel-menu",
+        "packages/ng/src/tiered-menu",
+        "packages/ng/src/dock",
+        "packages/ng/src/speed-dial"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/menu/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/context-menu/index.ts"
+        },
+        {
+          "subpath": "./context-menu",
+          "source": "packages/ng/src/context-menu/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/breadcrumb/index.ts"
+        },
+        {
+          "subpath": "./breadcrumb",
+          "source": "packages/ng/src/breadcrumb/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/mega-menu/index.ts"
+        },
+        {
+          "subpath": "./mega-menu",
+          "source": "packages/ng/src/mega-menu/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/menubar/index.ts"
+        },
+        {
+          "subpath": "./menubar",
+          "source": "packages/ng/src/menubar/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/panel-menu/index.ts"
+        },
+        {
+          "subpath": "./panel-menu",
+          "source": "packages/ng/src/panel-menu/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/tiered-menu/index.ts"
+        },
+        {
+          "subpath": "./tiered-menu",
+          "source": "packages/ng/src/tiered-menu/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/dock/index.ts"
+        },
+        {
+          "subpath": "./dock",
+          "source": "packages/ng/src/dock/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/speed-dial/index.ts"
+        },
+        {
+          "subpath": "./speed-dial",
+          "source": "packages/ng/src/speed-dial/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/ng/src/menu/menu.api.mdx",
+      "reason": "Generated API documentation; supporting metadata view, not additional product source."
+    },
+    {
+      "path": "packages/ng/src/menu/menu.spec.ts",
+      "reason": "Behavioral test source; supporting evidence, not a runtime API or passing execution."
+    },
+    {
+      "path": "packages/ng/src/menu/menu.stories.ts",
+      "reason": "Storybook example source; supporting usage context, not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/context-menu/context-menu.spec.ts",
+      "reason": "Behavioral test source; supporting evidence, not a runtime API or passing execution."
+    },
+    {
+      "path": "packages/ng/src/context-menu/context-menu.stories.ts",
+      "reason": "Storybook example source; supporting usage context, not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/breadcrumb/breadcrumb.spec.ts",
+      "reason": "Behavioral test source; supporting evidence, not a runtime API or passing execution."
+    },
+    {
+      "path": "packages/ng/src/breadcrumb/breadcrumb.stories.ts",
+      "reason": "Storybook example source; supporting usage context, not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/mega-menu/mega-menu.spec.ts",
+      "reason": "Behavioral test source; supporting evidence, not a runtime API or passing execution."
+    },
+    {
+      "path": "packages/ng/src/mega-menu/mega-menu.stories.ts",
+      "reason": "Storybook example source; supporting usage context, not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/menubar/menubar.spec.ts",
+      "reason": "Behavioral test source; supporting evidence, not a runtime API or passing execution."
+    },
+    {
+      "path": "packages/ng/src/menubar/menubar.stories.ts",
+      "reason": "Storybook example source; supporting usage context, not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/panel-menu/panel-menu.spec.ts",
+      "reason": "Behavioral test source; supporting evidence, not a runtime API or passing execution."
+    },
+    {
+      "path": "packages/ng/src/panel-menu/panel-menu.stories.ts",
+      "reason": "Storybook example source; supporting usage context, not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/tiered-menu/tiered-menu.spec.ts",
+      "reason": "Behavioral test source; supporting evidence, not a runtime API or passing execution."
+    },
+    {
+      "path": "packages/ng/src/tiered-menu/tiered-menu.stories.ts",
+      "reason": "Storybook example source; supporting usage context, not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/dock/dock.spec.ts",
+      "reason": "Behavioral test source; supporting evidence, not a runtime API or passing execution."
+    },
+    {
+      "path": "packages/ng/src/dock/dock.stories.ts",
+      "reason": "Storybook example source; supporting usage context, not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/speed-dial/speed-dial.spec.ts",
+      "reason": "Behavioral test source; supporting evidence, not a runtime API or passing execution."
+    },
+    {
+      "path": "packages/ng/src/speed-dial/speed-dial.stories.ts",
+      "reason": "Storybook example source; supporting usage context, not exported runtime API."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.component-metadata.records",
+      "batch": "ticket-153",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.api",
+      "batch": "ticket-148",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.basecomponent",
+      "batch": "ticket-148",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.id",
+      "batch": "ticket-148",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.overlay",
+      "batch": "ticket-148",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng.ripple",
+      "batch": "ticket-140",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.ng.tooltip",
+      "batch": "ticket-122",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-styles.menu",
+      "batch": "ticket-146",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-utils.escape",
+      "batch": "ticket-144",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-utils.zindex",
+      "batch": "ticket-144",
+      "reason": "External reconciled identity; this batch describes its source relationship without completing the owning ticket."
+    }
+  ],
+  "ownership": {
+    "ticket": 125,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.ng.menu",
+      "record": "angular.menu"
+    },
+    {
+      "id": "package.ultimate.ng.context-menu",
+      "record": "angular.context-menu"
+    },
+    {
+      "id": "package.ultimate.ng.breadcrumb",
+      "record": "angular.breadcrumb"
+    },
+    {
+      "id": "package.ultimate.ng.mega-menu",
+      "record": "angular.mega-menu"
+    },
+    {
+      "id": "package.ultimate.ng.menubar",
+      "record": "angular.menubar"
+    },
+    {
+      "id": "package.ultimate.ng.panel-menu",
+      "record": "angular.panel-menu"
+    },
+    {
+      "id": "package.ultimate.ng.tiered-menu",
+      "record": "angular.tiered-menu"
+    },
+    {
+      "id": "package.ultimate.ng.dock",
+      "record": "angular.dock"
+    },
+    {
+      "id": "package.ultimate.ng.speed-dial",
+      "record": "angular.speed-dial"
+    }
+  ],
+  "records": [
+    {
+      "id": "angular.menu",
+      "name": "Angular UMenu",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Flat navigation or command list, inline or imperatively opened as a popup anchored to a triggering element.",
+      "surface": "Selector u-menu. Inputs model: UMenuItem[] = [], popup=false (booleanAttribute), appendTo?: HTMLElement | (() => HTMLElement), baseZIndex=0 (numberAttribute), closeOnEscape=true (booleanAttribute). Outputs onShow/onHide: void. Public toggle(event), show(event), hide(event?) manage popup visibility; show is a no-op in inline mode. Enabled item activation calls command with the raw MouseEvent and closes a popup. ArrowDown/ArrowUp move native focus among anchors, skipping disabled anchors. Provides ComponentIdGenerator for composed UTooltip; composes URipple, RouterModule and UOverlay. Resolves appendTo per open; positions below target in a microtask, sets ZIndex, and registers outside-click/resize and display-order Escape resources released on hide/destroy. MenuClassesParams (popup/focused/disabled) and menuStyleModule are source-only style exports, not barrel API. menuStyleModule wraps @ultimate/uix-styles/menu CSS with local class resolvers. Extends UBaseComponent, which owns shared component lifecycle/style handling. Consumer availability: @ultimate/ng#UMenu via selected root/family barrels and manifest entries; source-only exports mentioned above are not package barrel API. All remaining class state, event/DOM handlers and local css/classes constants in the listed files are implementation parts owned by this record, not independent products. Aura preset registers the menu component token family; this is source configuration, not rendered-theme verification. MENU_METADATA in component-metadata records links to the Angular implementation; generated menu.api.mdx is supporting documentation. Inherited inputs dt?: Record<string,unknown> and unstyled?: boolean come from UBaseComponent; its ngOnInit registers theme variables and component CSS through the per-document stylesheet. Shared UMenuItem supports optional label/icon/url/routerLink/command/items/separator/disabled/visible/target/tooltip; each component consumes only the fields described above, not automatically every field in the shared type.",
+      "files": [
+        "packages/ng/src/menu/index.ts",
+        "packages/ng/src/menu/menu-style.ts",
+        "packages/ng/src/menu/menu.ts"
+      ],
+      "exports": ["@ultimate/ng#UMenu"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/menu/menu.ts",
+          "contains": "export class UMenu extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/menu/index.ts",
+          "contains": "export { UMenu }"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "./menu"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"name\": \"@ultimate/ng\""
+        },
+        {
+          "path": "packages/ng/src/menu/menu-style.ts",
+          "contains": "export const menuStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    menu,"
+        },
+        {
+          "path": "packages/component-metadata/src/records/menu.ts",
+          "contains": "export const MENU_METADATA"
+        },
+        {
+          "path": "packages/ng-core/src/api/types.ts",
+          "contains": "command?: (event: unknown) => void;"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.api",
+        "package.ultimate.themes.presets",
+        "package.ultimate.ng-core.overlay",
+        "package.ultimate.uix-utils.escape",
+        "package.ultimate.uix-utils.zindex",
+        "package.ultimate.ng-core.id",
+        "package.ultimate.ng.ripple",
+        "package.ultimate.ng.tooltip",
+        "package.ultimate.uix-styles.menu",
+        "package.ultimate.component-metadata.records"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, owned composition/types/helpers/style source and supporting specs exist; source inspection is not execution."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Angular menu product checks NOT RUN.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/menu/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "e661ec4539053d25da39594441225520e5dd07ab",
+          "limitations": "Explicit resource limits prohibit installs, builds, Vitest, ng test, Storybook and watchers. No product runtime success or failure inferred from source/test presence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step invokes root pnpm run test, whose recursive command includes Angular test. Configuration only: no successful CI execution or branch protection inferred; test:scripts selects provenance tests, not these inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on !cancelled() and classification scope != docs; dependencies can prevent assertions. Remote CI not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.context-menu",
+      "name": "Angular UContextMenu",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Context-triggered flat command list positioned at pointer page coordinates.",
+      "surface": "Selector u-context-menu. Inputs model: UMenuItem[] = [], global=false. Outputs onShow/onHide: void and onItemSelect: {originalEvent: MouseEvent; item: UMenuItem}. Public show(event: MouseEvent) suppresses default and propagation, reads pageX/pageY, binds listeners and Escape, positions afterNextRender and focuses the list; hide() releases dismissal listeners and Escape. global is read in ngOnInit to bind document contextmenu; otherwise the host event triggers show. Template uses UOverlay appendTo body and aria-activedescendant on a tabindex=0 list. ArrowDown/ArrowUp (non-wrapping), Home/End, Enter/Space activation and Tab dismissal operate on eligible model entries. Enabled activation invokes command with {originalEvent,item}, emits onItemSelect then hides. ContextMenuClassesParams (disabled/focused) and contextMenuStyleModule are source-only exports owned here; local CSS consumes contextmenu tokens. Extends UBaseComponent, which owns shared component lifecycle/style handling. Consumer availability: @ultimate/ng#UContextMenu, @ultimate/ng/context-menu#UContextMenu via selected root/family barrels and manifest entries; source-only exports mentioned above are not package barrel API. All remaining class state, event/DOM handlers and local css/classes constants in the listed files are implementation parts owned by this record, not independent products. Aura preset registers the contextmenu component token family; this is source configuration, not rendered-theme verification. Metadata relationship is not inferred from a matching component name; this record relies on direct implementation and styling evidence. Inherited inputs dt?: Record<string,unknown> and unstyled?: boolean come from UBaseComponent; its ngOnInit registers theme variables and component CSS through the per-document stylesheet. Shared UMenuItem supports optional label/icon/url/routerLink/command/items/separator/disabled/visible/target/tooltip; each component consumes only the fields described above, not automatically every field in the shared type.",
+      "files": [
+        "packages/ng/src/context-menu/context-menu-style.ts",
+        "packages/ng/src/context-menu/context-menu.ts",
+        "packages/ng/src/context-menu/index.ts"
+      ],
+      "exports": ["@ultimate/ng#UContextMenu", "@ultimate/ng/context-menu#UContextMenu"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/context-menu/context-menu.ts",
+          "contains": "export class UContextMenu extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/context-menu/index.ts",
+          "contains": "export { UContextMenu }"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "@ultimate/ng/context-menu"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./context-menu\""
+        },
+        {
+          "path": "packages/ng/src/context-menu/context-menu-style.ts",
+          "contains": "export const contextMenuStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    contextmenu:"
+        },
+        {
+          "path": "packages/ng-core/src/api/types.ts",
+          "contains": "command?: (event: unknown) => void;"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.api",
+        "package.ultimate.themes.presets",
+        "package.ultimate.ng-core.overlay",
+        "package.ultimate.uix-utils.escape",
+        "package.ultimate.uix-utils.zindex"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, owned composition/types/helpers/style source and supporting specs exist; source inspection is not execution."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Angular context-menu product checks NOT RUN.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/context-menu/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "e661ec4539053d25da39594441225520e5dd07ab",
+          "limitations": "Explicit resource limits prohibit installs, builds, Vitest, ng test, Storybook and watchers. No product runtime success or failure inferred from source/test presence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step invokes root pnpm run test, whose recursive command includes Angular test. Configuration only: no successful CI execution or branch protection inferred; test:scripts selects provenance tests, not these inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on !cancelled() and classification scope != docs; dependencies can prevent assertions. Remote CI not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.breadcrumb",
+      "name": "Angular UBreadcrumb",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Trail of navigation links with optional home item and separators.",
+      "surface": "Selector u-breadcrumb. Inputs model: UMenuItem[] = [], home?: UMenuItem, homeAriaLabel?: string. Output onItemClick: {originalEvent: MouseEvent; item: UMenuItem}. RouterModule handles routerLink and ordinary anchors use url; visible=false omits entries and disabled activation prevents default. onClick invokes command with {originalEvent,item} and emits the output. The component-local isCurrent compares window pathname after stripping one leading slash and sets aria-current=page only on the final model entry when matched. BreadcrumbClassesParams (disabled), breadcrumbStyleModule and isCurrentBreadcrumbItem are source-only exports owned here, not public barrel exports. isCurrentBreadcrumbItem is a separate helper accepting Pick<UMenuItem,\"routerLink\"> and normalizing repeated slashes for its pathname comparison; the component uses its own isCurrent instead. Local CSS consumes breadcrumb tokens. Extends UBaseComponent, which owns shared component lifecycle/style handling. Consumer availability: @ultimate/ng#UBreadcrumb, @ultimate/ng/breadcrumb#UBreadcrumb via selected root/family barrels and manifest entries; source-only exports mentioned above are not package barrel API. All remaining class state, event/DOM handlers and local css/classes constants in the listed files are implementation parts owned by this record, not independent products. Aura preset registers the breadcrumb component token family; this is source configuration, not rendered-theme verification. Metadata relationship is not inferred from a matching component name; this record relies on direct implementation and styling evidence. Inherited inputs dt?: Record<string,unknown> and unstyled?: boolean come from UBaseComponent; its ngOnInit registers theme variables and component CSS through the per-document stylesheet. Shared UMenuItem supports optional label/icon/url/routerLink/command/items/separator/disabled/visible/target/tooltip; each component consumes only the fields described above, not automatically every field in the shared type.",
+      "files": [
+        "packages/ng/src/breadcrumb/breadcrumb-style.ts",
+        "packages/ng/src/breadcrumb/breadcrumb.ts",
+        "packages/ng/src/breadcrumb/index.ts"
+      ],
+      "exports": ["@ultimate/ng#UBreadcrumb", "@ultimate/ng/breadcrumb#UBreadcrumb"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/breadcrumb/breadcrumb.ts",
+          "contains": "export class UBreadcrumb extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/breadcrumb/index.ts",
+          "contains": "export { UBreadcrumb }"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "@ultimate/ng/breadcrumb"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./breadcrumb\""
+        },
+        {
+          "path": "packages/ng/src/breadcrumb/breadcrumb-style.ts",
+          "contains": "export const breadcrumbStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    breadcrumb,"
+        },
+        {
+          "path": "packages/ng-core/src/api/types.ts",
+          "contains": "command?: (event: unknown) => void;"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.api",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, owned composition/types/helpers/style source and supporting specs exist; source inspection is not execution."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Angular breadcrumb product checks NOT RUN.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/breadcrumb/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "e661ec4539053d25da39594441225520e5dd07ab",
+          "limitations": "Explicit resource limits prohibit installs, builds, Vitest, ng test, Storybook and watchers. No product runtime success or failure inferred from source/test presence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step invokes root pnpm run test, whose recursive command includes Angular test. Configuration only: no successful CI execution or branch protection inferred; test:scripts selects provenance tests, not these inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on !cancelled() and classification scope != docs; dependencies can prevent assertions. Remote CI not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.mega-menu",
+      "name": "Angular UMegaMenu",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Top-level navigation with a multi-column overlay of labeled flat leaf groups.",
+      "surface": "Selector u-mega-menu. Inputs model: UMegaMenuItem[] = [], ariaLabel?: string. Output onItemSelect: {originalEvent: MouseEvent; item: UMenuItem}. Public composition UMegaMenuColumnGroup (selector u-mega-menu-column-group) requires @Input group: UMegaMenuGroup and emits itemSelect of the same payload. UMegaMenuItem extends Omit<UMenuItem,\"items\"> with items?: UMegaMenuGroup[][]: columns of groups. UMegaMenuGroup extends Omit<UMenuItem,\"items\"> with items?: UMenuItem[]; it is exported by its source but not re-exported by the family barrel. Root click/hover opens a group overlay; leaf activation invokes command and emits selection, and nested leaf selection clears openItem. Root ArrowRight/Left move focus, Enter/Space open and defer focus into the overlay; Escape closes and restores trigger focus. Column groups handle ArrowDown/Up among eligible leaves and let Escape bubble. MegaMenuClassesParams (disabled/open) and megaMenuStyleModule are source-only exports owned here; local token CSS controls overlay display and grid/column flex layout. Extends UBaseComponent, which owns shared component lifecycle/style handling. Consumer availability: @ultimate/ng#UMegaMenu, @ultimate/ng/mega-menu#UMegaMenu, @ultimate/ng#UMegaMenuColumnGroup, @ultimate/ng/mega-menu#UMegaMenuColumnGroup, @ultimate/ng#UMegaMenuItem, @ultimate/ng/mega-menu#UMegaMenuItem via selected root/family barrels and manifest entries; source-only exports mentioned above are not package barrel API. All remaining class state, event/DOM handlers and local css/classes constants in the listed files are implementation parts owned by this record, not independent products. Aura preset registers the megamenu component token family; this is source configuration, not rendered-theme verification. Metadata relationship is not inferred from a matching component name; this record relies on direct implementation and styling evidence. Inherited inputs dt?: Record<string,unknown> and unstyled?: boolean come from UBaseComponent; its ngOnInit registers theme variables and component CSS through the per-document stylesheet. Shared UMenuItem supports optional label/icon/url/routerLink/command/items/separator/disabled/visible/target/tooltip; each component consumes only the fields described above, not automatically every field in the shared type.",
+      "files": [
+        "packages/ng/src/mega-menu/index.ts",
+        "packages/ng/src/mega-menu/mega-menu-column.ts",
+        "packages/ng/src/mega-menu/mega-menu-item.ts",
+        "packages/ng/src/mega-menu/mega-menu-style.ts",
+        "packages/ng/src/mega-menu/mega-menu.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UMegaMenu",
+        "@ultimate/ng/mega-menu#UMegaMenu",
+        "@ultimate/ng#UMegaMenuColumnGroup",
+        "@ultimate/ng/mega-menu#UMegaMenuColumnGroup",
+        "@ultimate/ng#UMegaMenuItem",
+        "@ultimate/ng/mega-menu#UMegaMenuItem"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/mega-menu/mega-menu.ts",
+          "contains": "export class UMegaMenu extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/mega-menu/index.ts",
+          "contains": "export { UMegaMenu }"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "@ultimate/ng/mega-menu"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./mega-menu\""
+        },
+        {
+          "path": "packages/ng/src/mega-menu/mega-menu-style.ts",
+          "contains": "export const megaMenuStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    megamenu:"
+        },
+        {
+          "path": "packages/ng-core/src/api/types.ts",
+          "contains": "command?: (event: unknown) => void;"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.api",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, owned composition/types/helpers/style source and supporting specs exist; source inspection is not execution."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Angular mega-menu product checks NOT RUN.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/mega-menu/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "e661ec4539053d25da39594441225520e5dd07ab",
+          "limitations": "Explicit resource limits prohibit installs, builds, Vitest, ng test, Storybook and watchers. No product runtime success or failure inferred from source/test presence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step invokes root pnpm run test, whose recursive command includes Angular test. Configuration only: no successful CI execution or branch protection inferred; test:scripts selects provenance tests, not these inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on !cancelled() and classification scope != docs; dependencies can prevent assertions. Remote CI not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.menubar",
+      "name": "Angular UMenubar",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Horizontal navigation bar composed from recursively nested submenu levels.",
+      "surface": "Selector u-menubar. Inputs model: UMenuItem[] = [], ariaLabel?: string. Output onItemSelect: {originalEvent: MouseEvent; item: UMenuItem}. Public UMenubarSub (selector u-menubar-sub) has @Input items: UMenuItem[] = [], root=false and itemSelect output with the same payload. Recursive levels render separators, visible items, router/url links and submenu state. Hover opens enabled groups; click toggles groups or invokes leaf command and emits itemSelect. Root keys use ArrowRight/Left, nested levels ArrowDown/Up; Enter/Space opens children with deferred focus and Escape closes the nearest open level and restores its trigger. Private ITEM_LINK_SELECTOR limits native-focus lookup to a level’s own links; resolveOwnItem/renderedItems/moveFocus/focusFirstSubmenuItem/closeAndRefocus are owned implementation helpers. MenubarClassesParams (disabled/open/focused) and menubarStyleModule are source-only exports owned here. Local menubar token CSS controls nested submenu visibility. Extends UBaseComponent, which owns shared component lifecycle/style handling. Consumer availability: @ultimate/ng#UMenubar, @ultimate/ng/menubar#UMenubar, @ultimate/ng#UMenubarSub, @ultimate/ng/menubar#UMenubarSub via selected root/family barrels and manifest entries; source-only exports mentioned above are not package barrel API. All remaining class state, event/DOM handlers and local css/classes constants in the listed files are implementation parts owned by this record, not independent products. Aura preset registers the menubar component token family; this is source configuration, not rendered-theme verification. Metadata relationship is not inferred from a matching component name; this record relies on direct implementation and styling evidence. Inherited inputs dt?: Record<string,unknown> and unstyled?: boolean come from UBaseComponent; its ngOnInit registers theme variables and component CSS through the per-document stylesheet. Shared UMenuItem supports optional label/icon/url/routerLink/command/items/separator/disabled/visible/target/tooltip; each component consumes only the fields described above, not automatically every field in the shared type.",
+      "files": [
+        "packages/ng/src/menubar/index.ts",
+        "packages/ng/src/menubar/menubar-style.ts",
+        "packages/ng/src/menubar/menubar-sub.ts",
+        "packages/ng/src/menubar/menubar.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UMenubar",
+        "@ultimate/ng/menubar#UMenubar",
+        "@ultimate/ng#UMenubarSub",
+        "@ultimate/ng/menubar#UMenubarSub"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/menubar/menubar.ts",
+          "contains": "export class UMenubar extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/menubar/index.ts",
+          "contains": "export { UMenubar }"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "@ultimate/ng/menubar"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./menubar\""
+        },
+        {
+          "path": "packages/ng/src/menubar/menubar-style.ts",
+          "contains": "export const menubarStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    menubar,"
+        },
+        {
+          "path": "packages/ng-core/src/api/types.ts",
+          "contains": "command?: (event: unknown) => void;"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.api",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, owned composition/types/helpers/style source and supporting specs exist; source inspection is not execution."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Angular menubar product checks NOT RUN.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/menubar/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "e661ec4539053d25da39594441225520e5dd07ab",
+          "limitations": "Explicit resource limits prohibit installs, builds, Vitest, ng test, Storybook and watchers. No product runtime success or failure inferred from source/test presence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step invokes root pnpm run test, whose recursive command includes Angular test. Configuration only: no successful CI execution or branch protection inferred; test:scripts selects provenance tests, not these inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on !cancelled() and classification scope != docs; dependencies can prevent assertions. Remote CI not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.panel-menu",
+      "name": "Angular UPanelMenu",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Accordion-style command navigation with nested expansion in normal document flow.",
+      "surface": "Selector u-panel-menu. Inputs model: UMenuItem[] = [], multiple=false (booleanAttribute). Output onItemSelect: {originalEvent: MouseEvent; item: UMenuItem}. Public UPanelMenuList (selector u-panel-menu-list) accepts @Input items: UMenuItem[] = [], required expandedItems: WritableSignal<Set<UMenuItem>>, multiple=false, and emits itemSelect with the same payload. Root owns expandedItems signal shared through recursion. Group click or Enter/Space toggles a copied Set; when multiple=false only this level’s siblings are deleted before adding a group. Leaf activation calls command and emits selection; ArrowDown/Up wrap among eligible siblings. Template uses tree/treeitem roles and aria-expanded; expanded children are conditionally rendered. resolveOwnItem/getItemLinks/renderedItems/moveFocus and toggleExpanded are owned helpers. PanelMenuClassesParams (disabled/expanded) and panelMenuStyleModule are source-only exports; local panelmenu token CSS styles expansion and indent. Extends UBaseComponent, which owns shared component lifecycle/style handling. Consumer availability: @ultimate/ng#UPanelMenu, @ultimate/ng/panel-menu#UPanelMenu, @ultimate/ng#UPanelMenuList, @ultimate/ng/panel-menu#UPanelMenuList via selected root/family barrels and manifest entries; source-only exports mentioned above are not package barrel API. All remaining class state, event/DOM handlers and local css/classes constants in the listed files are implementation parts owned by this record, not independent products. Aura preset registers the panelmenu component token family; this is source configuration, not rendered-theme verification. Metadata relationship is not inferred from a matching component name; this record relies on direct implementation and styling evidence. Inherited inputs dt?: Record<string,unknown> and unstyled?: boolean come from UBaseComponent; its ngOnInit registers theme variables and component CSS through the per-document stylesheet. Shared UMenuItem supports optional label/icon/url/routerLink/command/items/separator/disabled/visible/target/tooltip; each component consumes only the fields described above, not automatically every field in the shared type.",
+      "files": [
+        "packages/ng/src/panel-menu/index.ts",
+        "packages/ng/src/panel-menu/panel-menu-list.ts",
+        "packages/ng/src/panel-menu/panel-menu-style.ts",
+        "packages/ng/src/panel-menu/panel-menu.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UPanelMenu",
+        "@ultimate/ng/panel-menu#UPanelMenu",
+        "@ultimate/ng#UPanelMenuList",
+        "@ultimate/ng/panel-menu#UPanelMenuList"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/panel-menu/panel-menu.ts",
+          "contains": "export class UPanelMenu extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/panel-menu/index.ts",
+          "contains": "export { UPanelMenu }"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "@ultimate/ng/panel-menu"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./panel-menu\""
+        },
+        {
+          "path": "packages/ng/src/panel-menu/panel-menu-style.ts",
+          "contains": "export const panelMenuStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    panelmenu:"
+        },
+        {
+          "path": "packages/ng-core/src/api/types.ts",
+          "contains": "command?: (event: unknown) => void;"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.api",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, owned composition/types/helpers/style source and supporting specs exist; source inspection is not execution."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Angular panel-menu product checks NOT RUN.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/panel-menu/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "e661ec4539053d25da39594441225520e5dd07ab",
+          "limitations": "Explicit resource limits prohibit installs, builds, Vitest, ng test, Storybook and watchers. No product runtime success or failure inferred from source/test presence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step invokes root pnpm run test, whose recursive command includes Angular test. Configuration only: no successful CI execution or branch protection inferred; test:scripts selects provenance tests, not these inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on !cancelled() and classification scope != docs; dependencies can prevent assertions. Remote CI not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.tiered-menu",
+      "name": "Angular UTieredMenu",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Vertical nested navigation, either inline or conditionally rendered as a popup.",
+      "surface": "Selector u-tiered-menu. Inputs model: UMenuItem[] = [], popup=false (booleanAttribute). Outputs onItemSelect: {originalEvent: MouseEvent; item: UMenuItem}, onShow/onHide: void. Public toggle(), show(), hide() change the internal visible signal and emit transition events; popup gates template visibility and leaf selection hides when popup=true. document:keydown.escape hides a visible popup. Public UTieredMenuSub (selector u-tiered-menu-sub) accepts @Input items: UMenuItem[] = [], root=false and emits itemSelect with the same payload. Recursive levels use router/url links, hover/click group opening, ArrowDown/Up focus movement, ArrowRight/Enter/Space opening and Escape nearest-level closure/refocus. Private ITEM_LINK_SELECTOR and focus/index helpers are owned implementation details. TieredMenuClassesParams (disabled/open) and tieredMenuStyleModule are source-only exports. Local CSS positions submenus and gives popup root class u-tieredmenu-overlay absolute top/left -9999px; this record does not claim successful popup positioning. Extends UBaseComponent, which owns shared component lifecycle/style handling. Consumer availability: @ultimate/ng#UTieredMenu, @ultimate/ng/tiered-menu#UTieredMenu, @ultimate/ng#UTieredMenuSub, @ultimate/ng/tiered-menu#UTieredMenuSub via selected root/family barrels and manifest entries; source-only exports mentioned above are not package barrel API. All remaining class state, event/DOM handlers and local css/classes constants in the listed files are implementation parts owned by this record, not independent products. Aura preset registers the tieredmenu component token family; this is source configuration, not rendered-theme verification. Metadata relationship is not inferred from a matching component name; this record relies on direct implementation and styling evidence. Inherited inputs dt?: Record<string,unknown> and unstyled?: boolean come from UBaseComponent; its ngOnInit registers theme variables and component CSS through the per-document stylesheet. Shared UMenuItem supports optional label/icon/url/routerLink/command/items/separator/disabled/visible/target/tooltip; each component consumes only the fields described above, not automatically every field in the shared type.",
+      "files": [
+        "packages/ng/src/tiered-menu/index.ts",
+        "packages/ng/src/tiered-menu/tiered-menu-style.ts",
+        "packages/ng/src/tiered-menu/tiered-menu-sub.ts",
+        "packages/ng/src/tiered-menu/tiered-menu.ts"
+      ],
+      "exports": [
+        "@ultimate/ng#UTieredMenu",
+        "@ultimate/ng/tiered-menu#UTieredMenu",
+        "@ultimate/ng#UTieredMenuSub",
+        "@ultimate/ng/tiered-menu#UTieredMenuSub"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/tiered-menu/tiered-menu.ts",
+          "contains": "export class UTieredMenu extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/tiered-menu/index.ts",
+          "contains": "export { UTieredMenu }"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "@ultimate/ng/tiered-menu"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./tiered-menu\""
+        },
+        {
+          "path": "packages/ng/src/tiered-menu/tiered-menu-style.ts",
+          "contains": "export const tieredMenuStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    tieredmenu:"
+        },
+        {
+          "path": "packages/ng-core/src/api/types.ts",
+          "contains": "command?: (event: unknown) => void;"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.api",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, owned composition/types/helpers/style source and supporting specs exist; source inspection is not execution."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Angular tiered-menu product checks NOT RUN.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/tiered-menu/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "e661ec4539053d25da39594441225520e5dd07ab",
+          "limitations": "Explicit resource limits prohibit installs, builds, Vitest, ng test, Storybook and watchers. No product runtime success or failure inferred from source/test presence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step invokes root pnpm run test, whose recursive command includes Angular test. Configuration only: no successful CI execution or branch protection inferred; test:scripts selects provenance tests, not these inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on !cancelled() and classification scope != docs; dependencies can prevent assertions. Remote CI not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.dock",
+      "name": "Angular UDock",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Positionable icon command bar with CSS hover magnification.",
+      "surface": "Selector u-dock. Inputs model: UMenuItem[] = [], position: bottom|top|left|right = bottom, ariaLabel?: string. Output onItemSelect: {originalEvent: MouseEvent; item: UMenuItem}. Visible model entries render icon links, using RouterModule for enabled routerLink or url anchors with target. Enabled click emits selection then invokes command; it prevents default when item.url is absent. Hover state starts/resets at -3 and drives data-u-active. ArrowRight/Left for top/bottom and ArrowDown/Up for left/right wrap eligible focus; Home/End focus edges. DOM/model mapping helpers are owned here. dockStyleModule is a source-only export with inline parameter types for position and active/disabled; local dock token CSS applies scale(1.5) to hovered/data-u-active links. Extends UBaseComponent, which owns shared component lifecycle/style handling. Consumer availability: @ultimate/ng#UDock, @ultimate/ng/dock#UDock via selected root/family barrels and manifest entries; source-only exports mentioned above are not package barrel API. All remaining class state, event/DOM handlers and local css/classes constants in the listed files are implementation parts owned by this record, not independent products. Aura preset registers the dock component token family; this is source configuration, not rendered-theme verification. Metadata relationship is not inferred from a matching component name; this record relies on direct implementation and styling evidence. Inherited inputs dt?: Record<string,unknown> and unstyled?: boolean come from UBaseComponent; its ngOnInit registers theme variables and component CSS through the per-document stylesheet. Shared UMenuItem supports optional label/icon/url/routerLink/command/items/separator/disabled/visible/target/tooltip; each component consumes only the fields described above, not automatically every field in the shared type.",
+      "files": [
+        "packages/ng/src/dock/dock-style.ts",
+        "packages/ng/src/dock/dock.ts",
+        "packages/ng/src/dock/index.ts"
+      ],
+      "exports": ["@ultimate/ng#UDock", "@ultimate/ng/dock#UDock"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/dock/dock.ts",
+          "contains": "export class UDock extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/dock/index.ts",
+          "contains": "export { UDock }"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "@ultimate/ng/dock"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./dock\""
+        },
+        {
+          "path": "packages/ng/src/dock/dock-style.ts",
+          "contains": "export const dockStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    dock,"
+        },
+        {
+          "path": "packages/ng-core/src/api/types.ts",
+          "contains": "command?: (event: unknown) => void;"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.api",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, owned composition/types/helpers/style source and supporting specs exist; source inspection is not execution."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Angular dock product checks NOT RUN.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/dock/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "e661ec4539053d25da39594441225520e5dd07ab",
+          "limitations": "Explicit resource limits prohibit installs, builds, Vitest, ng test, Storybook and watchers. No product runtime success or failure inferred from source/test presence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step invokes root pnpm run test, whose recursive command includes Angular test. Configuration only: no successful CI execution or branch protection inferred; test:scripts selects provenance tests, not these inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on !cancelled() and classification scope != docs; dependencies can prevent assertions. Remote CI not observed."
+        }
+      ]
+    },
+    {
+      "id": "angular.speed-dial",
+      "name": "Angular USpeedDial",
+      "framework": "angular",
+      "availability": "public",
+      "purpose": "Floating toggle action button revealing a directionally arranged list of secondary command buttons.",
+      "surface": "Selector u-speed-dial. Inputs model: UMenuItem[] = [], icon?: string, direction=up, type=linear, radius=0 and transitionDelay=30 (numberAttribute), mask=false, disabled=false, closeOnEscape=true (booleanAttribute), ariaLabel?: string. Source-only SpeedDialDirection union: up/down/left/right/up-left/up-right/down-left/down-right; SpeedDialType: linear/circle/semi-circle/quarter-circle. Outputs onVisibleChange: boolean, onClick: MouseEvent, onShow/onHide: void. Public show()/hide() update visibility and emit visibility plus transition events. Toggle click changes visibility and emits onClick; action calls command with {originalEvent,item} then hides. document:keydown.escape checks closeOnEscape; mask click hides. listDirectionStyle, getItemStyle and calculatePointStyle own flex direction, stagger delay and trigonometric point placement; keyboard/index helpers wrap among eligible action buttons using direction-dependent axes. Hidden entries remain in DOM with a hidden class; action tabindex depends on disabled/visible state. speedDialStyleModule is source-only with inline direction/open/hidden parameter shapes; local speeddial token CSS controls scale/opacity and pointer-events. Extends UBaseComponent, which owns shared component lifecycle/style handling. Consumer availability: @ultimate/ng#USpeedDial, @ultimate/ng/speed-dial#USpeedDial via selected root/family barrels and manifest entries; source-only exports mentioned above are not package barrel API. All remaining class state, event/DOM handlers and local css/classes constants in the listed files are implementation parts owned by this record, not independent products. Aura preset registers the speeddial component token family; this is source configuration, not rendered-theme verification. Metadata relationship is not inferred from a matching component name; this record relies on direct implementation and styling evidence. Inherited inputs dt?: Record<string,unknown> and unstyled?: boolean come from UBaseComponent; its ngOnInit registers theme variables and component CSS through the per-document stylesheet. Shared UMenuItem supports optional label/icon/url/routerLink/command/items/separator/disabled/visible/target/tooltip; each component consumes only the fields described above, not automatically every field in the shared type.",
+      "files": [
+        "packages/ng/src/speed-dial/index.ts",
+        "packages/ng/src/speed-dial/speed-dial-style.ts",
+        "packages/ng/src/speed-dial/speed-dial.ts"
+      ],
+      "exports": ["@ultimate/ng#USpeedDial", "@ultimate/ng/speed-dial#USpeedDial"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/speed-dial/speed-dial.ts",
+          "contains": "export class USpeedDial extends UBaseComponent"
+        },
+        {
+          "path": "packages/ng/src/speed-dial/index.ts",
+          "contains": "export { USpeedDial }"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "@ultimate/ng/speed-dial"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./speed-dial\""
+        },
+        {
+          "path": "packages/ng/src/speed-dial/speed-dial-style.ts",
+          "contains": "export const speedDialStyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    speeddial:"
+        },
+        {
+          "path": "packages/ng-core/src/api/types.ts",
+          "contains": "command?: (event: unknown) => void;"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng-core.api",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, owned composition/types/helpers/style source and supporting specs exist; source inspection is not execution."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Angular speed-dial product checks NOT RUN.",
+          "command": "pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/speed-dial/*.spec.ts'",
+          "outcome": "not-run",
+          "revision": "e661ec4539053d25da39594441225520e5dd07ab",
+          "limitations": "Explicit resource limits prohibit installs, builds, Vitest, ng test, Storybook and watchers. No product runtime success or failure inferred from source/test presence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs Test step invokes root pnpm run test, whose recursive command includes Angular test. Configuration only: no successful CI execution or branch protection inferred; test:scripts selects provenance tests, not these inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on !cancelled() and classification scope != docs; dependencies can prevent assertions. Remote CI not observed."
+        }
+      ]
+    }
+  ]
+}

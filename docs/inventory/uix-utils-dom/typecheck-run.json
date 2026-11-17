@@ -1,0 +1,6 @@
+{
+  "command": "pnpm typecheck",
+  "revision": "41e8047c4ed60eed2789c89c1bb67b27469cd039",
+  "outcome": "passed",
+  "output": "22 of 23 workspace projects were in scope; all listed typecheck commands completed successfully."
+}

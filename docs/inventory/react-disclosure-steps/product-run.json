@@ -1,0 +1,7 @@
+{
+  "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/accordion/ src/tabs/ src/stepper/ src/steps/ --config /tmp/vitest-react129.config.mjs --maxWorkers=1 --no-file-parallelism",
+  "revision": "ac4fc25447d81612681a7a7a075ce569e0490498",
+  "outcome": "passed",
+  "output": "Vitest 2.1.9, Node v24.15.0: Test Files 4 passed (4); Tests 65 passed (65). React act(...) warnings appeared during accordion tests; all assertions passed.",
+  "limitations": "A temporary config outside the repository set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs, which requires unavailable postcss-import. CSS PostCSS processing was not exercised. No repository product code or host configuration changed."
+}

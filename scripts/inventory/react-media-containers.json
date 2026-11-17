@@ -1,0 +1,1123 @@
+{
+  "version": 1,
+  "scope": "react-media-containers",
+  "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+  "packages": [
+    {
+      "path": "packages/react",
+      "roots": [
+        "packages/react/src/carousel",
+        "packages/react/src/galleria",
+        "packages/react/src/image",
+        "packages/react/src/card",
+        "packages/react/src/panel",
+        "packages/react/src/fieldset",
+        "packages/react/src/splitter",
+        "packages/react/src/divider",
+        "packages/react/src/scroll-panel"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/react/src/carousel/index.ts"
+        },
+        {
+          "subpath": "./carousel",
+          "source": "packages/react/src/carousel/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/galleria/index.ts"
+        },
+        {
+          "subpath": "./galleria",
+          "source": "packages/react/src/galleria/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/image/index.ts"
+        },
+        {
+          "subpath": "./image",
+          "source": "packages/react/src/image/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/card/index.ts"
+        },
+        {
+          "subpath": "./card",
+          "source": "packages/react/src/card/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/panel/index.ts"
+        },
+        {
+          "subpath": "./panel",
+          "source": "packages/react/src/panel/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/fieldset/index.ts"
+        },
+        {
+          "subpath": "./fieldset",
+          "source": "packages/react/src/fieldset/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/splitter/index.ts"
+        },
+        {
+          "subpath": "./splitter",
+          "source": "packages/react/src/splitter/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/divider/index.ts"
+        },
+        {
+          "subpath": "./divider",
+          "source": "packages/react/src/divider/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/scroll-panel/index.ts"
+        },
+        {
+          "subpath": "./scroll-panel",
+          "source": "packages/react/src/scroll-panel/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/react/src/carousel/carousel.spec.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/carousel/carousel.stories.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/galleria/galleria.spec.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/galleria/galleria.stories.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/image/image.spec.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/image/image.stories.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/card/card.spec.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/card/card.stories.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/panel/panel.spec.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/panel/panel.stories.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/fieldset/fieldset.spec.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/fieldset/fieldset.stories.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/splitter/splitter.spec.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/splitter/splitter.stories.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/divider/divider.spec.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/divider/divider.stories.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/scroll-panel/scroll-panel.spec.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/scroll-panel/scroll-panel.stories.tsx",
+      "reason": "Supporting test or story; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.react-core.base",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.styling",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by #151; reconciled identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.overlay",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.focus-trap",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.icons",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.escape",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react.button",
+      "batch": "ticket-108",
+      "reason": "External reconciled identity already inventoried by the completed #108 scope (react-actions); this batch describes its source relationship without duplicating the owning record."
+    }
+  ],
+  "ownership": {
+    "ticket": 138,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.react.carousel",
+      "record": "react.carousel"
+    },
+    {
+      "id": "package.ultimate.react.galleria",
+      "record": "react.galleria"
+    },
+    {
+      "id": "package.ultimate.react.image",
+      "record": "react.image"
+    },
+    {
+      "id": "package.ultimate.react.card",
+      "record": "react.card"
+    },
+    {
+      "id": "package.ultimate.react.panel",
+      "record": "react.panel"
+    },
+    {
+      "id": "package.ultimate.react.fieldset",
+      "record": "react.fieldset"
+    },
+    {
+      "id": "package.ultimate.react.splitter",
+      "record": "react.splitter"
+    },
+    {
+      "id": "package.ultimate.react.divider",
+      "record": "react.divider"
+    },
+    {
+      "id": "package.ultimate.react.scroll-panel",
+      "record": "react.scroll-panel"
+    }
+  ],
+  "records": [
+    {
+      "id": "react.carousel",
+      "name": "React UCarousel",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Slide a caller-rendered collection through a horizontal or vertical viewport with page navigation, indicators and optional autoplay.",
+      "surface": "UCarousel<T> and UCarouselProps<T> expose required value and itemTemplate(item, index) => React.ReactNode; numVisible (default 1), numScroll (1), circular (false), showIndicators (true), showNavigators (true), autoplayInterval (0), orientation horizontal|vertical (horizontal), page, onPageChange and className. UCarouselPageEvent contains page:number. page is controlled when defined; otherwise internal state starts at zero. totalPages uses Math.ceil((value.length - numVisible) / numScroll) + 1 for nonempty value; no normalization of sizing props is applied. goToPage rejects out-of-range or unchanged pages and emits {page}. Previous/Next buttons wrap only when circular; autoplay wraps to zero regardless of circular. A translate3d transform shifts the entire item list by page*numScroll*(100/numVisible), with a 500ms CSS transform transition. Every item is rendered and keyed by index, receives role group and aria-hidden based on the visible window. The outer div has role region; content aria-live is polite during autoplay and off otherwise; indicator buttons expose Page N and aria-current. There are no exported composition components. carouselStyleModule is a source-only local {css, classes} object consumed by useComponentBase with componentName carousel; it is exported from the style file but not the family barrel. No family @ultimate/uix-styles entry or component-metadata record exists in this revision. Each family barrel explicitly exports the component and public types; root and family subpath expose the same named surface. Declared dist paths do not establish publication. Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context. Props are explicitly declared; no arbitrary native-attribute spread is implemented.",
+      "files": [
+        "packages/react/src/carousel/carousel-style.ts",
+        "packages/react/src/carousel/carousel.tsx",
+        "packages/react/src/carousel/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UCarousel",
+        "@ultimate/react/carousel#UCarousel",
+        "@ultimate/react#UCarouselProps",
+        "@ultimate/react/carousel#UCarouselProps",
+        "@ultimate/react#UCarouselPageEvent",
+        "@ultimate/react/carousel#UCarouselPageEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/carousel/index.ts",
+          "contains": "export { UCarousel } from \"./carousel\";"
+        },
+        {
+          "path": "packages/react/src/carousel/carousel.tsx",
+          "contains": "componentName: \"carousel\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./carousel\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./carousel\": {"
+        },
+        {
+          "path": "packages/react/src/carousel/carousel-style.ts",
+          "contains": "export const carouselStyleModule"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    carousel,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/react/src/carousel/carousel.tsx",
+          "contains": "Math.ceil((value.length - numVisible) / numScroll) + 1"
+        },
+        {
+          "path": "packages/react/src/carousel/carousel.tsx",
+          "contains": "const next = page >= totalPages - 1 ? 0 : page + 1;"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, public types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed; this family contributed 9 tests to the captured run.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/carousel/ src/galleria/ src/image/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 9 passed (9); Tests 75 passed (75): galleria 22, carousel 9, image 8, fieldset 7, panel 7, splitter 7, scroll-panel 6, card 5, divider 4. Carousel emitted React act(...) warnings.",
+          "limitations": "Temporary config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs was outside tracked files and removed after the run. It set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import, with jsdom, globals:true and the absolute main-checkout vitest.setup.ts path. PostCSS plugin processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence.",
+          "run": "docs/inventory/react-media-containers/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.galleria",
+      "name": "React UGalleria",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Present one caller-rendered item with optional thumbnail selection, navigation, autoplay and fullscreen overlay.",
+      "surface": "UGalleria<T> and UGalleriaProps<T> expose required value and itemTemplate(item), optional thumbnailTemplate(item), activeIndex (default 0), onActiveIndexChange(index), showItemNavigators (true), showThumbnails (true), circular (false), autoplayInterval (0), fullScreen (false), fullScreenActive, onFullScreenActiveChange(active) and className. Internal active index initializes from activeIndex; isActiveIndexControlled checks onActiveIndexChange plus activeIndexProp after its default has made it defined. Consequently supplying the callback alone also selects the controlled branch with index zero. Navigation checks range, updates internal state only in uncontrolled mode and emits the numeric index. Previous/Next use circular wraparound; autoplay wraps to zero regardless of circular. Thumbnail rendering falls back to itemTemplate; role button li elements support Enter/Space and aria-current. The content key handler supports ArrowLeft/ArrowRight, Home/End and Escape to close active fullscreen, ignoring editable descendants via private isEditableTarget. fullScreenActive is independently controlled when defined, otherwise internal; no opening control is rendered, and the internal state starts false. The fullscreen branch composes Portal, FocusTrap autoFocus and UTimesIcon from React core; Close emits false and the mask has role dialog. The inline branch has role region. These parts are imported dependencies, not owned Galleria exports; no separate GalleriaItem or GalleriaThumbnails is exported. galleriaStyleModule is a source-only local {css, classes} object consumed by useComponentBase with componentName galleria; it is exported from the style file but not the family barrel. No family @ultimate/uix-styles entry or component-metadata record exists in this revision. Each family barrel explicitly exports the component and public types; root and family subpath expose the same named surface. Declared dist paths do not establish publication. Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context. Props are explicitly declared; no arbitrary native-attribute spread is implemented.",
+      "files": [
+        "packages/react/src/galleria/galleria-style.ts",
+        "packages/react/src/galleria/galleria.tsx",
+        "packages/react/src/galleria/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UGalleria",
+        "@ultimate/react/galleria#UGalleria",
+        "@ultimate/react#UGalleriaProps",
+        "@ultimate/react/galleria#UGalleriaProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/galleria/index.ts",
+          "contains": "export { UGalleria } from \"./galleria\";"
+        },
+        {
+          "path": "packages/react/src/galleria/galleria.tsx",
+          "contains": "componentName: \"galleria\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./galleria\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./galleria\": {"
+        },
+        {
+          "path": "packages/react/src/galleria/galleria-style.ts",
+          "contains": "export const galleriaStyleModule"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    galleria,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/react-core/src/overlay/index.ts",
+          "contains": "export { Portal } from \"./portal\";"
+        },
+        {
+          "path": "packages/react-core/src/focus-trap/index.ts",
+          "contains": "export { FocusTrap } from \"./focus-trap\";"
+        },
+        {
+          "path": "packages/react-core/src/icons/index.ts",
+          "contains": "export { UTimesIcon } from \"./times-icon\";"
+        },
+        {
+          "path": "packages/react/src/galleria/galleria.tsx",
+          "contains": "onActiveIndexChange !== undefined && activeIndexProp !== undefined;"
+        },
+        {
+          "path": "packages/react/src/galleria/galleria.tsx",
+          "contains": "const [internalFullScreenActive, setInternalFullScreenActive] = React.useState(false);"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.react-core.overlay",
+        "package.ultimate.react-core.focus-trap",
+        "package.ultimate.react-core.icons"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, public types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed; this family contributed 22 tests to the captured run.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/carousel/ src/galleria/ src/image/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 9 passed (9); Tests 75 passed (75): galleria 22, carousel 9, image 8, fieldset 7, panel 7, splitter 7, scroll-panel 6, card 5, divider 4. Carousel emitted React act(...) warnings.",
+          "limitations": "Temporary config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs was outside tracked files and removed after the run. It set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import, with jsdom, globals:true and the absolute main-checkout vitest.setup.ts path. PostCSS plugin processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence.",
+          "run": "docs/inventory/react-media-containers/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.image",
+      "name": "React UImage",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Display an image with optional modal preview, rotation and zoom controls.",
+      "surface": "UImage and UImageProps expose src, alt, width:string, height:string, preview (default false), onShow(), onHide(), onImageError(React.SyntheticEvent<HTMLImageElement>) and className. The base img receives src/alt/width/height and onError. A Zoom image button opens internal maskVisible and previewVisible, emits onShow and queues focus to Close. The overlay composes Portal, FocusTrap autoFocus and UTimesIcon; useDisplayOrder(\"image\", maskVisible) and useGlobalEscapeKey use [ESCAPE_PRIORITIES.IMAGE, displayOrder]. The mask has role dialog and aria-modal, closes on mask click and also handles Escape locally. Toolbar/image clicks stop propagation. Rotate left/right change by 90 degrees; private ZOOM_STEP=0.1, ZOOM_MIN=0.5 and ZOOM_MAX=1.5 use <=/>= boundary guards, so boundary values are not deliberately set by the step controls. close resets rotation to zero and scale to one and calls onHide. The preview img receives src and transform but not the base img alt or onImageError. The eye glyph is inline SVG. There are no exported preview composition members. imageStyleModule is a source-only local {css, classes} object consumed by useComponentBase with componentName image; it is exported from the style file but not the family barrel. No family @ultimate/uix-styles entry or component-metadata record exists in this revision. Each family barrel explicitly exports the component and public types; root and family subpath expose the same named surface. Declared dist paths do not establish publication. Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context. Props are explicitly declared; no arbitrary native-attribute spread is implemented.",
+      "files": [
+        "packages/react/src/image/image-style.ts",
+        "packages/react/src/image/image.tsx",
+        "packages/react/src/image/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UImage",
+        "@ultimate/react/image#UImage",
+        "@ultimate/react#UImageProps",
+        "@ultimate/react/image#UImageProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/image/index.ts",
+          "contains": "export { UImage } from \"./image\";"
+        },
+        {
+          "path": "packages/react/src/image/image.tsx",
+          "contains": "componentName: \"image\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./image\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./image\": {"
+        },
+        {
+          "path": "packages/react/src/image/image-style.ts",
+          "contains": "export const imageStyleModule"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    image,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/react-core/src/overlay/index.ts",
+          "contains": "export { Portal } from \"./portal\";"
+        },
+        {
+          "path": "packages/react-core/src/focus-trap/index.ts",
+          "contains": "export { FocusTrap } from \"./focus-trap\";"
+        },
+        {
+          "path": "packages/react-core/src/icons/index.ts",
+          "contains": "export { UTimesIcon } from \"./times-icon\";"
+        },
+        {
+          "path": "packages/react-core/src/escape/index.ts",
+          "contains": "export { useGlobalEscapeKey } from \"./use-global-escape-key\";"
+        },
+        {
+          "path": "packages/react/src/image/image.tsx",
+          "contains": "priority: [ESCAPE_PRIORITIES.IMAGE, displayOrder],"
+        },
+        {
+          "path": "packages/react/src/image/image.tsx",
+          "contains": "const isZoomOutDisabled = scale - ZOOM_STEP <= ZOOM_MIN;"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.react-core.overlay",
+        "package.ultimate.react-core.focus-trap",
+        "package.ultimate.react-core.icons",
+        "package.ultimate.react-core.escape"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, public types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed; this family contributed 8 tests to the captured run.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/carousel/ src/galleria/ src/image/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 9 passed (9); Tests 75 passed (75): galleria 22, carousel 9, image 8, fieldset 7, panel 7, splitter 7, scroll-panel 6, card 5, divider 4. Carousel emitted React act(...) warnings.",
+          "limitations": "Temporary config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs was outside tracked files and removed after the run. It set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import, with jsdom, globals:true and the absolute main-checkout vitest.setup.ts path. PostCSS plugin processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence.",
+          "run": "docs/inventory/react-media-containers/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.card",
+      "name": "React UCard",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Group content into optional header, title, subtitle and footer regions around body content.",
+      "surface": "UCard is React.forwardRef<HTMLDivElement, UCardProps>. UCardProps exposes header, title, subTitle, footer and children as React.ReactNode, plus className. The ref targets the outer div. Header is outside body; title, subtitle, content and footer render inside body. Each optional region uses a truthiness condition, so numeric zero does not produce that region. There are no callbacks, factories or exported Card region components. cardStyleModule is a source-only local {css, classes} object consumed by useComponentBase with componentName card; it is exported from the style file but not the family barrel. No family @ultimate/uix-styles entry or component-metadata record exists in this revision. Each family barrel explicitly exports the component and public types; root and family subpath expose the same named surface. Declared dist paths do not establish publication. Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context. Props are explicitly declared; no arbitrary native-attribute spread is implemented.",
+      "files": [
+        "packages/react/src/card/card-style.ts",
+        "packages/react/src/card/card.tsx",
+        "packages/react/src/card/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UCard",
+        "@ultimate/react/card#UCard",
+        "@ultimate/react#UCardProps",
+        "@ultimate/react/card#UCardProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/card/index.ts",
+          "contains": "export { UCard } from \"./card\";"
+        },
+        {
+          "path": "packages/react/src/card/card.tsx",
+          "contains": "componentName: \"card\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./card\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./card\": {"
+        },
+        {
+          "path": "packages/react/src/card/card-style.ts",
+          "contains": "export const cardStyleModule"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    card,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/react/src/card/card.tsx",
+          "contains": "{children && <div className={cx(\"content\")}>{children}</div>}"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, public types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed; this family contributed 5 tests to the captured run.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/carousel/ src/galleria/ src/image/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 9 passed (9); Tests 75 passed (75): galleria 22, carousel 9, image 8, fieldset 7, panel 7, splitter 7, scroll-panel 6, card 5, divider 4. Carousel emitted React act(...) warnings.",
+          "limitations": "Temporary config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs was outside tracked files and removed after the run. It set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import, with jsdom, globals:true and the absolute main-checkout vitest.setup.ts path. PostCSS plugin processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence.",
+          "run": "docs/inventory/react-media-containers/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.panel",
+      "name": "React UPanel",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Container with header, body and footer regions and optional content collapse.",
+      "surface": "UPanel is React.forwardRef<HTMLDivElement, UPanelProps>. UPanelProps exposes header, footer and children React nodes, toggleable (default false), collapsed (false), showHeader (true), onToggle({originalEvent:React.SyntheticEvent, value:boolean}) and className. Internal collapsedState initializes from collapsed; supplying onToggle makes collapsed controlled. The header title is rendered only when header is truthy, and showHeader gates the entire header including the toggle. The toggle composes UButton from ../button, owned by #108, with secondary/text/rounded settings, aria-controls, aria-expanded and a pi pi-plus/pi pi-minus i element. Module-level private uid generates header/content IDs. Content and footer are conditionally unmounted when toggleable and collapsed; the content container has role region and aria-labelledby pointing to headerId even if no title is rendered. No exported header/footer composition members or base factory exist. panelStyleModule is a source-only local {css, classes} object consumed by useComponentBase with componentName panel; it is exported from the style file but not the family barrel. No family @ultimate/uix-styles entry or component-metadata record exists in this revision. Each family barrel explicitly exports the component and public types; root and family subpath expose the same named surface. Declared dist paths do not establish publication. Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context. Props are explicitly declared; no arbitrary native-attribute spread is implemented.",
+      "files": [
+        "packages/react/src/panel/panel-style.ts",
+        "packages/react/src/panel/panel.tsx",
+        "packages/react/src/panel/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UPanel",
+        "@ultimate/react/panel#UPanel",
+        "@ultimate/react#UPanelProps",
+        "@ultimate/react/panel#UPanelProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/panel/index.ts",
+          "contains": "export { UPanel } from \"./panel\";"
+        },
+        {
+          "path": "packages/react/src/panel/panel.tsx",
+          "contains": "componentName: \"panel\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./panel\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./panel\": {"
+        },
+        {
+          "path": "packages/react/src/panel/panel-style.ts",
+          "contains": "export const panelStyleModule"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    panel,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/react/src/panel/panel.tsx",
+          "contains": "import { UButton } from \"../button\";"
+        },
+        {
+          "path": "packages/react/src/panel/panel.tsx",
+          "contains": "const collapsed = onToggle ? collapsedProp : collapsedState;"
+        },
+        {
+          "path": "packages/react/src/panel/panel.tsx",
+          "contains": "aria-labelledby={headerId}"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.react.button"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, public types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed; this family contributed 7 tests to the captured run.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/carousel/ src/galleria/ src/image/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 9 passed (9); Tests 75 passed (75): galleria 22, carousel 9, image 8, fieldset 7, panel 7, splitter 7, scroll-panel 6, card 5, divider 4. Carousel emitted React act(...) warnings.",
+          "limitations": "Temporary config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs was outside tracked files and removed after the run. It set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import, with jsdom, globals:true and the absolute main-checkout vitest.setup.ts path. PostCSS plugin processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence.",
+          "run": "docs/inventory/react-media-containers/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.fieldset",
+      "name": "React UFieldset",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Group child content with a legend and optional expand/collapse control.",
+      "surface": "UFieldset is React.forwardRef<HTMLFieldSetElement, UFieldsetProps>. UFieldsetProps exposes legend and children React nodes, toggleable (default false), collapsed (false), onToggle({originalEvent:React.SyntheticEvent, value:boolean}) and className. Supplying onToggle makes collapse controlled; otherwise collapsedState initializes from collapsed. Non-toggleable forces collapsed false. Private module uid generates header/content IDs. A native fieldset/legend contains either a legend label or a button with +/\u2212 text glyphs, aria-controls and aria-expanded. Its key handler handles Enter, NumpadEnter and Space; toggle prevents the event default. Content is conditionally unmounted when collapsed and has role region and aria-labelledby headerId; that header ID is assigned only to the toggle button. The non-toggleable branch has no element with headerId although its content still references it. There are no exported legend or toggle components. fieldsetStyleModule is a source-only local {css, classes} object consumed by useComponentBase with componentName fieldset; it is exported from the style file but not the family barrel. No family @ultimate/uix-styles entry or component-metadata record exists in this revision. Each family barrel explicitly exports the component and public types; root and family subpath expose the same named surface. Declared dist paths do not establish publication. Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context. Props are explicitly declared; no arbitrary native-attribute spread is implemented.",
+      "files": [
+        "packages/react/src/fieldset/fieldset-style.ts",
+        "packages/react/src/fieldset/fieldset.tsx",
+        "packages/react/src/fieldset/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UFieldset",
+        "@ultimate/react/fieldset#UFieldset",
+        "@ultimate/react#UFieldsetProps",
+        "@ultimate/react/fieldset#UFieldsetProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/fieldset/index.ts",
+          "contains": "export { UFieldset } from \"./fieldset\";"
+        },
+        {
+          "path": "packages/react/src/fieldset/fieldset.tsx",
+          "contains": "componentName: \"fieldset\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./fieldset\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./fieldset\": {"
+        },
+        {
+          "path": "packages/react/src/fieldset/fieldset-style.ts",
+          "contains": "export const fieldsetStyleModule"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    fieldset,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/react/src/fieldset/fieldset.tsx",
+          "contains": "const collapsed = toggleable ? (onToggle ? collapsedProp : collapsedState) : false;"
+        },
+        {
+          "path": "packages/react/src/fieldset/fieldset.tsx",
+          "contains": "aria-labelledby={headerId}"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, public types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed; this family contributed 7 tests to the captured run.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/carousel/ src/galleria/ src/image/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 9 passed (9); Tests 75 passed (75): galleria 22, carousel 9, image 8, fieldset 7, panel 7, splitter 7, scroll-panel 6, card 5, divider 4. Carousel emitted React act(...) warnings.",
+          "limitations": "Temporary config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs was outside tracked files and removed after the run. It set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import, with jsdom, globals:true and the absolute main-checkout vitest.setup.ts path. PostCSS plugin processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence.",
+          "run": "docs/inventory/react-media-containers/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.splitter",
+      "name": "React USplitter",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Arrange configured content panels and resize adjacent panels with mouse, touch or keyboard gutters.",
+      "surface": "USplitter and USplitterProps expose panels:USplitterPanelConfig[], layout horizontal|vertical (default horizontal), gutterSize (4 pixels), step (5), onResizeStart, onResizeEnd and className. USplitterPanelConfig contains content:React.ReactNode and optional minSize percentage; USplitterResizeEvent contains originalEvent:Event and sizes:number[]. It initializes equal panelSizes once from panels and uses config-driven panel content, not a public USplitterPanel component. Private pointFrom reads mouse coordinates or changedTouches[0]. Drag starts capture root dimensions and neighbouring sizes; document mousemove/mouseup and touchmove/touchend update percentage sizes with minSize guards and emit resize-end. Keyboard Left/Right steps horizontal sizes; Down decreases and Up increases the preceding vertical panel; repeat runs every 40ms until keyup, which emits resize-end. Each repeated keyboard step also emits resize-start. Panels are keyed by index and use flexBasis calc with gutter subtraction. Focusable gutter handles have role separator, aria-orientation from layout and aria-valuenow. No persistence or exported gutter component is declared. splitterStyleModule is a source-only local {css, classes} object consumed by useComponentBase with componentName splitter; it is exported from the style file but not the family barrel. No family @ultimate/uix-styles entry or component-metadata record exists in this revision. Each family barrel explicitly exports the component and public types; root and family subpath expose the same named surface. Declared dist paths do not establish publication. Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context. Props are explicitly declared; no arbitrary native-attribute spread is implemented.",
+      "files": [
+        "packages/react/src/splitter/splitter-style.ts",
+        "packages/react/src/splitter/splitter.tsx",
+        "packages/react/src/splitter/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#USplitter",
+        "@ultimate/react/splitter#USplitter",
+        "@ultimate/react#USplitterProps",
+        "@ultimate/react/splitter#USplitterProps",
+        "@ultimate/react#USplitterPanelConfig",
+        "@ultimate/react/splitter#USplitterPanelConfig",
+        "@ultimate/react#USplitterResizeEvent",
+        "@ultimate/react/splitter#USplitterResizeEvent"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/splitter/index.ts",
+          "contains": "export { USplitter } from \"./splitter\";"
+        },
+        {
+          "path": "packages/react/src/splitter/splitter.tsx",
+          "contains": "componentName: \"splitter\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./splitter\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./splitter\": {"
+        },
+        {
+          "path": "packages/react/src/splitter/splitter-style.ts",
+          "contains": "export const splitterStyleModule"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    splitter,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/react/src/splitter/splitter.tsx",
+          "contains": "panels.map(() => 100 / panels.length)"
+        },
+        {
+          "path": "packages/react/src/splitter/splitter.tsx",
+          "contains": "repeatTimerRef.current = setInterval(repeat, 40);"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, public types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed; this family contributed 7 tests to the captured run.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/carousel/ src/galleria/ src/image/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 9 passed (9); Tests 75 passed (75): galleria 22, carousel 9, image 8, fieldset 7, panel 7, splitter 7, scroll-panel 6, card 5, divider 4. Carousel emitted React act(...) warnings.",
+          "limitations": "Temporary config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs was outside tracked files and removed after the run. It set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import, with jsdom, globals:true and the absolute main-checkout vitest.setup.ts path. PostCSS plugin processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence.",
+          "run": "docs/inventory/react-media-containers/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.divider",
+      "name": "React UDivider",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Separate sections with a horizontal or vertical rule and optional child content.",
+      "surface": "UDivider is React.forwardRef<HTMLDivElement, UDividerProps>. UDividerProps exposes layout horizontal|vertical (default horizontal), children:React.ReactNode and className. The forwarded root div has role separator and aria-orientation=layout. A content div renders when children != null, including numeric zero. The local CSS uses a solid border pseudo-element; there are no type or align props, callbacks, base factories or exported label components. dividerStyleModule is a source-only local {css, classes} object consumed by useComponentBase with componentName divider; it is exported from the style file but not the family barrel. No family @ultimate/uix-styles entry or component-metadata record exists in this revision. Each family barrel explicitly exports the component and public types; root and family subpath expose the same named surface. Declared dist paths do not establish publication. Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context. Props are explicitly declared; no arbitrary native-attribute spread is implemented.",
+      "files": [
+        "packages/react/src/divider/divider-style.ts",
+        "packages/react/src/divider/divider.tsx",
+        "packages/react/src/divider/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UDivider",
+        "@ultimate/react/divider#UDivider",
+        "@ultimate/react#UDividerProps",
+        "@ultimate/react/divider#UDividerProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/divider/index.ts",
+          "contains": "export { UDivider } from \"./divider\";"
+        },
+        {
+          "path": "packages/react/src/divider/divider.tsx",
+          "contains": "componentName: \"divider\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./divider\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./divider\": {"
+        },
+        {
+          "path": "packages/react/src/divider/divider-style.ts",
+          "contains": "export const dividerStyleModule"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    divider,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/react/src/divider/divider.tsx",
+          "contains": "{children != null && <div className={cx(\"content\")}>{children}</div>}"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, public types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed; this family contributed 4 tests to the captured run.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/carousel/ src/galleria/ src/image/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 9 passed (9); Tests 75 passed (75): galleria 22, carousel 9, image 8, fieldset 7, panel 7, splitter 7, scroll-panel 6, card 5, divider 4. Carousel emitted React act(...) warnings.",
+          "limitations": "Temporary config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs was outside tracked files and removed after the run. It set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import, with jsdom, globals:true and the absolute main-checkout vitest.setup.ts path. PostCSS plugin processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence.",
+          "run": "docs/inventory/react-media-containers/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.scroll-panel",
+      "name": "React UScrollPanel",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Wrap native scrolling content with proportional draggable custom scrollbar thumbs and an imperative refresh/scroll API.",
+      "surface": "UScrollPanel is React.forwardRef<UScrollPanelHandle, UScrollPanelProps>. UScrollPanelProps exposes step (default 5), className and children. UScrollPanelHandle exposes refresh:() => void and scrollTop:(value:number) => void through useImperativeHandle; scrollTop clamps to the native scrollable height and zero. Private moveBar computes scroll ratios, sizes thumbs with a minimum 10 percent and uses requestAnimationFrame to set positions; ratios >=1 hide the bar. Scroll, resize and mouseenter update bars. Mouse dragging installs document listeners and updates native scroll position using delta/ratio; cleanup removes listeners, cancels a frame and clears the timer. Focus switches keyboard orientation; matching arrows schedule one step with setTimeout(...,40), and keyup clears it. The private repeat function does not reschedule itself. Both bars are focusable role scrollbar elements with aria-orientation, aria-valuenow and aria-controls=contentId. The computed contentId is not assigned as an id to the content div. The stylesheet hides native scrollbars. No touch drag handler, exported thumb component or base factory is declared. scrollPanelStyleModule is a source-only local {css, classes} object consumed by useComponentBase with componentName scroll-panel; it is exported from the style file but not the family barrel. No family @ultimate/uix-styles entry or component-metadata record exists in this revision. Each family barrel explicitly exports the component and public types; root and family subpath expose the same named surface. Declared dist paths do not establish publication. Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context. Props are explicitly declared; no arbitrary native-attribute spread is implemented.",
+      "files": [
+        "packages/react/src/scroll-panel/scroll-panel-style.ts",
+        "packages/react/src/scroll-panel/scroll-panel.tsx",
+        "packages/react/src/scroll-panel/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UScrollPanel",
+        "@ultimate/react/scroll-panel#UScrollPanel",
+        "@ultimate/react#UScrollPanelProps",
+        "@ultimate/react/scroll-panel#UScrollPanelProps",
+        "@ultimate/react#UScrollPanelHandle",
+        "@ultimate/react/scroll-panel#UScrollPanelHandle"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/scroll-panel/index.ts",
+          "contains": "export { UScrollPanel } from \"./scroll-panel\";"
+        },
+        {
+          "path": "packages/react/src/scroll-panel/scroll-panel.tsx",
+          "contains": "componentName: \"scroll-panel\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./scroll-panel\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./scroll-panel\": {"
+        },
+        {
+          "path": "packages/react/src/scroll-panel/scroll-panel-style.ts",
+          "contains": "export const scrollPanelStyleModule"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "scrollpanel: scrollPanel,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/react/src/scroll-panel/scroll-panel.tsx",
+          "contains": "timer.current = setTimeout(() => repeat(bar, stepValue), 40);"
+        },
+        {
+          "path": "packages/react/src/scroll-panel/scroll-panel.tsx",
+          "contains": "aria-controls={contentId}"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, public types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed; this family contributed 6 tests to the captured run.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/carousel/ src/galleria/ src/image/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 9 passed (9); Tests 75 passed (75): galleria 22, carousel 9, image 8, fieldset 7, panel 7, splitter 7, scroll-panel 6, card 5, divider 4. Carousel emitted React act(...) warnings.",
+          "limitations": "Temporary config /private/tmp/claude-501/ult-wt/react138-vitest.config.mjs was outside tracked files and removed after the run. It set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import, with jsdom, globals:true and the absolute main-checkout vitest.setup.ts path. PostCSS plugin processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence.",
+          "run": "docs/inventory/react-media-containers/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    }
+  ]
+}

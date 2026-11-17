@@ -1,0 +1,7 @@
+{
+  "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{data-view,order-list,pick-list,timeline}/*.spec.ts'",
+  "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+  "outcome": "passed",
+  "output": "Exit 0. Vitest 4.0.8: 4 files, 76 tests passed (Timeline 5, DataView 21, OrderList 13, PickList 37). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19).",
+  "preparation": "PATH=\"$HOME/.nvm/versions/node/v24.15.0/bin:$PATH\"; workspace dependency artifacts (packages/*/dist) were already built, so no dependency build or failed first attempt was needed."
+}

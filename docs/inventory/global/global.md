@@ -1,0 +1,499 @@
+# Ultimate global inventory
+
+Generated from authored inputs; edit those inputs, not this file. A passing reconciliation means every discovered identity and reference resolves to authored inventory evidence. It does not assert a defect-free product, and closure requires owner review.
+
+Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
+
+## Batches
+
+- scripts/inventory/ai.json: ticket #156; scope ai-156; revision 84805a04a25704f0d942148892b9935d41c89b7c
+- scripts/inventory/angular-actions.json: ticket #107; scope angular-actions; revision 4ad393323af126b83c46c40a53d34cdadf2070ef
+- scripts/inventory/angular-choice-range.json: ticket #113; scope angular-choice-range; revision d2e8101bf77e8e440c7166211ad5eae0e0ac6df8
+- scripts/inventory/angular-collection-presentation.json: ticket #134; scope angular-collection-presentation; revision 3864a1d23b5ef0c5601ff740c104fdec4584d14d
+- scripts/inventory/angular-core.json: ticket #148; scope angular-core-148; revision 5a49a62b07259a6033e13fb52a4bb39869a389ed
+- scripts/inventory/angular-disclosure-steps.json: ticket #128; scope angular-disclosure-steps; revision fcd2e02d28e0b9a678262d4731bb7ae31732d574
+- scripts/inventory/angular-feedback.json: ticket #140; scope angular-feedback; revision c531e881dfa14e18449553ecfe45b0ab17d3210a
+- scripts/inventory/angular-media-containers.json: ticket #137; scope angular-media-containers; revision cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6
+- scripts/inventory/angular-menu-navigation.json: ticket #125; scope angular-menu-navigation; revision e661ec4539053d25da39594441225520e5dd07ab
+- scripts/inventory/angular-numeric-date-color-file.json: ticket #119; scope angular-numeric-date-color-file; revision 73cc77945ad2e4213695c2d140166822dc1ad12c
+- scripts/inventory/angular-option-selection.json: ticket #116; scope angular-option-selection; revision f8fc98fc26ad56886dfe9af8714fb6b6f66e78a7
+- scripts/inventory/angular-overlays-notifications.json: ticket #122; scope angular-overlays-notifications; revision 02810e3a8a6ca5ccf75eb596a1ddccdb86257c9b
+- scripts/inventory/angular-table-viewport.json: ticket #131; scope angular-table-viewport; revision 3864a1d23b5ef0c5601ff740c104fdec4584d14d
+- scripts/inventory/angular-text-entry.json: ticket #110; scope angular-text-entry; revision 07ced02e76e763352e806fc53006976eb0f6259d
+- scripts/inventory/cli.json: ticket #154; scope cli-154; revision bad6cc52abbeaa74c357dfcdc0a5a4338c781a86
+- scripts/inventory/component-schema.json: ticket #152; scope component-schema-152; revision 0fa34369fc5b6f0a424f932d91ef6b560a294236
+- scripts/inventory/data-motion-primitives.json: ticket #147; scope data-motion-primitives-147; revision 75271f0ae536520ff9179f33b4309e7950b7aab4
+- scripts/inventory/mcp.json: ticket #155; scope mcp-155; revision 642e7e27996c29dc6cca009f93a84e76ee74c9b8
+- scripts/inventory/metadata-registry.json: ticket #153; scope metadata-registry-153; revision e60b2f03cdcfdbd8bf6cdb999a346858ad619718
+- scripts/inventory/react-actions.json: ticket #108; scope react-actions; revision c7a8d706e9ebfb22ebf6cc6635a77819cce95576
+- scripts/inventory/react-choice-range.json: ticket #114; scope react-choice-range; revision 8d8d52094058993d3ca29823d1c2cd922805570e
+- scripts/inventory/react-collection-presentation.json: ticket #135; scope react-collection-presentation; revision 3864a1d23b5ef0c5601ff740c104fdec4584d14d
+- scripts/inventory/react-core.json: ticket #149; scope react-core-149; revision bc2ea64ece059085cc26dbc0e72e983b12f16cd1
+- scripts/inventory/react-disclosure-steps.json: ticket #129; scope react-disclosure-steps; revision ac4fc25447d81612681a7a7a075ce569e0490498
+- scripts/inventory/react-feedback.json: ticket #141; scope react-feedback; revision e3add69e5d93fea60f7a0d3f96ca986c0c8c9738
+- scripts/inventory/react-media-containers.json: ticket #138; scope react-media-containers; revision cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6
+- scripts/inventory/react-menu-navigation.json: ticket #126; scope react-menu-navigation; revision af79b2ec8b18681f0163d9ede0beba387c462258
+- scripts/inventory/react-numeric-date-color-file.json: ticket #120; scope react-numeric-date-color-file; revision e99d41249677496cf6c531576dd6e1c181544883
+- scripts/inventory/react-option-selection.json: ticket #117; scope react-option-selection; revision 7845cf0f945bc5526061884f531fa9a01ba4757d
+- scripts/inventory/react-overlays-notifications.json: ticket #123; scope react-overlays-notifications; revision 7b296258f469ba37ed2367cafbf3f2dbf95398f0
+- scripts/inventory/react-table-viewport.json: ticket #132; scope react-table-viewport; revision 3864a1d23b5ef0c5601ff740c104fdec4584d14d
+- scripts/inventory/react-text-entry.json: ticket #111; scope react-text-entry; revision c49aa4e6906a9d72a1893b3fc006fce55489d0b7
+- scripts/inventory/root-files.json: ticket #157; scope root-files-157; revision 70b74575698fb77a72a18022b91181c66df41484
+- scripts/inventory/shared-component-styles.json: ticket #146; scope shared-component-styles-146; revision 54f81ae85b0cfe3583541471bd4114fe8d8d7bac
+- scripts/inventory/styled-runtime.json: ticket #145; scope styled-runtime-145; revision f0b7e867d6edf346284af3400e28e6ec6fbe4500
+- scripts/inventory/theme-contract.json: ticket #151; scope theme-contract-151; revision bced8db5905c1e1f38463c585063e110a93624ca
+- scripts/inventory/uix-utils-dom.json: ticket #143; scope uix-utils-dom-143; revision 41e8047c4ed60eed2789c89c1bb67b27469cd039
+- scripts/inventory/uix-utils-values.json: ticket #144; scope uix-utils-values-144; revision 7a06beb32487f04ccd84a765f7722ac606825c74
+- scripts/inventory/vue-actions.json: ticket #109; scope vue-actions; revision 37aa7ce8525c6f1622127eb1735ec41beb4096c5
+- scripts/inventory/vue-choice-range.json: ticket #115; scope vue-choice-range; revision 638b5a660b62be5b39a9402db09bccc2a9e9d2e4
+- scripts/inventory/vue-collection-presentation.json: ticket #136; scope vue-collection-presentation; revision 3864a1d23b5ef0c5601ff740c104fdec4584d14d
+- scripts/inventory/vue-core.json: ticket #150; scope vue-core-150; revision c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89
+- scripts/inventory/vue-disclosure-steps.json: ticket #130; scope vue-disclosure-steps; revision 3864a1d23b5ef0c5601ff740c104fdec4584d14d
+- scripts/inventory/vue-feedback.json: ticket #142; scope vue-feedback; revision fdd42818185ed77ae0c025f732310672581c1cea
+- scripts/inventory/vue-media-containers.json: ticket #139; scope vue-media-containers; revision cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6
+- scripts/inventory/vue-menu-navigation.json: ticket #127; scope vue-menu-navigation; revision c15f80a751deffcf91566d7a4353d95d73548589
+- scripts/inventory/vue-numeric-date-color-file.json: ticket #121; scope vue-numeric-date-color-file; revision 3143b1f248e72addb28087e65a31014466c5969d
+- scripts/inventory/vue-option-selection.json: ticket #118; scope vue-option-selection; revision ba145d8cfc110bae18e4787a1242d51e38da9cd1
+- scripts/inventory/vue-overlays-notifications.json: ticket #124; scope vue-overlays-notifications; revision ce6cb351653cbbb19cc0b0246942082dd0aff73d
+- scripts/inventory/vue-table-viewport.json: ticket #133; scope vue-table-viewport; revision 3864a1d23b5ef0c5601ff740c104fdec4584d14d
+- scripts/inventory/vue-text-entry.json: ticket #112; scope vue-text-entry; revision 849ec35cc57b459cf1a6fb24f83b24d4beff559a
+
+## Coverage
+
+- package.reserved.uix: Reserved UIX scaffold with only .gitkeep; no implemented API or source family. -> excluded
+- package.ultimate.ai: #156 -> scripts/inventory/ai.json#ai.root
+- package.ultimate.ai.root: #156 -> scripts/inventory/ai.json#ai.root
+- package.ultimate.cli: #154 -> scripts/inventory/cli.json#cli.root
+- package.ultimate.cli.commands: #154 -> scripts/inventory/cli.json#cli.dispatch
+- package.ultimate.cli.root: #154 -> scripts/inventory/cli.json#cli.root
+- package.ultimate.component-metadata: #153 -> scripts/inventory/metadata-registry.json#metadata.root
+- package.ultimate.component-metadata.records: #153 -> scripts/inventory/metadata-registry.json#metadata.root
+- package.ultimate.component-metadata.root: #153 -> scripts/inventory/metadata-registry.json#metadata.root
+- package.ultimate.component-schema: #152 -> scripts/inventory/component-schema.json#schema.root
+- package.ultimate.component-schema.root: #152 -> scripts/inventory/component-schema.json#schema.root
+- package.ultimate.mcp: #155 -> scripts/inventory/mcp.json#mcp.root
+- package.ultimate.mcp.root: #155 -> scripts/inventory/mcp.json#mcp.root
+- package.ultimate.mcp.tools: #155 -> scripts/inventory/mcp.json#mcp.server
+- package.ultimate.ng: #107, #110, #113, #116, #119, #122, #125, #128, #131, #134, #137, #140 -> aggregate of 90 resolved families (#107, #110, #113, #116, #119, #122, #125, #128, #131, #134, #137, #140)
+- package.ultimate.ng-core: #148 -> scripts/inventory/angular-core.json#ngcore.root
+- package.ultimate.ng-core.api: #148 -> scripts/inventory/angular-core.json#ngcore.api
+- package.ultimate.ng-core.base-editable-holder: #148 -> scripts/inventory/angular-core.json#ngcore.base-editable-holder
+- package.ultimate.ng-core.base-input: #148 -> scripts/inventory/angular-core.json#ngcore.base-input
+- package.ultimate.ng-core.basecomponent: #148 -> scripts/inventory/angular-core.json#ngcore.basecomponent
+- package.ultimate.ng-core.bind: #148 -> scripts/inventory/angular-core.json#ngcore.bind
+- package.ultimate.ng-core.config: #148 -> scripts/inventory/angular-core.json#ngcore.config
+- package.ultimate.ng-core.confirmation: #148 -> scripts/inventory/angular-core.json#ngcore.confirmation
+- package.ultimate.ng-core.dialog-service: #148 -> scripts/inventory/angular-core.json#ngcore.dialog-service
+- package.ultimate.ng-core.focus-trap: #148 -> scripts/inventory/angular-core.json#ngcore.focus-trap
+- package.ultimate.ng-core.icons: #148 -> scripts/inventory/angular-core.json#ngcore.icons
+- package.ultimate.ng-core.id: #148 -> scripts/inventory/angular-core.json#ngcore.id
+- package.ultimate.ng-core.model-holder: #148 -> scripts/inventory/angular-core.json#ngcore.model-holder
+- package.ultimate.ng-core.overlay: #148 -> scripts/inventory/angular-core.json#ngcore.overlay
+- package.ultimate.ng-core.root: #148 -> scripts/inventory/angular-core.json#ngcore.root
+- package.ultimate.ng-core.terminal-service: #148 -> scripts/inventory/angular-core.json#ngcore.terminal-service
+- package.ultimate.ng-core.toast-service: #148 -> scripts/inventory/angular-core.json#ngcore.toast-service
+- package.ultimate.ng.accordion: #128 -> scripts/inventory/angular-disclosure-steps.json#angular.accordion
+- package.ultimate.ng.animate-on-scroll: #140 -> scripts/inventory/angular-feedback.json#angular.animate-on-scroll
+- package.ultimate.ng.autocomplete: #116 -> scripts/inventory/angular-option-selection.json#angular.autocomplete
+- package.ultimate.ng.autofocus: #140 -> scripts/inventory/angular-feedback.json#angular.autofocus
+- package.ultimate.ng.avatar: #107 -> scripts/inventory/angular-actions.json#angular.avatar
+- package.ultimate.ng.avatar-group: #107 -> scripts/inventory/angular-actions.json#angular.avatar-group
+- package.ultimate.ng.badge: #107 -> scripts/inventory/angular-actions.json#angular.badge
+- package.ultimate.ng.block-ui: #122 -> scripts/inventory/angular-overlays-notifications.json#angular.block-ui
+- package.ultimate.ng.breadcrumb: #125 -> scripts/inventory/angular-menu-navigation.json#angular.breadcrumb
+- package.ultimate.ng.button: #107 -> scripts/inventory/angular-actions.json#angular.button
+- package.ultimate.ng.button-group: #107 -> scripts/inventory/angular-actions.json#angular.button-group
+- package.ultimate.ng.card: #137 -> scripts/inventory/angular-media-containers.json#angular.card
+- package.ultimate.ng.carousel: #137 -> scripts/inventory/angular-media-containers.json#angular.carousel
+- package.ultimate.ng.cascade-select: #116 -> scripts/inventory/angular-option-selection.json#angular.cascade-select
+- package.ultimate.ng.checkbox: #113 -> scripts/inventory/angular-choice-range.json#angular.checkbox
+- package.ultimate.ng.chip: #107 -> scripts/inventory/angular-actions.json#angular.chip
+- package.ultimate.ng.color-picker: #119 -> scripts/inventory/angular-numeric-date-color-file.json#angular.color-picker
+- package.ultimate.ng.confirm-dialog: #122 -> scripts/inventory/angular-overlays-notifications.json#angular.confirm-dialog
+- package.ultimate.ng.confirm-popup: #122 -> scripts/inventory/angular-overlays-notifications.json#angular.confirm-popup
+- package.ultimate.ng.context-menu: #125 -> scripts/inventory/angular-menu-navigation.json#angular.context-menu
+- package.ultimate.ng.data-view: #134 -> scripts/inventory/angular-collection-presentation.json#angular.data-view
+- package.ultimate.ng.date-picker: #119 -> scripts/inventory/angular-numeric-date-color-file.json#angular.date-picker
+- package.ultimate.ng.dialog: #122 -> scripts/inventory/angular-overlays-notifications.json#angular.dialog
+- package.ultimate.ng.divider: #137 -> scripts/inventory/angular-media-containers.json#angular.divider
+- package.ultimate.ng.dock: #125 -> scripts/inventory/angular-menu-navigation.json#angular.dock
+- package.ultimate.ng.drawer: #122 -> scripts/inventory/angular-overlays-notifications.json#angular.drawer
+- package.ultimate.ng.dynamic-dialog: #122 -> scripts/inventory/angular-overlays-notifications.json#angular.dynamic-dialog
+- package.ultimate.ng.fieldset: #137 -> scripts/inventory/angular-media-containers.json#angular.fieldset
+- package.ultimate.ng.file-upload: #119 -> scripts/inventory/angular-numeric-date-color-file.json#angular.file-upload
+- package.ultimate.ng.float-label: #110 -> scripts/inventory/angular-text-entry.json#angular.float-label
+- package.ultimate.ng.fluid: #140 -> scripts/inventory/angular-feedback.json#angular.fluid
+- package.ultimate.ng.galleria: #137 -> scripts/inventory/angular-media-containers.json#angular.galleria
+- package.ultimate.ng.icon-field: #110 -> scripts/inventory/angular-text-entry.json#angular.icon-field
+- package.ultimate.ng.ifta-label: #110 -> scripts/inventory/angular-text-entry.json#angular.ifta-label
+- package.ultimate.ng.image: #137 -> scripts/inventory/angular-media-containers.json#angular.image
+- package.ultimate.ng.image-compare: #137 -> scripts/inventory/angular-media-containers.json#angular.image-compare
+- package.ultimate.ng.inplace: #140 -> scripts/inventory/angular-feedback.json#angular.inplace
+- package.ultimate.ng.input-group: #110 -> scripts/inventory/angular-text-entry.json#angular.input-group
+- package.ultimate.ng.input-mask: #110 -> scripts/inventory/angular-text-entry.json#angular.input-mask
+- package.ultimate.ng.input-number: #119 -> scripts/inventory/angular-numeric-date-color-file.json#angular.input-number
+- package.ultimate.ng.input-otp: #110 -> scripts/inventory/angular-text-entry.json#angular.input-otp
+- package.ultimate.ng.input-text: #110 -> scripts/inventory/angular-text-entry.json#angular.input-text
+- package.ultimate.ng.key-filter: #140 -> scripts/inventory/angular-feedback.json#angular.key-filter
+- package.ultimate.ng.knob: #113 -> scripts/inventory/angular-choice-range.json#angular.knob
+- package.ultimate.ng.listbox: #116 -> scripts/inventory/angular-option-selection.json#angular.listbox
+- package.ultimate.ng.mega-menu: #125 -> scripts/inventory/angular-menu-navigation.json#angular.mega-menu
+- package.ultimate.ng.menu: #125 -> scripts/inventory/angular-menu-navigation.json#angular.menu
+- package.ultimate.ng.menubar: #125 -> scripts/inventory/angular-menu-navigation.json#angular.menubar
+- package.ultimate.ng.message: #122 -> scripts/inventory/angular-overlays-notifications.json#angular.message
+- package.ultimate.ng.meter-group: #140 -> scripts/inventory/angular-feedback.json#angular.meter-group
+- package.ultimate.ng.multi-select: #116 -> scripts/inventory/angular-option-selection.json#angular.multi-select
+- package.ultimate.ng.order-list: #134 -> scripts/inventory/angular-collection-presentation.json#angular.order-list
+- package.ultimate.ng.overlay-badge: #107 -> scripts/inventory/angular-actions.json#angular.overlay-badge
+- package.ultimate.ng.paginator: #131 -> scripts/inventory/angular-table-viewport.json#angular.paginator
+- package.ultimate.ng.panel: #137 -> scripts/inventory/angular-media-containers.json#angular.panel
+- package.ultimate.ng.panel-menu: #125 -> scripts/inventory/angular-menu-navigation.json#angular.panel-menu
+- package.ultimate.ng.password: #110 -> scripts/inventory/angular-text-entry.json#angular.password
+- package.ultimate.ng.pick-list: #134 -> scripts/inventory/angular-collection-presentation.json#angular.pick-list
+- package.ultimate.ng.popover: #122 -> scripts/inventory/angular-overlays-notifications.json#angular.popover
+- package.ultimate.ng.progress-bar: #140 -> scripts/inventory/angular-feedback.json#angular.progress-bar
+- package.ultimate.ng.progress-spinner: #140 -> scripts/inventory/angular-feedback.json#angular.progress-spinner
+- package.ultimate.ng.radio-button: #113 -> scripts/inventory/angular-choice-range.json#angular.radio-button
+- package.ultimate.ng.rating: #113 -> scripts/inventory/angular-choice-range.json#angular.rating
+- package.ultimate.ng.ripple: #140 -> scripts/inventory/angular-feedback.json#angular.ripple
+- package.ultimate.ng.root: #157 -> scripts/inventory/root-files.json#files
+- package.ultimate.ng.scroll-panel: #137 -> scripts/inventory/angular-media-containers.json#angular.scroll-panel
+- package.ultimate.ng.scroll-top: #140 -> scripts/inventory/angular-feedback.json#angular.scroll-top
+- package.ultimate.ng.scroller: #131 -> scripts/inventory/angular-table-viewport.json#angular.scroller
+- package.ultimate.ng.select: #116 -> scripts/inventory/angular-option-selection.json#angular.select
+- package.ultimate.ng.select-button: #113 -> scripts/inventory/angular-choice-range.json#angular.select-button
+- package.ultimate.ng.skeleton: #140 -> scripts/inventory/angular-feedback.json#angular.skeleton
+- package.ultimate.ng.slider: #113 -> scripts/inventory/angular-choice-range.json#angular.slider
+- package.ultimate.ng.speed-dial: #125 -> scripts/inventory/angular-menu-navigation.json#angular.speed-dial
+- package.ultimate.ng.split-button: #107 -> scripts/inventory/angular-actions.json#angular.split-button
+- package.ultimate.ng.splitter: #137 -> scripts/inventory/angular-media-containers.json#angular.splitter
+- package.ultimate.ng.stepper: #128 -> scripts/inventory/angular-disclosure-steps.json#angular.stepper
+- package.ultimate.ng.steps: #128 -> scripts/inventory/angular-disclosure-steps.json#angular.steps
+- package.ultimate.ng.style-class: #140 -> scripts/inventory/angular-feedback.json#angular.style-class
+- package.ultimate.ng.table: #131 -> scripts/inventory/angular-table-viewport.json#angular.table
+- package.ultimate.ng.tabs: #128 -> scripts/inventory/angular-disclosure-steps.json#angular.tabs
+- package.ultimate.ng.tag: #107 -> scripts/inventory/angular-actions.json#angular.tag
+- package.ultimate.ng.terminal: #140 -> scripts/inventory/angular-feedback.json#angular.terminal
+- package.ultimate.ng.textarea: #110 -> scripts/inventory/angular-text-entry.json#angular.textarea
+- package.ultimate.ng.tiered-menu: #125 -> scripts/inventory/angular-menu-navigation.json#angular.tiered-menu
+- package.ultimate.ng.timeline: #134 -> scripts/inventory/angular-collection-presentation.json#angular.timeline
+- package.ultimate.ng.toast: #122 -> scripts/inventory/angular-overlays-notifications.json#angular.toast
+- package.ultimate.ng.toggle-button: #113 -> scripts/inventory/angular-choice-range.json#angular.toggle-button
+- package.ultimate.ng.toggle-switch: #113 -> scripts/inventory/angular-choice-range.json#angular.toggle-switch
+- package.ultimate.ng.toolbar: #107 -> scripts/inventory/angular-actions.json#angular.toolbar
+- package.ultimate.ng.tooltip: #122 -> scripts/inventory/angular-overlays-notifications.json#angular.tooltip
+- package.ultimate.react: #108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141 -> aggregate of 87 resolved families (#108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141)
+- package.ultimate.react-core: #149 -> scripts/inventory/react-core.json#reactcore.root
+- package.ultimate.react-core.base: #149 -> scripts/inventory/react-core.json#reactcore.base
+- package.ultimate.react-core.confirmation: #149 -> scripts/inventory/react-core.json#reactcore.confirmation
+- package.ultimate.react-core.escape: #149 -> scripts/inventory/react-core.json#reactcore.escape
+- package.ultimate.react-core.focus-trap: #149 -> scripts/inventory/react-core.json#reactcore.focus-trap
+- package.ultimate.react-core.hooks: #149 -> scripts/inventory/react-core.json#reactcore.hooks
+- package.ultimate.react-core.icons: #149 -> scripts/inventory/react-core.json#reactcore.icons
+- package.ultimate.react-core.motion: #149 -> scripts/inventory/react-core.json#reactcore.motion
+- package.ultimate.react-core.overlay: #149 -> scripts/inventory/react-core.json#reactcore.overlay
+- package.ultimate.react-core.root: #149 -> scripts/inventory/react-core.json#reactcore.root
+- package.ultimate.react-core.scroll-lock: #149 -> scripts/inventory/react-core.json#reactcore.scroll-lock
+- package.ultimate.react-core.styling: #149 -> scripts/inventory/react-core.json#reactcore.styling
+- package.ultimate.react-core.zindex: #149 -> scripts/inventory/react-core.json#reactcore.zindex
+- package.ultimate.react.accordion: #129 -> scripts/inventory/react-disclosure-steps.json#react.accordion
+- package.ultimate.react.autocomplete: #117 -> scripts/inventory/react-option-selection.json#react.autocomplete
+- package.ultimate.react.avatar: #108 -> scripts/inventory/react-actions.json#react.avatar
+- package.ultimate.react.avatar-group: #108 -> scripts/inventory/react-actions.json#react.avatar-group
+- package.ultimate.react.block-ui: #123 -> scripts/inventory/react-overlays-notifications.json#react.block-ui
+- package.ultimate.react.breadcrumb: #126 -> scripts/inventory/react-menu-navigation.json#react.breadcrumb
+- package.ultimate.react.button: #108 -> scripts/inventory/react-actions.json#react.button
+- package.ultimate.react.button-group: #108 -> scripts/inventory/react-actions.json#react.button-group
+- package.ultimate.react.card: #138 -> scripts/inventory/react-media-containers.json#react.card
+- package.ultimate.react.carousel: #138 -> scripts/inventory/react-media-containers.json#react.carousel
+- package.ultimate.react.cascade-select: #117 -> scripts/inventory/react-option-selection.json#react.cascade-select
+- package.ultimate.react.checkbox: #114 -> scripts/inventory/react-choice-range.json#react.checkbox
+- package.ultimate.react.chip: #108 -> scripts/inventory/react-actions.json#react.chip
+- package.ultimate.react.color-picker: #120 -> scripts/inventory/react-numeric-date-color-file.json#react.color-picker
+- package.ultimate.react.confirm-dialog: #123 -> scripts/inventory/react-overlays-notifications.json#react.confirm-dialog
+- package.ultimate.react.confirm-popup: #123 -> scripts/inventory/react-overlays-notifications.json#react.confirm-popup
+- package.ultimate.react.context-menu: #126 -> scripts/inventory/react-menu-navigation.json#react.context-menu
+- package.ultimate.react.data-scroller: #132 -> scripts/inventory/react-table-viewport.json#react.data-scroller
+- package.ultimate.react.data-view: #135 -> scripts/inventory/react-collection-presentation.json#react.data-view
+- package.ultimate.react.date-picker: #120 -> scripts/inventory/react-numeric-date-color-file.json#react.date-picker
+- package.ultimate.react.deferred-content: #141 -> scripts/inventory/react-feedback.json#react.deferred-content
+- package.ultimate.react.dialog: #123 -> scripts/inventory/react-overlays-notifications.json#react.dialog
+- package.ultimate.react.divider: #138 -> scripts/inventory/react-media-containers.json#react.divider
+- package.ultimate.react.dock: #126 -> scripts/inventory/react-menu-navigation.json#react.dock
+- package.ultimate.react.drawer: #123 -> scripts/inventory/react-overlays-notifications.json#react.drawer
+- package.ultimate.react.fieldset: #138 -> scripts/inventory/react-media-containers.json#react.fieldset
+- package.ultimate.react.file-upload: #120 -> scripts/inventory/react-numeric-date-color-file.json#react.file-upload
+- package.ultimate.react.float-label: #111 -> scripts/inventory/react-text-entry.json#react.float-label
+- package.ultimate.react.galleria: #138 -> scripts/inventory/react-media-containers.json#react.galleria
+- package.ultimate.react.icon-field: #111 -> scripts/inventory/react-text-entry.json#react.icon-field
+- package.ultimate.react.image: #138 -> scripts/inventory/react-media-containers.json#react.image
+- package.ultimate.react.inplace: #141 -> scripts/inventory/react-feedback.json#react.inplace
+- package.ultimate.react.input-chips: #111 -> scripts/inventory/react-text-entry.json#react.input-chips
+- package.ultimate.react.input-mask: #111 -> scripts/inventory/react-text-entry.json#react.input-mask
+- package.ultimate.react.input-number: #120 -> scripts/inventory/react-numeric-date-color-file.json#react.input-number
+- package.ultimate.react.input-otp: #111 -> scripts/inventory/react-text-entry.json#react.input-otp
+- package.ultimate.react.input-switch: #114 -> scripts/inventory/react-choice-range.json#react.input-switch
+- package.ultimate.react.input-text: #111 -> scripts/inventory/react-text-entry.json#react.input-text
+- package.ultimate.react.input-textarea: #111 -> scripts/inventory/react-text-entry.json#react.input-textarea
+- package.ultimate.react.key-filter: #141 -> scripts/inventory/react-feedback.json#react.key-filter
+- package.ultimate.react.knob: #114 -> scripts/inventory/react-choice-range.json#react.knob
+- package.ultimate.react.listbox: #117 -> scripts/inventory/react-option-selection.json#react.listbox
+- package.ultimate.react.mega-menu: #126 -> scripts/inventory/react-menu-navigation.json#react.mega-menu
+- package.ultimate.react.mention: #111 -> scripts/inventory/react-text-entry.json#react.mention
+- package.ultimate.react.menu: #126 -> scripts/inventory/react-menu-navigation.json#react.menu
+- package.ultimate.react.menubar: #126 -> scripts/inventory/react-menu-navigation.json#react.menubar
+- package.ultimate.react.message: #123 -> scripts/inventory/react-overlays-notifications.json#react.message
+- package.ultimate.react.meter-group: #141 -> scripts/inventory/react-feedback.json#react.meter-group
+- package.ultimate.react.multi-select: #117 -> scripts/inventory/react-option-selection.json#react.multi-select
+- package.ultimate.react.multi-state-checkbox: #114 -> scripts/inventory/react-choice-range.json#react.multi-state-checkbox
+- package.ultimate.react.order-list: #135 -> scripts/inventory/react-collection-presentation.json#react.order-list
+- package.ultimate.react.organization-chart: #135 -> scripts/inventory/react-collection-presentation.json#react.organization-chart
+- package.ultimate.react.paginator: #132 -> scripts/inventory/react-table-viewport.json#react.paginator
+- package.ultimate.react.panel: #138 -> scripts/inventory/react-media-containers.json#react.panel
+- package.ultimate.react.panel-menu: #126 -> scripts/inventory/react-menu-navigation.json#react.panel-menu
+- package.ultimate.react.password: #111 -> scripts/inventory/react-text-entry.json#react.password
+- package.ultimate.react.pick-list: #135 -> scripts/inventory/react-collection-presentation.json#react.pick-list
+- package.ultimate.react.popover: #123 -> scripts/inventory/react-overlays-notifications.json#react.popover
+- package.ultimate.react.progress-bar: #141 -> scripts/inventory/react-feedback.json#react.progress-bar
+- package.ultimate.react.progress-spinner: #141 -> scripts/inventory/react-feedback.json#react.progress-spinner
+- package.ultimate.react.radio-button: #114 -> scripts/inventory/react-choice-range.json#react.radio-button
+- package.ultimate.react.rating: #114 -> scripts/inventory/react-choice-range.json#react.rating
+- package.ultimate.react.root: #157 -> scripts/inventory/root-files.json#files
+- package.ultimate.react.scroll-panel: #138 -> scripts/inventory/react-media-containers.json#react.scroll-panel
+- package.ultimate.react.scroll-top: #141 -> scripts/inventory/react-feedback.json#react.scroll-top
+- package.ultimate.react.scroller: #132 -> scripts/inventory/react-table-viewport.json#react.scroller
+- package.ultimate.react.select: #117 -> scripts/inventory/react-option-selection.json#react.select
+- package.ultimate.react.select-button: #114 -> scripts/inventory/react-choice-range.json#react.select-button
+- package.ultimate.react.skeleton: #141 -> scripts/inventory/react-feedback.json#react.skeleton
+- package.ultimate.react.slider: #114 -> scripts/inventory/react-choice-range.json#react.slider
+- package.ultimate.react.speed-dial: #126 -> scripts/inventory/react-menu-navigation.json#react.speed-dial
+- package.ultimate.react.split-button: #108 -> scripts/inventory/react-actions.json#react.split-button
+- package.ultimate.react.splitter: #138 -> scripts/inventory/react-media-containers.json#react.splitter
+- package.ultimate.react.stepper: #129 -> scripts/inventory/react-disclosure-steps.json#react.stepper
+- package.ultimate.react.steps: #129 -> scripts/inventory/react-disclosure-steps.json#react.steps
+- package.ultimate.react.style-class: #141 -> scripts/inventory/react-feedback.json#react.style-class
+- package.ultimate.react.table: #132 -> scripts/inventory/react-table-viewport.json#react.table
+- package.ultimate.react.tabs: #129 -> scripts/inventory/react-disclosure-steps.json#react.tabs
+- package.ultimate.react.tag: #108 -> scripts/inventory/react-actions.json#react.tag
+- package.ultimate.react.terminal: #141 -> scripts/inventory/react-feedback.json#react.terminal
+- package.ultimate.react.tiered-menu: #126 -> scripts/inventory/react-menu-navigation.json#react.tiered-menu
+- package.ultimate.react.timeline: #135 -> scripts/inventory/react-collection-presentation.json#react.timeline
+- package.ultimate.react.toast: #123 -> scripts/inventory/react-overlays-notifications.json#react.toast
+- package.ultimate.react.toggle-button: #114 -> scripts/inventory/react-choice-range.json#react.toggle-button
+- package.ultimate.react.toolbar: #108 -> scripts/inventory/react-actions.json#react.toolbar
+- package.ultimate.react.tooltip: #123 -> scripts/inventory/react-overlays-notifications.json#react.tooltip
+- package.ultimate.react.tri-state-checkbox: #114 -> scripts/inventory/react-choice-range.json#react.tri-state-checkbox
+- package.ultimate.themes: #151 -> scripts/inventory/theme-contract.json#themes.root
+- package.ultimate.themes.contract: #151 -> scripts/inventory/theme-contract.json#themes.contract
+- package.ultimate.themes.presets: #151 -> scripts/inventory/theme-contract.json#themes.aura
+- package.ultimate.themes.root: #151 -> scripts/inventory/theme-contract.json#themes.root
+- package.ultimate.uix-data: #147 -> scripts/inventory/data-motion-primitives.json#uixdata.root
+- package.ultimate.uix-data.filter: #147 -> scripts/inventory/data-motion-primitives.json#uixdata.filter
+- package.ultimate.uix-data.identity: #147 -> scripts/inventory/data-motion-primitives.json#uixdata.identity
+- package.ultimate.uix-data.pagination: #147 -> scripts/inventory/data-motion-primitives.json#uixdata.pagination
+- package.ultimate.uix-data.root: #147 -> scripts/inventory/data-motion-primitives.json#uixdata.root
+- package.ultimate.uix-data.selection: #147 -> scripts/inventory/data-motion-primitives.json#uixdata.selection
+- package.ultimate.uix-data.sort: #147 -> scripts/inventory/data-motion-primitives.json#uixdata.sort
+- package.ultimate.uix-data.virtualization: #147 -> scripts/inventory/data-motion-primitives.json#uixdata.virtualization
+- package.ultimate.uix-motion: #147 -> scripts/inventory/data-motion-primitives.json#uixmotion.root
+- package.ultimate.uix-motion.config: #147 -> scripts/inventory/data-motion-primitives.json#uixmotion.config
+- package.ultimate.uix-motion.root: #147 -> scripts/inventory/data-motion-primitives.json#uixmotion.root
+- package.ultimate.uix-motion.utils: #147 -> scripts/inventory/data-motion-primitives.json#uixmotion.utils
+- package.ultimate.uix-styled: #145 -> scripts/inventory/styled-runtime.json#uixstyled.root
+- package.ultimate.uix-styled.actions: #145 -> scripts/inventory/styled-runtime.json#uixstyled.actions
+- package.ultimate.uix-styled.config: #145 -> scripts/inventory/styled-runtime.json#uixstyled.config
+- package.ultimate.uix-styled.helpers: #145 -> scripts/inventory/styled-runtime.json#uixstyled.helpers
+- package.ultimate.uix-styled.root: #145 -> scripts/inventory/styled-runtime.json#uixstyled.root
+- package.ultimate.uix-styled.service: #145 -> scripts/inventory/styled-runtime.json#uixstyled.service
+- package.ultimate.uix-styled.stylesheet: #145 -> scripts/inventory/styled-runtime.json#uixstyled.stylesheet
+- package.ultimate.uix-styled.utils: #145 -> scripts/inventory/styled-runtime.json#uixstyled.utils
+- package.ultimate.uix-styles: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.root
+- package.ultimate.uix-styles.badge: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.badge
+- package.ultimate.uix-styles.base: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.base
+- package.ultimate.uix-styles.button: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.button
+- package.ultimate.uix-styles.checkbox: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.checkbox
+- package.ultimate.uix-styles.dialog: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.dialog
+- package.ultimate.uix-styles.inputnumber: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.inputnumber
+- package.ultimate.uix-styles.inputtext: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.inputtext
+- package.ultimate.uix-styles.menu: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.menu
+- package.ultimate.uix-styles.paginator: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.paginator
+- package.ultimate.uix-styles.root: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.root
+- package.ultimate.uix-styles.table: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.table
+- package.ultimate.uix-styles.tooltip: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.tooltip
+- package.ultimate.uix-styles.virtualscroller: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.virtualscroller
+- package.ultimate.uix-utils: #143, #144 -> aggregate of 10 resolved families (#143, #144)
+- package.ultimate.uix-utils.classnames: #144 -> scripts/inventory/uix-utils-values.json#uixutils.classnames
+- package.ultimate.uix-utils.dom: #143 -> scripts/inventory/uix-utils-dom.json#uixutils.dom
+- package.ultimate.uix-utils.escape: #144 -> scripts/inventory/uix-utils-values.json#uixutils.escape
+- package.ultimate.uix-utils.eventbus: #144 -> scripts/inventory/uix-utils-values.json#uixutils.eventbus
+- package.ultimate.uix-utils.mergeprops: #144 -> scripts/inventory/uix-utils-values.json#uixutils.mergeprops
+- package.ultimate.uix-utils.object: #144 -> scripts/inventory/uix-utils-values.json#uixutils.object
+- package.ultimate.uix-utils.root: #157 -> scripts/inventory/root-files.json#files
+- package.ultimate.uix-utils.scroll-lock: #144 -> scripts/inventory/uix-utils-values.json#uixutils.scroll-lock
+- package.ultimate.uix-utils.uuid: #144 -> scripts/inventory/uix-utils-values.json#uixutils.uuid
+- package.ultimate.uix-utils.zindex: #144 -> scripts/inventory/uix-utils-values.json#uixutils.zindex
+- package.ultimate.vue: #109, #112, #115, #118, #121, #124, #127, #130, #133, #136, #139, #142 -> aggregate of 95 resolved families (#109, #112, #115, #118, #121, #124, #127, #130, #133, #136, #139, #142)
+- package.ultimate.vue-core: #150 -> scripts/inventory/vue-core.json#vuecore.root
+- package.ultimate.vue-core.base: #150 -> scripts/inventory/vue-core.json#vuecore.base
+- package.ultimate.vue-core.directive: #150 -> scripts/inventory/vue-core.json#vuecore.directive
+- package.ultimate.vue-core.escape: #150 -> scripts/inventory/vue-core.json#vuecore.escape
+- package.ultimate.vue-core.focus-trap: #150 -> scripts/inventory/vue-core.json#vuecore.focus-trap
+- package.ultimate.vue-core.icons: #150 -> scripts/inventory/vue-core.json#vuecore.icons
+- package.ultimate.vue-core.motion: #150 -> scripts/inventory/vue-core.json#vuecore.motion
+- package.ultimate.vue-core.overlay: #150 -> scripts/inventory/vue-core.json#vuecore.overlay
+- package.ultimate.vue-core.root: #150 -> scripts/inventory/vue-core.json#vuecore.root
+- package.ultimate.vue-core.scroll-lock: #150 -> scripts/inventory/vue-core.json#vuecore.scroll-lock
+- package.ultimate.vue-core.service: #150 -> scripts/inventory/vue-core.json#vuecore.service
+- package.ultimate.vue-core.styling: #150 -> scripts/inventory/vue-core.json#vuecore.styling
+- package.ultimate.vue-core.zindex: #150 -> scripts/inventory/vue-core.json#vuecore.zindex
+- package.ultimate.vue.accordion: #130 -> scripts/inventory/vue-disclosure-steps.json#vue.accordion
+- package.ultimate.vue.accordion-content: #130 -> scripts/inventory/vue-disclosure-steps.json#vue.accordion-content
+- package.ultimate.vue.accordion-header: #130 -> scripts/inventory/vue-disclosure-steps.json#vue.accordion-header
+- package.ultimate.vue.accordion-panel: #130 -> scripts/inventory/vue-disclosure-steps.json#vue.accordion-panel
+- package.ultimate.vue.animate-on-scroll: #142 -> scripts/inventory/vue-feedback.json#vue.animate-on-scroll
+- package.ultimate.vue.autocomplete: #118 -> scripts/inventory/vue-option-selection.json#vue.autocomplete
+- package.ultimate.vue.avatar: #109 -> scripts/inventory/vue-actions.json#vue.avatar
+- package.ultimate.vue.avatar-group: #109 -> scripts/inventory/vue-actions.json#vue.avatar-group
+- package.ultimate.vue.badge: #109 -> scripts/inventory/vue-actions.json#vue.badge
+- package.ultimate.vue.block-ui: #124 -> scripts/inventory/vue-overlays-notifications.json#vue.block-ui
+- package.ultimate.vue.breadcrumb: #127 -> scripts/inventory/vue-menu-navigation.json#vue.breadcrumb
+- package.ultimate.vue.button: #109 -> scripts/inventory/vue-actions.json#vue.button
+- package.ultimate.vue.button-group: #109 -> scripts/inventory/vue-actions.json#vue.button-group
+- package.ultimate.vue.card: #139 -> scripts/inventory/vue-media-containers.json#vue.card
+- package.ultimate.vue.carousel: #139 -> scripts/inventory/vue-media-containers.json#vue.carousel
+- package.ultimate.vue.cascade-select: #118 -> scripts/inventory/vue-option-selection.json#vue.cascade-select
+- package.ultimate.vue.checkbox: #115 -> scripts/inventory/vue-choice-range.json#vue.checkbox
+- package.ultimate.vue.chip: #109 -> scripts/inventory/vue-actions.json#vue.chip
+- package.ultimate.vue.color-picker: #121 -> scripts/inventory/vue-numeric-date-color-file.json#vue.color-picker
+- package.ultimate.vue.confirm-dialog: #124 -> scripts/inventory/vue-overlays-notifications.json#vue.confirm-dialog
+- package.ultimate.vue.confirm-popup: #124 -> scripts/inventory/vue-overlays-notifications.json#vue.confirm-popup
+- package.ultimate.vue.context-menu: #127 -> scripts/inventory/vue-menu-navigation.json#vue.context-menu
+- package.ultimate.vue.data-view: #136 -> scripts/inventory/vue-collection-presentation.json#vue.data-view
+- package.ultimate.vue.date-picker: #121 -> scripts/inventory/vue-numeric-date-color-file.json#vue.date-picker
+- package.ultimate.vue.deferred-content: #142 -> scripts/inventory/vue-feedback.json#vue.deferred-content
+- package.ultimate.vue.dialog: #124 -> scripts/inventory/vue-overlays-notifications.json#vue.dialog
+- package.ultimate.vue.divider: #139 -> scripts/inventory/vue-media-containers.json#vue.divider
+- package.ultimate.vue.dock: #127 -> scripts/inventory/vue-menu-navigation.json#vue.dock
+- package.ultimate.vue.drawer: #124 -> scripts/inventory/vue-overlays-notifications.json#vue.drawer
+- package.ultimate.vue.dynamic-dialog: #124 -> scripts/inventory/vue-overlays-notifications.json#vue.dynamic-dialog
+- package.ultimate.vue.fieldset: #139 -> scripts/inventory/vue-media-containers.json#vue.fieldset
+- package.ultimate.vue.file-upload: #121 -> scripts/inventory/vue-numeric-date-color-file.json#vue.file-upload
+- package.ultimate.vue.float-label: #112 -> scripts/inventory/vue-text-entry.json#vue.float-label
+- package.ultimate.vue.galleria: #139 -> scripts/inventory/vue-media-containers.json#vue.galleria
+- package.ultimate.vue.icon-field: #112 -> scripts/inventory/vue-text-entry.json#vue.icon-field
+- package.ultimate.vue.ifta-label: #112 -> scripts/inventory/vue-text-entry.json#vue.ifta-label
+- package.ultimate.vue.image: #139 -> scripts/inventory/vue-media-containers.json#vue.image
+- package.ultimate.vue.image-compare: #139 -> scripts/inventory/vue-media-containers.json#vue.image-compare
+- package.ultimate.vue.inline-message: #124 -> scripts/inventory/vue-overlays-notifications.json#vue.inline-message
+- package.ultimate.vue.inplace: #142 -> scripts/inventory/vue-feedback.json#vue.inplace
+- package.ultimate.vue.input-chips: #112 -> scripts/inventory/vue-text-entry.json#vue.input-chips
+- package.ultimate.vue.input-group: #112 -> scripts/inventory/vue-text-entry.json#vue.input-group
+- package.ultimate.vue.input-mask: #112 -> scripts/inventory/vue-text-entry.json#vue.input-mask
+- package.ultimate.vue.input-number: #121 -> scripts/inventory/vue-numeric-date-color-file.json#vue.input-number
+- package.ultimate.vue.input-otp: #112 -> scripts/inventory/vue-text-entry.json#vue.input-otp
+- package.ultimate.vue.input-text: #112 -> scripts/inventory/vue-text-entry.json#vue.input-text
+- package.ultimate.vue.key-filter: #142 -> scripts/inventory/vue-feedback.json#vue.key-filter
+- package.ultimate.vue.knob: #115 -> scripts/inventory/vue-choice-range.json#vue.knob
+- package.ultimate.vue.listbox: #118 -> scripts/inventory/vue-option-selection.json#vue.listbox
+- package.ultimate.vue.mega-menu: #127 -> scripts/inventory/vue-menu-navigation.json#vue.mega-menu
+- package.ultimate.vue.menu: #127 -> scripts/inventory/vue-menu-navigation.json#vue.menu
+- package.ultimate.vue.menubar: #127 -> scripts/inventory/vue-menu-navigation.json#vue.menubar
+- package.ultimate.vue.message: #124 -> scripts/inventory/vue-overlays-notifications.json#vue.message
+- package.ultimate.vue.meter-group: #142 -> scripts/inventory/vue-feedback.json#vue.meter-group
+- package.ultimate.vue.multi-select: #118 -> scripts/inventory/vue-option-selection.json#vue.multi-select
+- package.ultimate.vue.order-list: #136 -> scripts/inventory/vue-collection-presentation.json#vue.order-list
+- package.ultimate.vue.organization-chart: #136 -> scripts/inventory/vue-collection-presentation.json#vue.organization-chart
+- package.ultimate.vue.overlay-badge: #109 -> scripts/inventory/vue-actions.json#vue.overlay-badge
+- package.ultimate.vue.paginator: #133 -> scripts/inventory/vue-table-viewport.json#vue.paginator
+- package.ultimate.vue.panel: #139 -> scripts/inventory/vue-media-containers.json#vue.panel
+- package.ultimate.vue.panel-menu: #127 -> scripts/inventory/vue-menu-navigation.json#vue.panel-menu
+- package.ultimate.vue.password: #112 -> scripts/inventory/vue-text-entry.json#vue.password
+- package.ultimate.vue.pick-list: #136 -> scripts/inventory/vue-collection-presentation.json#vue.pick-list
+- package.ultimate.vue.popover: #124 -> scripts/inventory/vue-overlays-notifications.json#vue.popover
+- package.ultimate.vue.progress-bar: #142 -> scripts/inventory/vue-feedback.json#vue.progress-bar
+- package.ultimate.vue.progress-spinner: #142 -> scripts/inventory/vue-feedback.json#vue.progress-spinner
+- package.ultimate.vue.radio-button: #115 -> scripts/inventory/vue-choice-range.json#vue.radio-button
+- package.ultimate.vue.rating: #115 -> scripts/inventory/vue-choice-range.json#vue.rating
+- package.ultimate.vue.ripple: #142 -> scripts/inventory/vue-feedback.json#vue.ripple
+- package.ultimate.vue.root: #157 -> scripts/inventory/root-files.json#files
+- package.ultimate.vue.scroll-panel: #139 -> scripts/inventory/vue-media-containers.json#vue.scroll-panel
+- package.ultimate.vue.scroll-top: #142 -> scripts/inventory/vue-feedback.json#vue.scroll-top
+- package.ultimate.vue.scroller: #133 -> scripts/inventory/vue-table-viewport.json#vue.scroller
+- package.ultimate.vue.select: #118 -> scripts/inventory/vue-option-selection.json#vue.select
+- package.ultimate.vue.select-button: #115 -> scripts/inventory/vue-choice-range.json#vue.select-button
+- package.ultimate.vue.skeleton: #142 -> scripts/inventory/vue-feedback.json#vue.skeleton
+- package.ultimate.vue.slider: #115 -> scripts/inventory/vue-choice-range.json#vue.slider
+- package.ultimate.vue.speed-dial: #127 -> scripts/inventory/vue-menu-navigation.json#vue.speed-dial
+- package.ultimate.vue.split-button: #109 -> scripts/inventory/vue-actions.json#vue.split-button
+- package.ultimate.vue.splitter: #139 -> scripts/inventory/vue-media-containers.json#vue.splitter
+- package.ultimate.vue.stepper: #130 -> scripts/inventory/vue-disclosure-steps.json#vue.stepper
+- package.ultimate.vue.steps: #130 -> scripts/inventory/vue-disclosure-steps.json#vue.steps
+- package.ultimate.vue.style-class: #142 -> scripts/inventory/vue-feedback.json#vue.style-class
+- package.ultimate.vue.table: #133 -> scripts/inventory/vue-table-viewport.json#vue.table
+- package.ultimate.vue.tabs: #130 -> scripts/inventory/vue-disclosure-steps.json#vue.tabs
+- package.ultimate.vue.tag: #109 -> scripts/inventory/vue-actions.json#vue.tag
+- package.ultimate.vue.terminal: #142 -> scripts/inventory/vue-feedback.json#vue.terminal
+- package.ultimate.vue.textarea: #112 -> scripts/inventory/vue-text-entry.json#vue.textarea
+- package.ultimate.vue.tiered-menu: #127 -> scripts/inventory/vue-menu-navigation.json#vue.tiered-menu
+- package.ultimate.vue.timeline: #136 -> scripts/inventory/vue-collection-presentation.json#vue.timeline
+- package.ultimate.vue.toast: #124 -> scripts/inventory/vue-overlays-notifications.json#vue.toast
+- package.ultimate.vue.toggle-button: #115 -> scripts/inventory/vue-choice-range.json#vue.toggle-button
+- package.ultimate.vue.toggle-switch: #115 -> scripts/inventory/vue-choice-range.json#vue.toggle-switch
+- package.ultimate.vue.toolbar: #109 -> scripts/inventory/vue-actions.json#vue.toolbar
+- package.ultimate.vue.tooltip: #124 -> scripts/inventory/vue-overlays-notifications.json#vue.tooltip
+
+## References
+
+1868 references; 0 unresolved.
+
+- scripts/inventory/ai.json: 18 references, 0 unresolved
+- scripts/inventory/angular-actions.json: 47 references, 0 unresolved
+- scripts/inventory/angular-choice-range.json: 49 references, 0 unresolved
+- scripts/inventory/angular-collection-presentation.json: 17 references, 0 unresolved
+- scripts/inventory/angular-core.json: 34 references, 0 unresolved
+- scripts/inventory/angular-disclosure-steps.json: 12 references, 0 unresolved
+- scripts/inventory/angular-feedback.json: 29 references, 0 unresolved
+- scripts/inventory/angular-media-containers.json: 39 references, 0 unresolved
+- scripts/inventory/angular-menu-navigation.json: 49 references, 0 unresolved
+- scripts/inventory/angular-numeric-date-color-file.json: 35 references, 0 unresolved
+- scripts/inventory/angular-option-selection.json: 37 references, 0 unresolved
+- scripts/inventory/angular-overlays-notifications.json: 80 references, 0 unresolved
+- scripts/inventory/angular-table-viewport.json: 26 references, 0 unresolved
+- scripts/inventory/angular-text-entry.json: 57 references, 0 unresolved
+- scripts/inventory/cli.json: 48 references, 0 unresolved
+- scripts/inventory/component-schema.json: 11 references, 0 unresolved
+- scripts/inventory/data-motion-primitives.json: 31 references, 0 unresolved
+- scripts/inventory/mcp.json: 37 references, 0 unresolved
+- scripts/inventory/metadata-registry.json: 41 references, 0 unresolved
+- scripts/inventory/react-actions.json: 47 references, 0 unresolved
+- scripts/inventory/react-choice-range.json: 48 references, 0 unresolved
+- scripts/inventory/react-collection-presentation.json: 22 references, 0 unresolved
+- scripts/inventory/react-core.json: 35 references, 0 unresolved
+- scripts/inventory/react-disclosure-steps.json: 19 references, 0 unresolved
+- scripts/inventory/react-feedback.json: 23 references, 0 unresolved
+- scripts/inventory/react-media-containers.json: 43 references, 0 unresolved
+- scripts/inventory/react-menu-navigation.json: 62 references, 0 unresolved
+- scripts/inventory/react-numeric-date-color-file.json: 21 references, 0 unresolved
+- scripts/inventory/react-option-selection.json: 23 references, 0 unresolved
+- scripts/inventory/react-overlays-notifications.json: 83 references, 0 unresolved
+- scripts/inventory/react-table-viewport.json: 34 references, 0 unresolved
+- scripts/inventory/react-text-entry.json: 41 references, 0 unresolved
+- scripts/inventory/root-files.json: 0 references, 0 unresolved
+- scripts/inventory/shared-component-styles.json: 37 references, 0 unresolved
+- scripts/inventory/styled-runtime.json: 33 references, 0 unresolved
+- scripts/inventory/theme-contract.json: 20 references, 0 unresolved
+- scripts/inventory/uix-utils-dom.json: 9 references, 0 unresolved
+- scripts/inventory/uix-utils-values.json: 4 references, 0 unresolved
+- scripts/inventory/vue-actions.json: 60 references, 0 unresolved
+- scripts/inventory/vue-choice-range.json: 46 references, 0 unresolved
+- scripts/inventory/vue-collection-presentation.json: 25 references, 0 unresolved
+- scripts/inventory/vue-core.json: 32 references, 0 unresolved
+- scripts/inventory/vue-disclosure-steps.json: 30 references, 0 unresolved
+- scripts/inventory/vue-feedback.json: 43 references, 0 unresolved
+- scripts/inventory/vue-media-containers.json: 48 references, 0 unresolved
+- scripts/inventory/vue-menu-navigation.json: 59 references, 0 unresolved
+- scripts/inventory/vue-numeric-date-color-file.json: 24 references, 0 unresolved
+- scripts/inventory/vue-option-selection.json: 28 references, 0 unresolved
+- scripts/inventory/vue-overlays-notifications.json: 93 references, 0 unresolved
+- scripts/inventory/vue-table-viewport.json: 35 references, 0 unresolved
+- scripts/inventory/vue-text-entry.json: 44 references, 0 unresolved

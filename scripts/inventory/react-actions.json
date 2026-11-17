@@ -1,0 +1,677 @@
+{
+  "version": 1,
+  "scope": "react-actions",
+  "revision": "c7a8d706e9ebfb22ebf6cc6635a77819cce95576",
+  "packages": [
+    {
+      "path": "packages/react",
+      "roots": [
+        "packages/react/src/button",
+        "packages/react/src/button-group",
+        "packages/react/src/split-button",
+        "packages/react/src/avatar",
+        "packages/react/src/avatar-group",
+        "packages/react/src/chip",
+        "packages/react/src/tag",
+        "packages/react/src/toolbar"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/react/src/button/index.ts"
+        },
+        {
+          "subpath": "./button",
+          "source": "packages/react/src/button/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/button-group/index.ts"
+        },
+        {
+          "subpath": "./button-group",
+          "source": "packages/react/src/button-group/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/split-button/index.ts"
+        },
+        {
+          "subpath": "./split-button",
+          "source": "packages/react/src/split-button/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/avatar/index.ts"
+        },
+        {
+          "subpath": "./avatar",
+          "source": "packages/react/src/avatar/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/avatar-group/index.ts"
+        },
+        {
+          "subpath": "./avatar-group",
+          "source": "packages/react/src/avatar-group/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/chip/index.ts"
+        },
+        {
+          "subpath": "./chip",
+          "source": "packages/react/src/chip/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/tag/index.ts"
+        },
+        {
+          "subpath": "./tag",
+          "source": "packages/react/src/tag/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/toolbar/index.ts"
+        },
+        {
+          "subpath": "./toolbar",
+          "source": "packages/react/src/toolbar/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "react.button",
+      "name": "React UButton",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Native action button with loading/disabled gating, icons, badge and optional tooltip. Reuses the pilot react.button identity rather than introducing a second product.",
+      "surface": "UButton and UButtonProps expose a forwarded HTMLButtonElement ref. UButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, \"disabled\">: native events, children and attributes remain available. Adds label:string, icon/loadingIcon:ReactNode, iconPos:left|right|top|bottom, loading/disabled, severity:secondary|success|info|warning|danger|help|contrast, size:small|large, text/raised/rounded/outlined/link/plain, badge/badgeClassName, visible, tooltip and tooltipOptions:Record<string,unknown>. visible=false returns null; loading disables the button. Label plus badge supplies aria-label when label exists, even over an explicit aria-label; type defaults to button but rest attributes follow it. Internal setRef/renderIcon and buttonStyleModule belong here. ButtonClassesParams is an owned source-only class resolver contract for hasIcon/label/loading/severity/raised/rounded/text/outlined/link/plain/size/iconPos; not a barrel export. USpinnerIcon and UTooltip are dependencies, not owned products. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/button. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution and delegates mounting/style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is registered; no scoped style module imports @ultimate/uix-styles. Comments claiming missing shared modules are historical, not availability evidence. Aura registry key button exists; this local structural CSS has no dt() token references. BUTTON_METADATA names this React sourcePath.",
+      "files": [
+        "packages/react/src/button/index.ts",
+        "packages/react/src/button/button.tsx",
+        "packages/react/src/button/button-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UButton",
+        "@ultimate/react#UButtonProps",
+        "@ultimate/react/button#UButton",
+        "@ultimate/react/button#UButtonProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/button/button.tsx",
+          "contains": "export interface UButtonProps"
+        },
+        {
+          "path": "packages/react/src/button/button-style.ts",
+          "contains": "export const buttonStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./button\";"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.button",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.react-core.icons",
+        "package.ultimate.react.tooltip",
+        "package.ultimate.component-metadata.records"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Forward-ref component, declared props, local style module and described composition exist in source; not behavioral proof."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing product tests aborted before assertions.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "c7a8d706e9ebfb22ebf6cc6635a77819cce95576",
+          "limitations": "Host ancestor PostCSS configuration requires unavailable postcss-import. No product assertions executed, no browser/build/publish coverage; external configuration and product left unchanged.",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "react.button-group",
+      "name": "React UButtonGroup",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "CSS grouping wrapper for adjacent action buttons; children remain independently supplied controls.",
+      "surface": "UButtonGroup and UButtonGroupProps forward HTMLSpanElement ref. Props are children?:ReactNode and className?:string only, not arbitrary native span attributes. Renders span role=group. buttonGroupStyleModule owns inline-flex, adjoining border suppression, fixed 6px outer corners and focus stacking. No standalone hook, base factory or compound static members; children are the public composition seam. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/button-group. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution and delegates mounting/style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is registered; no scoped style module imports @ultimate/uix-styles. Comments claiming missing shared modules are historical, not availability evidence. No dedicated button-group key in Aura registry; local CSS composes button classes. No dedicated record for this family is present in the current metadata registry; no metadata association is inferred from its name.",
+      "files": [
+        "packages/react/src/button-group/index.ts",
+        "packages/react/src/button-group/button-group.tsx",
+        "packages/react/src/button-group/button-group-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UButtonGroup",
+        "@ultimate/react#UButtonGroupProps",
+        "@ultimate/react/button-group#UButtonGroup",
+        "@ultimate/react/button-group#UButtonGroupProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/button-group/button-group.tsx",
+          "contains": "export interface UButtonGroupProps"
+        },
+        {
+          "path": "packages/react/src/button-group/button-group-style.ts",
+          "contains": "export const buttonGroupStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./button-group\";"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.button-group",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "react.button"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Forward-ref component, declared props, local style module and described composition exist in source; not behavioral proof."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing product tests aborted before assertions.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "c7a8d706e9ebfb22ebf6cc6635a77819cce95576",
+          "limitations": "Host ancestor PostCSS configuration requires unavailable postcss-import. No product assertions executed, no browser/build/publish coverage; external configuration and product left unchanged.",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "react.split-button",
+      "name": "React USplitButton",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Primary command with a secondary popup menu, composing UButton and UMenu rather than owning a new menu implementation.",
+      "surface": "USplitButton and USplitButtonProps forward HTMLDivElement ref. Props: model?:UMenuItem[] (default []), label, icon:ReactNode, iconPos:left|right|top|bottom, severity:secondary|success|info|warning|danger|help|contrast, text, outlined, size:small|large, disabled, onClick:(React.SyntheticEvent)=>void, onShow/onHide:()=>void, className. No arbitrary native div props or children contract. Private handleDefaultClick hides UMenu then invokes onClick; handleDropdownClick invokes UMenuHandle.toggle(event). Two UButton children share modifiers; dropdown has aria-haspopup=menu. UMenu owns overlay behavior and UMenuItem/UMenuHandle contracts, not this record. splitButtonStyleModule owns local fixed-radius joined-button CSS. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/split-button. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution and delegates mounting/style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is registered; no scoped style module imports @ultimate/uix-styles. Comments claiming missing shared modules are historical, not availability evidence. Aura registry uses splitbutton while componentName is split-button; local CSS has no dt() calls. Registry existence is not proof of that hyphenated registration resolving tokens. No dedicated record for this family is present in the current metadata registry; no metadata association is inferred from its name.",
+      "files": [
+        "packages/react/src/split-button/index.ts",
+        "packages/react/src/split-button/split-button.tsx",
+        "packages/react/src/split-button/split-button-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#USplitButton",
+        "@ultimate/react#USplitButtonProps",
+        "@ultimate/react/split-button#USplitButton",
+        "@ultimate/react/split-button#USplitButtonProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/split-button/split-button.tsx",
+          "contains": "export interface USplitButtonProps"
+        },
+        {
+          "path": "packages/react/src/split-button/split-button-style.ts",
+          "contains": "export const splitButtonStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./split-button\";"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.split-button",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "react.button",
+        "package.ultimate.react.menu"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Forward-ref component, declared props, local style module and described composition exist in source; not behavioral proof."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing product tests aborted before assertions.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "c7a8d706e9ebfb22ebf6cc6635a77819cce95576",
+          "limitations": "Host ancestor PostCSS configuration requires unavailable postcss-import. No product assertions executed, no browser/build/publish coverage; external configuration and product left unchanged.",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "react.avatar",
+      "name": "React UAvatar",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Identity image, label or icon with local image-error fallback state.",
+      "surface": "UAvatar and UAvatarProps forward HTMLDivElement ref. Props: label?:string, icon?:ReactNode, image?:string, size:normal|large|xlarge (default normal), shape:square|circle (default square), ariaLabel, onImageError:(SyntheticEvent<HTMLImageElement,Event>)=>void and className. No native attribute spread or children contract. imageFailed state hides failed image and prefers label then icon; changing image does not reset that state. ariaLabel becomes root aria-label and image alt. avatarStyleModule and AvatarClassesParams own hasImage/imageFailed/shape/size class resolution, local dimensions and circle styling; source-only, not public exports. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/avatar. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution and delegates mounting/style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is registered; no scoped style module imports @ultimate/uix-styles. Comments claiming missing shared modules are historical, not availability evidence. Aura key avatar exists; local CSS uses fixed dimensions, not avatar dt() tokens. No dedicated record for this family is present in the current metadata registry; no metadata association is inferred from its name.",
+      "files": [
+        "packages/react/src/avatar/index.ts",
+        "packages/react/src/avatar/avatar.tsx",
+        "packages/react/src/avatar/avatar-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UAvatar",
+        "@ultimate/react#UAvatarProps",
+        "@ultimate/react/avatar#UAvatar",
+        "@ultimate/react/avatar#UAvatarProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/avatar/avatar.tsx",
+          "contains": "export interface UAvatarProps"
+        },
+        {
+          "path": "packages/react/src/avatar/avatar-style.ts",
+          "contains": "export const avatarStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./avatar\";"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.avatar",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Forward-ref component, declared props, local style module and described composition exist in source; not behavioral proof."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing product tests aborted before assertions.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "c7a8d706e9ebfb22ebf6cc6635a77819cce95576",
+          "limitations": "Host ancestor PostCSS configuration requires unavailable postcss-import. No product assertions executed, no browser/build/publish coverage; external configuration and product left unchanged.",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "react.avatar-group",
+      "name": "React UAvatarGroup",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Accessible group wrapper whose CSS overlaps child avatars; does not clone children or provide avatar context.",
+      "surface": "UAvatarGroup and UAvatarGroupProps forward HTMLSpanElement ref. children?:ReactNode and className?:string are the complete declared props; no native attribute spread. span role=group wraps children unchanged. avatarGroupStyleModule owns flex layout, negative margin overlap and --u-avatar-group-border-color with #fff fallback. It has no compound member, custom public hook or base factory. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/avatar-group. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution and delegates mounting/style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is registered; no scoped style module imports @ultimate/uix-styles. Comments claiming missing shared modules are historical, not availability evidence. No dedicated avatar-group key in Aura registry; avatar overlap uses local CSS. No dedicated record for this family is present in the current metadata registry; no metadata association is inferred from its name.",
+      "files": [
+        "packages/react/src/avatar-group/index.ts",
+        "packages/react/src/avatar-group/avatar-group.tsx",
+        "packages/react/src/avatar-group/avatar-group-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UAvatarGroup",
+        "@ultimate/react#UAvatarGroupProps",
+        "@ultimate/react/avatar-group#UAvatarGroup",
+        "@ultimate/react/avatar-group#UAvatarGroupProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/avatar-group/avatar-group.tsx",
+          "contains": "export interface UAvatarGroupProps"
+        },
+        {
+          "path": "packages/react/src/avatar-group/avatar-group-style.ts",
+          "contains": "export const avatarGroupStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./avatar-group\";"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.avatar-group",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "react.avatar"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Forward-ref component, declared props, local style module and described composition exist in source; not behavioral proof."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing product tests aborted before assertions.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "c7a8d706e9ebfb22ebf6cc6635a77819cce95576",
+          "limitations": "Host ancestor PostCSS configuration requires unavailable postcss-import. No product assertions executed, no browser/build/publish coverage; external configuration and product left unchanged.",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "react.chip",
+      "name": "React UChip",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Compact item/person label with optional image or icon and uncontrolled removable visibility.",
+      "surface": "UChip and UChipProps forward HTMLDivElement ref. Props: label, icon:string (CSS classes, not ReactNode), image, alt, disabled, removable, removeAriaLabel, onRemove:(MouseEvent|KeyboardEvent)=>void, onImageError:(SyntheticEvent<HTMLImageElement>)=>void, className. No native div attributes or children spread. Image takes priority over icon; label renders independently. Internal close/onKeyDown and visible state own removal; click, Enter or Backspace hides the chip before onRemove unless disabled. Remove span role=button has tabIndex -1 when disabled, otherwise 0; removeAriaLabel supplies its accessible label. UTimesIcon is external foundation content. chipStyleModule owns classes and --u-chip-* fallbacks, not a separately exported API. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/chip. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution and delegates mounting/style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is registered; no scoped style module imports @ultimate/uix-styles. Comments claiming missing shared modules are historical, not availability evidence. Aura key chip exists; local CSS uses custom-property fallbacks rather than dt(). No dedicated record for this family is present in the current metadata registry; no metadata association is inferred from its name.",
+      "files": [
+        "packages/react/src/chip/index.ts",
+        "packages/react/src/chip/chip.tsx",
+        "packages/react/src/chip/chip-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UChip",
+        "@ultimate/react#UChipProps",
+        "@ultimate/react/chip#UChip",
+        "@ultimate/react/chip#UChipProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/chip/chip.tsx",
+          "contains": "export interface UChipProps"
+        },
+        {
+          "path": "packages/react/src/chip/chip-style.ts",
+          "contains": "export const chipStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./chip\";"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.chip",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.react-core.icons"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Forward-ref component, declared props, local style module and described composition exist in source; not behavioral proof."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing product tests aborted before assertions.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "c7a8d706e9ebfb22ebf6cc6635a77819cce95576",
+          "limitations": "Host ancestor PostCSS configuration requires unavailable postcss-import. No product assertions executed, no browser/build/publish coverage; external configuration and product left unchanged.",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "react.tag",
+      "name": "React UTag",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Non-form status/category label with severity classes, optional icon and children/value content.",
+      "surface": "UTag and UTagProps forward HTMLSpanElement ref. Props: severity:success|secondary|info|warn|danger|contrast, value?:string, icon?:ReactNode, rounded?:boolean (default false), children?:ReactNode, className. Not arbitrary span attributes or a form control. children ?? value supplies label content; icon renders separately. tagStyleModule owns local severity/rounded class resolution and --u-tag-* color fallback variables; no custom public hook, factory or compound component members. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/tag. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution and delegates mounting/style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is registered; no scoped style module imports @ultimate/uix-styles. Comments claiming missing shared modules are historical, not availability evidence. Aura key tag exists; local CSS uses --u-tag-bg/severity-bg fallbacks, not automatically equivalent to the token contract. No dedicated record for this family is present in the current metadata registry; no metadata association is inferred from its name.",
+      "files": [
+        "packages/react/src/tag/index.ts",
+        "packages/react/src/tag/tag.tsx",
+        "packages/react/src/tag/tag-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UTag",
+        "@ultimate/react#UTagProps",
+        "@ultimate/react/tag#UTag",
+        "@ultimate/react/tag#UTagProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/tag/tag.tsx",
+          "contains": "export interface UTagProps"
+        },
+        {
+          "path": "packages/react/src/tag/tag-style.ts",
+          "contains": "export const tagStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./tag\";"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.tag",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Forward-ref component, declared props, local style module and described composition exist in source; not behavioral proof."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing product tests aborted before assertions.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "c7a8d706e9ebfb22ebf6cc6635a77819cce95576",
+          "limitations": "Host ancestor PostCSS configuration requires unavailable postcss-import. No product assertions executed, no browser/build/publish coverage; external configuration and product left unchanged.",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "react.toolbar",
+      "name": "React UToolbar",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Toolbar layout grouping default children and independently optional start, center and end content.",
+      "surface": "UToolbar and UToolbarProps forward HTMLDivElement ref. Props: ariaLabelledBy, start/center/end/children:ReactNode, className and style:React.CSSProperties. role=toolbar and aria-labelledby are applied to root; no general native-attribute spread. children render before slot wrappers; start, center and end wrappers are created when value !== undefined (including null). These named props are composition members, not independent exported components. toolbarStyleModule owns root/start/center/end classes and dt(toolbar.*) CSS for padding/background/border/color/radius/gap. No additional owned hook or base factory. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/toolbar. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution and delegates mounting/style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is registered; no scoped style module imports @ultimate/uix-styles. Comments claiming missing shared modules are historical, not availability evidence. Aura key toolbar matches componentName and explicit dt() references. No dedicated record for this family is present in the current metadata registry; no metadata association is inferred from its name.",
+      "files": [
+        "packages/react/src/toolbar/index.ts",
+        "packages/react/src/toolbar/toolbar.tsx",
+        "packages/react/src/toolbar/toolbar-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UToolbar",
+        "@ultimate/react#UToolbarProps",
+        "@ultimate/react/toolbar#UToolbar",
+        "@ultimate/react/toolbar#UToolbarProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/toolbar/toolbar.tsx",
+          "contains": "export interface UToolbarProps"
+        },
+        {
+          "path": "packages/react/src/toolbar/toolbar-style.ts",
+          "contains": "export const toolbarStyleModule"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./toolbar\";"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.toolbar",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Forward-ref component, declared props, local style module and described composition exist in source; not behavioral proof."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing product tests aborted before assertions.",
+          "command": "pnpm --filter @ultimate/react exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "c7a8d706e9ebfb22ebf6cc6635a77819cce95576",
+          "limitations": "Host ancestor PostCSS configuration requires unavailable postcss-import. No product assertions executed, no browser/build/publish coverage; external configuration and product left unchanged.",
+          "output": "Failed to load PostCSS config: Loading PostCSS Plugin failed: Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/react/src/button/button.api.mdx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/button/button.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/button/button.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/button/gap-124-react-unchanged.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/button-group/button-group.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/button-group/button-group.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/split-button/split-button.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/split-button/split-button.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/avatar/avatar.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/avatar/avatar.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/avatar-group/avatar-group.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/avatar-group/avatar-group.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/chip/chip.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/chip/chip.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/tag/tag.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/tag/tag.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/toolbar/toolbar.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/toolbar/toolbar.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.component-metadata.records",
+      "batch": "ticket-153",
+      "reason": "Detailed inventory remains owned by [#153](https://github.com/majedsiefalnasr/ultimate-packages/issues/153). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.base",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.icons",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.styling",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by [#149](https://github.com/majedsiefalnasr/ultimate-packages/issues/149). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react.menu",
+      "batch": "ticket-126",
+      "reason": "Detailed inventory remains owned by [#126](https://github.com/majedsiefalnasr/ultimate-packages/issues/126). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react.tooltip",
+      "batch": "ticket-123",
+      "reason": "Detailed inventory remains owned by [#123](https://github.com/majedsiefalnasr/ultimate-packages/issues/123). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.react.button",
+      "record": "react.button"
+    },
+    {
+      "id": "package.ultimate.react.button-group",
+      "record": "react.button-group"
+    },
+    {
+      "id": "package.ultimate.react.split-button",
+      "record": "react.split-button"
+    },
+    {
+      "id": "package.ultimate.react.avatar",
+      "record": "react.avatar"
+    },
+    {
+      "id": "package.ultimate.react.avatar-group",
+      "record": "react.avatar-group"
+    },
+    {
+      "id": "package.ultimate.react.chip",
+      "record": "react.chip"
+    },
+    {
+      "id": "package.ultimate.react.tag",
+      "record": "react.tag"
+    },
+    {
+      "id": "package.ultimate.react.toolbar",
+      "record": "react.toolbar"
+    }
+  ],
+  "ownership": {
+    "ticket": 108,
+    "path": "scripts/inventory/package-coverage.json"
+  }
+}

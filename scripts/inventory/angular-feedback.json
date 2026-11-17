@@ -1,0 +1,1368 @@
+{
+  "version": 1,
+  "scope": "angular-feedback",
+  "revision": "c531e881dfa14e18449553ecfe45b0ab17d3210a",
+  "packages": [
+    {
+      "path": "packages/ng",
+      "roots": [
+        "packages/ng/src/progress-bar",
+        "packages/ng/src/progress-spinner",
+        "packages/ng/src/meter-group",
+        "packages/ng/src/skeleton",
+        "packages/ng/src/terminal",
+        "packages/ng/src/inplace",
+        "packages/ng/src/scroll-top",
+        "packages/ng/src/ripple",
+        "packages/ng/src/autofocus",
+        "packages/ng/src/fluid",
+        "packages/ng/src/key-filter",
+        "packages/ng/src/style-class",
+        "packages/ng/src/animate-on-scroll"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/progress-bar/index.ts"
+        },
+        {
+          "subpath": "./progress-bar",
+          "source": "packages/ng/src/progress-bar/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/progress-spinner/index.ts"
+        },
+        {
+          "subpath": "./progress-spinner",
+          "source": "packages/ng/src/progress-spinner/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/meter-group/index.ts"
+        },
+        {
+          "subpath": "./meter-group",
+          "source": "packages/ng/src/meter-group/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/skeleton/index.ts"
+        },
+        {
+          "subpath": "./skeleton",
+          "source": "packages/ng/src/skeleton/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/terminal/index.ts"
+        },
+        {
+          "subpath": "./terminal",
+          "source": "packages/ng/src/terminal/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/inplace/index.ts"
+        },
+        {
+          "subpath": "./inplace",
+          "source": "packages/ng/src/inplace/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/scroll-top/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/ripple/index.ts"
+        },
+        {
+          "subpath": "./ripple",
+          "source": "packages/ng/src/ripple/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/autofocus/index.ts"
+        },
+        {
+          "subpath": "./autofocus",
+          "source": "packages/ng/src/autofocus/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/fluid/index.ts"
+        },
+        {
+          "subpath": "./fluid",
+          "source": "packages/ng/src/fluid/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/key-filter/index.ts"
+        },
+        {
+          "subpath": "./key-filter",
+          "source": "packages/ng/src/key-filter/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/style-class/index.ts"
+        },
+        {
+          "subpath": "./style-class",
+          "source": "packages/ng/src/style-class/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/ng/src/animate-on-scroll/index.ts"
+        },
+        {
+          "subpath": "./animate-on-scroll",
+          "source": "packages/ng/src/animate-on-scroll/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/ng/src/progress-bar/progress-bar.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng/src/progress-bar/progress-bar.stories.ts",
+      "reason": "Supporting Storybook examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/progress-spinner/progress-spinner.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng/src/progress-spinner/progress-spinner.stories.ts",
+      "reason": "Supporting Storybook examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/meter-group/meter-group.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng/src/meter-group/meter-group.stories.ts",
+      "reason": "Supporting Storybook examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/skeleton/skeleton.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng/src/skeleton/skeleton.stories.ts",
+      "reason": "Supporting Storybook examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/terminal/terminal.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng/src/terminal/terminal.stories.ts",
+      "reason": "Supporting Storybook examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/inplace/inplace.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng/src/inplace/inplace.stories.ts",
+      "reason": "Supporting Storybook examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/scroll-top/scroll-top.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng/src/scroll-top/scroll-top.stories.ts",
+      "reason": "Supporting Storybook examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/ripple/ripple.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng/src/ripple/ripple.stories.ts",
+      "reason": "Supporting Storybook examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/autofocus/auto-focus.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng/src/autofocus/auto-focus.stories.ts",
+      "reason": "Supporting Storybook examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/fluid/fluid.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng/src/fluid/fluid.stories.ts",
+      "reason": "Supporting Storybook examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/key-filter/key-filter.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng/src/key-filter/key-filter.stories.ts",
+      "reason": "Supporting Storybook examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/style-class/style-class.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng/src/style-class/style-class.stories.ts",
+      "reason": "Supporting Storybook examples; not exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/animate-on-scroll/animate-on-scroll.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/ng/src/animate-on-scroll/animate-on-scroll.stories.ts",
+      "reason": "Supporting Storybook examples; not exported runtime API."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.ng-core.base-input",
+      "batch": "ticket-148",
+      "reason": "External reconciled owner; source relationship is described here without completing that ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.basecomponent",
+      "batch": "ticket-148",
+      "reason": "External reconciled owner; source relationship is described here without completing that ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.config",
+      "batch": "ticket-148",
+      "reason": "External reconciled owner; source relationship is described here without completing that ticket."
+    },
+    {
+      "id": "package.ultimate.ng-core.terminal-service",
+      "batch": "ticket-148",
+      "reason": "External reconciled owner; source relationship is described here without completing that ticket."
+    },
+    {
+      "id": "package.ultimate.ng.button",
+      "batch": "ticket-107",
+      "reason": "External reconciled owner; source relationship is described here without completing that ticket."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "External reconciled owner; source relationship is described here without completing that ticket."
+    },
+    {
+      "id": "package.ultimate.uix-utils.dom",
+      "batch": "ticket-143",
+      "reason": "External reconciled owner; source relationship is described here without completing that ticket."
+    },
+    {
+      "id": "package.ultimate.uix-utils.zindex",
+      "batch": "ticket-144",
+      "reason": "External reconciled owner; source relationship is described here without completing that ticket."
+    }
+  ],
+  "ownership": {
+    "ticket": 140,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.ng.progress-bar",
+      "record": "angular.progress-bar"
+    },
+    {
+      "id": "package.ultimate.ng.progress-spinner",
+      "record": "angular.progress-spinner"
+    },
+    {
+      "id": "package.ultimate.ng.meter-group",
+      "record": "angular.meter-group"
+    },
+    {
+      "id": "package.ultimate.ng.skeleton",
+      "record": "angular.skeleton"
+    },
+    {
+      "id": "package.ultimate.ng.terminal",
+      "record": "angular.terminal"
+    },
+    {
+      "id": "package.ultimate.ng.inplace",
+      "record": "angular.inplace"
+    },
+    {
+      "id": "package.ultimate.ng.scroll-top",
+      "record": "angular.scroll-top"
+    },
+    {
+      "id": "package.ultimate.ng.ripple",
+      "record": "angular.ripple"
+    },
+    {
+      "id": "package.ultimate.ng.autofocus",
+      "record": "angular.autofocus"
+    },
+    {
+      "id": "package.ultimate.ng.fluid",
+      "record": "angular.fluid"
+    },
+    {
+      "id": "package.ultimate.ng.key-filter",
+      "record": "angular.key-filter"
+    },
+    {
+      "id": "package.ultimate.ng.style-class",
+      "record": "angular.style-class"
+    },
+    {
+      "id": "package.ultimate.ng.animate-on-scroll",
+      "record": "angular.animate-on-scroll"
+    }
+  ],
+  "records": [
+    {
+      "id": "angular.progress-bar",
+      "name": "Angular UProgressBar",
+      "framework": "angular",
+      "purpose": "Determinate or indeterminate progress indicator.",
+      "surface": "UProgressBar; Inputs value:number=0, showValue:boolean=true, unit:string=\"%\", mode:\"determinate\"|\"indeterminate\"=\"determinate\". Numeric and boolean attributes are transformed. Determinate mode binds value directly to width and aria-valuenow (no clamping), with min=0/max=100 and optional label; indeterminate mode omits aria-valuenow. No outputs. Standalone OnPush component, selector u-progress-bar, extends UBaseComponent with inherited dt:Record<string,unknown>|undefined and unstyled:boolean|undefined. Owned source-only progressBarStyleModule exports css/classes; it is not barrel-exported and does not import @ultimate/uix-styles. componentName \"progressbar\" selects the Aura components key progressbar; base initialization registers theme variables and styles. No record for this family exists in the current ALL_COMPONENTS metadata registry. Consumer availability is the root and matching secondary manifest entry.",
+      "files": [
+        "packages/ng/src/progress-bar/index.ts",
+        "packages/ng/src/progress-bar/progress-bar.ts",
+        "packages/ng/src/progress-bar/progress-bar-style.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/ng#UProgressBar", "@ultimate/ng/progress-bar#UProgressBar"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/progress-bar/progress-bar.ts",
+          "contains": "export class UProgressBar"
+        },
+        {
+          "path": "packages/ng/src/progress-bar/index.ts",
+          "contains": "UProgressBar"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/progress-bar\";"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/progress-bar/progress-bar.spec.ts",
+          "contains": "UProgressBar"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./progress-bar\":"
+        },
+        {
+          "path": "packages/ng/src/progress-bar/progress-bar-style.ts",
+          "contains": "export const progressBarStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "progressbar"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Determinate or indeterminate progress indicator. Interface, local helpers, ownership and source observations are supported by cited source, not exhaustive behavioral verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "The existing scoped spec suite passed once: progress-bar.spec.ts. Only assertions in the cited tests are verified; the full authored surface is source evidence.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{progress-bar,progress-spinner,meter-group,skeleton,terminal,inplace,scroll-top,ripple,autofocus,fluid,key-filter,style-class,animate-on-scroll}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "c531e881dfa14e18449553ecfe45b0ab17d3210a",
+          "run": "docs/inventory/angular-feedback/product-run.json",
+          "output": "Vitest 4.0.8: Test Files 13 passed (13); Tests 62 passed (62). key-filter 8; animate-on-scroll 5; style-class 9; autofocus 1; progress-bar 5; fluid 2; progress-spinner 4; scroll-top 4; skeleton 7; inplace 6; meter-group 5; terminal 5; ripple 1. Compiler warnings: NG8113 unused UStepList/UStepPanels in VerticalStepperHost; NG8102 step() ?? 1 in InputNumber. Runtime warning: NG0912 SsrHostComponent/HostComponent component-ID collision in style-class toggle test.",
+          "limitations": "One bounded local jsdom unit run under Node 24.15.0 after worktree-local prerequisite builds; no browser, visual, accessibility, Storybook, full platform/build, installed-package or publication proof. IntersectionObserver is mocked in animate-on-scroll; ripple only checks ink-span presence and fluid checks host class/DOM content. Coverage includes imported foundations and Button, not just this scope; existing tests are not exhaustive."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configuration only: the non-docs CI Test step invokes root pnpm run test, whose recursive package tests include Angular. This does not prove a remote run or branch protection. Inventory node tests are outside provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml"
+        }
+      ]
+    },
+    {
+      "id": "angular.progress-spinner",
+      "name": "Angular UProgressSpinner",
+      "framework": "angular",
+      "purpose": "Indeterminate SVG activity indicator.",
+      "surface": "UProgressSpinner; Inputs strokeWidth:string=\"2\", fill:string=\"none\", animationDuration:string=\"2s\", ariaLabel:string|undefined. Role progressbar with aria-busy=true; SVG circle animates continuously. No determinate value or outputs. CSS requests both progressspinner.colorOne and dotted progressspinner.color.one/two/three/four variables. Standalone OnPush component, selector u-progress-spinner, extends UBaseComponent with inherited dt:Record<string,unknown>|undefined and unstyled:boolean|undefined. Owned source-only progressSpinnerStyleModule exports css/classes; it is not barrel-exported and does not import @ultimate/uix-styles. componentName \"progressspinner\" selects the Aura components key progressspinner; base initialization registers theme variables and styles. No record for this family exists in the current ALL_COMPONENTS metadata registry. Consumer availability is the root and matching secondary manifest entry.",
+      "files": [
+        "packages/ng/src/progress-spinner/index.ts",
+        "packages/ng/src/progress-spinner/progress-spinner.ts",
+        "packages/ng/src/progress-spinner/progress-spinner-style.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/ng#UProgressSpinner",
+        "@ultimate/ng/progress-spinner#UProgressSpinner"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/progress-spinner/progress-spinner.ts",
+          "contains": "export class UProgressSpinner"
+        },
+        {
+          "path": "packages/ng/src/progress-spinner/index.ts",
+          "contains": "UProgressSpinner"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/progress-spinner\";"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/progress-spinner/progress-spinner.spec.ts",
+          "contains": "UProgressSpinner"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./progress-spinner\":"
+        },
+        {
+          "path": "packages/ng/src/progress-spinner/progress-spinner-style.ts",
+          "contains": "export const progressSpinnerStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "progressspinner"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Indeterminate SVG activity indicator. Interface, local helpers, ownership and source observations are supported by cited source, not exhaustive behavioral verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "The existing scoped spec suite passed once: progress-spinner.spec.ts. Only assertions in the cited tests are verified; the full authored surface is source evidence.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{progress-bar,progress-spinner,meter-group,skeleton,terminal,inplace,scroll-top,ripple,autofocus,fluid,key-filter,style-class,animate-on-scroll}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "c531e881dfa14e18449553ecfe45b0ab17d3210a",
+          "run": "docs/inventory/angular-feedback/product-run.json",
+          "output": "Vitest 4.0.8: Test Files 13 passed (13); Tests 62 passed (62). key-filter 8; animate-on-scroll 5; style-class 9; autofocus 1; progress-bar 5; fluid 2; progress-spinner 4; scroll-top 4; skeleton 7; inplace 6; meter-group 5; terminal 5; ripple 1. Compiler warnings: NG8113 unused UStepList/UStepPanels in VerticalStepperHost; NG8102 step() ?? 1 in InputNumber. Runtime warning: NG0912 SsrHostComponent/HostComponent component-ID collision in style-class toggle test.",
+          "limitations": "One bounded local jsdom unit run under Node 24.15.0 after worktree-local prerequisite builds; no browser, visual, accessibility, Storybook, full platform/build, installed-package or publication proof. IntersectionObserver is mocked in animate-on-scroll; ripple only checks ink-span presence and fluid checks host class/DOM content. Coverage includes imported foundations and Button, not just this scope; existing tests are not exhaustive."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configuration only: the non-docs CI Test step invokes root pnpm run test, whose recursive package tests include Angular. This does not prove a remote run or branch protection. Inventory node tests are outside provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml"
+        }
+      ]
+    },
+    {
+      "id": "angular.meter-group",
+      "name": "Angular UMeterGroup",
+      "framework": "angular",
+      "purpose": "Multiple proportional meter segments with a legend.",
+      "surface": "UMeterGroup; Inputs value:UMeterItem[]=[], min:number=0, max:number=100, orientation:\"horizontal\"|\"vertical\"=\"horizontal\". Exported UMeterItem has label?:string, color?:string, value:number, icon?:string. Only positive values produce segments; all items produce legend entries. Percentage is rounded and clamped from (value-min)/(max-min)*100, with equal endpoints returning 100. aria-valuenow normalizes the sum of item values through percent(), while min/max attributes retain raw range values. No outputs. Standalone OnPush component, selector u-meter-group, extends UBaseComponent with inherited dt:Record<string,unknown>|undefined and unstyled:boolean|undefined. Owned source-only meterGroupStyleModule exports css/classes; it is not barrel-exported and does not import @ultimate/uix-styles. componentName \"metergroup\" selects the Aura components key metergroup; base initialization registers theme variables and styles. No record for this family exists in the current ALL_COMPONENTS metadata registry. Consumer availability is the root and matching secondary manifest entry.",
+      "files": [
+        "packages/ng/src/meter-group/index.ts",
+        "packages/ng/src/meter-group/meter-group.ts",
+        "packages/ng/src/meter-group/meter-group-style.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/ng#UMeterGroup",
+        "@ultimate/ng#UMeterItem",
+        "@ultimate/ng/meter-group#UMeterGroup",
+        "@ultimate/ng/meter-group#UMeterItem"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/meter-group/meter-group.ts",
+          "contains": "export class UMeterGroup"
+        },
+        {
+          "path": "packages/ng/src/meter-group/index.ts",
+          "contains": "UMeterGroup"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/meter-group\";"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/meter-group/meter-group.spec.ts",
+          "contains": "UMeterGroup"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./meter-group\":"
+        },
+        {
+          "path": "packages/ng/src/meter-group/meter-group-style.ts",
+          "contains": "export const meterGroupStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "metergroup"
+        },
+        {
+          "path": "packages/ng/src/meter-group/meter-group.ts",
+          "contains": "export interface UMeterItem"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Multiple proportional meter segments with a legend. Interface, local helpers, ownership and source observations are supported by cited source, not exhaustive behavioral verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "The existing scoped spec suite passed once: meter-group.spec.ts. Only assertions in the cited tests are verified; the full authored surface is source evidence.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{progress-bar,progress-spinner,meter-group,skeleton,terminal,inplace,scroll-top,ripple,autofocus,fluid,key-filter,style-class,animate-on-scroll}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "c531e881dfa14e18449553ecfe45b0ab17d3210a",
+          "run": "docs/inventory/angular-feedback/product-run.json",
+          "output": "Vitest 4.0.8: Test Files 13 passed (13); Tests 62 passed (62). key-filter 8; animate-on-scroll 5; style-class 9; autofocus 1; progress-bar 5; fluid 2; progress-spinner 4; scroll-top 4; skeleton 7; inplace 6; meter-group 5; terminal 5; ripple 1. Compiler warnings: NG8113 unused UStepList/UStepPanels in VerticalStepperHost; NG8102 step() ?? 1 in InputNumber. Runtime warning: NG0912 SsrHostComponent/HostComponent component-ID collision in style-class toggle test.",
+          "limitations": "One bounded local jsdom unit run under Node 24.15.0 after worktree-local prerequisite builds; no browser, visual, accessibility, Storybook, full platform/build, installed-package or publication proof. IntersectionObserver is mocked in animate-on-scroll; ripple only checks ink-span presence and fluid checks host class/DOM content. Coverage includes imported foundations and Button, not just this scope; existing tests are not exhaustive."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configuration only: the non-docs CI Test step invokes root pnpm run test, whose recursive package tests include Angular. This does not prove a remote run or branch protection. Inventory node tests are outside provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml"
+        }
+      ]
+    },
+    {
+      "id": "angular.skeleton",
+      "name": "Angular USkeleton",
+      "framework": "angular",
+      "purpose": "Decorative placeholder for loading content.",
+      "surface": "USkeleton; Inputs shape:\"rectangle\"|\"circle\"=\"rectangle\", animation:\"wave\"|\"none\"=\"wave\", borderRadius?:string, size?:string, width:string=\"100%\", height:string=\"1rem\". size overrides both dimensions. Empty template, host aria-hidden=true; no outputs. Standalone OnPush component, selector u-skeleton, extends UBaseComponent with inherited dt:Record<string,unknown>|undefined and unstyled:boolean|undefined. Owned source-only skeletonStyleModule exports css/classes; it is not barrel-exported and does not import @ultimate/uix-styles. componentName \"skeleton\" selects the Aura components key skeleton; base initialization registers theme variables and styles. No record for this family exists in the current ALL_COMPONENTS metadata registry. Consumer availability is the root and matching secondary manifest entry.",
+      "files": [
+        "packages/ng/src/skeleton/index.ts",
+        "packages/ng/src/skeleton/skeleton.ts",
+        "packages/ng/src/skeleton/skeleton-style.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/ng#USkeleton", "@ultimate/ng/skeleton#USkeleton"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/skeleton/skeleton.ts",
+          "contains": "export class USkeleton"
+        },
+        {
+          "path": "packages/ng/src/skeleton/index.ts",
+          "contains": "USkeleton"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/skeleton\";"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/skeleton/skeleton.spec.ts",
+          "contains": "USkeleton"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./skeleton\":"
+        },
+        {
+          "path": "packages/ng/src/skeleton/skeleton-style.ts",
+          "contains": "export const skeletonStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "skeleton"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Decorative placeholder for loading content. Interface, local helpers, ownership and source observations are supported by cited source, not exhaustive behavioral verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "The existing scoped spec suite passed once: skeleton.spec.ts. Only assertions in the cited tests are verified; the full authored surface is source evidence.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{progress-bar,progress-spinner,meter-group,skeleton,terminal,inplace,scroll-top,ripple,autofocus,fluid,key-filter,style-class,animate-on-scroll}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "c531e881dfa14e18449553ecfe45b0ab17d3210a",
+          "run": "docs/inventory/angular-feedback/product-run.json",
+          "output": "Vitest 4.0.8: Test Files 13 passed (13); Tests 62 passed (62). key-filter 8; animate-on-scroll 5; style-class 9; autofocus 1; progress-bar 5; fluid 2; progress-spinner 4; scroll-top 4; skeleton 7; inplace 6; meter-group 5; terminal 5; ripple 1. Compiler warnings: NG8113 unused UStepList/UStepPanels in VerticalStepperHost; NG8102 step() ?? 1 in InputNumber. Runtime warning: NG0912 SsrHostComponent/HostComponent component-ID collision in style-class toggle test.",
+          "limitations": "One bounded local jsdom unit run under Node 24.15.0 after worktree-local prerequisite builds; no browser, visual, accessibility, Storybook, full platform/build, installed-package or publication proof. IntersectionObserver is mocked in animate-on-scroll; ripple only checks ink-span presence and fluid checks host class/DOM content. Coverage includes imported foundations and Button, not just this scope; existing tests are not exhaustive."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configuration only: the non-docs CI Test step invokes root pnpm run test, whose recursive package tests include Angular. This does not prove a remote run or branch protection. Inventory node tests are outside provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml"
+        }
+      ]
+    },
+    {
+      "id": "angular.terminal",
+      "name": "Angular UTerminal",
+      "framework": "angular",
+      "purpose": "Command-entry display connected to the Angular terminal service.",
+      "surface": "UTerminal; Inputs welcomeMessage?:string and prompt:string=\"$\". Enter on nonempty input appends an owned TerminalCommand {text:string;response?:string}, calls UTerminalService.sendCommand and clears the input. The response subscription updates the latest command and ignores responses before a command exists; it unsubscribes on destroy. Host click focuses the input; responses use aria-live=polite. No component outputs; service commandHandler/responseHandler are the communication seam, owned externally by ng-core. Internal command state, input handlers and TerminalCommand are attributed to this record. Standalone OnPush component, selector u-terminal, extends UBaseComponent with inherited dt:Record<string,unknown>|undefined and unstyled:boolean|undefined. Owned source-only terminalStyleModule exports css/classes; it is not barrel-exported and does not import @ultimate/uix-styles. componentName \"terminal\" selects the Aura components key terminal; base initialization registers theme variables and styles. No record for this family exists in the current ALL_COMPONENTS metadata registry. Consumer availability is the root and matching secondary manifest entry.",
+      "files": [
+        "packages/ng/src/terminal/index.ts",
+        "packages/ng/src/terminal/terminal.ts",
+        "packages/ng/src/terminal/terminal-style.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/ng#UTerminal", "@ultimate/ng/terminal#UTerminal"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/terminal/terminal.ts",
+          "contains": "export class UTerminal"
+        },
+        {
+          "path": "packages/ng/src/terminal/index.ts",
+          "contains": "UTerminal"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/terminal\";"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/terminal/terminal.spec.ts",
+          "contains": "UTerminal"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./terminal\":"
+        },
+        {
+          "path": "packages/ng/src/terminal/terminal-style.ts",
+          "contains": "export const terminalStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "terminal"
+        },
+        {
+          "path": "packages/ng-core/src/terminal-service/terminal-service.ts",
+          "contains": "export class UTerminalService"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets",
+        "package.ultimate.ng-core.terminal-service"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Command-entry display connected to the Angular terminal service. Interface, local helpers, ownership and source observations are supported by cited source, not exhaustive behavioral verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "The existing scoped spec suite passed once: terminal.spec.ts. Only assertions in the cited tests are verified; the full authored surface is source evidence.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{progress-bar,progress-spinner,meter-group,skeleton,terminal,inplace,scroll-top,ripple,autofocus,fluid,key-filter,style-class,animate-on-scroll}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "c531e881dfa14e18449553ecfe45b0ab17d3210a",
+          "run": "docs/inventory/angular-feedback/product-run.json",
+          "output": "Vitest 4.0.8: Test Files 13 passed (13); Tests 62 passed (62). key-filter 8; animate-on-scroll 5; style-class 9; autofocus 1; progress-bar 5; fluid 2; progress-spinner 4; scroll-top 4; skeleton 7; inplace 6; meter-group 5; terminal 5; ripple 1. Compiler warnings: NG8113 unused UStepList/UStepPanels in VerticalStepperHost; NG8102 step() ?? 1 in InputNumber. Runtime warning: NG0912 SsrHostComponent/HostComponent component-ID collision in style-class toggle test.",
+          "limitations": "One bounded local jsdom unit run under Node 24.15.0 after worktree-local prerequisite builds; no browser, visual, accessibility, Storybook, full platform/build, installed-package or publication proof. IntersectionObserver is mocked in animate-on-scroll; ripple only checks ink-span presence and fluid checks host class/DOM content. Coverage includes imported foundations and Button, not just this scope; existing tests are not exhaustive."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configuration only: the non-docs CI Test step invokes root pnpm run test, whose recursive package tests include Angular. This does not prove a remote run or branch protection. Inventory node tests are outside provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml"
+        }
+      ]
+    },
+    {
+      "id": "angular.inplace",
+      "name": "Angular UInplace",
+      "framework": "angular",
+      "purpose": "Switches projected display content to an editable content template.",
+      "surface": "UInplace; Inputs active=false, disabled=false, preventClick=false with booleanAttribute; outputs onActivate/onDeactivate:Event|undefined. Projects [displayContent] when inactive and direct-child #content TemplateRef when active. Exported UInplaceContentContext has closeCallback:(event?:Event)=>void. Private activate(event?:Event) and deactivate(event?:Event) implement template interaction, set an internal override after first use and emit; disabled blocks both. preventClick is checked in click/callback paths, while Enter calls activate directly. Display div role=button tabindex=0 and host aria-live=polite. No separate public display/content component or factory. Standalone OnPush component, selector u-inplace, extends UBaseComponent with inherited dt:Record<string,unknown>|undefined and unstyled:boolean|undefined. Owned source-only inplaceStyleModule exports css/classes; it is not barrel-exported and does not import @ultimate/uix-styles. componentName \"inplace\" selects the Aura components key inplace; base initialization registers theme variables and styles. No record for this family exists in the current ALL_COMPONENTS metadata registry. Consumer availability is the root and matching secondary manifest entry.",
+      "files": [
+        "packages/ng/src/inplace/index.ts",
+        "packages/ng/src/inplace/inplace.ts",
+        "packages/ng/src/inplace/inplace-style.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/ng#UInplace",
+        "@ultimate/ng#UInplaceContentContext",
+        "@ultimate/ng/inplace#UInplace",
+        "@ultimate/ng/inplace#UInplaceContentContext"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/inplace/inplace.ts",
+          "contains": "export class UInplace"
+        },
+        {
+          "path": "packages/ng/src/inplace/index.ts",
+          "contains": "UInplace"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/inplace\";"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/inplace/inplace.spec.ts",
+          "contains": "UInplace"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./inplace\":"
+        },
+        {
+          "path": "packages/ng/src/inplace/inplace-style.ts",
+          "contains": "export const inplaceStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "inplace"
+        },
+        {
+          "path": "packages/ng/src/inplace/inplace.ts",
+          "contains": "export interface UInplaceContentContext"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Switches projected display content to an editable content template. Interface, local helpers, ownership and source observations are supported by cited source, not exhaustive behavioral verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "The existing scoped spec suite passed once: inplace.spec.ts. Only assertions in the cited tests are verified; the full authored surface is source evidence.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{progress-bar,progress-spinner,meter-group,skeleton,terminal,inplace,scroll-top,ripple,autofocus,fluid,key-filter,style-class,animate-on-scroll}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "c531e881dfa14e18449553ecfe45b0ab17d3210a",
+          "run": "docs/inventory/angular-feedback/product-run.json",
+          "output": "Vitest 4.0.8: Test Files 13 passed (13); Tests 62 passed (62). key-filter 8; animate-on-scroll 5; style-class 9; autofocus 1; progress-bar 5; fluid 2; progress-spinner 4; scroll-top 4; skeleton 7; inplace 6; meter-group 5; terminal 5; ripple 1. Compiler warnings: NG8113 unused UStepList/UStepPanels in VerticalStepperHost; NG8102 step() ?? 1 in InputNumber. Runtime warning: NG0912 SsrHostComponent/HostComponent component-ID collision in style-class toggle test.",
+          "limitations": "One bounded local jsdom unit run under Node 24.15.0 after worktree-local prerequisite builds; no browser, visual, accessibility, Storybook, full platform/build, installed-package or publication proof. IntersectionObserver is mocked in animate-on-scroll; ripple only checks ink-span presence and fluid checks host class/DOM content. Coverage includes imported foundations and Button, not just this scope; existing tests are not exhaustive."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configuration only: the non-docs CI Test step invokes root pnpm run test, whose recursive package tests include Angular. This does not prove a remote run or branch protection. Inventory node tests are outside provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml"
+        }
+      ]
+    },
+    {
+      "id": "angular.scroll-top",
+      "name": "Angular UScrollTop",
+      "framework": "angular",
+      "purpose": "Button that scrolls the window or its parent to the top.",
+      "surface": "UScrollTop; Inputs target:\"window\"|\"parent\"=\"window\", threshold:number=400 (numberAttribute), behavior:\"auto\"|\"smooth\"=\"smooth\", buttonAriaLabel:string=\"Scroll to top\"; outputs onShow/onHide:void. Composes real UButton. The template's protected onClick() scrolls the selected target; there is no public scrollToTop method. Listener installed on init; visibility checks scroll position > threshold after scroll events, without an initial scroll-position check. An effect emits initial onHide and subsequent visibility events and queues overlay ZIndex.set. Destroy removes the scroll listener. ngOnInit overrides the base without calling super.ngOnInit, so inherited style registration is not invoked there. Local structural style uses componentName \"scroll-top\", which has no Aura component key. Standalone OnPush component, selector u-scroll-top, extends UBaseComponent with inherited dt:Record<string,unknown>|undefined and unstyled:boolean|undefined. Owned source-only scrollTopStyleModule exports css/classes; it is not barrel-exported and does not import @ultimate/uix-styles. No record for this family exists in the current ALL_COMPONENTS metadata registry. Consumer availability is root-only; the package manifest has no ./scroll-top export.",
+      "files": [
+        "packages/ng/src/scroll-top/index.ts",
+        "packages/ng/src/scroll-top/scroll-top.ts",
+        "packages/ng/src/scroll-top/scroll-top-style.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/ng#UScrollTop"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/scroll-top/scroll-top.ts",
+          "contains": "export class UScrollTop"
+        },
+        {
+          "path": "packages/ng/src/scroll-top/index.ts",
+          "contains": "UScrollTop"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"./scroll-top\";"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/scroll-top/scroll-top.spec.ts",
+          "contains": "UScrollTop"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "pnpm run test"
+        },
+        {
+          "path": "packages/ng/src/scroll-top/scroll-top-style.ts",
+          "contains": "export const scrollTopStyleModule"
+        },
+        {
+          "path": "packages/ng-core/src/basecomponent/base-component.ts",
+          "contains": "registerThemeVariables(sheet, this.componentName);"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "components:"
+        },
+        {
+          "path": "packages/ng/src/button/index.ts",
+          "contains": "UButton"
+        },
+        {
+          "path": "packages/uix-utils/src/dom/index.ts",
+          "contains": "export"
+        },
+        {
+          "path": "packages/uix-utils/src/zindex/index.ts",
+          "contains": "export"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.ng-core.basecomponent",
+        "package.ultimate.ng.button",
+        "package.ultimate.uix-utils.dom",
+        "package.ultimate.uix-utils.zindex"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Button that scrolls the window or its parent to the top. Interface, local helpers, ownership and source observations are supported by cited source, not exhaustive behavioral verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "The existing scoped spec suite passed once: scroll-top.spec.ts. Only assertions in the cited tests are verified; the full authored surface is source evidence.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{progress-bar,progress-spinner,meter-group,skeleton,terminal,inplace,scroll-top,ripple,autofocus,fluid,key-filter,style-class,animate-on-scroll}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "c531e881dfa14e18449553ecfe45b0ab17d3210a",
+          "run": "docs/inventory/angular-feedback/product-run.json",
+          "output": "Vitest 4.0.8: Test Files 13 passed (13); Tests 62 passed (62). key-filter 8; animate-on-scroll 5; style-class 9; autofocus 1; progress-bar 5; fluid 2; progress-spinner 4; scroll-top 4; skeleton 7; inplace 6; meter-group 5; terminal 5; ripple 1. Compiler warnings: NG8113 unused UStepList/UStepPanels in VerticalStepperHost; NG8102 step() ?? 1 in InputNumber. Runtime warning: NG0912 SsrHostComponent/HostComponent component-ID collision in style-class toggle test.",
+          "limitations": "One bounded local jsdom unit run under Node 24.15.0 after worktree-local prerequisite builds; no browser, visual, accessibility, Storybook, full platform/build, installed-package or publication proof. IntersectionObserver is mocked in animate-on-scroll; ripple only checks ink-span presence and fluid checks host class/DOM content. Coverage includes imported foundations and Button, not just this scope; existing tests are not exhaustive."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configuration only: the non-docs CI Test step invokes root pnpm run test, whose recursive package tests include Angular. This does not prove a remote run or branch protection. Inventory node tests are outside provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml"
+        }
+      ]
+    },
+    {
+      "id": "angular.ripple",
+      "name": "Angular URipple",
+      "framework": "angular",
+      "purpose": "Config-gated pointer ripple directive.",
+      "surface": "URipple; Selector [uRipple]; no inputs or outputs. Host class u-ripple. Injects UltimateConfig, browser-guards its effect and creates/removes the ink span according to config.ripple(). Mousedown listener runs outside Angular. Ink span is aria-hidden with role=presentation; animationend and a 401ms fallback remove the active state. Destroy removes the ripple when enabled. Position calculation combines pageX with body.scrollTop and pageY with body.scrollLeft. DOM helpers, listeners and timeout belong to this record; there is no base component, local style module or CSS import proving ripple CSS delivery. No dedicated Aura component key is registered. No record for this family exists in the current ALL_COMPONENTS metadata registry. Consumer availability is the root and matching secondary manifest entry.",
+      "files": ["packages/ng/src/ripple/index.ts", "packages/ng/src/ripple/ripple.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/ng#URipple", "@ultimate/ng/ripple#URipple"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/ripple/ripple.ts",
+          "contains": "export class URipple"
+        },
+        {
+          "path": "packages/ng/src/ripple/index.ts",
+          "contains": "URipple"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/ripple\";"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/ripple/ripple.spec.ts",
+          "contains": "URipple"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./ripple\":"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "components:"
+        },
+        {
+          "path": "packages/ng-core/src/config/ultimate-config.ts",
+          "contains": "export class UltimateConfig"
+        },
+        {
+          "path": "packages/uix-utils/src/dom/index.ts",
+          "contains": "export"
+        }
+      ],
+      "relationships": ["package.ultimate.ng-core.config", "package.ultimate.uix-utils.dom"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Config-gated pointer ripple directive. Interface, local helpers, ownership and source observations are supported by cited source, not exhaustive behavioral verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "The existing scoped spec suite passed once: ripple.spec.ts. Only assertions in the cited tests are verified; the full authored surface is source evidence.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{progress-bar,progress-spinner,meter-group,skeleton,terminal,inplace,scroll-top,ripple,autofocus,fluid,key-filter,style-class,animate-on-scroll}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "c531e881dfa14e18449553ecfe45b0ab17d3210a",
+          "run": "docs/inventory/angular-feedback/product-run.json",
+          "output": "Vitest 4.0.8: Test Files 13 passed (13); Tests 62 passed (62). key-filter 8; animate-on-scroll 5; style-class 9; autofocus 1; progress-bar 5; fluid 2; progress-spinner 4; scroll-top 4; skeleton 7; inplace 6; meter-group 5; terminal 5; ripple 1. Compiler warnings: NG8113 unused UStepList/UStepPanels in VerticalStepperHost; NG8102 step() ?? 1 in InputNumber. Runtime warning: NG0912 SsrHostComponent/HostComponent component-ID collision in style-class toggle test.",
+          "limitations": "One bounded local jsdom unit run under Node 24.15.0 after worktree-local prerequisite builds; no browser, visual, accessibility, Storybook, full platform/build, installed-package or publication proof. IntersectionObserver is mocked in animate-on-scroll; ripple only checks ink-span presence and fluid checks host class/DOM content. Coverage includes imported foundations and Button, not just this scope; existing tests are not exhaustive."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configuration only: the non-docs CI Test step invokes root pnpm run test, whose recursive package tests include Angular. This does not prove a remote run or branch protection. Inventory node tests are outside provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml"
+        }
+      ]
+    },
+    {
+      "id": "angular.autofocus",
+      "name": "Angular UAutoFocus",
+      "framework": "angular",
+      "purpose": "Optionally focuses a host or first focusable descendant after view initialization.",
+      "surface": "UAutoFocus; Selector [uAutoFocus]; autofocus:boolean=false aliases uAutoFocus with booleanAttribute. Writes the native autofocus attribute, browser-guards deferred focus, chooses first focusable descendant or host, and sets its internal focused flag. No outputs, forms provider, base component or local style module; deferred timer is not explicitly cancelled on destroy. No dedicated Aura component key is registered. No record for this family exists in the current ALL_COMPONENTS metadata registry. Consumer availability is the root and matching secondary manifest entry.",
+      "files": ["packages/ng/src/autofocus/index.ts", "packages/ng/src/autofocus/auto-focus.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/ng#UAutoFocus", "@ultimate/ng/autofocus#UAutoFocus"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/autofocus/auto-focus.ts",
+          "contains": "export class UAutoFocus"
+        },
+        {
+          "path": "packages/ng/src/autofocus/index.ts",
+          "contains": "UAutoFocus"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/autofocus\";"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/autofocus/auto-focus.spec.ts",
+          "contains": "UAutoFocus"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./autofocus\":"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "components:"
+        },
+        {
+          "path": "packages/uix-utils/src/dom/index.ts",
+          "contains": "export"
+        }
+      ],
+      "relationships": ["package.ultimate.uix-utils.dom"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Optionally focuses a host or first focusable descendant after view initialization. Interface, local helpers, ownership and source observations are supported by cited source, not exhaustive behavioral verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "The existing scoped spec suite passed once: auto-focus.spec.ts. Only assertions in the cited tests are verified; the full authored surface is source evidence.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{progress-bar,progress-spinner,meter-group,skeleton,terminal,inplace,scroll-top,ripple,autofocus,fluid,key-filter,style-class,animate-on-scroll}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "c531e881dfa14e18449553ecfe45b0ab17d3210a",
+          "run": "docs/inventory/angular-feedback/product-run.json",
+          "output": "Vitest 4.0.8: Test Files 13 passed (13); Tests 62 passed (62). key-filter 8; animate-on-scroll 5; style-class 9; autofocus 1; progress-bar 5; fluid 2; progress-spinner 4; scroll-top 4; skeleton 7; inplace 6; meter-group 5; terminal 5; ripple 1. Compiler warnings: NG8113 unused UStepList/UStepPanels in VerticalStepperHost; NG8102 step() ?? 1 in InputNumber. Runtime warning: NG0912 SsrHostComponent/HostComponent component-ID collision in style-class toggle test.",
+          "limitations": "One bounded local jsdom unit run under Node 24.15.0 after worktree-local prerequisite builds; no browser, visual, accessibility, Storybook, full platform/build, installed-package or publication proof. IntersectionObserver is mocked in animate-on-scroll; ripple only checks ink-span presence and fluid checks host class/DOM content. Coverage includes imported foundations and Button, not just this scope; existing tests are not exhaustive."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configuration only: the non-docs CI Test step invokes root pnpm run test, whose recursive package tests include Angular. This does not prove a remote run or branch protection. Inventory node tests are outside provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml"
+        }
+      ]
+    },
+    {
+      "id": "angular.fluid",
+      "name": "Angular UFluid",
+      "framework": "angular",
+      "purpose": "Marks a projected subtree as a fluid ancestor for participating inputs.",
+      "surface": "UFluid; Selector u-fluid; standalone OnPush component with ViewEncapsulation.None, ng-content and host class u-fluid. Provides U_FLUID_ANCESTOR with useValue:true from ng-core/base-input. No inputs, outputs, base component or local style module. This provider relationship lets participating controls derive fluid context; the component has no own CSS establishing arbitrary descendant width. No dedicated Aura component key is registered. No record for this family exists in the current ALL_COMPONENTS metadata registry. Consumer availability is the root and matching secondary manifest entry.",
+      "files": ["packages/ng/src/fluid/index.ts", "packages/ng/src/fluid/fluid.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/ng#UFluid", "@ultimate/ng/fluid#UFluid"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/fluid/fluid.ts",
+          "contains": "export class UFluid"
+        },
+        {
+          "path": "packages/ng/src/fluid/index.ts",
+          "contains": "UFluid"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/fluid\";"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/fluid/fluid.spec.ts",
+          "contains": "UFluid"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./fluid\":"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "components:"
+        },
+        {
+          "path": "packages/ng-core/src/base-input/fluid-ancestor.token.ts",
+          "contains": "U_FLUID_ANCESTOR"
+        }
+      ],
+      "relationships": ["package.ultimate.ng-core.base-input"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Marks a projected subtree as a fluid ancestor for participating inputs. Interface, local helpers, ownership and source observations are supported by cited source, not exhaustive behavioral verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "The existing scoped spec suite passed once: fluid.spec.ts. Only assertions in the cited tests are verified; the full authored surface is source evidence.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{progress-bar,progress-spinner,meter-group,skeleton,terminal,inplace,scroll-top,ripple,autofocus,fluid,key-filter,style-class,animate-on-scroll}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "c531e881dfa14e18449553ecfe45b0ab17d3210a",
+          "run": "docs/inventory/angular-feedback/product-run.json",
+          "output": "Vitest 4.0.8: Test Files 13 passed (13); Tests 62 passed (62). key-filter 8; animate-on-scroll 5; style-class 9; autofocus 1; progress-bar 5; fluid 2; progress-spinner 4; scroll-top 4; skeleton 7; inplace 6; meter-group 5; terminal 5; ripple 1. Compiler warnings: NG8113 unused UStepList/UStepPanels in VerticalStepperHost; NG8102 step() ?? 1 in InputNumber. Runtime warning: NG0912 SsrHostComponent/HostComponent component-ID collision in style-class toggle test.",
+          "limitations": "One bounded local jsdom unit run under Node 24.15.0 after worktree-local prerequisite builds; no browser, visual, accessibility, Storybook, full platform/build, installed-package or publication proof. IntersectionObserver is mocked in animate-on-scroll; ripple only checks ink-span presence and fluid checks host class/DOM content. Coverage includes imported foundations and Button, not just this scope; existing tests are not exhaustive."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configuration only: the non-docs CI Test step invokes root pnpm run test, whose recursive package tests include Angular. This does not prove a remote run or branch protection. Inventory node tests are outside provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml"
+        }
+      ]
+    },
+    {
+      "id": "angular.key-filter",
+      "name": "Angular UKeyFilter",
+      "framework": "angular",
+      "purpose": "Filters keypress and pasted characters on an input host.",
+      "surface": "UKeyFilter; Selector [uKeyFilter]. pattern:RegExp|UKeyFilterPattern|undefined aliases uKeyFilter; validateOnly:boolean=false has no boolean transform. Exported UKeyFilterPattern is \"pint\"|\"int\"|\"pnum\"|\"money\"|\"num\"|\"hex\"|\"email\"|\"alpha\"|\"alphanum\". Source-only DEFAULT_MASKS and handlers belong here. Keypress checks existingValue+key, bypassing modifiers/Enter or validateOnly; paste checks each character and does not consult validateOnly. Undefined pattern uses /./. No outputs, NG_VALIDATORS provider, validation result, base component or styling integration. No dedicated Aura component key is registered. No record for this family exists in the current ALL_COMPONENTS metadata registry. Consumer availability is the root and matching secondary manifest entry.",
+      "files": ["packages/ng/src/key-filter/index.ts", "packages/ng/src/key-filter/key-filter.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/ng#UKeyFilter",
+        "@ultimate/ng#UKeyFilterPattern",
+        "@ultimate/ng/key-filter#UKeyFilter",
+        "@ultimate/ng/key-filter#UKeyFilterPattern"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/key-filter/key-filter.ts",
+          "contains": "export class UKeyFilter"
+        },
+        {
+          "path": "packages/ng/src/key-filter/index.ts",
+          "contains": "UKeyFilter"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/key-filter\";"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/key-filter/key-filter.spec.ts",
+          "contains": "UKeyFilter"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./key-filter\":"
+        },
+        {
+          "path": "packages/ng/src/key-filter/key-filter.ts",
+          "contains": "export type UKeyFilterPattern"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "components:"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Filters keypress and pasted characters on an input host. Interface, local helpers, ownership and source observations are supported by cited source, not exhaustive behavioral verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "The existing scoped spec suite passed once: key-filter.spec.ts. Only assertions in the cited tests are verified; the full authored surface is source evidence.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{progress-bar,progress-spinner,meter-group,skeleton,terminal,inplace,scroll-top,ripple,autofocus,fluid,key-filter,style-class,animate-on-scroll}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "c531e881dfa14e18449553ecfe45b0ab17d3210a",
+          "run": "docs/inventory/angular-feedback/product-run.json",
+          "output": "Vitest 4.0.8: Test Files 13 passed (13); Tests 62 passed (62). key-filter 8; animate-on-scroll 5; style-class 9; autofocus 1; progress-bar 5; fluid 2; progress-spinner 4; scroll-top 4; skeleton 7; inplace 6; meter-group 5; terminal 5; ripple 1. Compiler warnings: NG8113 unused UStepList/UStepPanels in VerticalStepperHost; NG8102 step() ?? 1 in InputNumber. Runtime warning: NG0912 SsrHostComponent/HostComponent component-ID collision in style-class toggle test.",
+          "limitations": "One bounded local jsdom unit run under Node 24.15.0 after worktree-local prerequisite builds; no browser, visual, accessibility, Storybook, full platform/build, installed-package or publication proof. IntersectionObserver is mocked in animate-on-scroll; ripple only checks ink-span presence and fluid checks host class/DOM content. Coverage includes imported foundations and Button, not just this scope; existing tests are not exhaustive."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configuration only: the non-docs CI Test step invokes root pnpm run test, whose recursive package tests include Angular. This does not prove a remote run or branch protection. Inventory node tests are outside provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml"
+        }
+      ]
+    },
+    {
+      "id": "angular.style-class",
+      "name": "Angular UStyleClass",
+      "framework": "angular",
+      "purpose": "Applies caller-supplied transition and toggle classes to a selected target.",
+      "surface": "UStyleClass; Selector [uStyleClass]. selector?:string aliases uStyleClass; enterFromClass/enterActiveClass/enterToClass/leaveFromClass/leaveActiveClass/leaveToClass/toggleClass?:string; hideOnOutsideClick/hideOnEscape/hideOnResize=false. First click caches target selected by @next/@prev/@parent/@grandparent or document.querySelector. toggleClass toggles directly; otherwise offsetParent===null chooses enter versus leave, with animationend cleanup. Destroy clears target and outside/escape/resize listeners but does not invoke stored enter/leave animation-listener cleanup functions. Target resolution, class mutation and listeners are owned helpers; no outputs, base component, local CSS or theme module. No dedicated Aura component key is registered. No record for this family exists in the current ALL_COMPONENTS metadata registry. Consumer availability is the root and matching secondary manifest entry.",
+      "files": [
+        "packages/ng/src/style-class/index.ts",
+        "packages/ng/src/style-class/style-class.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/ng#UStyleClass", "@ultimate/ng/style-class#UStyleClass"],
+      "evidence": [
+        {
+          "path": "packages/ng/src/style-class/style-class.ts",
+          "contains": "export class UStyleClass"
+        },
+        {
+          "path": "packages/ng/src/style-class/index.ts",
+          "contains": "UStyleClass"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/style-class\";"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/style-class/style-class.spec.ts",
+          "contains": "UStyleClass"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./style-class\":"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "components:"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Applies caller-supplied transition and toggle classes to a selected target. Interface, local helpers, ownership and source observations are supported by cited source, not exhaustive behavioral verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "The existing scoped spec suite passed once: style-class.spec.ts. Only assertions in the cited tests are verified; the full authored surface is source evidence.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{progress-bar,progress-spinner,meter-group,skeleton,terminal,inplace,scroll-top,ripple,autofocus,fluid,key-filter,style-class,animate-on-scroll}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "c531e881dfa14e18449553ecfe45b0ab17d3210a",
+          "run": "docs/inventory/angular-feedback/product-run.json",
+          "output": "Vitest 4.0.8: Test Files 13 passed (13); Tests 62 passed (62). key-filter 8; animate-on-scroll 5; style-class 9; autofocus 1; progress-bar 5; fluid 2; progress-spinner 4; scroll-top 4; skeleton 7; inplace 6; meter-group 5; terminal 5; ripple 1. Compiler warnings: NG8113 unused UStepList/UStepPanels in VerticalStepperHost; NG8102 step() ?? 1 in InputNumber. Runtime warning: NG0912 SsrHostComponent/HostComponent component-ID collision in style-class toggle test.",
+          "limitations": "One bounded local jsdom unit run under Node 24.15.0 after worktree-local prerequisite builds; no browser, visual, accessibility, Storybook, full platform/build, installed-package or publication proof. IntersectionObserver is mocked in animate-on-scroll; ripple only checks ink-span presence and fluid checks host class/DOM content. Coverage includes imported foundations and Button, not just this scope; existing tests are not exhaustive."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configuration only: the non-docs CI Test step invokes root pnpm run test, whose recursive package tests include Angular. This does not prove a remote run or branch protection. Inventory node tests are outside provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml"
+        }
+      ]
+    },
+    {
+      "id": "angular.animate-on-scroll",
+      "name": "Angular UAnimateOnScroll",
+      "framework": "angular",
+      "purpose": "Applies caller-defined classes through intersection observers.",
+      "surface": "UAnimateOnScroll; Selector [uAnimateOnScroll]; inputs enterClass?/leaveClass?:string, root:HTMLElement|null=null, rootMargin?:string, threshold:number=0.5 with numberAttribute, once:boolean=false with booleanAttribute. Browser-guards deferred observer setup; initially hides via opacity when enterClass is given. Observer uses threshold() || 0.5, so zero becomes 0.5. The initial intersecting callback can enter at any top position; subsequent entry/exit handling requires boundingClientRect.top>0. Repeated mode attaches a reset observer after animationend; its reset also checks top>0. Destroy unobserves observers and removes the animation listener but does not cancel deferred setup timeout. Observer state and renderer helpers belong here; no outputs, base component, local stylesheet or theme module. No dedicated Aura component key is registered. No record for this family exists in the current ALL_COMPONENTS metadata registry. Consumer availability is the root and matching secondary manifest entry.",
+      "files": [
+        "packages/ng/src/animate-on-scroll/index.ts",
+        "packages/ng/src/animate-on-scroll/animate-on-scroll.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/ng#UAnimateOnScroll",
+        "@ultimate/ng/animate-on-scroll#UAnimateOnScroll"
+      ],
+      "evidence": [
+        {
+          "path": "packages/ng/src/animate-on-scroll/animate-on-scroll.ts",
+          "contains": "export class UAnimateOnScroll"
+        },
+        {
+          "path": "packages/ng/src/animate-on-scroll/index.ts",
+          "contains": "UAnimateOnScroll"
+        },
+        {
+          "path": "packages/ng/src/index.ts",
+          "contains": "export * from \"@ultimate/ng/animate-on-scroll\";"
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/ng/src/animate-on-scroll/animate-on-scroll.spec.ts",
+          "contains": "UAnimateOnScroll"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "pnpm run test"
+        },
+        {
+          "path": "packages/ng/package.json",
+          "contains": "\"./animate-on-scroll\":"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "components:"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Applies caller-defined classes through intersection observers. Interface, local helpers, ownership and source observations are supported by cited source, not exhaustive behavioral verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "The existing scoped spec suite passed once: animate-on-scroll.spec.ts. Only assertions in the cited tests are verified; the full authored surface is source evidence.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{progress-bar,progress-spinner,meter-group,skeleton,terminal,inplace,scroll-top,ripple,autofocus,fluid,key-filter,style-class,animate-on-scroll}/*.spec.ts'",
+          "outcome": "passed",
+          "revision": "c531e881dfa14e18449553ecfe45b0ab17d3210a",
+          "run": "docs/inventory/angular-feedback/product-run.json",
+          "output": "Vitest 4.0.8: Test Files 13 passed (13); Tests 62 passed (62). key-filter 8; animate-on-scroll 5; style-class 9; autofocus 1; progress-bar 5; fluid 2; progress-spinner 4; scroll-top 4; skeleton 7; inplace 6; meter-group 5; terminal 5; ripple 1. Compiler warnings: NG8113 unused UStepList/UStepPanels in VerticalStepperHost; NG8102 step() ?? 1 in InputNumber. Runtime warning: NG0912 SsrHostComponent/HostComponent component-ID collision in style-class toggle test.",
+          "limitations": "One bounded local jsdom unit run under Node 24.15.0 after worktree-local prerequisite builds; no browser, visual, accessibility, Storybook, full platform/build, installed-package or publication proof. IntersectionObserver is mocked in animate-on-scroll; ripple only checks ink-span presence and fluid checks host class/DOM content. Coverage includes imported foundations and Button, not just this scope; existing tests are not exhaustive."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configuration only: the non-docs CI Test step invokes root pnpm run test, whose recursive package tests include Angular. This does not prove a remote run or branch protection. Inventory node tests are outside provenance-only test:scripts.",
+          "workflow": ".github/workflows/ci.yml"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,878 @@
+{
+  "version": 1,
+  "scope": "vue-core-150",
+  "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+  "ownership": {
+    "ticket": 150,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.vue-core",
+      "record": "vuecore.root"
+    },
+    {
+      "id": "package.ultimate.vue-core.root",
+      "record": "vuecore.root"
+    },
+    {
+      "id": "package.ultimate.vue-core.base",
+      "record": "vuecore.base"
+    },
+    {
+      "id": "package.ultimate.vue-core.directive",
+      "record": "vuecore.directive"
+    },
+    {
+      "id": "package.ultimate.vue-core.escape",
+      "record": "vuecore.escape"
+    },
+    {
+      "id": "package.ultimate.vue-core.focus-trap",
+      "record": "vuecore.focus-trap"
+    },
+    {
+      "id": "package.ultimate.vue-core.icons",
+      "record": "vuecore.icons"
+    },
+    {
+      "id": "package.ultimate.vue-core.motion",
+      "record": "vuecore.motion"
+    },
+    {
+      "id": "package.ultimate.vue-core.overlay",
+      "record": "vuecore.overlay"
+    },
+    {
+      "id": "package.ultimate.vue-core.scroll-lock",
+      "record": "vuecore.scroll-lock"
+    },
+    {
+      "id": "package.ultimate.vue-core.service",
+      "record": "vuecore.service"
+    },
+    {
+      "id": "package.ultimate.vue-core.styling",
+      "record": "vuecore.styling"
+    },
+    {
+      "id": "package.ultimate.vue-core.zindex",
+      "record": "vuecore.zindex"
+    }
+  ],
+  "packages": [
+    {
+      "path": "packages/vue-core",
+      "roots": ["packages/vue-core/src"],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/vue-core/src/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "vuecore.root",
+      "name": "Vue core entry",
+      "framework": "vue",
+      "purpose": "The package entry barrel that selects which Vue core primitives are public.",
+      "surface": "See [authored signatures and interpretation](README.md). src/index.ts star re-exports eleven modules (base, directive, escape, focus-trap, icons, motion, overlay, scroll-lock, service, styling, zindex). Availability is internal because the barrel owns no export identities; the identities it forwards are attributed to the module records.",
+      "files": ["packages/vue-core/src/index.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/vue-core/src/index.ts",
+          "contains": "export * from \"./base\";"
+        },
+        {
+          "path": "packages/vue-core/src/index.ts",
+          "contains": "export * from \"./zindex\";"
+        }
+      ],
+      "relationships": [
+        "vuecore.base",
+        "vuecore.directive",
+        "vuecore.escape",
+        "vuecore.focus-trap",
+        "vuecore.icons",
+        "vuecore.motion",
+        "vuecore.overlay",
+        "vuecore.scroll-lock",
+        "vuecore.service",
+        "vuecore.styling",
+        "vuecore.zindex"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Vue core entry is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/vue-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 34 source files accounted for, 47 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/vue-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "vuecore.base",
+      "name": "Component, editable and input bases",
+      "framework": "vue",
+      "purpose": "Options-API factories producing base components: class resolution with style registration, an editable value holder and an input base.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports createBaseComponent, createBaseEditableHolder, createBaseInput and the types ClassValue, StyleModule and BaseComponentOptions. createBaseComponent adds a cx method and registers the style module on mount; createBaseEditableHolder adds modelValue and defaultValue props, update:modelValue and value-change emits, dValue, controlled and filled; createBaseInput adds size, fluid and variant props and injects pcFluid.",
+      "files": [
+        "packages/vue-core/src/base/index.ts",
+        "packages/vue-core/src/base/base-component.ts",
+        "packages/vue-core/src/base/base-editable-holder.ts",
+        "packages/vue-core/src/base/base-input.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue-core#createBaseComponent",
+        "@ultimate/vue-core#StyleModule",
+        "@ultimate/vue-core#ClassValue",
+        "@ultimate/vue-core#BaseComponentOptions",
+        "@ultimate/vue-core#createBaseEditableHolder",
+        "@ultimate/vue-core#createBaseInput"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue-core/src/base/base-component.ts",
+          "contains": "export function createBaseComponent(options: BaseComponentOptions) {"
+        },
+        {
+          "path": "packages/vue-core/src/base/base-editable-holder.ts",
+          "contains": "export function createBaseEditableHolder("
+        },
+        {
+          "path": "packages/vue-core/src/base/base-input.ts",
+          "contains": "export function createBaseInput() {"
+        }
+      ],
+      "relationships": ["vuecore.styling", "package.ultimate.uix-utils.classnames"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Component, editable and input bases is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/vue-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 34 source files accounted for, 47 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/vue-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "vuecore.directive",
+      "name": "Base directive factory",
+      "framework": "vue",
+      "purpose": "Factory that wraps mounted, updated and unmounted hooks into a Vue object directive with a simplified binding.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports createDirective and the types DirectiveBinding and DirectiveInstanceOptions. The simplified binding exposes value and oldValue only.",
+      "files": [
+        "packages/vue-core/src/directive/index.ts",
+        "packages/vue-core/src/directive/base-directive.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue-core#createDirective",
+        "@ultimate/vue-core#DirectiveBinding",
+        "@ultimate/vue-core#DirectiveInstanceOptions"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue-core/src/directive/base-directive.ts",
+          "contains": "export function createDirective<TValue = unknown>("
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Base directive factory is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/vue-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 34 source files accounted for, 47 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/vue-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "vuecore.escape",
+      "name": "Escape and display-order mixins",
+      "framework": "vue",
+      "purpose": "Mixins and a composable that register Escape key handlers with priorities and track display order of visible groups.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports createGlobalEscapeKeyMixin, CreateGlobalEscapeKeyMixinOptions, useDisplayOrder, createDisplayOrderMixin and CreateDisplayOrderMixinOptions. The mixins register on mount and update and unregister before unmount; useDisplayOrder registers on mount only when visible.",
+      "files": [
+        "packages/vue-core/src/escape/index.ts",
+        "packages/vue-core/src/escape/create-display-order-mixin.ts",
+        "packages/vue-core/src/escape/use-display-order.ts",
+        "packages/vue-core/src/escape/use-global-escape-key.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue-core#createGlobalEscapeKeyMixin",
+        "@ultimate/vue-core#CreateGlobalEscapeKeyMixinOptions",
+        "@ultimate/vue-core#useDisplayOrder",
+        "@ultimate/vue-core#createDisplayOrderMixin",
+        "@ultimate/vue-core#CreateDisplayOrderMixinOptions"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue-core/src/escape/use-global-escape-key.ts",
+          "contains": "export function createGlobalEscapeKeyMixin({"
+        },
+        {
+          "path": "packages/vue-core/src/escape/use-display-order.ts",
+          "contains": "export function useDisplayOrder("
+        },
+        {
+          "path": "packages/vue-core/src/escape/create-display-order-mixin.ts",
+          "contains": "export function createDisplayOrderMixin({ group, isVisible }: CreateDisplayOrderMixinOptions) {"
+        }
+      ],
+      "relationships": ["package.ultimate.uix-utils.escape"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Escape and display-order mixins is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/vue-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 34 source files accounted for, 47 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/vue-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "vuecore.focus-trap",
+      "name": "Focus trap directive",
+      "framework": "vue",
+      "purpose": "Directive that inserts hidden sentinel elements and keeps tab focus inside the host element.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports focusTrapDirective and the type FocusTrapBindingValue (disabled, autoFocus, autoFocusSelector, firstFocusableSelector, lastFocusableSelector). Per-element state is kept in a WeakMap; a MutationObserver is part of the state.",
+      "files": [
+        "packages/vue-core/src/focus-trap/index.ts",
+        "packages/vue-core/src/focus-trap/focus-trap.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue-core#focusTrapDirective",
+        "@ultimate/vue-core#FocusTrapBindingValue"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue-core/src/focus-trap/focus-trap.ts",
+          "contains": "export interface FocusTrapBindingValue {"
+        },
+        {
+          "path": "packages/vue-core/src/focus-trap/focus-trap.ts",
+          "contains": "const stateByElement = new WeakMap<HTMLElement, TrapState>();"
+        }
+      ],
+      "relationships": ["vuecore.directive", "package.ultimate.uix-utils.dom"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Focus trap directive is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/vue-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 34 source files accounted for, 47 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/vue-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "vuecore.icons",
+      "name": "Base icons",
+      "framework": "vue",
+      "purpose": "Small SVG icon components shared by Vue components.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports SpinnerIcon, TimesIcon, WindowMaximizeIcon, WindowMinimizeIcon, CheckIcon, MinusIcon and the type IconProps (class, label, spin). Icon components are named with a U prefix at registration (for example USpinnerIcon) but exported without it.",
+      "files": [
+        "packages/vue-core/src/icons/index.ts",
+        "packages/vue-core/src/icons/check-icon.ts",
+        "packages/vue-core/src/icons/minus-icon.ts",
+        "packages/vue-core/src/icons/spinner-icon.ts",
+        "packages/vue-core/src/icons/times-icon.ts",
+        "packages/vue-core/src/icons/window-maximize-icon.ts",
+        "packages/vue-core/src/icons/window-minimize-icon.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue-core#SpinnerIcon",
+        "@ultimate/vue-core#IconProps",
+        "@ultimate/vue-core#TimesIcon",
+        "@ultimate/vue-core#WindowMaximizeIcon",
+        "@ultimate/vue-core#WindowMinimizeIcon",
+        "@ultimate/vue-core#CheckIcon",
+        "@ultimate/vue-core#MinusIcon"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue-core/src/icons/spinner-icon.ts",
+          "contains": "export const SpinnerIcon = defineComponent({"
+        },
+        {
+          "path": "packages/vue-core/src/icons/check-icon.ts",
+          "contains": "export const CheckIcon"
+        },
+        {
+          "path": "packages/vue-core/src/icons/minus-icon.ts",
+          "contains": "export const MinusIcon = defineComponent({"
+        },
+        {
+          "path": "packages/vue-core/src/icons/times-icon.ts",
+          "contains": "export const TimesIcon"
+        },
+        {
+          "path": "packages/vue-core/src/icons/window-maximize-icon.ts",
+          "contains": "export const WindowMaximizeIcon"
+        },
+        {
+          "path": "packages/vue-core/src/icons/window-minimize-icon.ts",
+          "contains": "export const WindowMinimizeIcon"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Base icons is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/vue-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 34 source files accounted for, 47 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/vue-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "vuecore.motion",
+      "name": "Motion transition hooks",
+      "framework": "vue",
+      "purpose": "Factory producing Vue transition hooks that drive uix-motion enter and leave.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export createMotionTransitionHooks(getOptions) returning onEnter, onLeave, onEnterCancelled and onLeaveCancelled. Motion instances are kept per element in a WeakMap and cancelled on cancellation hooks.",
+      "files": [
+        "packages/vue-core/src/motion/index.ts",
+        "packages/vue-core/src/motion/use-motion.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/vue-core#createMotionTransitionHooks"],
+      "evidence": [
+        {
+          "path": "packages/vue-core/src/motion/use-motion.ts",
+          "contains": "export function createMotionTransitionHooks("
+        }
+      ],
+      "relationships": ["package.ultimate.uix-motion.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Motion transition hooks is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/vue-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 34 source files accounted for, 47 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/vue-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "vuecore.overlay",
+      "name": "Portal component",
+      "framework": "vue",
+      "purpose": "Teleport based component that renders slot content into a target or inline.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports Portal (registered as UPortal) and the type PortalProps (appendTo, disabled). appendTo defaults to body; self or disabled renders inline; nothing renders until mounted on the client.",
+      "files": [
+        "packages/vue-core/src/overlay/index.ts",
+        "packages/vue-core/src/overlay/portal.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/vue-core#Portal", "@ultimate/vue-core#PortalProps"],
+      "evidence": [
+        {
+          "path": "packages/vue-core/src/overlay/portal.ts",
+          "contains": "export const Portal = defineComponent({"
+        }
+      ],
+      "relationships": [],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Portal component is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/vue-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 34 source files accounted for, 47 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/vue-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "vuecore.scroll-lock",
+      "name": "Scroll lock composable",
+      "framework": "vue",
+      "purpose": "Composable exposing register and unregister backed by the shared scroll lock registry.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export useScrollLock returning register(id) and unregister(id).",
+      "files": [
+        "packages/vue-core/src/scroll-lock/index.ts",
+        "packages/vue-core/src/scroll-lock/use-scroll-lock.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/vue-core#useScrollLock"],
+      "evidence": [
+        {
+          "path": "packages/vue-core/src/scroll-lock/use-scroll-lock.ts",
+          "contains": "export function useScrollLock(): {"
+        }
+      ],
+      "relationships": ["package.ultimate.uix-utils.scroll-lock"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Scroll lock composable is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/vue-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 34 source files accounted for, 47 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/vue-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "vuecore.service",
+      "name": "Confirmation, dialog and toast services",
+      "framework": "vue",
+      "purpose": "Vue plugins and injection keys that expose event-bus based confirmation, dialog and toast APIs.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports UConfirmationService, UConfirmationServiceKey, confirmationEventBus, ConfirmationOptions, ConfirmationServiceApi, UDialogService, UDialogServiceKey, dialogEventBus, DynamicDialogOptions, DynamicDialogRef, DialogServiceApi, UToastService, UToastServiceKey, toastEventBus, ToastMessageOptions and ToastServiceApi. Each plugin provides its API through app.provide; no renderer ships here, so consumer components must subscribe to the buses. Option types are open index signatures.",
+      "files": [
+        "packages/vue-core/src/service/index.ts",
+        "packages/vue-core/src/service/confirmation-service.ts",
+        "packages/vue-core/src/service/dialog-service.ts",
+        "packages/vue-core/src/service/toast-service.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue-core#UConfirmationService",
+        "@ultimate/vue-core#UConfirmationServiceKey",
+        "@ultimate/vue-core#confirmationEventBus",
+        "@ultimate/vue-core#ConfirmationOptions",
+        "@ultimate/vue-core#ConfirmationServiceApi",
+        "@ultimate/vue-core#UDialogService",
+        "@ultimate/vue-core#UDialogServiceKey",
+        "@ultimate/vue-core#dialogEventBus",
+        "@ultimate/vue-core#DynamicDialogOptions",
+        "@ultimate/vue-core#DynamicDialogRef",
+        "@ultimate/vue-core#DialogServiceApi",
+        "@ultimate/vue-core#UToastService",
+        "@ultimate/vue-core#UToastServiceKey",
+        "@ultimate/vue-core#toastEventBus",
+        "@ultimate/vue-core#ToastMessageOptions",
+        "@ultimate/vue-core#ToastServiceApi"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue-core/src/service/confirmation-service.ts",
+          "contains": "export const UConfirmationService: Plugin = {"
+        },
+        {
+          "path": "packages/vue-core/src/service/dialog-service.ts",
+          "contains": "export const UDialogService: Plugin = {"
+        },
+        {
+          "path": "packages/vue-core/src/service/toast-service.ts",
+          "contains": "export const UToastService: Plugin = {"
+        }
+      ],
+      "relationships": ["package.ultimate.uix-utils.eventbus"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Confirmation, dialog and toast services is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/vue-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 34 source files accounted for, 47 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/vue-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "vuecore.styling",
+      "name": "Style sheet and component style registration",
+      "framework": "vue",
+      "purpose": "SSR-guarded style sheet instance and a function that registers theme variables, hidden-accessible, icon spin, box-model and component CSS.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports vueCoreStyleSheet and registerComponentStyle(componentName, styleModule, additionalPresetKeys?). Style elements are created in document.head with a data-u-style attribute and return undefined without a document.",
+      "files": [
+        "packages/vue-core/src/styling/index.ts",
+        "packages/vue-core/src/styling/vue-style-sheet.ts"
+      ],
+      "availability": "public",
+      "exports": [
+        "@ultimate/vue-core#vueCoreStyleSheet",
+        "@ultimate/vue-core#registerComponentStyle"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue-core/src/styling/vue-style-sheet.ts",
+          "contains": "export const vueCoreStyleSheet = new VueStyleSheet();"
+        },
+        {
+          "path": "packages/vue-core/src/styling/vue-style-sheet.ts",
+          "contains": "export function registerComponentStyle("
+        }
+      ],
+      "relationships": [
+        "package.ultimate.uix-styled.stylesheet",
+        "package.ultimate.uix-styled.helpers",
+        "package.ultimate.uix-utils.dom"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Style sheet and component style registration is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/vue-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 34 source files accounted for, 47 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/vue-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "vuecore.zindex",
+      "name": "Z-index composable",
+      "framework": "vue",
+      "purpose": "Composable that sets and clears stacked z-index values by named key.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports useZIndex and Z_INDEX_KEYS (modal, menu, tooltip, overlay). There is no base-value table in this package; baseZIndex is forwarded to ZIndex.set unchanged.",
+      "files": [
+        "packages/vue-core/src/zindex/index.ts",
+        "packages/vue-core/src/zindex/use-z-index.ts"
+      ],
+      "availability": "public",
+      "exports": ["@ultimate/vue-core#useZIndex", "@ultimate/vue-core#Z_INDEX_KEYS"],
+      "evidence": [
+        {
+          "path": "packages/vue-core/src/zindex/use-z-index.ts",
+          "contains": "export function useZIndex(): {"
+        },
+        {
+          "path": "packages/vue-core/src/zindex/use-z-index.ts",
+          "contains": "export const Z_INDEX_KEYS = {"
+        }
+      ],
+      "relationships": ["package.ultimate.uix-utils.zindex"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Z-index composable is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files beside the sources under packages/vue-core/src exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
+          "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 34 source files accounted for, 47 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/vue-core/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/vue-core/src/base/base-component.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/base/base-editable-holder.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/base/base-input.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/directive/base-directive.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/escape/create-display-order-mixin.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/escape/escape.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/focus-trap/focus-trap.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/icons/icons.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/motion/motion.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/overlay/portal.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/scroll-lock/scroll-lock.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/service/confirmation-service.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/service/dialog-service.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/service/toast-service.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/styling/additional-preset-keys.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/styling/hidden-accessible.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/styling/icon-spin.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/styling/ssr-contract.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/styling/styling.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/zindex/zindex.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.uix-motion.root",
+      "batch": "Data and motion primitives (#147)",
+      "reason": "Motion primitives are owned by the data-motion inventory."
+    },
+    {
+      "id": "package.ultimate.uix-styled.helpers",
+      "batch": "UIX styled (#145)",
+      "reason": "Style registration helpers are owned by the uix-styled inventory."
+    },
+    {
+      "id": "package.ultimate.uix-styled.stylesheet",
+      "batch": "UIX styled (#145)",
+      "reason": "Style sheet registration is owned by the uix-styled inventory."
+    },
+    {
+      "id": "package.ultimate.uix-utils.classnames",
+      "batch": "UIX utilities (#143, #144)",
+      "reason": "Class name utility is owned by the uix-utils inventory."
+    },
+    {
+      "id": "package.ultimate.uix-utils.dom",
+      "batch": "UIX utilities (#143, #144)",
+      "reason": "DOM utilities are owned by the uix-utils inventory."
+    },
+    {
+      "id": "package.ultimate.uix-utils.escape",
+      "batch": "UIX utilities (#143, #144)",
+      "reason": "Escape registries are owned by the uix-utils inventory."
+    },
+    {
+      "id": "package.ultimate.uix-utils.eventbus",
+      "batch": "UIX utilities (#143, #144)",
+      "reason": "Event bus utility is owned by the uix-utils inventory."
+    },
+    {
+      "id": "package.ultimate.uix-utils.scroll-lock",
+      "batch": "UIX utilities (#143, #144)",
+      "reason": "Scroll lock registry is owned by the uix-utils inventory."
+    },
+    {
+      "id": "package.ultimate.uix-utils.zindex",
+      "batch": "UIX utilities (#143, #144)",
+      "reason": "z-index utility is owned by the uix-utils inventory."
+    }
+  ]
+}

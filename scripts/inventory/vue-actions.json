@@ -1,0 +1,885 @@
+{
+  "version": 1,
+  "scope": "vue-actions",
+  "revision": "37aa7ce8525c6f1622127eb1735ec41beb4096c5",
+  "packages": [
+    {
+      "path": "packages/vue",
+      "roots": [
+        "packages/vue/src/button",
+        "packages/vue/src/button-group",
+        "packages/vue/src/split-button",
+        "packages/vue/src/avatar",
+        "packages/vue/src/avatar-group",
+        "packages/vue/src/badge",
+        "packages/vue/src/overlay-badge",
+        "packages/vue/src/chip",
+        "packages/vue/src/tag",
+        "packages/vue/src/toolbar"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/button/index.ts"
+        },
+        {
+          "subpath": "./button",
+          "source": "packages/vue/src/button/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/button-group/index.ts"
+        },
+        {
+          "subpath": "./button-group",
+          "source": "packages/vue/src/button-group/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/split-button/index.ts"
+        },
+        {
+          "subpath": "./split-button",
+          "source": "packages/vue/src/split-button/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/avatar/index.ts"
+        },
+        {
+          "subpath": "./avatar",
+          "source": "packages/vue/src/avatar/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/avatar-group/index.ts"
+        },
+        {
+          "subpath": "./avatar-group",
+          "source": "packages/vue/src/avatar-group/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/badge/index.ts"
+        },
+        {
+          "subpath": "./badge",
+          "source": "packages/vue/src/badge/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/overlay-badge/index.ts"
+        },
+        {
+          "subpath": "./overlay-badge",
+          "source": "packages/vue/src/overlay-badge/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/chip/index.ts"
+        },
+        {
+          "subpath": "./chip",
+          "source": "packages/vue/src/chip/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/tag/index.ts"
+        },
+        {
+          "subpath": "./tag",
+          "source": "packages/vue/src/tag/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/toolbar/index.ts"
+        },
+        {
+          "subpath": "./toolbar",
+          "source": "packages/vue/src/toolbar/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "vue.button",
+      "name": "Vue UButton",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Native action button with loading, icon, badge, polymorphic root and tooltip; retains pilot vue.button identity.",
+      "surface": "label/icon/iconPos(left default)/iconClass, badge/badgeClass/badgeSeverity(secondary), loading(false)/loadingIcon, as(BUTTON)/asChild(false), link/severity/raised/rounded/text/outlined/size/variant/plain/fluid(null), ariaLabel, tooltip/tooltipOptions are declared props. pcFluid injection supplies fluid when null. Loading uses SpinnerIcon and disables only the native button root. rootAttrs explicitly merges attrs then overrides aria-label, disabled and type; default type is button. asChild renders the default slot with class only, not a cloned child. Default slot follows label; badge is a span, not UBadge; badgeSeverity is declared but unused in rendering. Ripple and tooltip directives attach only on the normal root. styleParams, tag, hasIcon, resolvedAriaLabel, rootAttrs and tooltipBinding are owned computed helpers. ButtonClassesParams is a source-only style contract, not a public barrel type. UButton and createBaseButton are named exports from both @ultimate/vue and @ultimate/vue/button. createBaseButton is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. ButtonClassesParams, buttonStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS imports the shared token-bearing style string from @ultimate/uix-styles/button. Aura registry has the button token namespace. BUTTON_METADATA points to base-button.ts. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
+      "files": [
+        "packages/vue/src/button/Button.vue",
+        "packages/vue/src/button/base-button.ts",
+        "packages/vue/src/button/button-style.ts",
+        "packages/vue/src/button/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UButton",
+        "@ultimate/vue#createBaseButton",
+        "@ultimate/vue/button#UButton",
+        "@ultimate/vue/button#createBaseButton"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/button/index.ts",
+          "contains": "export { default as UButton } from \"./Button.vue\";\nexport { createBaseButton } from \"./base-button\";"
+        },
+        {
+          "path": "packages/vue/src/button/base-button.ts",
+          "contains": "export function createBaseButton"
+        },
+        {
+          "path": "packages/vue/src/button/button-style.ts",
+          "contains": "export const buttonStyleModule"
+        },
+        {
+          "path": "packages/vue/src/button/Button.vue",
+          "contains": "name: \"UButton\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.button",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.uix-styles.button",
+        "package.ultimate.vue-core.icons",
+        "package.ultimate.vue.ripple",
+        "package.ultimate.vue.tooltip",
+        "package.ultimate.component-metadata.records"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Read component template, base factory and style helpers directly; source existence and interpretation only."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Existing bounded product runner aborted before assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/badge/ src/overlay-badge/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "37aa7ce8525c6f1622127eb1735ec41beb4096c5",
+          "limitations": "Host ancestor PostCSS config requires unavailable postcss-import; no product assertions executed. No product or host repair; no browser/build/publish proof.",
+          "output": "Vitest 2.1.9: Failed to load PostCSS config; Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "vue.button-group",
+      "name": "Vue UButtonGroup",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Groups supplied buttons visually without creating or managing their state.",
+      "surface": "No own props or events. span role=group projects default slot. inheritAttrs:false does not forward arbitrary attrs. CSS adjoining borders, fixed 6px outer corners and focus stacking implement composition with UButton; no compound static members. UButtonGroup and createBaseButtonGroup are named exports from both @ultimate/vue and @ultimate/vue/button-group. createBaseButtonGroup is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. buttonGroupStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. No dedicated Aura registry key is inferred for this grouping wrapper. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
+      "files": [
+        "packages/vue/src/button-group/BaseButtonGroup.ts",
+        "packages/vue/src/button-group/ButtonGroup.vue",
+        "packages/vue/src/button-group/button-group-style.ts",
+        "packages/vue/src/button-group/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UButtonGroup",
+        "@ultimate/vue#createBaseButtonGroup",
+        "@ultimate/vue/button-group#UButtonGroup",
+        "@ultimate/vue/button-group#createBaseButtonGroup"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/button-group/index.ts",
+          "contains": "export { default as UButtonGroup } from \"./ButtonGroup.vue\";\nexport { createBaseButtonGroup } from \"./BaseButtonGroup\";"
+        },
+        {
+          "path": "packages/vue/src/button-group/BaseButtonGroup.ts",
+          "contains": "export function createBaseButtonGroup"
+        },
+        {
+          "path": "packages/vue/src/button-group/button-group-style.ts",
+          "contains": "export const buttonGroupStyleModule"
+        },
+        {
+          "path": "packages/vue/src/button-group/ButtonGroup.vue",
+          "contains": "name: \"UButtonGroup\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.button-group",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "vue.button"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Read component template, base factory and style helpers directly; source existence and interpretation only."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Existing bounded product runner aborted before assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/badge/ src/overlay-badge/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "37aa7ce8525c6f1622127eb1735ec41beb4096c5",
+          "limitations": "Host ancestor PostCSS config requires unavailable postcss-import; no product assertions executed. No product or host repair; no browser/build/publish proof.",
+          "output": "Vitest 2.1.9: Failed to load PostCSS config; Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "vue.split-button",
+      "name": "Vue USplitButton",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Primary action plus dropdown of secondary commands, composed from UButton and popup UMenu.",
+      "surface": "model:readonly unknown[] defaults to [], label/icon/iconPos(left), severity/text/outlined/size/disabled are declared props. Emits click/show/hide. Two UButton instances share appearance and disabled state; dropdown uses pi pi-chevron-down. menuModel wraps command to hide the menu before calling the original callback. onDefaultButtonClick hides an open menu then emits click; onDropdownButtonClick calls menu.toggle with dropdownButton.$el. Internal refs menu/dropdownButton and handlers are owned helpers, not standalone exports. No slots are rendered; inheritAttrs:false discards unspecified attrs. USplitButton and createBaseSplitButton are named exports from both @ultimate/vue and @ultimate/vue/split-button. createBaseSplitButton is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. splitButtonStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. Aura registry has the splitbutton token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
+      "files": [
+        "packages/vue/src/split-button/BaseSplitButton.ts",
+        "packages/vue/src/split-button/SplitButton.vue",
+        "packages/vue/src/split-button/index.ts",
+        "packages/vue/src/split-button/split-button-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#USplitButton",
+        "@ultimate/vue#createBaseSplitButton",
+        "@ultimate/vue/split-button#USplitButton",
+        "@ultimate/vue/split-button#createBaseSplitButton"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/split-button/index.ts",
+          "contains": "export { default as USplitButton } from \"./SplitButton.vue\";\nexport { createBaseSplitButton } from \"./BaseSplitButton\";"
+        },
+        {
+          "path": "packages/vue/src/split-button/BaseSplitButton.ts",
+          "contains": "export function createBaseSplitButton"
+        },
+        {
+          "path": "packages/vue/src/split-button/split-button-style.ts",
+          "contains": "export const splitButtonStyleModule"
+        },
+        {
+          "path": "packages/vue/src/split-button/SplitButton.vue",
+          "contains": "name: \"USplitButton\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.split-button",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "vue.button",
+        "package.ultimate.vue.menu"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Read component template, base factory and style helpers directly; source existence and interpretation only."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Existing bounded product runner aborted before assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/badge/ src/overlay-badge/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "37aa7ce8525c6f1622127eb1735ec41beb4096c5",
+          "limitations": "Host ancestor PostCSS config requires unavailable postcss-import; no product assertions executed. No product or host repair; no browser/build/publish proof.",
+          "output": "Vitest 2.1.9: Failed to load PostCSS config; Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "vue.avatar",
+      "name": "Vue UAvatar",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Displays image, label or icon identity with image-error fallback.",
+      "surface": "label/icon/image, size(normal), shape(square), ariaLabelledby/ariaLabel props; error event. Image wins unless imageFailed, then label, then CSS-class icon. onError sets imageFailed and emits error; there is no image-change reset watcher. No default or icon slots. inheritAttrs:false. AvatarClassesParams owns hasImage/imageFailed/shape/size class resolution; source-only type, not public barrel API. UAvatar and createBaseAvatar are named exports from both @ultimate/vue and @ultimate/vue/avatar. createBaseAvatar is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. AvatarClassesParams, avatarStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. Aura registry has the avatar token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
+      "files": [
+        "packages/vue/src/avatar/Avatar.vue",
+        "packages/vue/src/avatar/BaseAvatar.ts",
+        "packages/vue/src/avatar/avatar-style.ts",
+        "packages/vue/src/avatar/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UAvatar",
+        "@ultimate/vue#createBaseAvatar",
+        "@ultimate/vue/avatar#UAvatar",
+        "@ultimate/vue/avatar#createBaseAvatar"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/avatar/index.ts",
+          "contains": "export { default as UAvatar } from \"./Avatar.vue\";\nexport { createBaseAvatar } from \"./BaseAvatar\";"
+        },
+        {
+          "path": "packages/vue/src/avatar/BaseAvatar.ts",
+          "contains": "export function createBaseAvatar"
+        },
+        {
+          "path": "packages/vue/src/avatar/avatar-style.ts",
+          "contains": "export const avatarStyleModule"
+        },
+        {
+          "path": "packages/vue/src/avatar/Avatar.vue",
+          "contains": "name: \"UAvatar\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.avatar",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Read component template, base factory and style helpers directly; source existence and interpretation only."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Existing bounded product runner aborted before assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/badge/ src/overlay-badge/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "37aa7ce8525c6f1622127eb1735ec41beb4096c5",
+          "limitations": "Host ancestor PostCSS config requires unavailable postcss-import; no product assertions executed. No product or host repair; no browser/build/publish proof.",
+          "output": "Vitest 2.1.9: Failed to load PostCSS config; Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "vue.avatar-group",
+      "name": "Vue UAvatarGroup",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Groups caller-supplied avatars with overlapping CSS.",
+      "surface": "No own props/events. div role=group projects default slot. inheritAttrs:false. Local CSS uses adjacent-avatar margin-left:-1rem and var(--u-avatar-group-border-color,#fff); no dt() calls or dedicated Aura avatar-group registry key. UAvatarGroup and createBaseAvatarGroup are named exports from both @ultimate/vue and @ultimate/vue/avatar-group. createBaseAvatarGroup is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. avatarGroupStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. No dedicated Aura registry key is inferred for this grouping wrapper. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
+      "files": [
+        "packages/vue/src/avatar-group/AvatarGroup.vue",
+        "packages/vue/src/avatar-group/BaseAvatarGroup.ts",
+        "packages/vue/src/avatar-group/avatar-group-style.ts",
+        "packages/vue/src/avatar-group/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UAvatarGroup",
+        "@ultimate/vue#createBaseAvatarGroup",
+        "@ultimate/vue/avatar-group#UAvatarGroup",
+        "@ultimate/vue/avatar-group#createBaseAvatarGroup"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/avatar-group/index.ts",
+          "contains": "export { default as UAvatarGroup } from \"./AvatarGroup.vue\";\nexport { createBaseAvatarGroup } from \"./BaseAvatarGroup\";"
+        },
+        {
+          "path": "packages/vue/src/avatar-group/BaseAvatarGroup.ts",
+          "contains": "export function createBaseAvatarGroup"
+        },
+        {
+          "path": "packages/vue/src/avatar-group/avatar-group-style.ts",
+          "contains": "export const avatarGroupStyleModule"
+        },
+        {
+          "path": "packages/vue/src/avatar-group/AvatarGroup.vue",
+          "contains": "name: \"UAvatarGroup\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.avatar-group",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "vue.avatar"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Read component template, base factory and style helpers directly; source existence and interpretation only."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Existing bounded product runner aborted before assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/badge/ src/overlay-badge/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "37aa7ce8525c6f1622127eb1735ec41beb4096c5",
+          "limitations": "Host ancestor PostCSS config requires unavailable postcss-import; no product assertions executed. No product or host repair; no browser/build/publish proof.",
+          "output": "Vitest 2.1.9: Failed to load PostCSS config; Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "vue.badge",
+      "name": "Vue UBadge",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Compact count or status display with value fallback and caller content.",
+      "surface": "value:string|number|null, severity:string|null, size:string|null props. span default slot falls back to value; styleParams tracks value, slot presence, size and severity. BadgeClassesParams is source-only: small/large/xlarge; secondary/info/success/warn/danger/contrast. Dot class is null value without default slot; one-character values get circle class. Attrs fall through to single root. There is no badge directive export in this family. UBadge and createBaseBadge are named exports from both @ultimate/vue and @ultimate/vue/badge. createBaseBadge is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. BadgeClassesParams, badgeStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS imports the shared token-bearing style string from @ultimate/uix-styles/badge. Aura registry has the badge token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
+      "files": [
+        "packages/vue/src/badge/Badge.vue",
+        "packages/vue/src/badge/badge-style.ts",
+        "packages/vue/src/badge/base-badge.ts",
+        "packages/vue/src/badge/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UBadge",
+        "@ultimate/vue#createBaseBadge",
+        "@ultimate/vue/badge#UBadge",
+        "@ultimate/vue/badge#createBaseBadge"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/badge/index.ts",
+          "contains": "export { default as UBadge } from \"./Badge.vue\";\nexport { createBaseBadge } from \"./base-badge\";"
+        },
+        {
+          "path": "packages/vue/src/badge/base-badge.ts",
+          "contains": "export function createBaseBadge"
+        },
+        {
+          "path": "packages/vue/src/badge/badge-style.ts",
+          "contains": "export const badgeStyleModule"
+        },
+        {
+          "path": "packages/vue/src/badge/Badge.vue",
+          "contains": "name: \"UBadge\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.badge",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.uix-styles.badge"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Read component template, base factory and style helpers directly; source existence and interpretation only."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Existing bounded product runner aborted before assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/badge/ src/overlay-badge/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "37aa7ce8525c6f1622127eb1735ec41beb4096c5",
+          "limitations": "Host ancestor PostCSS config requires unavailable postcss-import; no product assertions executed. No product or host repair; no browser/build/publish proof.",
+          "output": "Vitest 2.1.9: Failed to load PostCSS config; Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "vue.overlay-badge",
+      "name": "Vue UOverlayBadge",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Positions a composed UBadge at the top-right of supplied host content.",
+      "surface": "value:string|number|null, severity and size props forwarded via $props to UBadge. div projects default host slot then UBadge. Attrs fall through. createBaseOverlayBadge is source-exported internally but not re-exported by index.ts, hence unavailable from declared public entrypoints. Local positioning CSS includes RTL transform and overlaybadge outline tokens. UOverlayBadge are named exports from both @ultimate/vue and @ultimate/vue/overlay-badge. createBaseOverlayBadge is an owned source-only zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. overlayBadgeStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. Aura registry has the overlaybadge token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
+      "files": [
+        "packages/vue/src/overlay-badge/BaseOverlayBadge.ts",
+        "packages/vue/src/overlay-badge/OverlayBadge.vue",
+        "packages/vue/src/overlay-badge/index.ts",
+        "packages/vue/src/overlay-badge/overlay-badge-style.ts"
+      ],
+      "exports": ["@ultimate/vue#UOverlayBadge", "@ultimate/vue/overlay-badge#UOverlayBadge"],
+      "evidence": [
+        {
+          "path": "packages/vue/src/overlay-badge/index.ts",
+          "contains": "export { default as UOverlayBadge } from \"./OverlayBadge.vue\";"
+        },
+        {
+          "path": "packages/vue/src/overlay-badge/BaseOverlayBadge.ts",
+          "contains": "export function createBaseOverlayBadge"
+        },
+        {
+          "path": "packages/vue/src/overlay-badge/overlay-badge-style.ts",
+          "contains": "export const overlayBadgeStyleModule"
+        },
+        {
+          "path": "packages/vue/src/overlay-badge/OverlayBadge.vue",
+          "contains": "name: \"UOverlayBadge\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.overlay-badge",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "vue.badge"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Read component template, base factory and style helpers directly; source existence and interpretation only."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Existing bounded product runner aborted before assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/badge/ src/overlay-badge/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "37aa7ce8525c6f1622127eb1735ec41beb4096c5",
+          "limitations": "Host ancestor PostCSS config requires unavailable postcss-import; no product assertions executed. No product or host repair; no browser/build/publish proof.",
+          "output": "Vitest 2.1.9: Failed to load PostCSS config; Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "vue.chip",
+      "name": "Vue UChip",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Labeled identity/item token with optional image/icon and removable control.",
+      "surface": "label:string|number|null, icon/image/alt, disabled(false), removable(false), removeAriaLabel props; emits remove/imageError. visible initially true; close hides and emits remove unless disabled. onKeydown invokes close for Enter or Backspace (not Delete); onImageError forwards imageError. Image precedes icon, label is rendered unless null. Remove span role=button has tabindex -1 when disabled, otherwise 0, and TimesIcon. No default slot. inheritAttrs:false; visible and handlers are owned internal helpers. UChip and createBaseChip are named exports from both @ultimate/vue and @ultimate/vue/chip. createBaseChip is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. chipStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. Aura registry has the chip token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
+      "files": [
+        "packages/vue/src/chip/BaseChip.ts",
+        "packages/vue/src/chip/Chip.vue",
+        "packages/vue/src/chip/chip-style.ts",
+        "packages/vue/src/chip/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UChip",
+        "@ultimate/vue#createBaseChip",
+        "@ultimate/vue/chip#UChip",
+        "@ultimate/vue/chip#createBaseChip"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/chip/index.ts",
+          "contains": "export { default as UChip } from \"./Chip.vue\";\nexport { createBaseChip } from \"./BaseChip\";"
+        },
+        {
+          "path": "packages/vue/src/chip/BaseChip.ts",
+          "contains": "export function createBaseChip"
+        },
+        {
+          "path": "packages/vue/src/chip/chip-style.ts",
+          "contains": "export const chipStyleModule"
+        },
+        {
+          "path": "packages/vue/src/chip/Chip.vue",
+          "contains": "name: \"UChip\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.chip",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.vue-core.icons"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Read component template, base factory and style helpers directly; source existence and interpretation only."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Existing bounded product runner aborted before assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/badge/ src/overlay-badge/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "37aa7ce8525c6f1622127eb1735ec41beb4096c5",
+          "limitations": "Host ancestor PostCSS config requires unavailable postcss-import; no product assertions executed. No product or host repair; no browser/build/publish proof.",
+          "output": "Vitest 2.1.9: Failed to load PostCSS config; Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "vue.tag",
+      "name": "Vue UTag",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Status or category display with optional CSS-class icon.",
+      "surface": "severity, value:string|null, icon(undefined), rounded(false) props. span contains conditional icon wrapper with aria-hidden i and label default slot falling back to value. Actual template has no named icon slot despite historical comment. inheritAttrs:false; no own events or model interface. UTag and createBaseTag are named exports from both @ultimate/vue and @ultimate/vue/tag. createBaseTag is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. tagStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. Aura registry has the tag token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
+      "files": [
+        "packages/vue/src/tag/BaseTag.ts",
+        "packages/vue/src/tag/Tag.vue",
+        "packages/vue/src/tag/index.ts",
+        "packages/vue/src/tag/tag-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UTag",
+        "@ultimate/vue#createBaseTag",
+        "@ultimate/vue/tag#UTag",
+        "@ultimate/vue/tag#createBaseTag"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/tag/index.ts",
+          "contains": "export { default as UTag } from \"./Tag.vue\";\nexport { createBaseTag } from \"./BaseTag\";"
+        },
+        {
+          "path": "packages/vue/src/tag/BaseTag.ts",
+          "contains": "export function createBaseTag"
+        },
+        {
+          "path": "packages/vue/src/tag/tag-style.ts",
+          "contains": "export const tagStyleModule"
+        },
+        {
+          "path": "packages/vue/src/tag/Tag.vue",
+          "contains": "name: \"UTag\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.tag",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Read component template, base factory and style helpers directly; source existence and interpretation only."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Existing bounded product runner aborted before assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/badge/ src/overlay-badge/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "37aa7ce8525c6f1622127eb1735ec41beb4096c5",
+          "limitations": "Host ancestor PostCSS config requires unavailable postcss-import; no product assertions executed. No product or host repair; no browser/build/publish proof.",
+          "output": "Vitest 2.1.9: Failed to load PostCSS config; Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    },
+    {
+      "id": "vue.toolbar",
+      "name": "Vue UToolbar",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Layout container for actions and content in named sections.",
+      "surface": "ariaLabelledby:string|null prop. div role=toolbar binds aria-labelledby. Default slot plus independently conditional start, center and end named slots compose content. No button management, keyboard navigation, model interface or own events. inheritAttrs:false; local class keys root/start/center/end belong here. UToolbar and createBaseToolbar are named exports from both @ultimate/vue and @ultimate/vue/toolbar. createBaseToolbar is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. toolbarStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. Aura registry has the toolbar token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
+      "files": [
+        "packages/vue/src/toolbar/BaseToolbar.ts",
+        "packages/vue/src/toolbar/Toolbar.vue",
+        "packages/vue/src/toolbar/index.ts",
+        "packages/vue/src/toolbar/toolbar-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UToolbar",
+        "@ultimate/vue#createBaseToolbar",
+        "@ultimate/vue/toolbar#UToolbar",
+        "@ultimate/vue/toolbar#createBaseToolbar"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/toolbar/index.ts",
+          "contains": "export { default as UToolbar } from \"./Toolbar.vue\";\nexport { createBaseToolbar } from \"./BaseToolbar\";"
+        },
+        {
+          "path": "packages/vue/src/toolbar/BaseToolbar.ts",
+          "contains": "export function createBaseToolbar"
+        },
+        {
+          "path": "packages/vue/src/toolbar/toolbar-style.ts",
+          "contains": "export const toolbarStyleModule"
+        },
+        {
+          "path": "packages/vue/src/toolbar/Toolbar.vue",
+          "contains": "name: \"UToolbar\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.toolbar",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Read component template, base factory and style helpers directly; source existence and interpretation only."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Existing bounded product runner aborted before assertions.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/button/ src/button-group/ src/split-button/ src/avatar/ src/avatar-group/ src/badge/ src/overlay-badge/ src/chip/ src/tag/ src/toolbar/",
+          "outcome": "unavailable",
+          "revision": "37aa7ce8525c6f1622127eb1735ec41beb4096c5",
+          "limitations": "Host ancestor PostCSS config requires unavailable postcss-import; no product assertions executed. No product or host repair; no browser/build/publish proof.",
+          "output": "Vitest 2.1.9: Failed to load PostCSS config; Cannot find module 'postcss-import'; require stack /Users/majedsiefalnasr/postcss.config.mjs; exit 1"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/vue/src/button/button.api.mdx",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/button/button.spec.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/button/button.stories.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/button-group/button-group.spec.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/button-group/button-group.stories.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/split-button/split-button.spec.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/split-button/split-button.stories.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/avatar/avatar.spec.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/avatar/avatar.stories.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/avatar-group/avatar-group.spec.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/avatar-group/avatar-group.stories.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/badge/badge.spec.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/badge/badge.stories.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/overlay-badge/overlay-badge.spec.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/overlay-badge/overlay-badge.stories.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/chip/chip.spec.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/chip/chip.stories.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/tag/tag.spec.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/tag/tag.stories.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/toolbar/toolbar.spec.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    },
+    {
+      "path": "packages/vue/src/toolbar/toolbar.stories.ts",
+      "reason": "Supporting product test, Storybook example or authored API documentation; not an independent runtime export. Presence is not execution evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.component-metadata.records",
+      "batch": "ticket-153",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-styles.badge",
+      "batch": "ticket-146",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.uix-styles.button",
+      "batch": "ticket-146",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.vue-core.base",
+      "batch": "ticket-150",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.vue-core.icons",
+      "batch": "ticket-150",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.vue-core.styling",
+      "batch": "ticket-150",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.vue.menu",
+      "batch": "ticket-127",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.vue.ripple",
+      "batch": "ticket-142",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    },
+    {
+      "id": "package.ultimate.vue.tooltip",
+      "batch": "ticket-124",
+      "reason": "Reconciled cross-batch identity; source relationship described here without claiming completion of its owning ticket."
+    }
+  ],
+  "ownership": {
+    "ticket": 109,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.vue.button",
+      "record": "vue.button"
+    },
+    {
+      "id": "package.ultimate.vue.button-group",
+      "record": "vue.button-group"
+    },
+    {
+      "id": "package.ultimate.vue.split-button",
+      "record": "vue.split-button"
+    },
+    {
+      "id": "package.ultimate.vue.avatar",
+      "record": "vue.avatar"
+    },
+    {
+      "id": "package.ultimate.vue.avatar-group",
+      "record": "vue.avatar-group"
+    },
+    {
+      "id": "package.ultimate.vue.badge",
+      "record": "vue.badge"
+    },
+    {
+      "id": "package.ultimate.vue.overlay-badge",
+      "record": "vue.overlay-badge"
+    },
+    {
+      "id": "package.ultimate.vue.chip",
+      "record": "vue.chip"
+    },
+    {
+      "id": "package.ultimate.vue.tag",
+      "record": "vue.tag"
+    },
+    {
+      "id": "package.ultimate.vue.toolbar",
+      "record": "vue.toolbar"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+# React UFloatLabel
+
+ID: react.float-label
+
+Framework: react; availability: public
+
+## Authored interpretation
+
+Wrapper span that hosts a floating label variant around an input.
+
+## Framework surface
+
+UFloatLabel and UFloatLabelProps{variant?:in|on|over (default over), className?, children?}; no native props. forwardRef<HTMLSpanElement>. Renders a span with cx(root, {variant}) around children. floatLabelStyleModule root class function yields u-float-label with -over/-on/-in. The CSS uses :has() selectors keyed on u-input-text, u-textarea, u-filled, u-invalid and u-inputwrapper-* class names; UInputText and UInputTextarea render u-inputtext and u-inputtextarea with u-inputtext-filled/-invalid, so these selectors does not match the sibling components' classes by default. The spec and stories add class names such as u-input-text and u-filled by hand. Aura key floatlabel; componentName float-label. Exports from @ultimate/react and @ultimate/react/float-label. useComponentBase from @ultimate/react-core owns cx class resolution and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.
+
+## Public exports
+
+@ultimate/react#UFloatLabel
+@ultimate/react/float-label#UFloatLabel
+@ultimate/react#UFloatLabelProps
+@ultimate/react/float-label#UFloatLabelProps
+
+## Owned source and evidence
+
+packages/react/src/float-label/index.ts
+packages/react/src/float-label/float-label.tsx
+packages/react/src/float-label/float-label-style.ts
+
+```text
+packages/react/src/float-label/float-label.tsx: export interface UFloatLabelProps
+packages/react/src/float-label/float-label-style.ts: export const floatLabelStyleModule
+packages/react/src/index.ts: export * from "./float-label";
+packages/react/package.json: "./float-label": {
+```
+
+## Relationships
+
+package.ultimate.react.float-label → [react.float-label](react.float-label.md) (reconciled family alias)
+package.ultimate.react-core.base (pending cross-batch)
+package.ultimate.react-core.styling (pending cross-batch)
+package.ultimate.themes.presets (pending cross-batch)
+
+## Verification
+
+```text
+[
+  {
+    "state": "implemented",
+    "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+  },
+  {
+    "state": "not-run",
+    "behavior": "Bounded React product spec for the text-entry families was not executed for this inventory.",
+    "command": "pnpm --filter @ultimate/react exec vitest run src/input-text/ src/input-textarea/ src/input-mask/ src/input-otp/ src/password/ src/float-label/ src/icon-field/ src/input-chips/ src/mention/",
+    "outcome": "not-run",
+    "revision": "c49aa4e6906a9d72a1893b3fc006fce55489d0b7",
+    "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+  },
+  {
+    "state": "ci-enforced",
+    "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/react test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+    "workflow": ".github/workflows/ci.yml",
+    "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+  }
+]
+```

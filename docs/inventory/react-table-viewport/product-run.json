@@ -1,0 +1,7 @@
+{
+  "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/table/ src/paginator/ src/scroller/ src/data-scroller/ --config /tmp/vitest-react132.config.mjs --maxWorkers=1 --no-file-parallelism",
+  "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+  "outcome": "passed",
+  "output": "Vitest 2.1.9, Node v24.15.0: Test Files 4 passed (4); Tests 103 passed (103): table 70, paginator 7, scroller 20, data-scroller 6.",
+  "limitations": "Temporary config outside the repository set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were built before this run."
+}

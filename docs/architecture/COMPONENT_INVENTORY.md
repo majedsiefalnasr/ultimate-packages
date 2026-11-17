@@ -1,3 +1,5 @@
+> Historical migration baseline (preserved from 6c0358ca). Not current inventory evidence. See [the scoped inventory pilot](../inventory/README.md).
+
 # Component Inventory
 
 Full classification of all top-level source areas under PrimeNG 21.1.9's `packages/primeng/src/` (117 directories, confirmed authoritative via `tar -tzf .vendor-cache/primeng-21.1.9.tar.gz | grep -E "packages/primeng/src/[^/]+/$"` — see `docs/architecture/checksums.json` for the pinned tarball and `docs/architecture/PROVENANCE.md` for the PrimeNG package-level provenance record).

@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Scoped Ultimate inventory authored input",
+  "packageReconciliation": {
+    "type": "object",
+    "required": ["mode", "version", "scope", "revision", "ownership"],
+    "additionalProperties": false,
+    "properties": {
+      "mode": { "enum": ["packages"] },
+      "version": { "enum": [1] },
+      "scope": { "type": "string", "minLength": 1 },
+      "revision": { "type": "string", "minLength": 1 },
+      "closeout": { "enum": [true, false] },
+      "tickets": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["number", "title"],
+          "properties": {
+            "number": { "type": "number" },
+            "title": { "type": "string", "minLength": 1 }
+          }
+        }
+      },
+      "ownership": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["id"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "tickets": { "type": "array", "items": { "type": "number" } },
+            "reason": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    }
+  },
+  "type": "object",
+  "required": ["version", "scope", "revision", "packages", "records", "dispositions", "pending"],
+  "additionalProperties": false,
+  "properties": {
+    "ownership": {
+      "type": "object",
+      "required": ["ticket", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "ticket": { "type": "number" },
+        "path": { "type": "string", "minLength": 1 }
+      }
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "record"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "record": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "closeout": { "enum": [true, false] },
+    "version": { "enum": [1] },
+    "scope": { "type": "string", "minLength": 1 },
+    "revision": { "type": "string", "minLength": 1 },
+    "packages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "roots", "entries"],
+        "additionalProperties": false,
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "roots": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "entries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["subpath", "source"],
+              "additionalProperties": false,
+              "properties": { "subpath": { "type": "string" }, "source": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "framework",
+          "purpose",
+          "surface",
+          "files",
+          "availability",
+          "exports",
+          "evidence",
+          "relationships",
+          "claims"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9.-]+$" },
+          "name": { "type": "string", "minLength": 1 },
+          "framework": { "enum": ["angular", "react", "vue", "shared"] },
+          "purpose": { "type": "string", "minLength": 1 },
+          "surface": { "type": "string", "minLength": 1 },
+          "files": { "type": "array", "items": { "type": "string" } },
+          "availability": { "enum": ["public", "internal", "source-unexported", "reserved"] },
+          "exports": { "type": "array", "items": { "type": "string" } },
+          "relationships": { "type": "array", "items": { "type": "string" } },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["path", "contains"],
+              "additionalProperties": false,
+              "properties": {
+                "path": { "type": "string", "minLength": 1 },
+                "contains": { "type": "string", "minLength": 1 }
+              }
+            }
+          },
+          "claims": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["state", "behavior"],
+              "additionalProperties": false,
+              "properties": {
+                "state": {
+                  "enum": [
+                    "implemented",
+                    "verified",
+                    "ci-enforced",
+                    "not-run",
+                    "failed",
+                    "unavailable",
+                    "externally-unexercisable"
+                  ]
+                },
+                "behavior": { "type": "string", "minLength": 1 },
+                "command": { "type": "string" },
+                "outcome": { "enum": ["passed", "failed", "unavailable", "not-run"] },
+                "revision": { "type": "string" },
+                "limitations": { "type": "string" },
+                "output": { "type": "string" },
+                "workflow": { "type": "string" },
+                "run": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dispositions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "path": { "type": "string" },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "pending": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "batch", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "batch": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

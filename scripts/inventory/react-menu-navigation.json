@@ -1,0 +1,1298 @@
+{
+  "version": 1,
+  "scope": "react-menu-navigation",
+  "revision": "af79b2ec8b18681f0163d9ede0beba387c462258",
+  "packages": [
+    {
+      "path": "packages/react",
+      "roots": [
+        "packages/react/src/menu",
+        "packages/react/src/context-menu",
+        "packages/react/src/breadcrumb",
+        "packages/react/src/mega-menu",
+        "packages/react/src/menubar",
+        "packages/react/src/panel-menu",
+        "packages/react/src/tiered-menu",
+        "packages/react/src/dock",
+        "packages/react/src/speed-dial"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/react/src/menu/index.ts"
+        },
+        {
+          "subpath": "./menu",
+          "source": "packages/react/src/menu/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/context-menu/index.ts"
+        },
+        {
+          "subpath": "./context-menu",
+          "source": "packages/react/src/context-menu/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/breadcrumb/index.ts"
+        },
+        {
+          "subpath": "./breadcrumb",
+          "source": "packages/react/src/breadcrumb/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/mega-menu/index.ts"
+        },
+        {
+          "subpath": "./mega-menu",
+          "source": "packages/react/src/mega-menu/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/menubar/index.ts"
+        },
+        {
+          "subpath": "./menubar",
+          "source": "packages/react/src/menubar/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/panel-menu/index.ts"
+        },
+        {
+          "subpath": "./panel-menu",
+          "source": "packages/react/src/panel-menu/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/tiered-menu/index.ts"
+        },
+        {
+          "subpath": "./tiered-menu",
+          "source": "packages/react/src/tiered-menu/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/dock/index.ts"
+        },
+        {
+          "subpath": "./dock",
+          "source": "packages/react/src/dock/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/speed-dial/index.ts"
+        },
+        {
+          "subpath": "./speed-dial",
+          "source": "packages/react/src/speed-dial/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/react/src/menu/menu.api.mdx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/menu/menu.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/menu/menu.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/context-menu/context-menu.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/context-menu/context-menu.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/breadcrumb/breadcrumb.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/breadcrumb/breadcrumb.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/mega-menu/mega-menu.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/mega-menu/mega-menu.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/menubar/menubar.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/menubar/menubar.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/panel-menu/panel-menu.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/panel-menu/panel-menu.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/tiered-menu/tiered-menu.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/tiered-menu/tiered-menu.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/dock/dock.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/dock/dock.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/speed-dial/speed-dial.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/speed-dial/speed-dial.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.component-metadata.records",
+      "batch": "ticket-153",
+      "reason": "Detailed inventory remains owned by #153; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.base",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.escape",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.hooks",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.motion",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.overlay",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.styling",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.zindex",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by #151; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.react.menu",
+      "record": "react.menu"
+    },
+    {
+      "id": "package.ultimate.react.context-menu",
+      "record": "react.context-menu"
+    },
+    {
+      "id": "package.ultimate.react.breadcrumb",
+      "record": "react.breadcrumb"
+    },
+    {
+      "id": "package.ultimate.react.mega-menu",
+      "record": "react.mega-menu"
+    },
+    {
+      "id": "package.ultimate.react.menubar",
+      "record": "react.menubar"
+    },
+    {
+      "id": "package.ultimate.react.panel-menu",
+      "record": "react.panel-menu"
+    },
+    {
+      "id": "package.ultimate.react.tiered-menu",
+      "record": "react.tiered-menu"
+    },
+    {
+      "id": "package.ultimate.react.dock",
+      "record": "react.dock"
+    },
+    {
+      "id": "package.ultimate.react.speed-dial",
+      "record": "react.speed-dial"
+    }
+  ],
+  "ownership": {
+    "ticket": 126,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "records": [
+    {
+      "id": "react.menu",
+      "name": "React UMenu",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Flat inline or imperative popup command and navigation list.",
+      "surface": "UMenu forwards UMenuHandle with toggle(event), show(event), hide(event?). UMenuProps requires model: UMenuItem[]; optional popup=false, popupAlignment (accepted but unread), id, ariaLabel, ariaLabelledBy, className, style, baseZIndex, appendTo, closeOnEscape=true, onShow and onHide. UMenuItem has optional label, ReactNode icon, command({originalEvent,item}), disabled, separator, visible, url and recursive items; this renderer remains flat and does not consume items. The list has role menu, tabIndex=0 and aria-activedescendant, clamps ArrowUp/Down, supports Home/End and Enter/Space invocation, Tab dismissal and Alt+ArrowUp focus return. Popup uses Portal, useOverlayListener, useGlobalEscapeKey, useDisplayOrder/ESCAPE_PRIORITIES, useZIndex and useMotion; useUpdateEffect and useUnmountEffect manage lifecycle. onShow runs in show; onHide runs in onAfterLeave, after clearing z-index and listeners. containerVisible retains mounting through leave; portalReady resets for reopening. Inline toggle is guarded, but show/hide are not popup-guarded. Local popup CSS starts at top/left -9999px; no target positioning measurement is implemented. MENU_METADATA references this React source and models shown/hidden callbacks; metadata is not runtime integration. menuStyleModule is the owned source-only StyleModule adapter (css and classes), not a public package export. Each family uses useComponentBase from react-core/base, whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/menu expose the same named barrel surface; manifest paths declare dist artifacts, not proof of a published/installable package. Aura registers menu; its preset key matches componentName \"menu\"; registration is not rendered theme verification. No family implementation imports @ultimate/uix-styles, @ultimate/uix-utils or @ultimate/uix-motion.",
+      "files": [
+        "packages/react/src/menu/index.ts",
+        "packages/react/src/menu/menu-style.ts",
+        "packages/react/src/menu/menu.tsx"
+      ],
+      "exports": [
+        "@ultimate/react#UMenu",
+        "@ultimate/react/menu#UMenu",
+        "@ultimate/react#UMenuProps",
+        "@ultimate/react/menu#UMenuProps",
+        "@ultimate/react#UMenuItem",
+        "@ultimate/react/menu#UMenuItem",
+        "@ultimate/react#UMenuHandle",
+        "@ultimate/react/menu#UMenuHandle"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/menu/index.ts",
+          "contains": "export { UMenu } from \"./menu\";"
+        },
+        {
+          "path": "packages/react/src/menu/menu.tsx",
+          "contains": "componentName: \"menu\""
+        },
+        {
+          "path": "packages/react/src/menu/menu-style.ts",
+          "contains": "export const menuStyleModule: StyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./menu\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./menu\": {"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    menu,"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/react/src/menu/menu.tsx",
+          "contains": "export interface UMenuItem {"
+        },
+        {
+          "path": "packages/react/src/menu/menu.tsx",
+          "contains": "export interface UMenuProps {"
+        },
+        {
+          "path": "packages/react/src/menu/menu.tsx",
+          "contains": "export interface UMenuHandle {"
+        },
+        {
+          "path": "packages/react/src/menu/menu.tsx",
+          "contains": "export const UMenu = React.forwardRef<UMenuHandle, UMenuProps>(function UMenu("
+        },
+        {
+          "path": "packages/component-metadata/src/records/menu.ts",
+          "contains": "react: { packageName: \"@ultimate/react\", sourcePath: \"packages/react/src/menu/menu.tsx\" }"
+        },
+        {
+          "path": "packages/react/src/menu/menu.tsx",
+          "contains": "popupAlignment?: \"left\" | \"right\";"
+        },
+        {
+          "path": "packages/react/src/menu/menu.tsx",
+          "contains": "aria-activedescendant={focused ? (focusedId ?? undefined) : undefined}"
+        },
+        {
+          "path": "packages/react/src/menu/menu.tsx",
+          "contains": "onAfterLeave: () => {"
+        },
+        {
+          "path": "packages/react/src/menu/menu-style.ts",
+          "contains": ".u-menu-overlay { position: absolute; top: -9999px; left: -9999px; }"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.menu",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.react-core.overlay",
+        "package.ultimate.react-core.escape",
+        "package.ultimate.react-core.zindex",
+        "package.ultimate.react-core.motion",
+        "package.ultimate.react-core.hooks",
+        "package.ultimate.component-metadata.records"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing React product specifications were attempted, but the runner aborted before assertions.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/menu/ src/context-menu/ src/breadcrumb/ src/mega-menu/ src/menubar/ src/panel-menu/ src/tiered-menu/ src/dock/ src/speed-dial/ --maxWorkers=1 --no-file-parallelism",
+          "outcome": "unavailable",
+          "revision": "af79b2ec8b18681f0163d9ede0beba387c462258",
+          "output": "Vitest 2.1.9 exited 1: Failed to load PostCSS config; Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Node v24.22.2 and pnpm 9.6.0; ancestor host PostCSS configuration prevents execution. No product assertions passed; no host or product repair attempted."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.context-menu",
+      "name": "React UContextMenu",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Flat right-click command menu with local or document-wide activation.",
+      "surface": "UContextMenu forwards UContextMenuHandle exposing show(React.MouseEvent) and hide(). UContextMenuProps requires model: UContextMenuItem[] and optionally global=false, onShow, onHide, onItemSelect and children. UContextMenuItem has optional label, ReactNode icon, command({originalEvent,item}), disabled, separator, visible and url; no nested items. Local mode wraps children in a div with onContextMenu; global mode binds document contextmenu and does not render children. show prevents default/propagation, resets focusedIndex, sets visible and calls onShow, then schedules pageX/pageY positioning in a microtask; the position function adds one pixel, clamps after viewport overflow and sets menu z-index only if its ref exists. Portal rendering and this scheduling are implementation evidence, not proof positioning succeeds. useEventListener binds outside clicks, useResizeListener dismisses on resize and useGlobalEscapeKey/useDisplayOrder/ESCAPE_PRIORITIES handles Escape. Cleanup unbinds and calls clearZIndex. The list has role menu; anchors tabIndex=-1, hover focus bookkeeping and aria-disabled; there is no list keyboard-navigation handler. Separator handling precedes visible filtering. Selection runs item.command, onItemSelect then hide/onHide. contextMenuStyleModule is the owned source-only StyleModule adapter (css and classes), not a public package export. Each family uses useComponentBase from react-core/base, whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/context-menu expose the same named barrel surface; manifest paths declare dist artifacts, not proof of a published/installable package. Aura registers contextmenu: contextMenu; its preset key differs from componentName \"context-menu\"; registration is not rendered theme verification. No family implementation imports @ultimate/uix-styles, @ultimate/uix-utils or @ultimate/uix-motion. No dedicated component-metadata record exists for this family at the inspected revision.",
+      "files": [
+        "packages/react/src/context-menu/context-menu-style.ts",
+        "packages/react/src/context-menu/context-menu.tsx",
+        "packages/react/src/context-menu/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UContextMenu",
+        "@ultimate/react/context-menu#UContextMenu",
+        "@ultimate/react#UContextMenuProps",
+        "@ultimate/react/context-menu#UContextMenuProps",
+        "@ultimate/react#UContextMenuItem",
+        "@ultimate/react/context-menu#UContextMenuItem",
+        "@ultimate/react#UContextMenuHandle",
+        "@ultimate/react/context-menu#UContextMenuHandle"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/context-menu/index.ts",
+          "contains": "export { UContextMenu } from \"./context-menu\";"
+        },
+        {
+          "path": "packages/react/src/context-menu/context-menu.tsx",
+          "contains": "componentName: \"context-menu\""
+        },
+        {
+          "path": "packages/react/src/context-menu/context-menu-style.ts",
+          "contains": "export const contextMenuStyleModule: StyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./context-menu\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./context-menu\": {"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    contextmenu: contextMenu,"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/react/src/context-menu/context-menu.tsx",
+          "contains": "export interface UContextMenuItem {"
+        },
+        {
+          "path": "packages/react/src/context-menu/context-menu.tsx",
+          "contains": "export interface UContextMenuProps {"
+        },
+        {
+          "path": "packages/react/src/context-menu/context-menu.tsx",
+          "contains": "export interface UContextMenuHandle {"
+        },
+        {
+          "path": "packages/react/src/context-menu/context-menu.tsx",
+          "contains": "export const UContextMenu = React.forwardRef<UContextMenuHandle, UContextMenuProps>("
+        },
+        {
+          "path": "packages/react/src/context-menu/context-menu.tsx",
+          "contains": "Promise.resolve().then(() => position(pageX, pageY));"
+        },
+        {
+          "path": "packages/react/src/context-menu/context-menu.tsx",
+          "contains": "const [bindResize, unbindResize] = useResizeListener({ listener: () => hide(), when: visible });"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.context-menu",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.react-core.overlay",
+        "package.ultimate.react-core.escape",
+        "package.ultimate.react-core.zindex",
+        "package.ultimate.react-core.hooks"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing React product specifications were attempted, but the runner aborted before assertions.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/menu/ src/context-menu/ src/breadcrumb/ src/mega-menu/ src/menubar/ src/panel-menu/ src/tiered-menu/ src/dock/ src/speed-dial/ --maxWorkers=1 --no-file-parallelism",
+          "outcome": "unavailable",
+          "revision": "af79b2ec8b18681f0163d9ede0beba387c462258",
+          "output": "Vitest 2.1.9 exited 1: Failed to load PostCSS config; Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Node v24.22.2 and pnpm 9.6.0; ancestor host PostCSS configuration prevents execution. No product assertions passed; no host or product repair attempted."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.breadcrumb",
+      "name": "React UBreadcrumb",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Ordered breadcrumb navigation trail with an optional home link.",
+      "surface": "UBreadcrumb forwards an HTMLElement ref to nav. UBreadcrumbProps: model defaults [], home, homeAriaLabel, onItemClick({originalEvent,item}), className. model/home reuse public UMenuItem as a type only; UBreadcrumb does not compose UMenu. Visible entries render an ol with chevron separators. Disabled clicks prevent default; enabled clicks call item.command then onItemClick and suppress navigation/propagation without a url. isCurrent is a non-exported component-local helper comparing url with window.location.pathname under an SSR guard. aria-current=page is applied to model links, not the home link (despite the source comment describing both). homeAriaLabel labels the home anchor. No custom hooks, factories, provider or directive are declared. breadcrumbStyleModule is the owned source-only StyleModule adapter (css and classes), not a public package export. Each family uses useComponentBase from react-core/base, whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/breadcrumb expose the same named barrel surface; manifest paths declare dist artifacts, not proof of a published/installable package. Aura registers breadcrumb; its preset key matches componentName \"breadcrumb\"; registration is not rendered theme verification. No family implementation imports @ultimate/uix-styles, @ultimate/uix-utils or @ultimate/uix-motion. No dedicated component-metadata record exists for this family at the inspected revision.",
+      "files": [
+        "packages/react/src/breadcrumb/breadcrumb-style.ts",
+        "packages/react/src/breadcrumb/breadcrumb.tsx",
+        "packages/react/src/breadcrumb/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UBreadcrumb",
+        "@ultimate/react/breadcrumb#UBreadcrumb",
+        "@ultimate/react#UBreadcrumbProps",
+        "@ultimate/react/breadcrumb#UBreadcrumbProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/breadcrumb/index.ts",
+          "contains": "export { UBreadcrumb } from \"./breadcrumb\";"
+        },
+        {
+          "path": "packages/react/src/breadcrumb/breadcrumb.tsx",
+          "contains": "componentName: \"breadcrumb\""
+        },
+        {
+          "path": "packages/react/src/breadcrumb/breadcrumb-style.ts",
+          "contains": "export const breadcrumbStyleModule: StyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./breadcrumb\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./breadcrumb\": {"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    breadcrumb,"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/react/src/breadcrumb/breadcrumb.tsx",
+          "contains": "export interface UBreadcrumbProps {"
+        },
+        {
+          "path": "packages/react/src/breadcrumb/breadcrumb.tsx",
+          "contains": "export const UBreadcrumb = React.forwardRef<HTMLElement, UBreadcrumbProps>(function UBreadcrumb("
+        },
+        {
+          "path": "packages/react/src/breadcrumb/breadcrumb.tsx",
+          "contains": "aria-current={isCurrent(item.url)}"
+        },
+        {
+          "path": "packages/react/src/breadcrumb/breadcrumb.tsx",
+          "contains": "aria-label={homeAriaLabel}"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.breadcrumb",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "react.menu"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing React product specifications were attempted, but the runner aborted before assertions.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/menu/ src/context-menu/ src/breadcrumb/ src/mega-menu/ src/menubar/ src/panel-menu/ src/tiered-menu/ src/dock/ src/speed-dial/ --maxWorkers=1 --no-file-parallelism",
+          "outcome": "unavailable",
+          "revision": "af79b2ec8b18681f0163d9ede0beba387c462258",
+          "output": "Vitest 2.1.9 exited 1: Failed to load PostCSS config; Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Node v24.22.2 and pnpm 9.6.0; ancestor host PostCSS configuration prevents execution. No product assertions passed; no host or product repair attempted."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.mega-menu",
+      "name": "React UMegaMenu",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Horizontal command bar with multi-column grouped overlays.",
+      "surface": "UMegaMenu forwards an HTMLElement ref to nav. UMegaMenuProps: model defaults [], ariaLabel, onItemSelect({originalEvent,item}), className. Public UMegaMenuItem extends Omit<UMenuItem,\"items\"> with items?: UMegaMenuGroup[][]; public UMegaMenuGroup extends the same omission with flat items?: UMenuItem[]. UMegaMenuColumnGroup and UMegaMenuColumnGroupProps are source-only, not barrel exports. Their props are group, cx(key,params?) and onItemSelect. Root openItem tracks object identity; hover opens, click toggles groups, leaf command then callback selects, and column selection closes. Root ArrowRight/Left wraps enabled items; Enter/Space opens then an effect focuses the first column leaf; Escape closes/refocuses from bubbling descendants. Column ArrowDown/Up wraps enabled leaves, leaving Escape to root. Rendering uses menubar/menu/menuitem roles, aria-haspopup/expanded/disabled and in-tree CSS overlays, not Portal. Every enabled root/leaf anchor has tabIndex=0, not a single roving tab stop. Local CSS supplies absolute overlay placement and flex columns. megaMenuStyleModule is the owned source-only StyleModule adapter (css and classes), not a public package export. Each family uses useComponentBase from react-core/base, whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/mega-menu expose the same named barrel surface; manifest paths declare dist artifacts, not proof of a published/installable package. Aura registers megamenu: megaMenu; its preset key differs from componentName \"mega-menu\"; registration is not rendered theme verification. No family implementation imports @ultimate/uix-styles, @ultimate/uix-utils or @ultimate/uix-motion. No dedicated component-metadata record exists for this family at the inspected revision.",
+      "files": [
+        "packages/react/src/mega-menu/index.ts",
+        "packages/react/src/mega-menu/mega-menu-column.tsx",
+        "packages/react/src/mega-menu/mega-menu-item.ts",
+        "packages/react/src/mega-menu/mega-menu-style.ts",
+        "packages/react/src/mega-menu/mega-menu.tsx"
+      ],
+      "exports": [
+        "@ultimate/react#UMegaMenu",
+        "@ultimate/react/mega-menu#UMegaMenu",
+        "@ultimate/react#UMegaMenuProps",
+        "@ultimate/react/mega-menu#UMegaMenuProps",
+        "@ultimate/react#UMegaMenuItem",
+        "@ultimate/react/mega-menu#UMegaMenuItem",
+        "@ultimate/react#UMegaMenuGroup",
+        "@ultimate/react/mega-menu#UMegaMenuGroup"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/mega-menu/index.ts",
+          "contains": "export { UMegaMenu } from \"./mega-menu\";"
+        },
+        {
+          "path": "packages/react/src/mega-menu/mega-menu.tsx",
+          "contains": "componentName: \"mega-menu\""
+        },
+        {
+          "path": "packages/react/src/mega-menu/mega-menu-style.ts",
+          "contains": "export const megaMenuStyleModule: StyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./mega-menu\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./mega-menu\": {"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    megamenu: megaMenu,"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/react/src/mega-menu/mega-menu-column.tsx",
+          "contains": "export interface UMegaMenuColumnGroupProps {"
+        },
+        {
+          "path": "packages/react/src/mega-menu/mega-menu-column.tsx",
+          "contains": "export const UMegaMenuColumnGroup: React.FC<UMegaMenuColumnGroupProps> = ({"
+        },
+        {
+          "path": "packages/react/src/mega-menu/mega-menu-item.ts",
+          "contains": "export interface UMegaMenuGroup extends Omit<UMenuItem, \"items\"> {"
+        },
+        {
+          "path": "packages/react/src/mega-menu/mega-menu-item.ts",
+          "contains": "export interface UMegaMenuItem extends Omit<UMenuItem, \"items\"> {"
+        },
+        {
+          "path": "packages/react/src/mega-menu/mega-menu.tsx",
+          "contains": "export interface UMegaMenuProps {"
+        },
+        {
+          "path": "packages/react/src/mega-menu/mega-menu.tsx",
+          "contains": "export const UMegaMenu = React.forwardRef<HTMLElement, UMegaMenuProps>(function UMegaMenu("
+        },
+        {
+          "path": "packages/react/src/mega-menu/mega-menu.tsx",
+          "contains": "const [openItem, setOpenItem] = React.useState<UMegaMenuItem | null>(null);"
+        },
+        {
+          "path": "packages/react/src/mega-menu/mega-menu-column.tsx",
+          "contains": "case \"ArrowDown\":"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.mega-menu",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "react.menu"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing React product specifications were attempted, but the runner aborted before assertions.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/menu/ src/context-menu/ src/breadcrumb/ src/mega-menu/ src/menubar/ src/panel-menu/ src/tiered-menu/ src/dock/ src/speed-dial/ --maxWorkers=1 --no-file-parallelism",
+          "outcome": "unavailable",
+          "revision": "af79b2ec8b18681f0163d9ede0beba387c462258",
+          "output": "Vitest 2.1.9 exited 1: Failed to load PostCSS config; Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Node v24.22.2 and pnpm 9.6.0; ancestor host PostCSS configuration prevents execution. No product assertions passed; no host or product repair attempted."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.menubar",
+      "name": "React UMenubar",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Horizontal command bar with recursive positioned submenus.",
+      "surface": "UMenubar forwards an HTMLElement ref to nav; UMenubarProps: model defaults [], ariaLabel, onItemSelect({originalEvent,item}), className. UMenuItem is a type-only dependency, not UMenu composition. UMenubarSub and UMenubarSubProps are source-only, not barrel exports. Props: items, root, cx(key,params?), onItemSelect. Each recursive level stores openItem and focusFirstOnOpen; pointer hover opens groups, click toggles groups or calls command then onItemSelect for leaves. Root ArrowRight/Left and submenu ArrowDown/Up wrap enabled siblings; Enter/Space opens groups and an effect focuses the first child; Escape closes the innermost open level and refocuses its trigger. A direct-child ITEM_LINK_SELECTOR limits event ownership; list-level handlers receive bubbling descendants. Separators precede visible filtering. Nested lists always mount and CSS display/open selectors control visibility; enabled anchors each have tabIndex=0. Roles menubar/menu/menuitem and aria-haspopup/expanded/disabled are present; no Portal, outside-click dismissal or global Escape hook. menubarStyleModule is the owned source-only StyleModule adapter (css and classes), not a public package export. Each family uses useComponentBase from react-core/base, whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/menubar expose the same named barrel surface; manifest paths declare dist artifacts, not proof of a published/installable package. Aura registers menubar; its preset key matches componentName \"menubar\"; registration is not rendered theme verification. No family implementation imports @ultimate/uix-styles, @ultimate/uix-utils or @ultimate/uix-motion. No dedicated component-metadata record exists for this family at the inspected revision.",
+      "files": [
+        "packages/react/src/menubar/index.ts",
+        "packages/react/src/menubar/menubar-style.ts",
+        "packages/react/src/menubar/menubar-sub.tsx",
+        "packages/react/src/menubar/menubar.tsx"
+      ],
+      "exports": [
+        "@ultimate/react#UMenubar",
+        "@ultimate/react/menubar#UMenubar",
+        "@ultimate/react#UMenubarProps",
+        "@ultimate/react/menubar#UMenubarProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/menubar/index.ts",
+          "contains": "export { UMenubar } from \"./menubar\";"
+        },
+        {
+          "path": "packages/react/src/menubar/menubar.tsx",
+          "contains": "componentName: \"menubar\""
+        },
+        {
+          "path": "packages/react/src/menubar/menubar-style.ts",
+          "contains": "export const menubarStyleModule: StyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./menubar\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./menubar\": {"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    menubar,"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/react/src/menubar/menubar-sub.tsx",
+          "contains": "export interface UMenubarSubProps {"
+        },
+        {
+          "path": "packages/react/src/menubar/menubar-sub.tsx",
+          "contains": "export const UMenubarSub: React.FC<UMenubarSubProps> = ({ items, root, cx, onItemSelect }) => {"
+        },
+        {
+          "path": "packages/react/src/menubar/menubar.tsx",
+          "contains": "export interface UMenubarProps {"
+        },
+        {
+          "path": "packages/react/src/menubar/menubar.tsx",
+          "contains": "export const UMenubar = React.forwardRef<HTMLElement, UMenubarProps>(function UMenubar("
+        },
+        {
+          "path": "packages/react/src/menubar/menubar-sub.tsx",
+          "contains": "const forwardKey = root ? \"ArrowRight\" : \"ArrowDown\";"
+        },
+        {
+          "path": "packages/react/src/menubar/menubar-sub.tsx",
+          "contains": "role={root ? \"menubar\" : \"menu\"}"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.menubar",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "react.menu"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing React product specifications were attempted, but the runner aborted before assertions.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/menu/ src/context-menu/ src/breadcrumb/ src/mega-menu/ src/menubar/ src/panel-menu/ src/tiered-menu/ src/dock/ src/speed-dial/ --maxWorkers=1 --no-file-parallelism",
+          "outcome": "unavailable",
+          "revision": "af79b2ec8b18681f0163d9ede0beba387c462258",
+          "output": "Vitest 2.1.9 exited 1: Failed to load PostCSS config; Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Node v24.22.2 and pnpm 9.6.0; ancestor host PostCSS configuration prevents execution. No product assertions passed; no host or product repair attempted."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.panel-menu",
+      "name": "React UPanelMenu",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Recursive expand-in-place accordion navigation.",
+      "surface": "UPanelMenu forwards HTMLDivElement; UPanelMenuProps: model defaults [], multiple=false, onItemSelect({originalEvent,item}), className. UPanelMenuList and UPanelMenuListProps are source-only, not barrel exports. Props: items, expandedItems: Set<UMenuItem>, multiple, cx(key,params?), onToggle(item,siblings), onItemSelect. Root replaces an identity-keyed Set<UMenuItem>; single mode removes sibling entries before adding the current item, not all descendants. Recursive lists share expandedItems and callbacks; multiple is threaded through but exclusivity is implemented at root. Groups toggle without leaf callbacks; leaves call command then onItemSelect. ArrowDown/Up wraps visible enabled siblings; Enter/Space toggles groups without moving focus; no Escape handler. Lists have role tree and items treeitem with aria-expanded; nested lists mount only when expanded. Source observation: every list including the root uses u-panelmenu-submenu whose local CSS is display: none; only an expanded parent item selector displays a child list. No rendered visibility success is claimed or repaired. panelMenuStyleModule is the owned source-only StyleModule adapter (css and classes), not a public package export. Each family uses useComponentBase from react-core/base, whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/panel-menu expose the same named barrel surface; manifest paths declare dist artifacts, not proof of a published/installable package. Aura registers panelmenu: panelMenu; its preset key differs from componentName \"panel-menu\"; registration is not rendered theme verification. No family implementation imports @ultimate/uix-styles, @ultimate/uix-utils or @ultimate/uix-motion. No dedicated component-metadata record exists for this family at the inspected revision.",
+      "files": [
+        "packages/react/src/panel-menu/index.ts",
+        "packages/react/src/panel-menu/panel-menu-list.tsx",
+        "packages/react/src/panel-menu/panel-menu-style.ts",
+        "packages/react/src/panel-menu/panel-menu.tsx"
+      ],
+      "exports": [
+        "@ultimate/react#UPanelMenu",
+        "@ultimate/react/panel-menu#UPanelMenu",
+        "@ultimate/react#UPanelMenuProps",
+        "@ultimate/react/panel-menu#UPanelMenuProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/panel-menu/index.ts",
+          "contains": "export { UPanelMenu } from \"./panel-menu\";"
+        },
+        {
+          "path": "packages/react/src/panel-menu/panel-menu.tsx",
+          "contains": "componentName: \"panel-menu\""
+        },
+        {
+          "path": "packages/react/src/panel-menu/panel-menu-style.ts",
+          "contains": "export const panelMenuStyleModule: StyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./panel-menu\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./panel-menu\": {"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    panelmenu: panelMenu,"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/react/src/panel-menu/panel-menu-list.tsx",
+          "contains": "export interface UPanelMenuListProps {"
+        },
+        {
+          "path": "packages/react/src/panel-menu/panel-menu-list.tsx",
+          "contains": "export const UPanelMenuList: React.FC<UPanelMenuListProps> = ({"
+        },
+        {
+          "path": "packages/react/src/panel-menu/panel-menu.tsx",
+          "contains": "export interface UPanelMenuProps {"
+        },
+        {
+          "path": "packages/react/src/panel-menu/panel-menu.tsx",
+          "contains": "export const UPanelMenu = React.forwardRef<HTMLDivElement, UPanelMenuProps>(function UPanelMenu("
+        },
+        {
+          "path": "packages/react/src/panel-menu/panel-menu.tsx",
+          "contains": "const [expandedItems, setExpandedItems] = React.useState<Set<UMenuItem>>(new Set());"
+        },
+        {
+          "path": "packages/react/src/panel-menu/panel-menu-list.tsx",
+          "contains": "<ul ref={listRef} className={cx(\"submenu\")} role=\"tree\" onKeyDown={onKeyDown}>"
+        },
+        {
+          "path": "packages/react/src/panel-menu/panel-menu-style.ts",
+          "contains": ".u-panelmenu-submenu { margin: 0; padding-left: 1.25rem; list-style: none; display: none; }"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.panel-menu",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "react.menu"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing React product specifications were attempted, but the runner aborted before assertions.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/menu/ src/context-menu/ src/breadcrumb/ src/mega-menu/ src/menubar/ src/panel-menu/ src/tiered-menu/ src/dock/ src/speed-dial/ --maxWorkers=1 --no-file-parallelism",
+          "outcome": "unavailable",
+          "revision": "af79b2ec8b18681f0163d9ede0beba387c462258",
+          "output": "Vitest 2.1.9 exited 1: Failed to load PostCSS config; Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Node v24.22.2 and pnpm 9.6.0; ancestor host PostCSS configuration prevents execution. No product assertions passed; no host or product repair attempted."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.tiered-menu",
+      "name": "React UTieredMenu",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Vertical recursive menu, inline or imperatively toggled popup.",
+      "surface": "UTieredMenu forwards UTieredMenuHandle with toggle(), show(), hide(). UTieredMenuProps: model defaults [], popup=false, onItemSelect({originalEvent,item}), onShow, onHide, className. Visibility initializes !popup; show/hide invoke callbacks inside guarded state updaters. Popup hidden returns null; document keydown Escape is registered only while popup and visible. Leaf selection calls onItemSelect then hides popup. UTieredMenuSub and UTieredMenuSubProps are source-only, not barrel exports: items, root, cx(key,params?), onItemSelect. Each recursive level tracks openItem; ArrowDown/Up wraps enabled siblings at every depth, ArrowRight/Enter/Space opens and defers first-child focus, Escape closes/refocuses the innermost group via bubbling. Hover opens; groups toggle on click; leaves run command then selection callback. Separators precede visible filtering. All enabled anchors have tabIndex=0; menu/menuitem roles and aria-haspopup/expanded/disabled are present. No Portal, target positioning, z-index hook or outside-click listener; popup local CSS stays at top/left -9999px. Nested menus always mount with CSS controlling display. tieredMenuStyleModule is the owned source-only StyleModule adapter (css and classes), not a public package export. Each family uses useComponentBase from react-core/base, whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/tiered-menu expose the same named barrel surface; manifest paths declare dist artifacts, not proof of a published/installable package. Aura registers tieredmenu: tieredMenu; its preset key differs from componentName \"tiered-menu\"; registration is not rendered theme verification. No family implementation imports @ultimate/uix-styles, @ultimate/uix-utils or @ultimate/uix-motion. No dedicated component-metadata record exists for this family at the inspected revision.",
+      "files": [
+        "packages/react/src/tiered-menu/index.ts",
+        "packages/react/src/tiered-menu/tiered-menu-style.ts",
+        "packages/react/src/tiered-menu/tiered-menu-sub.tsx",
+        "packages/react/src/tiered-menu/tiered-menu.tsx"
+      ],
+      "exports": [
+        "@ultimate/react#UTieredMenu",
+        "@ultimate/react/tiered-menu#UTieredMenu",
+        "@ultimate/react#UTieredMenuProps",
+        "@ultimate/react/tiered-menu#UTieredMenuProps",
+        "@ultimate/react#UTieredMenuHandle",
+        "@ultimate/react/tiered-menu#UTieredMenuHandle"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/tiered-menu/index.ts",
+          "contains": "export { UTieredMenu } from \"./tiered-menu\";"
+        },
+        {
+          "path": "packages/react/src/tiered-menu/tiered-menu.tsx",
+          "contains": "componentName: \"tiered-menu\""
+        },
+        {
+          "path": "packages/react/src/tiered-menu/tiered-menu-style.ts",
+          "contains": "export const tieredMenuStyleModule: StyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./tiered-menu\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./tiered-menu\": {"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    tieredmenu: tieredMenu,"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/react/src/tiered-menu/tiered-menu-sub.tsx",
+          "contains": "export interface UTieredMenuSubProps {"
+        },
+        {
+          "path": "packages/react/src/tiered-menu/tiered-menu-sub.tsx",
+          "contains": "export const UTieredMenuSub: React.FC<UTieredMenuSubProps> = ({"
+        },
+        {
+          "path": "packages/react/src/tiered-menu/tiered-menu.tsx",
+          "contains": "export interface UTieredMenuProps {"
+        },
+        {
+          "path": "packages/react/src/tiered-menu/tiered-menu.tsx",
+          "contains": "export interface UTieredMenuHandle {"
+        },
+        {
+          "path": "packages/react/src/tiered-menu/tiered-menu.tsx",
+          "contains": "export const UTieredMenu = React.forwardRef<UTieredMenuHandle, UTieredMenuProps>("
+        },
+        {
+          "path": "packages/react/src/tiered-menu/tiered-menu.tsx",
+          "contains": "document.addEventListener(\"keydown\", onEscape);"
+        },
+        {
+          "path": "packages/react/src/tiered-menu/tiered-menu-style.ts",
+          "contains": ".u-tieredmenu-overlay { position: absolute; top: -9999px; left: -9999px; }"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.tiered-menu",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "react.menu"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing React product specifications were attempted, but the runner aborted before assertions.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/menu/ src/context-menu/ src/breadcrumb/ src/mega-menu/ src/menubar/ src/panel-menu/ src/tiered-menu/ src/dock/ src/speed-dial/ --maxWorkers=1 --no-file-parallelism",
+          "outcome": "unavailable",
+          "revision": "af79b2ec8b18681f0163d9ede0beba387c462258",
+          "output": "Vitest 2.1.9 exited 1: Failed to load PostCSS config; Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Node v24.22.2 and pnpm 9.6.0; ancestor host PostCSS configuration prevents execution. No product assertions passed; no host or product repair attempted."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.dock",
+      "name": "React UDock",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Positioned icon command dock with hover magnification.",
+      "surface": "UDock forwards HTMLDivElement. UDockProps: model defaults [], position defaults bottom (top/left/right also allowed), ariaLabel, onItemSelect({originalEvent,item}), className. UMenuItem is reused as a type only. Hidden items are omitted; disabled clicks prevent default; enabled selection calls onItemSelect before item.command and prevents navigation without url. Icons are joined into className strings rather than rendered as ReactNode children. hoveredIndex drives active class/data-u-active; local CSS scale(1.5) supplies magnification and position classes orient the list. ArrowRight/Left applies horizontally, ArrowDown/Up vertically; Home/End jumps to enabled edges, movement wraps enabled visible entries. Anchors have role menuitem and aria-label/disabled but no disabled tabIndex override; list role menu has ariaLabel. Local CSS disabled selectors require data-u-disabled on li, but the renderer sets no such attribute on li; it emits aria-disabled on anchors. No Portal, imperative API or custom hook declaration. dockStyleModule is the owned source-only StyleModule adapter (css and classes), not a public package export. Each family uses useComponentBase from react-core/base, whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/dock expose the same named barrel surface; manifest paths declare dist artifacts, not proof of a published/installable package. Aura registers dock; its preset key matches componentName \"dock\"; registration is not rendered theme verification. No family implementation imports @ultimate/uix-styles, @ultimate/uix-utils or @ultimate/uix-motion. No dedicated component-metadata record exists for this family at the inspected revision.",
+      "files": [
+        "packages/react/src/dock/dock-style.ts",
+        "packages/react/src/dock/dock.tsx",
+        "packages/react/src/dock/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UDock",
+        "@ultimate/react/dock#UDock",
+        "@ultimate/react#UDockProps",
+        "@ultimate/react/dock#UDockProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/dock/index.ts",
+          "contains": "export { UDock } from \"./dock\";"
+        },
+        {
+          "path": "packages/react/src/dock/dock.tsx",
+          "contains": "componentName: \"dock\""
+        },
+        {
+          "path": "packages/react/src/dock/dock-style.ts",
+          "contains": "export const dockStyleModule: StyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./dock\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./dock\": {"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    dock,"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/react/src/dock/dock.tsx",
+          "contains": "export interface UDockProps {"
+        },
+        {
+          "path": "packages/react/src/dock/dock.tsx",
+          "contains": "export const UDock = React.forwardRef<HTMLDivElement, UDockProps>(function UDock("
+        },
+        {
+          "path": "packages/react/src/dock/dock.tsx",
+          "contains": "case \"Home\":"
+        },
+        {
+          "path": "packages/react/src/dock/dock-style.ts",
+          "contains": ".u-dock-item-link:hover, .u-dock-item-link[data-u-active=\"true\"] { transform: scale(1.5); }"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.dock",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "react.menu"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing React product specifications were attempted, but the runner aborted before assertions.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/menu/ src/context-menu/ src/breadcrumb/ src/mega-menu/ src/menubar/ src/panel-menu/ src/tiered-menu/ src/dock/ src/speed-dial/ --maxWorkers=1 --no-file-parallelism",
+          "outcome": "unavailable",
+          "revision": "af79b2ec8b18681f0163d9ede0beba387c462258",
+          "output": "Vitest 2.1.9 exited 1: Failed to load PostCSS config; Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Node v24.22.2 and pnpm 9.6.0; ancestor host PostCSS configuration prevents execution. No product assertions passed; no host or product repair attempted."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.speed-dial",
+      "name": "React USpeedDial",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Floating action toggle with linear or circular secondary actions.",
+      "surface": "USpeedDial forwards USpeedDialHandle with show()/hide(). USpeedDialProps: model defaults [], icon, direction=up, type=linear, radius=0, transitionDelay=30ms, mask=false, disabled=false, closeOnEscape=true, ariaLabel, onVisibleChange(boolean), onClick(MouseEvent), onShow, onHide, className. Public USpeedDialDirection allows up/down/left/right/up-left/up-right/down-left/down-right; USpeedDialType allows linear/circle/semi-circle/quarter-circle. The native toggle button (not UButton) has aria-expanded/haspopup/label and disabled; imperative show is not disabled-guarded. State updater callbacks emit visibility and show/hide once per transition. Document Escape hides while open; optional mask click hides. Every model entry remains mounted as a native menuitem button; disabled uses the native attribute, closed state tabIndex=-1. Keyboard movement wraps eligible visible enabled actions on an axis chosen by direction. Hidden entries receive a u-speeddial-item-hidden class, but local CSS targets data-u-hidden, which is not emitted. Local CSS has transitions but no open/closed transform or opacity rule. Inline positions use trigonometry for circle variants with radius fallback model.length*20; semi steps divide by (length-1) and quarter steps by 2*(length-1), with no single-item guard. transitionDelay reverses on close. Item click calls command then hide; url is not consumed. No Portal, UButton, overlay foundation or motion hook is imported. speedDialStyleModule is the owned source-only StyleModule adapter (css and classes), not a public package export. Each family uses useComponentBase from react-core/base, whose implementation calls useComponentStyle from react-core/styling. No separate base class, props factory, directive, context/provider or exported hook exists under this family root. Root @ultimate/react and secondary @ultimate/react/speed-dial expose the same named barrel surface; manifest paths declare dist artifacts, not proof of a published/installable package. Aura registers speeddial: speedDial; its preset key differs from componentName \"speed-dial\"; registration is not rendered theme verification. No family implementation imports @ultimate/uix-styles, @ultimate/uix-utils or @ultimate/uix-motion. No dedicated component-metadata record exists for this family at the inspected revision.",
+      "files": [
+        "packages/react/src/speed-dial/index.ts",
+        "packages/react/src/speed-dial/speed-dial-style.ts",
+        "packages/react/src/speed-dial/speed-dial.tsx"
+      ],
+      "exports": [
+        "@ultimate/react#USpeedDial",
+        "@ultimate/react/speed-dial#USpeedDial",
+        "@ultimate/react#USpeedDialProps",
+        "@ultimate/react/speed-dial#USpeedDialProps",
+        "@ultimate/react#USpeedDialHandle",
+        "@ultimate/react/speed-dial#USpeedDialHandle",
+        "@ultimate/react#USpeedDialDirection",
+        "@ultimate/react/speed-dial#USpeedDialDirection",
+        "@ultimate/react#USpeedDialType",
+        "@ultimate/react/speed-dial#USpeedDialType"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/speed-dial/index.ts",
+          "contains": "export { USpeedDial } from \"./speed-dial\";"
+        },
+        {
+          "path": "packages/react/src/speed-dial/speed-dial.tsx",
+          "contains": "componentName: \"speed-dial\""
+        },
+        {
+          "path": "packages/react/src/speed-dial/speed-dial-style.ts",
+          "contains": "export const speedDialStyleModule: StyleModule = { css, classes };"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./speed-dial\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./speed-dial\": {"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    speeddial: speedDial,"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/react/src/speed-dial/speed-dial.tsx",
+          "contains": "export type USpeedDialDirection ="
+        },
+        {
+          "path": "packages/react/src/speed-dial/speed-dial.tsx",
+          "contains": "export type USpeedDialType = \"linear\" | \"circle\" | \"semi-circle\" | \"quarter-circle\";"
+        },
+        {
+          "path": "packages/react/src/speed-dial/speed-dial.tsx",
+          "contains": "export interface USpeedDialProps {"
+        },
+        {
+          "path": "packages/react/src/speed-dial/speed-dial.tsx",
+          "contains": "export interface USpeedDialHandle {"
+        },
+        {
+          "path": "packages/react/src/speed-dial/speed-dial.tsx",
+          "contains": "export const USpeedDial = React.forwardRef<USpeedDialHandle, USpeedDialProps>(function USpeedDial("
+        },
+        {
+          "path": "packages/react/src/speed-dial/speed-dial.tsx",
+          "contains": "className={cx(\"item\", { hidden: item.visible === false })}"
+        },
+        {
+          "path": "packages/react/src/speed-dial/speed-dial-style.ts",
+          "contains": ".u-speeddial-item[data-u-hidden=\"true\"] { visibility: hidden; }"
+        },
+        {
+          "path": "packages/react/src/speed-dial/speed-dial.tsx",
+          "contains": "const delay = (visible ? index : length - index - 1) * transitionDelay;"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.speed-dial",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "react.menu"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "unavailable",
+          "behavior": "Bounded existing React product specifications were attempted, but the runner aborted before assertions.",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/menu/ src/context-menu/ src/breadcrumb/ src/mega-menu/ src/menubar/ src/panel-menu/ src/tiered-menu/ src/dock/ src/speed-dial/ --maxWorkers=1 --no-file-parallelism",
+          "outcome": "unavailable",
+          "revision": "af79b2ec8b18681f0163d9ede0beba387c462258",
+          "output": "Vitest 2.1.9 exited 1: Failed to load PostCSS config; Cannot find module 'postcss-import'; Require stack: /Users/majedsiefalnasr/postcss.config.mjs",
+          "limitations": "Node v24.22.2 and pnpm 9.6.0; ancestor host PostCSS configuration prevents execution. No product assertions passed; no host or product repair attempted."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    }
+  ]
+}

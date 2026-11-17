@@ -1,0 +1,702 @@
+{
+  "version": 1,
+  "scope": "metadata-registry-153",
+  "revision": "e60b2f03cdcfdbd8bf6cdb999a346858ad619718",
+  "ownership": {
+    "ticket": 153,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.component-metadata",
+      "record": "metadata.root"
+    },
+    {
+      "id": "package.ultimate.component-metadata.root",
+      "record": "metadata.root"
+    },
+    {
+      "id": "package.ultimate.component-metadata.records",
+      "record": "metadata.root"
+    }
+  ],
+  "packages": [
+    {
+      "path": "packages/component-metadata",
+      "roots": ["packages/component-metadata/src", "packages/component-metadata/scripts"],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/component-metadata/src/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "metadata.root",
+      "name": "Metadata registry",
+      "framework": "shared",
+      "purpose": "The package entry that exposes the registry array of populated product component metadata records.",
+      "surface": "See [authored signatures and interpretation](README.md). src/index.ts imports the eight record constants and exports ALL_COMPONENTS: ComponentMetadata[] in the order Button, Checkbox, Dialog, Menu, Paginator, Scroller, Table, Tooltip. This is the only root export identity; the individual record constants are not exported from the root.",
+      "files": ["packages/component-metadata/src/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/component-metadata#ALL_COMPONENTS"],
+      "evidence": [
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "export const ALL_COMPONENTS: ComponentMetadata[] = ["
+        },
+        {
+          "path": "packages/component-metadata/src/index.ts",
+          "contains": "import { TOOLTIP_METADATA } from \"./records/tooltip\";"
+        }
+      ],
+      "relationships": [
+        "metadata.button",
+        "metadata.checkbox",
+        "metadata.dialog",
+        "metadata.menu",
+        "metadata.paginator",
+        "metadata.scroller",
+        "metadata.table",
+        "metadata.tooltip",
+        "package.ultimate.component-schema.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Metadata registry is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/component-metadata/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes. The metadata drift check, API docs check and coverage report steps in the same workflow are skipped on that path, so none of them is claimed as exercised.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/metadata-registry.json --out docs/inventory/metadata-registry (run twice; authored README SHA-256 checked before and after)",
+          "revision": "e60b2f03cdcfdbd8bf6cdb999a346858ad619718",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 1 root export identity attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/metadata-registry/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "metadata.button",
+      "name": "Button metadata record",
+      "framework": "shared",
+      "purpose": "Populated ComponentMetadata record for Button (category Primitive) with per-framework API facts for Angular, React and Vue, written by hand against the framework sources.",
+      "surface": "See [authored signatures and interpretation](README.md). Not exported from the package root; reachable only through ALL_COMPONENTS. packages/component-metadata/src/records/button.ts declares export const BUTTON_METADATA: ComponentMetadata with schemaVersion SCHEMA_VERSION. The record is a hand-maintained description of source, not a superior source of truth; the drift check compares its prop and event names against framework source.",
+      "files": ["packages/component-metadata/src/records/button.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/component-metadata/src/records/button.ts",
+          "contains": "export const BUTTON_METADATA: ComponentMetadata = {"
+        },
+        {
+          "path": "packages/component-metadata/src/records/button.ts",
+          "contains": "import { SCHEMA_VERSION } from \"@ultimate/component-schema\";"
+        }
+      ],
+      "relationships": [
+        "metadata.root",
+        "metadata.drift",
+        "package.ultimate.component-schema.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Button metadata record is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/component-metadata/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes. The metadata drift check, API docs check and coverage report steps in the same workflow are skipped on that path, so none of them is claimed as exercised.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/metadata-registry.json --out docs/inventory/metadata-registry (run twice; authored README SHA-256 checked before and after)",
+          "revision": "e60b2f03cdcfdbd8bf6cdb999a346858ad619718",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 1 root export identity attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/metadata-registry/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "metadata.checkbox",
+      "name": "Checkbox metadata record",
+      "framework": "shared",
+      "purpose": "Populated ComponentMetadata record for Checkbox (category Form) with per-framework API facts for Angular, React and Vue, written by hand against the framework sources.",
+      "surface": "See [authored signatures and interpretation](README.md). Not exported from the package root; reachable only through ALL_COMPONENTS. packages/component-metadata/src/records/checkbox.ts declares export const CHECKBOX_METADATA: ComponentMetadata with schemaVersion SCHEMA_VERSION. The record is a hand-maintained description of source, not a superior source of truth; the drift check compares its prop and event names against framework source.",
+      "files": ["packages/component-metadata/src/records/checkbox.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/component-metadata/src/records/checkbox.ts",
+          "contains": "export const CHECKBOX_METADATA: ComponentMetadata = {"
+        },
+        {
+          "path": "packages/component-metadata/src/records/checkbox.ts",
+          "contains": "import { SCHEMA_VERSION } from \"@ultimate/component-schema\";"
+        }
+      ],
+      "relationships": [
+        "metadata.root",
+        "metadata.drift",
+        "package.ultimate.component-schema.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Checkbox metadata record is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/component-metadata/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes. The metadata drift check, API docs check and coverage report steps in the same workflow are skipped on that path, so none of them is claimed as exercised.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/metadata-registry.json --out docs/inventory/metadata-registry (run twice; authored README SHA-256 checked before and after)",
+          "revision": "e60b2f03cdcfdbd8bf6cdb999a346858ad619718",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 1 root export identity attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/metadata-registry/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "metadata.dialog",
+      "name": "Dialog metadata record",
+      "framework": "shared",
+      "purpose": "Populated ComponentMetadata record for Dialog (category Overlay) with per-framework API facts for Angular, React and Vue, written by hand against the framework sources.",
+      "surface": "See [authored signatures and interpretation](README.md). Not exported from the package root; reachable only through ALL_COMPONENTS. packages/component-metadata/src/records/dialog.ts declares export const DIALOG_METADATA: ComponentMetadata with schemaVersion SCHEMA_VERSION. The record is a hand-maintained description of source, not a superior source of truth; the drift check compares its prop and event names against framework source.",
+      "files": ["packages/component-metadata/src/records/dialog.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/component-metadata/src/records/dialog.ts",
+          "contains": "export const DIALOG_METADATA: ComponentMetadata = {"
+        },
+        {
+          "path": "packages/component-metadata/src/records/dialog.ts",
+          "contains": "import { SCHEMA_VERSION } from \"@ultimate/component-schema\";"
+        }
+      ],
+      "relationships": [
+        "metadata.root",
+        "metadata.drift",
+        "package.ultimate.component-schema.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Dialog metadata record is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/component-metadata/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes. The metadata drift check, API docs check and coverage report steps in the same workflow are skipped on that path, so none of them is claimed as exercised.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/metadata-registry.json --out docs/inventory/metadata-registry (run twice; authored README SHA-256 checked before and after)",
+          "revision": "e60b2f03cdcfdbd8bf6cdb999a346858ad619718",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 1 root export identity attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/metadata-registry/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "metadata.menu",
+      "name": "Menu metadata record",
+      "framework": "shared",
+      "purpose": "Populated ComponentMetadata record for Menu (category Navigation) with per-framework API facts for Angular, React and Vue, written by hand against the framework sources.",
+      "surface": "See [authored signatures and interpretation](README.md). Not exported from the package root; reachable only through ALL_COMPONENTS. packages/component-metadata/src/records/menu.ts declares export const MENU_METADATA: ComponentMetadata with schemaVersion SCHEMA_VERSION. The record is a hand-maintained description of source, not a superior source of truth; the drift check compares its prop and event names against framework source.",
+      "files": ["packages/component-metadata/src/records/menu.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/component-metadata/src/records/menu.ts",
+          "contains": "export const MENU_METADATA: ComponentMetadata = {"
+        },
+        {
+          "path": "packages/component-metadata/src/records/menu.ts",
+          "contains": "import { SCHEMA_VERSION } from \"@ultimate/component-schema\";"
+        }
+      ],
+      "relationships": [
+        "metadata.root",
+        "metadata.drift",
+        "package.ultimate.component-schema.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Menu metadata record is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/component-metadata/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes. The metadata drift check, API docs check and coverage report steps in the same workflow are skipped on that path, so none of them is claimed as exercised.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/metadata-registry.json --out docs/inventory/metadata-registry (run twice; authored README SHA-256 checked before and after)",
+          "revision": "e60b2f03cdcfdbd8bf6cdb999a346858ad619718",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 1 root export identity attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/metadata-registry/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "metadata.paginator",
+      "name": "Paginator metadata record",
+      "framework": "shared",
+      "purpose": "Populated ComponentMetadata record for Paginator (category Data) with per-framework API facts for Angular, React and Vue, written by hand against the framework sources.",
+      "surface": "See [authored signatures and interpretation](README.md). Not exported from the package root; reachable only through ALL_COMPONENTS. packages/component-metadata/src/records/paginator.ts declares export const PAGINATOR_METADATA: ComponentMetadata with schemaVersion SCHEMA_VERSION. The record is a hand-maintained description of source, not a superior source of truth; the drift check compares its prop and event names against framework source.",
+      "files": ["packages/component-metadata/src/records/paginator.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/component-metadata/src/records/paginator.ts",
+          "contains": "export const PAGINATOR_METADATA: ComponentMetadata = {"
+        },
+        {
+          "path": "packages/component-metadata/src/records/paginator.ts",
+          "contains": "import { SCHEMA_VERSION } from \"@ultimate/component-schema\";"
+        }
+      ],
+      "relationships": [
+        "metadata.root",
+        "metadata.drift",
+        "package.ultimate.component-schema.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Paginator metadata record is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/component-metadata/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes. The metadata drift check, API docs check and coverage report steps in the same workflow are skipped on that path, so none of them is claimed as exercised.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/metadata-registry.json --out docs/inventory/metadata-registry (run twice; authored README SHA-256 checked before and after)",
+          "revision": "e60b2f03cdcfdbd8bf6cdb999a346858ad619718",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 1 root export identity attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/metadata-registry/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "metadata.scroller",
+      "name": "Scroller metadata record",
+      "framework": "shared",
+      "purpose": "Populated ComponentMetadata record for Scroller (category Data) with per-framework API facts for Angular, React and Vue, written by hand against the framework sources.",
+      "surface": "See [authored signatures and interpretation](README.md). Not exported from the package root; reachable only through ALL_COMPONENTS. packages/component-metadata/src/records/scroller.ts declares export const SCROLLER_METADATA: ComponentMetadata with schemaVersion SCHEMA_VERSION. The record is a hand-maintained description of source, not a superior source of truth; the drift check compares its prop and event names against framework source.",
+      "files": ["packages/component-metadata/src/records/scroller.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/component-metadata/src/records/scroller.ts",
+          "contains": "export const SCROLLER_METADATA: ComponentMetadata = {"
+        },
+        {
+          "path": "packages/component-metadata/src/records/scroller.ts",
+          "contains": "import { SCHEMA_VERSION } from \"@ultimate/component-schema\";"
+        }
+      ],
+      "relationships": [
+        "metadata.root",
+        "metadata.drift",
+        "package.ultimate.component-schema.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Scroller metadata record is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/component-metadata/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes. The metadata drift check, API docs check and coverage report steps in the same workflow are skipped on that path, so none of them is claimed as exercised.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/metadata-registry.json --out docs/inventory/metadata-registry (run twice; authored README SHA-256 checked before and after)",
+          "revision": "e60b2f03cdcfdbd8bf6cdb999a346858ad619718",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 1 root export identity attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/metadata-registry/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "metadata.table",
+      "name": "Table metadata record",
+      "framework": "shared",
+      "purpose": "Populated ComponentMetadata record for Table (category Data) with per-framework API facts for Angular, React and Vue, written by hand against the framework sources.",
+      "surface": "See [authored signatures and interpretation](README.md). Not exported from the package root; reachable only through ALL_COMPONENTS. packages/component-metadata/src/records/table.ts declares export const TABLE_METADATA: ComponentMetadata with schemaVersion SCHEMA_VERSION. The record is a hand-maintained description of source, not a superior source of truth; the drift check compares its prop and event names against framework source.",
+      "files": ["packages/component-metadata/src/records/table.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/component-metadata/src/records/table.ts",
+          "contains": "export const TABLE_METADATA: ComponentMetadata = {"
+        },
+        {
+          "path": "packages/component-metadata/src/records/table.ts",
+          "contains": "import { SCHEMA_VERSION } from \"@ultimate/component-schema\";"
+        }
+      ],
+      "relationships": [
+        "metadata.root",
+        "metadata.drift",
+        "package.ultimate.component-schema.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Table metadata record is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/component-metadata/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes. The metadata drift check, API docs check and coverage report steps in the same workflow are skipped on that path, so none of them is claimed as exercised.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/metadata-registry.json --out docs/inventory/metadata-registry (run twice; authored README SHA-256 checked before and after)",
+          "revision": "e60b2f03cdcfdbd8bf6cdb999a346858ad619718",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 1 root export identity attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/metadata-registry/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "metadata.tooltip",
+      "name": "Tooltip metadata record",
+      "framework": "shared",
+      "purpose": "Populated ComponentMetadata record for Tooltip (category Overlay) with per-framework API facts for Angular, React and Vue, written by hand against the framework sources.",
+      "surface": "See [authored signatures and interpretation](README.md). Not exported from the package root; reachable only through ALL_COMPONENTS. packages/component-metadata/src/records/tooltip.ts declares export const TOOLTIP_METADATA: ComponentMetadata with schemaVersion SCHEMA_VERSION. The record is a hand-maintained description of source, not a superior source of truth; the drift check compares its prop and event names against framework source.",
+      "files": ["packages/component-metadata/src/records/tooltip.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/component-metadata/src/records/tooltip.ts",
+          "contains": "export const TOOLTIP_METADATA: ComponentMetadata = {"
+        },
+        {
+          "path": "packages/component-metadata/src/records/tooltip.ts",
+          "contains": "import { SCHEMA_VERSION } from \"@ultimate/component-schema\";"
+        }
+      ],
+      "relationships": [
+        "metadata.root",
+        "metadata.drift",
+        "package.ultimate.component-schema.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Tooltip metadata record is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/component-metadata/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes. The metadata drift check, API docs check and coverage report steps in the same workflow are skipped on that path, so none of them is claimed as exercised.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/metadata-registry.json --out docs/inventory/metadata-registry (run twice; authored README SHA-256 checked before and after)",
+          "revision": "e60b2f03cdcfdbd8bf6cdb999a346858ad619718",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 1 root export identity attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/metadata-registry/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "metadata.validate",
+      "name": "Metadata validation script",
+      "framework": "shared",
+      "purpose": "Package script that validates every registry record with the component-schema validator.",
+      "surface": "See [authored signatures and interpretation](README.md). scripts/validate-all.mjs imports ALL_COMPONENTS from ../dist/index.mjs (the built package) and calls validateComponentMetadata(record, ALL_COMPONENTS) for each record, printing errors and exiting 1 on failure, otherwise printing the validated record count. Wired as the validate script in package.json. It requires a prior build.",
+      "files": ["packages/component-metadata/scripts/validate-all.mjs"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/component-metadata/scripts/validate-all.mjs",
+          "contains": "validateComponentMetadata(record, ALL_COMPONENTS)"
+        },
+        {
+          "path": "packages/component-metadata/scripts/validate-all.mjs",
+          "contains": "from \"../dist/index.mjs\""
+        }
+      ],
+      "relationships": ["metadata.root", "package.ultimate.component-schema.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Metadata validation script is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/component-metadata/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes. The metadata drift check, API docs check and coverage report steps in the same workflow are skipped on that path, so none of them is claimed as exercised.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/metadata-registry.json --out docs/inventory/metadata-registry (run twice; authored README SHA-256 checked before and after)",
+          "revision": "e60b2f03cdcfdbd8bf6cdb999a346858ad619718",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 1 root export identity attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/metadata-registry/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "metadata.drift",
+      "name": "API drift, source mapping and exclusions",
+      "framework": "shared",
+      "purpose": "Tooling that extracts prop and event names from Angular, React and Vue source and compares them with the registry records, with a source map and recorded exclusions.",
+      "surface": "See [authored signatures and interpretation](README.md). scripts/check-api-drift.mjs exports FRAMEWORKS, NATIVE_EVENT_PASSTHROUGH, extractApi, extractSources, diffApi, readSourceMap, readExclusions, collectDrift, formatProblem, driftProblems, applyExclusions and runDriftCheck and runs as drift:check when executed directly. scripts/source-map.json maps each of the eight components to its ng, react and vue source files. scripts/drift-exclusions.json lists three deliberate exclusions: Dialog vue event after-hide, Scroller react prop contentTemplate and Table vue event update:selection, each with a rationale and source line range. These helpers are script exports, not package root exports.",
+      "files": [
+        "packages/component-metadata/scripts/check-api-drift.mjs",
+        "packages/component-metadata/scripts/source-map.json",
+        "packages/component-metadata/scripts/drift-exclusions.json"
+      ],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/component-metadata/scripts/check-api-drift.mjs",
+          "contains": "export function runDriftCheck("
+        },
+        {
+          "path": "packages/component-metadata/scripts/check-api-drift.mjs",
+          "contains": "export function applyExclusions("
+        },
+        {
+          "path": "packages/component-metadata/scripts/source-map.json",
+          "contains": "\"Tooltip\": {"
+        },
+        {
+          "path": "packages/component-metadata/scripts/drift-exclusions.json",
+          "contains": "\"name\": \"after-hide\""
+        }
+      ],
+      "relationships": ["metadata.root", "metadata.docs"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for API drift tooling is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/component-metadata/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes. The metadata drift check, API docs check and coverage report steps in the same workflow are skipped on that path, so none of them is claimed as exercised.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/metadata-registry.json --out docs/inventory/metadata-registry (run twice; authored README SHA-256 checked before and after)",
+          "revision": "e60b2f03cdcfdbd8bf6cdb999a346858ad619718",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 1 root export identity attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/metadata-registry/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "metadata.docs",
+      "name": "API documentation generation",
+      "framework": "shared",
+      "purpose": "Tooling that generates one Storybook API reference page per record per framework from registry data.",
+      "surface": "See [authored signatures and interpretation](README.md). scripts/generate-api-docs.mjs reuses FRAMEWORKS, REPO_ROOT and readSourceMap from check-api-drift.mjs, writes packages/<fw>/src/<dir>/<dir>.api.mdx pages deterministically and, with --check, writes nothing and exits 1 when a committed page differs. Wired as docs:generate.",
+      "files": ["packages/component-metadata/scripts/generate-api-docs.mjs"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/component-metadata/scripts/generate-api-docs.mjs",
+          "contains": "--check"
+        },
+        {
+          "path": "packages/component-metadata/scripts/generate-api-docs.mjs",
+          "contains": "from \"./check-api-drift.mjs\""
+        }
+      ],
+      "relationships": ["metadata.drift", "metadata.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for API documentation generation is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/component-metadata/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes. The metadata drift check, API docs check and coverage report steps in the same workflow are skipped on that path, so none of them is claimed as exercised.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/metadata-registry.json --out docs/inventory/metadata-registry (run twice; authored README SHA-256 checked before and after)",
+          "revision": "e60b2f03cdcfdbd8bf6cdb999a346858ad619718",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 1 root export identity attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/metadata-registry/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "metadata.coverage",
+      "name": "Coverage tooling",
+      "framework": "shared",
+      "purpose": "Tooling that reports which shipped framework components lack a metadata record, skill or stories.",
+      "surface": "See [authored signatures and interpretation](README.md). scripts/coverage-report.mjs exports FRAMEWORKS, NON_COMPONENT_SUBPATHS, normalizeName, shippedComponents, unlistedDirs, coverageReport, parseArgs, exitCodeFor, readRepositoryInputs and runCoverageReport and runs as coverage:report when executed directly. It reads framework package exports and the repository layout, not only the registry.",
+      "files": ["packages/component-metadata/scripts/coverage-report.mjs"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/component-metadata/scripts/coverage-report.mjs",
+          "contains": "export function coverageReport("
+        },
+        {
+          "path": "packages/component-metadata/scripts/coverage-report.mjs",
+          "contains": "export const NON_COMPONENT_SUBPATHS"
+        }
+      ],
+      "relationships": ["metadata.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Coverage tooling is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/component-metadata/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes. The metadata drift check, API docs check and coverage report steps in the same workflow are skipped on that path, so none of them is claimed as exercised.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/metadata-registry.json --out docs/inventory/metadata-registry (run twice; authored README SHA-256 checked before and after)",
+          "revision": "e60b2f03cdcfdbd8bf6cdb999a346858ad619718",
+          "outcome": "passed",
+          "output": "Scoped reconciliation completed with no problems: 16 source files accounted for, 1 root export identity attributed to one public record, cross-scope references recorded as pending.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/metadata-registry/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/component-metadata/scripts/rename-dts.mjs",
+      "reason": "Build tooling that renames emitted declaration files; supporting context, not an independent metadata item."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.component-schema.root",
+      "batch": "Component schema (#152)",
+      "reason": "The schema contract and validator consumed by the registry are owned by the component-schema inventory."
+    }
+  ]
+}

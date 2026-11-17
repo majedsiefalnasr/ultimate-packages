@@ -1,0 +1,7 @@
+{
+  "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/ng exec ng test --project=ng --watch=false --include='src/{table,paginator,scroller}/*.spec.ts'",
+  "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+  "outcome": "passed",
+  "output": "Exit 0. Vitest 4.0.8: 3 files, 135 tests passed (Table 95, Paginator 16, Scroller 24). Angular warnings NG8113 for unused UStepList/UStepPanels in VerticalStepperHost (src/g3c1-aura-styles.spec.ts), NG8102 for step() ?? 1 (src/input-number/input-number.ts:90:19).",
+  "preparation": "PATH=\"$HOME/.nvm/versions/node/v24.15.0/bin:$PATH\" NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter '@ultimate/ng^...' --if-present run build (exit 0; 11 workspace projects selected). Initial test attempt failed before assertions on absent workspace dependency artifacts; retry passed after dependency build."
+}

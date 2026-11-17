@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "scope": "root-files-157",
+  "revision": "70b74575698fb77a72a18022b91181c66df41484",
+  "ownership": {
+    "ticket": 157,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "packages": [
+    {
+      "path": "packages/ng",
+      "roots": ["packages/ng/angular.json", "packages/ng/src/index.ts"],
+      "entries": []
+    },
+    {
+      "path": "packages/react",
+      "roots": ["packages/react/src/index.ts", "packages/react/vitest.setup.ts"],
+      "entries": []
+    },
+    {
+      "path": "packages/uix-utils",
+      "roots": ["packages/uix-utils/src/index.ts"],
+      "entries": []
+    },
+    {
+      "path": "packages/vue",
+      "roots": ["packages/vue/src/index.ts", "packages/vue/src/shims-vue.d.ts"],
+      "entries": []
+    }
+  ],
+  "records": [],
+  "dispositions": [
+    {
+      "path": "packages/ng/angular.json",
+      "reason": "Angular CLI workspace configuration for the single library project \"ng\" (build via @angular/build:ng-packagr with ng-package.json; unit-test; storybook; build-storybook). Build/test/tooling configuration consumed by the package scripts `ng test --project=ng` and `ng run ng:storybook`; it declares no component, export or runtime behavior, so it is supporting context rather than a product record (#98)."
+    },
+    {
+      "path": "packages/ng/src/index.ts",
+      "reason": "Root barrel of @ultimate/ng: 88 `export * from` statements and no own declarations. Every re-exported symbol is owned by the per-family batches, so a record here would duplicate public exports (the validator requires exactly one public record per symbol). Supporting aggregation of the `.` entry; it is built by ng-package.json lib.entryFile. Observed gap: ./input-number is a public subpath (package.json) with source at packages/ng/src/input-number but is not re-exported by this barrel."
+    },
+    {
+      "path": "packages/react/src/index.ts",
+      "reason": "Root barrel of @ultimate/react: 86 `export * from` relative statements and no own declarations. All symbols are owned by per-family batches; a record here would duplicate public exports. Supporting aggregation of the `.` entry (tsup entry)."
+    },
+    {
+      "path": "packages/react/vitest.setup.ts",
+      "reason": "Test-support file: single side-effect import of @testing-library/jest-dom/vitest, referenced as setupFiles in packages/react/vitest.config.ts. Test tooling, not a product item or public export (#98)."
+    },
+    {
+      "path": "packages/vue/src/index.ts",
+      "reason": "Root barrel of @ultimate/vue: 94 `export * from` relative statements and no own declarations. All symbols are owned by per-family batches; a record here would duplicate public exports. Supporting aggregation of the `.` entry (tsup entry)."
+    },
+    {
+      "path": "packages/vue/src/shims-vue.d.ts",
+      "reason": "Ambient type declaration `declare module \"*.vue\"` typing .vue imports as DefineComponent for the TypeScript/vue-tsc build. Type-check build support with no runtime export; not a product item. Included by packages/vue/tsconfig.json include [\"src\"]."
+    },
+    {
+      "path": "packages/uix-utils/src/index.ts",
+      "reason": "Root barrel of @ultimate/uix-utils: 9 `export * from` statements (classnames, dom, escape, eventbus, mergeprops, object, scroll-lock, uuid, zindex) and no own declarations. Symbols are owned by the uix-utils-dom (#143) and uix-utils-values (#144) batches; a record here would duplicate their public exports. Supporting aggregation of the `.` entry."
+    }
+  ],
+  "pending": []
+}

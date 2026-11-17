@@ -1,0 +1,988 @@
+{
+  "version": 1,
+  "scope": "vue-choice-range",
+  "revision": "638b5a660b62be5b39a9402db09bccc2a9e9d2e4",
+  "packages": [
+    {
+      "path": "packages/vue",
+      "roots": [
+        "packages/vue/src/checkbox",
+        "packages/vue/src/radio-button",
+        "packages/vue/src/toggle-button",
+        "packages/vue/src/toggle-switch",
+        "packages/vue/src/select-button",
+        "packages/vue/src/rating",
+        "packages/vue/src/slider",
+        "packages/vue/src/knob"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/checkbox/index.ts"
+        },
+        {
+          "subpath": "./checkbox",
+          "source": "packages/vue/src/checkbox/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/radio-button/index.ts"
+        },
+        {
+          "subpath": "./radio-button",
+          "source": "packages/vue/src/radio-button/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/toggle-button/index.ts"
+        },
+        {
+          "subpath": "./toggle-button",
+          "source": "packages/vue/src/toggle-button/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/toggle-switch/index.ts"
+        },
+        {
+          "subpath": "./toggle-switch",
+          "source": "packages/vue/src/toggle-switch/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/select-button/index.ts"
+        },
+        {
+          "subpath": "./select-button",
+          "source": "packages/vue/src/select-button/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/rating/index.ts"
+        },
+        {
+          "subpath": "./rating",
+          "source": "packages/vue/src/rating/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/slider/index.ts"
+        },
+        {
+          "subpath": "./slider",
+          "source": "packages/vue/src/slider/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/knob/index.ts"
+        },
+        {
+          "subpath": "./knob",
+          "source": "packages/vue/src/knob/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "vue.checkbox",
+      "name": "Vue UCheckbox",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Native checkbox input with a decorative check or minus box, supporting binary mode, array-membership mode and an indeterminate state.",
+      "surface": "UCheckbox (Options API SFC Checkbox.vue, name \"UCheckbox\") and createBaseCheckbox (BaseCheckbox.ts) plus checkboxStyleModule and CheckboxClassesParams (checkbox-style.ts; not re-exported from index.ts). Base factory chain: createBaseX extends createBaseInput (vue-core base-input: size, fluid, variant props, resolvedVariant, resolvedFluid) over createBaseEditableHolder (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue); because createBaseInput takes no arguments, the factory shadows cx() and mounted() locally over its own style module. Declared props: value, binary, indeterminate, trueValue, falseValue, disabled, readonly, required, tabindex, inputId, inputClass, inputStyle, ariaLabelledby, ariaLabel, invalid, name (plus inherited size, fluid, variant, modelValue, defaultValue). Emits declared: change, focus, blur, update:indeterminate. Template: root div with one native input type=\"checkbox\" (id, value, name, checked, tabindex, disabled, readonly, required, aria-labelledby, aria-label, aria-invalid set from invalid) and a decorative box div rendering UCheckIcon when checked or UMinusIcon when dIndeterminate; no slots. Only @change is bound on the input: onFocus and onBlur methods exist, but no template listener calls them, so focus and blur are declared in emits and never emitted. checked is false whenever dIndeterminate is true; otherwise binary mode compares dValue with trueValue and non-binary mode requires an array dValue that includes value. onChange returns before writing when disabled or readonly; binary mode writes trueValue when indeterminate or unchecked and falseValue when checked; array mode filters value out when checked or indeterminate and appends it otherwise; when dIndeterminate it then clears it and emits update:indeterminate false; then writeValue(newValue, event) and change with the native event. updateIndeterminate copies dIndeterminate to the native input.indeterminate in mounted, updated and the indeterminate watcher. styleParams passes checked, disabled, invalid, variant (resolvedVariant) and size, so the inherited size prop is read: the root renders u-checkbox with u-checkbox-checked, p-disabled, p-invalid, p-variant-filled (variant filled), u-checkbox-sm (size small) and u-checkbox-lg (size large). The css includes the style string imported from @ultimate/uix-styles/checkbox. A checkbox group is not ported (source comment). writeValue sets dValue and emits update:modelValue only when the component is controlled (modelValue passed, or neither modelValue nor defaultValue passed); value-change is always emitted. Style module registered as checkbox. checkbox.api.mdx is generated documentation and is excluded.",
+      "files": [
+        "packages/vue/src/checkbox/BaseCheckbox.ts",
+        "packages/vue/src/checkbox/Checkbox.vue",
+        "packages/vue/src/checkbox/index.ts",
+        "packages/vue/src/checkbox/checkbox-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UCheckbox",
+        "@ultimate/vue/checkbox#UCheckbox",
+        "@ultimate/vue#createBaseCheckbox",
+        "@ultimate/vue/checkbox#createBaseCheckbox"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/checkbox/Checkbox.vue",
+          "contains": "name: \"UCheckbox\""
+        },
+        {
+          "path": "packages/vue/src/checkbox/Checkbox.vue",
+          "contains": "emits: [\"change\", \"focus\", \"blur\", \"update:indeterminate\"]"
+        },
+        {
+          "path": "packages/vue/src/checkbox/Checkbox.vue",
+          "contains": "@change=\"onChange\""
+        },
+        {
+          "path": "packages/vue/src/checkbox/Checkbox.vue",
+          "contains": "this.$emit(\"update:indeterminate\", false);"
+        },
+        {
+          "path": "packages/vue/src/checkbox/BaseCheckbox.ts",
+          "contains": "extends: createBaseInput(),"
+        },
+        {
+          "path": "packages/vue/src/checkbox/checkbox-style.ts",
+          "contains": "import { style as checkboxCss } from \"@ultimate/uix-styles/checkbox\";"
+        },
+        {
+          "path": "packages/vue/src/checkbox/checkbox-style.ts",
+          "contains": "export const checkboxStyleModule"
+        },
+        {
+          "path": "packages/vue/src/checkbox/checkbox-style.ts",
+          "contains": "\"u-checkbox-sm\""
+        },
+        {
+          "path": "packages/vue/src/checkbox/index.ts",
+          "contains": "createBaseCheckbox"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./checkbox\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./checkbox\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.checkbox",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.vue-core.icons",
+        "package.ultimate.themes.presets",
+        "package.ultimate.uix-styles.checkbox",
+        "package.ultimate.component-metadata.records"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/toggle-switch/ src/select-button/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "638b5a660b62be5b39a9402db09bccc2a9e9d2e4",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.radio-button",
+      "name": "Vue URadioButton",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Native radio input with a decorative circle, holding either its own value or, in binary mode, a boolean.",
+      "surface": "URadioButton (Options API SFC RadioButton.vue, name \"URadioButton\") and createBaseRadioButton (BaseRadioButton.ts) plus radioButtonStyleModule and RadioButtonClassesParams (radio-button-style.ts; not re-exported from index.ts). Base factory chain: createBaseX extends createBaseInput (vue-core base-input: size, fluid, variant props, resolvedVariant, resolvedFluid) over createBaseEditableHolder (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue); because createBaseInput takes no arguments, the factory shadows cx() and mounted() locally over its own style module. Declared props: value, binary, readonly, tabindex, inputId, inputClass, inputStyle, ariaLabelledby, ariaLabel, disabled, required, invalid, name (plus inherited size, fluid, variant, modelValue, defaultValue). The template never reads the inherited size, fluid or variant props. Emits change (native event), focus and blur (native events). Template: root div with one native input type=\"radio\" (id, value, name, checked, tabindex, disabled, readonly, required, aria-labelledby, aria-label, aria-invalid set from invalid) with @change, @focus and @blur bound, and a decorative box div containing an icon div; no slots. checked is dValue != null and (binary ? !!dValue : dValue === value). onChange returns before writing when disabled or readonly; it writes !checked in binary mode and value otherwise, then emits change. styleParams passes checked, disabled and invalid; the root renders u-radio-button with u-radio-button-checked, p-disabled and p-invalid. A radio group is not ported (source comment). writeValue sets dValue and emits update:modelValue only when the component is controlled (modelValue passed, or neither modelValue nor defaultValue passed); value-change is always emitted. The css is hand-ported in radio-button-style.ts rather than imported from uix-styles. Style module registered as radiobutton.",
+      "files": [
+        "packages/vue/src/radio-button/BaseRadioButton.ts",
+        "packages/vue/src/radio-button/RadioButton.vue",
+        "packages/vue/src/radio-button/index.ts",
+        "packages/vue/src/radio-button/radio-button-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#URadioButton",
+        "@ultimate/vue/radio-button#URadioButton",
+        "@ultimate/vue#createBaseRadioButton",
+        "@ultimate/vue/radio-button#createBaseRadioButton"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/radio-button/RadioButton.vue",
+          "contains": "name: \"URadioButton\""
+        },
+        {
+          "path": "packages/vue/src/radio-button/RadioButton.vue",
+          "contains": "emits: [\"change\", \"focus\", \"blur\"]"
+        },
+        {
+          "path": "packages/vue/src/radio-button/RadioButton.vue",
+          "contains": "this.dValue != null && (this.binary ? !!this.dValue : this.dValue === this.value)"
+        },
+        {
+          "path": "packages/vue/src/radio-button/RadioButton.vue",
+          "contains": "const newValue = this.binary ? !this.checked : this.value;"
+        },
+        {
+          "path": "packages/vue/src/radio-button/BaseRadioButton.ts",
+          "contains": "extends: createBaseInput(),"
+        },
+        {
+          "path": "packages/vue/src/radio-button/radio-button-style.ts",
+          "contains": "export const radioButtonStyleModule"
+        },
+        {
+          "path": "packages/vue/src/radio-button/radio-button-style.ts",
+          "contains": "\"u-radio-button-checked\""
+        },
+        {
+          "path": "packages/vue/src/radio-button/index.ts",
+          "contains": "createBaseRadioButton"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./radio-button\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./radio-button\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.radio-button",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/toggle-switch/ src/select-button/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "638b5a660b62be5b39a9402db09bccc2a9e9d2e4",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.toggle-button",
+      "name": "Vue UToggleButton",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Native button that toggles a boolean value and shows an on or off label and optional icon.",
+      "surface": "UToggleButton (Options API SFC ToggleButton.vue, name \"UToggleButton\") and createBaseToggleButton (BaseToggleButton.ts) plus toggleButtonStyleModule and ToggleButtonClassesParams (toggle-button-style.ts; not re-exported from index.ts). Base factory chain: createBaseX extends createBaseEditableHolder directly (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue), not createBaseInput, so there is no pcFluid injection or inherited variant prop; because the holder is created with its empty default style module, the factory shadows cx() and mounted() locally over its own style module. Declared props: onIcon, offIcon, onLabel (\"Yes\"), offLabel (\"No\"), readonly, tabindex, ariaLabelledby, ariaLabel, disabled, invalid, fluid (a plain own boolean prop) plus modelValue and defaultValue. Emits change (native click event) and blur (native event); no focus listener or emit. Template: one native button type=\"button\" with the ripple directive (rippleDirective from ../ripple), tabindex, disabled, aria-pressed set from active, aria-label, aria-labelledby, aria-invalid set from invalid, @click bound to onChange and @blur; inside, a content span holding an icon span (rendered when onIcon or offIcon is set, class onIcon when active else offIcon) and a label span; no slots. active is dValue === true, so a truthy non-boolean model value renders as inactive. label is onLabel when active else offLabel, but a single space when isNotEmpty (from @ultimate/uix-utils/object) is false for either label. onChange returns before writing when disabled or readonly, otherwise writeValue(!active, event) then emits change. No readonly attribute is rendered. styleParams passes checked (active), disabled, invalid and fluid; the root renders u-toggle-button with u-toggle-button-checked, p-disabled, p-invalid and u-toggle-button-fluid. writeValue sets dValue and emits update:modelValue only when the component is controlled (modelValue passed, or neither modelValue nor defaultValue passed); value-change is always emitted. The css is hand-ported rather than imported from uix-styles. A toggle-button group context is not ported (source comment). Style module registered as togglebutton.",
+      "files": [
+        "packages/vue/src/toggle-button/BaseToggleButton.ts",
+        "packages/vue/src/toggle-button/ToggleButton.vue",
+        "packages/vue/src/toggle-button/index.ts",
+        "packages/vue/src/toggle-button/toggle-button-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UToggleButton",
+        "@ultimate/vue/toggle-button#UToggleButton",
+        "@ultimate/vue#createBaseToggleButton",
+        "@ultimate/vue/toggle-button#createBaseToggleButton"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/toggle-button/ToggleButton.vue",
+          "contains": "name: \"UToggleButton\""
+        },
+        {
+          "path": "packages/vue/src/toggle-button/ToggleButton.vue",
+          "contains": "emits: [\"change\", \"blur\"]"
+        },
+        {
+          "path": "packages/vue/src/toggle-button/ToggleButton.vue",
+          "contains": "return this.dValue === true;"
+        },
+        {
+          "path": "packages/vue/src/toggle-button/ToggleButton.vue",
+          "contains": "import { isNotEmpty } from \"@ultimate/uix-utils/object\";"
+        },
+        {
+          "path": "packages/vue/src/toggle-button/ToggleButton.vue",
+          "contains": "this.writeValue(!this.active, event);"
+        },
+        {
+          "path": "packages/vue/src/toggle-button/ToggleButton.vue",
+          "contains": "directives: { ripple: rippleDirective },"
+        },
+        {
+          "path": "packages/vue/src/toggle-button/BaseToggleButton.ts",
+          "contains": "extends: createBaseEditableHolder(),"
+        },
+        {
+          "path": "packages/vue/src/toggle-button/toggle-button-style.ts",
+          "contains": "export const toggleButtonStyleModule"
+        },
+        {
+          "path": "packages/vue/src/toggle-button/index.ts",
+          "contains": "createBaseToggleButton"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./toggle-button\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./toggle-button\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.toggle-button",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.vue.ripple",
+        "package.ultimate.uix-utils.object"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/toggle-switch/ src/select-button/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "638b5a660b62be5b39a9402db09bccc2a9e9d2e4",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.toggle-switch",
+      "name": "Vue UToggleSwitch",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Checkbox-based switch with a decorative slider and handle, toggling between configurable true and false values.",
+      "surface": "UToggleSwitch (Options API SFC ToggleSwitch.vue, name \"UToggleSwitch\") and createBaseToggleSwitch (BaseToggleSwitch.ts) plus toggleSwitchStyleModule and ToggleSwitchClassesParams (toggle-switch-style.ts; not re-exported from index.ts). Base factory chain: createBaseX extends createBaseEditableHolder directly (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue), not createBaseInput, so there is no pcFluid injection or inherited variant prop; because the holder is created with its empty default style module, the factory shadows cx() and mounted() locally over its own style module. Declared props: trueValue (true), falseValue (false), readonly, tabindex, inputId, inputClass, inputStyle, ariaLabelledby, ariaLabel, disabled, invalid plus modelValue and defaultValue; it declares no name, value or fluid prop. Emits change (native event), focus and blur (native events). Template: root div with one native input type=\"checkbox\" role=\"switch\" (id, checked, tabindex, disabled, readonly, aria-checked, aria-labelledby, aria-label, aria-invalid set from invalid) with @focus, @blur and @change bound, and a slider div containing a handle div; no slots. checked is dValue === trueValue. onChange returns before writing when disabled or readonly; it writes falseValue when checked and trueValue otherwise, then emits change. styleParams passes checked, disabled and invalid; the root renders u-toggle-switch with u-toggle-switch-checked, p-disabled and p-invalid. writeValue sets dValue and emits update:modelValue only when the component is controlled (modelValue passed, or neither modelValue nor defaultValue passed); value-change is always emitted. The css is hand-ported rather than imported from uix-styles. Style module registered as toggleswitch.",
+      "files": [
+        "packages/vue/src/toggle-switch/BaseToggleSwitch.ts",
+        "packages/vue/src/toggle-switch/ToggleSwitch.vue",
+        "packages/vue/src/toggle-switch/index.ts",
+        "packages/vue/src/toggle-switch/toggle-switch-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UToggleSwitch",
+        "@ultimate/vue/toggle-switch#UToggleSwitch",
+        "@ultimate/vue#createBaseToggleSwitch",
+        "@ultimate/vue/toggle-switch#createBaseToggleSwitch"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/toggle-switch/ToggleSwitch.vue",
+          "contains": "name: \"UToggleSwitch\""
+        },
+        {
+          "path": "packages/vue/src/toggle-switch/ToggleSwitch.vue",
+          "contains": "emits: [\"change\", \"focus\", \"blur\"]"
+        },
+        {
+          "path": "packages/vue/src/toggle-switch/ToggleSwitch.vue",
+          "contains": "role=\"switch\""
+        },
+        {
+          "path": "packages/vue/src/toggle-switch/ToggleSwitch.vue",
+          "contains": "return this.dValue === this.trueValue;"
+        },
+        {
+          "path": "packages/vue/src/toggle-switch/BaseToggleSwitch.ts",
+          "contains": "extends: createBaseEditableHolder(),"
+        },
+        {
+          "path": "packages/vue/src/toggle-switch/toggle-switch-style.ts",
+          "contains": "export const toggleSwitchStyleModule"
+        },
+        {
+          "path": "packages/vue/src/toggle-switch/index.ts",
+          "contains": "createBaseToggleSwitch"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./toggle-switch\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./toggle-switch\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.toggle-switch",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/toggle-switch/ src/select-button/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "638b5a660b62be5b39a9402db09bccc2a9e9d2e4",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.select-button",
+      "name": "Vue USelectButton",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Group of toggle buttons, one per option, for single or multiple selection.",
+      "surface": "USelectButton (Options API SFC SelectButton.vue, name \"USelectButton\") and createBaseSelectButton (BaseSelectButton.ts) plus selectButtonStyleModule and SelectButtonClassesParams (select-button-style.ts; not re-exported from index.ts). Base factory chain: createBaseX extends createBaseEditableHolder directly (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue), not createBaseInput, so there is no pcFluid injection or inherited variant prop; because the holder is created with its empty default style module, the factory shadows cx() and mounted() locally over its own style module. Declared props: options (default empty array), optionLabel, optionValue, optionDisabled (each a string key or function, default null), multiple, allowEmpty (true), disabled, ariaLabelledby plus modelValue and defaultValue. Emits change with { originalEvent: new Event(\"change\"), value }, a synthetic Event rather than the user's event. Template: root div role=\"group\" with aria-labelledby, rendering one UToggleButton per option (composed from ../toggle-button/ToggleButton.vue, record vue.toggle-button) with model-value from isSelected, on-label and off-label both set to the option label, disabled when the group or the option is disabled, and update:model-value bound to onOptionSelect; no slots. The root cx call passes the constant { fluid: false }, so u-select-button-fluid is never applied, and the invalid param is never passed, so u-select-button-invalid is never applied. getOptionLabel, getOptionValue and isOptionDisabled accept a function or a string key (string keys read only from non-null objects; labels fall back to String(option) and a null key value gives an empty label). isSelected compares by strict equality; in multiple mode it also requires an array dValue. onOptionSelect returns when the group or option is disabled; in multiple mode it removes a selected value (returning early when allowEmpty is false and one value remains) or appends one; in single mode it writes null when the selected option is chosen again (returning early when allowEmpty is false) and the option value otherwise; it calls writeValue(newValue) without an event. The source comment lists dataKey equality, item slots and roving tabindex as not ported. writeValue sets dValue and emits update:modelValue only when the component is controlled (modelValue passed, or neither modelValue nor defaultValue passed); value-change is always emitted. The css is hand-ported rather than imported from uix-styles. Style module registered as selectbutton.",
+      "files": [
+        "packages/vue/src/select-button/BaseSelectButton.ts",
+        "packages/vue/src/select-button/SelectButton.vue",
+        "packages/vue/src/select-button/index.ts",
+        "packages/vue/src/select-button/select-button-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#USelectButton",
+        "@ultimate/vue/select-button#USelectButton",
+        "@ultimate/vue#createBaseSelectButton",
+        "@ultimate/vue/select-button#createBaseSelectButton"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/select-button/SelectButton.vue",
+          "contains": "name: \"USelectButton\""
+        },
+        {
+          "path": "packages/vue/src/select-button/SelectButton.vue",
+          "contains": "emits: [\"change\"]"
+        },
+        {
+          "path": "packages/vue/src/select-button/SelectButton.vue",
+          "contains": "<UToggleButton"
+        },
+        {
+          "path": "packages/vue/src/select-button/SelectButton.vue",
+          "contains": "cx('root', { fluid: false })"
+        },
+        {
+          "path": "packages/vue/src/select-button/SelectButton.vue",
+          "contains": "this.$emit(\"change\", { originalEvent: new Event(\"change\"), value: newValue });"
+        },
+        {
+          "path": "packages/vue/src/select-button/SelectButton.vue",
+          "contains": "if (!this.allowEmpty && current.length === 1) return;"
+        },
+        {
+          "path": "packages/vue/src/select-button/BaseSelectButton.ts",
+          "contains": "extends: createBaseEditableHolder(),"
+        },
+        {
+          "path": "packages/vue/src/select-button/select-button-style.ts",
+          "contains": "export const selectButtonStyleModule"
+        },
+        {
+          "path": "packages/vue/src/select-button/index.ts",
+          "contains": "createBaseSelectButton"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./select-button\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./select-button\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.select-button",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.vue.toggle-button"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/toggle-switch/ src/select-button/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "638b5a660b62be5b39a9402db09bccc2a9e9d2e4",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.rating",
+      "name": "Vue URating",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Row of star options backed by visually hidden radio inputs, with keyboard stepping.",
+      "surface": "URating (Options API SFC Rating.vue, name \"URating\") and createBaseRating (BaseRating.ts) plus ratingStyleModule, RatingClassesParams and RatingOptionClassesParams (rating-style.ts; not re-exported from index.ts). Base factory chain: createBaseX extends createBaseEditableHolder directly (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue), not createBaseInput, so there is no pcFluid injection or inherited variant prop; because the holder is created with its empty default style module, the factory shadows cx() and mounted() locally over its own style module. Declared props: stars (5), readonly, disabled, name, ariaLabelledby plus modelValue and defaultValue. Emits rate ({ originalEvent, value }), focus and blur; focus and blur carry new synthetic FocusEvent objects, not the native event. Template: root div role=\"group\" with aria-labelledby; one option div (tabindex \"-1\") per star containing a hidden-accessible span with an input type=\"radio\" (value, name, disabled, readonly, checked when dValue === star, aria-label \"1 star\" or \"N stars\") bound to @focus, @blur, @change and @keydown, followed by an aria-hidden SVG star, the on icon when dValue is neither null nor undefined and star <= dValue, otherwise the off icon; no slots and no cancel icon. onOptionSelect returns when readonly or disabled; it writes null when the chosen star equals dValue and the star otherwise, sets focusedIndex to -1 for null and the star otherwise, and emits rate. onInputFocus returns when readonly or disabled; onInputBlur always resets focusedIndex and emits blur, with no readonly or disabled guard. onStarKeyDown returns when readonly or disabled; Enter and Space select the star; ArrowLeft and ArrowUp step to dValue - 1 (to stars when dValue is falsy or the result is below 1); ArrowRight and ArrowDown step to dValue + 1 (to 1 when dValue is falsy or the result exceeds stars). The source comment says the keyboard stepping was added to match the React realization. styleParams: the root receives { disabled } and each option receives { focused }, rendering u-rating (with u-rating-disabled) and u-rating-option (with u-rating-option-focused). writeValue sets dValue and emits update:modelValue only when the component is controlled (modelValue passed, or neither modelValue nor defaultValue passed); value-change is always emitted. The css is hand-ported rather than imported from uix-styles. Style module registered as rating.",
+      "files": [
+        "packages/vue/src/rating/BaseRating.ts",
+        "packages/vue/src/rating/Rating.vue",
+        "packages/vue/src/rating/index.ts",
+        "packages/vue/src/rating/rating-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#URating",
+        "@ultimate/vue/rating#URating",
+        "@ultimate/vue#createBaseRating",
+        "@ultimate/vue/rating#createBaseRating"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/rating/Rating.vue",
+          "contains": "name: \"URating\""
+        },
+        {
+          "path": "packages/vue/src/rating/Rating.vue",
+          "contains": "emits: [\"rate\", \"focus\", \"blur\"]"
+        },
+        {
+          "path": "packages/vue/src/rating/Rating.vue",
+          "contains": "this.$emit(\"blur\", new FocusEvent(\"blur\"));"
+        },
+        {
+          "path": "packages/vue/src/rating/Rating.vue",
+          "contains": "const newValue = this.dValue === value ? null : value;"
+        },
+        {
+          "path": "packages/vue/src/rating/Rating.vue",
+          "contains": "const prev = this.dValue ? this.dValue - 1 : this.stars;"
+        },
+        {
+          "path": "packages/vue/src/rating/BaseRating.ts",
+          "contains": "extends: createBaseEditableHolder(),"
+        },
+        {
+          "path": "packages/vue/src/rating/rating-style.ts",
+          "contains": "export const ratingStyleModule"
+        },
+        {
+          "path": "packages/vue/src/rating/rating-style.ts",
+          "contains": "export interface RatingOptionClassesParams"
+        },
+        {
+          "path": "packages/vue/src/rating/index.ts",
+          "contains": "createBaseRating"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./rating\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./rating\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.rating",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/toggle-switch/ src/select-button/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "638b5a660b62be5b39a9402db09bccc2a9e9d2e4",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.slider",
+      "name": "Vue USlider",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Draggable single-value or two-handle range slider with mouse, click and keyboard input.",
+      "surface": "USlider (Options API SFC Slider.vue, name \"USlider\") and createBaseSlider (BaseSlider.ts) plus sliderStyleModule (slider-style.ts; its root params are an inline type, so no params interface is exported; not re-exported from index.ts). Base factory chain: createBaseX extends createBaseEditableHolder directly (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue), not createBaseInput, so there is no pcFluid injection or inherited variant prop; because the holder is created with its empty default style module, the factory shadows cx() and mounted() locally over its own style module. Declared props: min (0), max (100), orientation (\"horizontal\"), step (null), range (false), disabled, ariaLabelledby, ariaLabel plus modelValue and defaultValue. The ariaLabelledby and ariaLabel props are declared but never bound in the template, and there is no readonly prop. Emits change ({ originalEvent, value }) and slideend ({ originalEvent, value }). Template: root div with @click bound to onBarClick; single mode renders a range span and one handle span, range mode renders a range span and two handle spans (indices 0 and 1); each handle has role=\"slider\", tabindex=\"0\" (also when disabled), aria-valuemin, aria-valuenow, aria-valuemax, aria-orientation and @mousedown and @keydown; no aria-disabled; mouse events only, with document mousemove and mouseup listeners added on mousedown and removed only on mouseup. singleValue is dValue when it is a number else min; rangeValue is dValue when it is an array else [min, max]. toPercent returns 0 below min, 100 above max, otherwise ((value - min) * 100) / (max - min), which is 0/0 (NaN) when min, max and value are all equal. The style computeds test orientation === \"horizontal\" (left and width) and otherwise use bottom and height, while the root class marks vertical only for \"vertical\", so any other orientation string gets the horizontal class with vertical positioning. applyStep floors the raw value when step is falsy and otherwise rounds to the nearest multiple of step, fixed to the step's decimal places when step is non-integer. updateValue clamps to min and max; in range mode it replaces only the active handle's entry with no ordering guard between handles. Pointer values pass through applyStep; keyboard values do not: ArrowLeft and ArrowDown subtract, ArrowRight and ArrowUp add (step or 1), PageDown and PageUp use ten times that, Home and End use min and max, each with preventDefault. onMouseDown and onKeyDown return when disabled; onBarClick returns when disabled, while dragging, or when the target has role slider, and picks the nearer handle in range mode (ties go to index 0) and then emits slideend; keyboard input never emits slideend. writeValue sets dValue and emits update:modelValue only when the component is controlled (modelValue passed, or neither modelValue nor defaultValue passed); value-change is always emitted. The css is hand-ported rather than imported from uix-styles. Style module registered as slider.",
+      "files": [
+        "packages/vue/src/slider/BaseSlider.ts",
+        "packages/vue/src/slider/Slider.vue",
+        "packages/vue/src/slider/index.ts",
+        "packages/vue/src/slider/slider-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#USlider",
+        "@ultimate/vue/slider#USlider",
+        "@ultimate/vue#createBaseSlider",
+        "@ultimate/vue/slider#createBaseSlider"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/slider/Slider.vue",
+          "contains": "name: \"USlider\""
+        },
+        {
+          "path": "packages/vue/src/slider/Slider.vue",
+          "contains": "emits: [\"change\", \"slideend\"]"
+        },
+        {
+          "path": "packages/vue/src/slider/Slider.vue",
+          "contains": "role=\"slider\""
+        },
+        {
+          "path": "packages/vue/src/slider/Slider.vue",
+          "contains": "return ((value - this.min) * 100) / (this.max - this.min);"
+        },
+        {
+          "path": "packages/vue/src/slider/Slider.vue",
+          "contains": "return this.orientation === \"horizontal\""
+        },
+        {
+          "path": "packages/vue/src/slider/Slider.vue",
+          "contains": "if (!this.step) return Math.floor(raw);"
+        },
+        {
+          "path": "packages/vue/src/slider/Slider.vue",
+          "contains": "values[this.handleIndex] = clamped;"
+        },
+        {
+          "path": "packages/vue/src/slider/Slider.vue",
+          "contains": "const stepAmount = this.step || 1;"
+        },
+        {
+          "path": "packages/vue/src/slider/BaseSlider.ts",
+          "contains": "extends: createBaseEditableHolder(),"
+        },
+        {
+          "path": "packages/vue/src/slider/slider-style.ts",
+          "contains": "export const sliderStyleModule"
+        },
+        {
+          "path": "packages/vue/src/slider/slider-style.ts",
+          "contains": "\"u-slider-vertical\": params.orientation === \"vertical\""
+        },
+        {
+          "path": "packages/vue/src/slider/index.ts",
+          "contains": "createBaseSlider"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./slider\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./slider\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.slider",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/toggle-switch/ src/select-button/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "638b5a660b62be5b39a9402db09bccc2a9e9d2e4",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.knob",
+      "name": "Vue UKnob",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Circular SVG dial that sets a numeric value by click, drag or keyboard.",
+      "surface": "UKnob (Options API SFC Knob.vue, name \"UKnob\") and createBaseKnob (BaseKnob.ts) plus knobStyleModule (knob-style.ts; no params interface is exported; not re-exported from index.ts). Base factory chain: createBaseX extends createBaseEditableHolder directly (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue), not createBaseInput, so there is no pcFluid injection or inherited variant prop; because the holder is created with its empty default style module, the factory shadows cx() and mounted() locally over its own style module. Declared props: size (a Number, 100), readonly, step (1), min (0), max (100), strokeWidth (14), showValue (true), valueTemplate (\"{value}\"), disabled, valueColor, rangeColor, textColor (default hex colours), ariaLabelledby, ariaLabel plus modelValue and defaultValue. Emits change with the bare clamped number, not an event object. Template: root div containing one svg (viewBox 0 0 100 100, role=\"slider\", width and height from size, tabindex -1 when readonly or disabled else 0, aria-valuemin, aria-valuemax, aria-valuenow, aria-labelledby, aria-label, @click, @mousedown, @keydown), a range path, a value path and an optional text element showing valueToDisplay; no slots, no aria-disabled or aria-readonly. currentValue is dValue when it is a number else min. valueToDisplay replaces the first \"{value}\" in valueTemplate with currentValue. mapRange divides by (inMax - inMin) without a guard for max equal to min. updateFromAngle maps angles above -PI/3, and angles below the start angle after adding 2*PI, to a value, rounds it to a multiple of step from min, then updateModelValue clamps it and calls writeValue(clamped) without an event; angles in neither range return without change, and step is not guarded against 0. onClick and onMouseDown return when disabled or readonly and map offsets to an angle via atan2 from the centre (size / 2); onClick reads event.offsetX and event.offsetY; onMouseDown adds document mousemove and mouseup listeners removed only on mouseup. onKeyDown switches on event.code: ArrowRight and ArrowUp add step, ArrowLeft and ArrowDown subtract step, Home and End set min and max, PageUp and PageDown add or subtract a fixed 10 (not a multiple of step). The root class is the constant u-knob u-component. writeValue sets dValue and emits update:modelValue only when the component is controlled (modelValue passed, or neither modelValue nor defaultValue passed); value-change is always emitted. The css is hand-ported rather than imported from uix-styles; a comment in knob-style.ts cites @primeuix/styles 2.0.3 structural CSS and packages/themes/test/utils/g3a-port.mjs. Style module registered as knob.",
+      "files": [
+        "packages/vue/src/knob/BaseKnob.ts",
+        "packages/vue/src/knob/Knob.vue",
+        "packages/vue/src/knob/index.ts",
+        "packages/vue/src/knob/knob-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UKnob",
+        "@ultimate/vue/knob#UKnob",
+        "@ultimate/vue#createBaseKnob",
+        "@ultimate/vue/knob#createBaseKnob"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/knob/Knob.vue",
+          "contains": "name: \"UKnob\""
+        },
+        {
+          "path": "packages/vue/src/knob/Knob.vue",
+          "contains": "emits: [\"change\"]"
+        },
+        {
+          "path": "packages/vue/src/knob/Knob.vue",
+          "contains": "role=\"slider\""
+        },
+        {
+          "path": "packages/vue/src/knob/Knob.vue",
+          "contains": "this.$emit(\"change\", clamped);"
+        },
+        {
+          "path": "packages/vue/src/knob/Knob.vue",
+          "contains": "switch (event.code) {"
+        },
+        {
+          "path": "packages/vue/src/knob/Knob.vue",
+          "contains": "this.updateModelValue(this.currentValue + 10);"
+        },
+        {
+          "path": "packages/vue/src/knob/Knob.vue",
+          "contains": "return ((x - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;"
+        },
+        {
+          "path": "packages/vue/src/knob/BaseKnob.ts",
+          "contains": "extends: createBaseEditableHolder(),"
+        },
+        {
+          "path": "packages/vue/src/knob/BaseKnob.ts",
+          "contains": "size: { type: Number, default: 100 },"
+        },
+        {
+          "path": "packages/vue/src/knob/knob-style.ts",
+          "contains": "export const knobStyleModule"
+        },
+        {
+          "path": "packages/vue/src/knob/index.ts",
+          "contains": "createBaseKnob"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./knob\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./knob\": {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue.knob",
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Bounded Vue product spec for the choice and range families was not executed for this inventory.",
+          "command": "pnpm --filter @ultimate/vue exec vitest run src/checkbox/ src/radio-button/ src/toggle-button/ src/toggle-switch/ src/select-button/ src/rating/ src/slider/ src/knob/",
+          "outcome": "not-run",
+          "revision": "638b5a660b62be5b39a9402db09bccc2a9e9d2e4",
+          "limitations": "Not run by instruction to avoid heavy local load (no vitest, build or Storybook); node_modules is absent in the worktree. No product or host repair attempted; presence of spec files is not pass evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking the @ultimate/vue test script (vitest run). This is workflow configuration evidence only, not a successful CI execution or branch-protection claim. Scoped inventory Node tests are not included in test:scripts (provenance-only glob).",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on classification scope != docs and !cancelled(); upstream steps/dependencies can prevent assertions. No remote CI observed."
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/vue/src/checkbox/checkbox.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/checkbox/checkbox.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/checkbox/checkbox.api.mdx",
+      "reason": "Generated API documentation fixture for UCheckbox (from the component-metadata Checkbox record); not a separately exported runtime API."
+    },
+    {
+      "path": "packages/vue/src/radio-button/radio-button.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/radio-button/radio-button.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/toggle-button/toggle-button.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/toggle-button/toggle-button.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/toggle-switch/toggle-switch.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/toggle-switch/toggle-switch.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/select-button/select-button.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/select-button/select-button.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/rating/rating.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/rating/rating.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/slider/slider.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/slider/slider.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/knob/knob.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/knob/knob.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.vue-core.base",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.styling",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.icons",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.component-metadata.records",
+      "batch": "ticket-153",
+      "reason": "Detailed inventory remains owned by [#153](https://github.com/majedsiefalnasr/ultimate-packages/issues/153). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-styles.checkbox",
+      "batch": "ticket-146",
+      "reason": "Detailed inventory remains owned by [#146](https://github.com/majedsiefalnasr/ultimate-packages/issues/146). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue.ripple",
+      "batch": "ticket-142",
+      "reason": "Detailed inventory remains owned by [#142](https://github.com/majedsiefalnasr/ultimate-packages/issues/142). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-utils.object",
+      "batch": "ticket-144",
+      "reason": "Detailed inventory remains owned by [#144](https://github.com/majedsiefalnasr/ultimate-packages/issues/144). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "package.ultimate.vue.checkbox",
+      "record": "vue.checkbox"
+    },
+    {
+      "id": "package.ultimate.vue.radio-button",
+      "record": "vue.radio-button"
+    },
+    {
+      "id": "package.ultimate.vue.toggle-button",
+      "record": "vue.toggle-button"
+    },
+    {
+      "id": "package.ultimate.vue.toggle-switch",
+      "record": "vue.toggle-switch"
+    },
+    {
+      "id": "package.ultimate.vue.select-button",
+      "record": "vue.select-button"
+    },
+    {
+      "id": "package.ultimate.vue.rating",
+      "record": "vue.rating"
+    },
+    {
+      "id": "package.ultimate.vue.slider",
+      "record": "vue.slider"
+    },
+    {
+      "id": "package.ultimate.vue.knob",
+      "record": "vue.knob"
+    }
+  ],
+  "ownership": {
+    "ticket": 115,
+    "path": "scripts/inventory/package-coverage.json"
+  }
+}

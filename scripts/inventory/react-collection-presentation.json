@@ -1,0 +1,608 @@
+{
+  "version": 1,
+  "scope": "react-collection-presentation",
+  "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+  "packages": [
+    {
+      "path": "packages/react",
+      "roots": [
+        "packages/react/src/data-view",
+        "packages/react/src/order-list",
+        "packages/react/src/organization-chart",
+        "packages/react/src/pick-list",
+        "packages/react/src/timeline"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/react/src/data-view/data-view.tsx"
+        },
+        {
+          "subpath": "./data-view",
+          "source": "packages/react/src/data-view/data-view.tsx"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/order-list/order-list.tsx"
+        },
+        {
+          "subpath": "./order-list",
+          "source": "packages/react/src/order-list/order-list.tsx"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/organization-chart/organization-chart.tsx"
+        },
+        {
+          "subpath": "./organization-chart",
+          "source": "packages/react/src/organization-chart/organization-chart.tsx"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/pick-list/pick-list.tsx"
+        },
+        {
+          "subpath": "./pick-list",
+          "source": "packages/react/src/pick-list/pick-list.tsx"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/react/src/timeline/index.ts"
+        },
+        {
+          "subpath": "./timeline",
+          "source": "packages/react/src/timeline/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/react/src/data-view/data-view.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/data-view/data-view.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/order-list/order-list.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/order-list/order-list.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/organization-chart/organization-chart.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/organization-chart/organization-chart.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/pick-list/pick-list.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/pick-list/pick-list.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/timeline/timeline.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/timeline/timeline.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.react-core.base",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react-core.styling",
+      "batch": "ticket-149",
+      "reason": "Detailed inventory remains owned by #149; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by #151; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-data.root",
+      "batch": "ticket-147",
+      "reason": "Detailed inventory remains owned by #147; reconciled package identity is linked from source evidence here, not claimed as external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.react.paginator",
+      "batch": "ticket-132",
+      "reason": "External reconciled identity already inventoried by the completed #132 scope; this batch describes its source relationship without completing the owning ticket."
+    }
+  ],
+  "ownership": {
+    "ticket": 135,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.react.data-view",
+      "record": "react.data-view"
+    },
+    {
+      "id": "package.ultimate.react.order-list",
+      "record": "react.order-list"
+    },
+    {
+      "id": "package.ultimate.react.organization-chart",
+      "record": "react.organization-chart"
+    },
+    {
+      "id": "package.ultimate.react.pick-list",
+      "record": "react.pick-list"
+    },
+    {
+      "id": "package.ultimate.react.timeline",
+      "record": "react.timeline"
+    }
+  ],
+  "records": [
+    {
+      "id": "react.data-view",
+      "name": "React UDataView",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Present a collection through a caller-supplied item renderer in list or grid layout, with optional paging, sorting, lazy-load notification, loading and empty states.",
+      "surface": "UDataView<T = unknown> renders UDataViewProps<T>: value, itemTemplate (item, layout) => React.ReactNode, layout list|grid (default list), paginator, first, rows, totalRecords, rowsPerPageOptions, paginatorPosition top|bottom|both (default bottom), alwaysShowPaginator (default true), currentPageReportTemplate (default \"{first} to {last} of {totalRecords}\" with {currentPage}, {totalPages} and {rows} also substituted), sortField, sortOrder 1|-1, lazy, loading, loadingIcon (default \"Loading\", rendered in a span with role status), emptyMessage (default \"No results found\"), dataKey, trackBy, onPageChange (PaginatorPageChangeEvent), onLazyLoad ({first, rows, sortField, sortOrder}, fired from an effect when lazy) and className. Non-lazy data is sorted by sortField via the non-exported helpers field() and compare() and sliced by first/rows when paginator is on; lazy data is passed through and the record count falls back to value length. Grid renders div role list/listitem, list renders ul/li, and an empty collection renders emptyMessage. It composes UPaginator from ../paginator/paginator (identity owned by #132) and a rows-per-page select plus an aria-live page report. It declares no filter. dataViewStyleModule is the local StyleModule using useComponentBase with componentName data-view. The root barrel and the family subpath expose the same named surface; declared dist paths do not establish publication. The style module is a source-only local StyleModule exported from its style file and not from the family barrel. No component-metadata record or @ultimate/uix-styles entry exists for this family in this revision. The Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context.",
+      "files": [
+        "packages/react/src/data-view/data-view-style.ts",
+        "packages/react/src/data-view/data-view.tsx",
+        "packages/react/src/data-view/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UDataView",
+        "@ultimate/react/data-view#UDataView",
+        "@ultimate/react#UDataViewProps",
+        "@ultimate/react/data-view#UDataViewProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/data-view/index.ts",
+          "contains": "export * from \"./data-view\";"
+        },
+        {
+          "path": "packages/react/src/data-view/data-view.tsx",
+          "contains": "componentName: \"data-view\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./data-view\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./data-view\": {"
+        },
+        {
+          "path": "packages/react/src/data-view/data-view-style.ts",
+          "contains": "export const dataViewStyleModule"
+        },
+        {
+          "path": "packages/react/src/data-view/data-view.tsx",
+          "contains": "export function UDataView"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "dataview: dataView,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/react/src/data-view/data-view.tsx",
+          "contains": "import { UPaginator, type PaginatorPageChangeEvent } from \"../paginator/paginator\";"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.react.paginator"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed: 5 test files and 63 tests (data-view 10).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/data-view src/order-list src/organization-chart src/pick-list src/timeline --config vitest-react135.tmp.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 5 passed (5); Tests 63 passed (63): pick-list 30, order-list 13, data-view 10, organization-chart 5, timeline 5.",
+          "limitations": "Temporary config vitest-react135.tmp.config.mjs (copied into packages/react for the run, then removed; not committed) set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence.",
+          "run": "docs/inventory/react-collection-presentation/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.order-list",
+      "name": "React UOrderList",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Reorderable single list with move up/top/down/bottom controls, optional filtering, multi-selection and optional drag-and-drop.",
+      "surface": "UOrderList<T = unknown> renders UOrderListProps<T>: value, onChange (receives a new array), itemTemplate (item) => React.ReactNode, autoOptionFocus (default true), focusOnHover, tabIndex (default 0), listStyle, dataKey, filter, filterBy (comma-separated paths), filterMatchMode, filterLocale, dragdrop, breakpoint (default 960px) and className. The MatchMode union (contains, startsWith, endsWith, equals, notEquals, in, lt, lte, gt, gte), field() and matches() are non-exported module-level helpers. Four buttons labelled Move up, Move top, Move down and Move bottom (data-move attribute) are disabled when nothing is selected; selection is internal state keyed by identity from dataKey or the item itself. up/down shift selected items past unselected neighbours; top/bottom gather the selection before or after the rest. The list is a ul with role listbox and li role option, supports click, Enter/Space, ArrowUp/ArrowDown and Home/End, and with dragdrop uses HTML5 drag events and a drop that reorders and clears selection. The optional filter is an input with role searchbox and aria-label Filter source. A style element generated with React.useId writes a responsive max-width rule from breakpoint. It implements its own list markup and does not import UListbox. orderListStyleModule is the local StyleModule using useComponentBase with componentName order-list. The root barrel and the family subpath expose the same named surface; declared dist paths do not establish publication. The style module is a source-only local StyleModule exported from its style file and not from the family barrel. No component-metadata record or @ultimate/uix-styles entry exists for this family in this revision. The Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context.",
+      "files": [
+        "packages/react/src/order-list/order-list-style.ts",
+        "packages/react/src/order-list/order-list.tsx",
+        "packages/react/src/order-list/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UOrderList",
+        "@ultimate/react/order-list#UOrderList",
+        "@ultimate/react#UOrderListProps",
+        "@ultimate/react/order-list#UOrderListProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/order-list/index.ts",
+          "contains": "export * from \"./order-list\";"
+        },
+        {
+          "path": "packages/react/src/order-list/order-list.tsx",
+          "contains": "componentName: \"order-list\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./order-list\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./order-list\": {"
+        },
+        {
+          "path": "packages/react/src/order-list/order-list-style.ts",
+          "contains": "export const orderListStyleModule"
+        },
+        {
+          "path": "packages/react/src/order-list/order-list.tsx",
+          "contains": "export function UOrderList"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "orderlist: orderList,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed: 5 test files and 63 tests (order-list 13).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/data-view src/order-list src/organization-chart src/pick-list src/timeline --config vitest-react135.tmp.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 5 passed (5); Tests 63 passed (63): pick-list 30, order-list 13, data-view 10, organization-chart 5, timeline 5.",
+          "limitations": "Temporary config vitest-react135.tmp.config.mjs (copied into packages/react for the run, then removed; not committed) set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence.",
+          "run": "docs/inventory/react-collection-presentation/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.organization-chart",
+      "name": "React UOrganizationChart",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Render a hierarchy of labelled nodes as an expandable tree with optional single or multiple node selection.",
+      "surface": "UOrganizationChart renders UOrganizationChartProps: value (OrganizationChartNodeData[]), selectionMode (SelectionMode type imported from @ultimate/uix-data), selection (a node, an array of nodes or null), onSelectionChange and className, inside a div with role tree, aria-label Organization chart and aria-multiselectable for multiple. OrganizationChartNodeData has optional label, className, expanded, selectable and children. The internal non-exported OrganizationChartNode keeps local expanded state initialised from node.expanded, renders role treeitem with aria-expanded and aria-selected, and a toggle button with aria-label \"Toggle <label>\" showing + or -; children render in a role group. Selection is by node identity: single mode toggles one node or null, multiple mode adds or removes the node in an array; Enter and Space select, nodes with selectable false are skipped, and nodes are keyed by index. organizationChartStyleModule is the local StyleModule using useComponentBase with componentName organization-chart. The root barrel and the family subpath expose the same named surface; declared dist paths do not establish publication. The style module is a source-only local StyleModule exported from its style file and not from the family barrel. No component-metadata record or @ultimate/uix-styles entry exists for this family in this revision; the Aura organization-chart preset is registered through packages/themes/src/presets/aura/organization-chart.ts. The Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context.",
+      "files": [
+        "packages/react/src/organization-chart/organization-chart-style.ts",
+        "packages/react/src/organization-chart/organization-chart.tsx",
+        "packages/react/src/organization-chart/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UOrganizationChart",
+        "@ultimate/react/organization-chart#UOrganizationChart",
+        "@ultimate/react#UOrganizationChartProps",
+        "@ultimate/react/organization-chart#UOrganizationChartProps",
+        "@ultimate/react#OrganizationChartNodeData",
+        "@ultimate/react/organization-chart#OrganizationChartNodeData"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/organization-chart/index.ts",
+          "contains": "export * from \"./organization-chart\";"
+        },
+        {
+          "path": "packages/react/src/organization-chart/organization-chart.tsx",
+          "contains": "componentName: \"organization-chart\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./organization-chart\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./organization-chart\": {"
+        },
+        {
+          "path": "packages/react/src/organization-chart/organization-chart-style.ts",
+          "contains": "export const organizationChartStyleModule"
+        },
+        {
+          "path": "packages/react/src/organization-chart/organization-chart.tsx",
+          "contains": "export function UOrganizationChart"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "organizationchart: organizationChart,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/react/src/organization-chart/organization-chart.tsx",
+          "contains": "import type { SelectionMode } from \"@ultimate/uix-data\";"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.uix-data.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed: 5 test files and 63 tests (organization-chart 5).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/data-view src/order-list src/organization-chart src/pick-list src/timeline --config vitest-react135.tmp.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 5 passed (5); Tests 63 passed (63): pick-list 30, order-list 13, data-view 10, organization-chart 5, timeline 5.",
+          "limitations": "Temporary config vitest-react135.tmp.config.mjs (copied into packages/react for the run, then removed; not committed) set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence.",
+          "run": "docs/inventory/react-collection-presentation/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.pick-list",
+      "name": "React UPickList",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Dual-list transfer control that moves items between a source and a target list with per-side reordering, optional filtering and optional drag-and-drop.",
+      "surface": "UPickList<T = unknown> renders UPickListProps<T>: source, target, onSourceChange, onTargetChange, itemTemplate (item) => React.ReactNode, showSourceFilter and showTargetFilter (default true), showSourceControls and showTargetControls (default true), sourceHeader (default Source) and targetHeader (default Target), sourceStyle, targetStyle, dataKey, filter, filterBy, filterMatchMode, filterLocale, dragdrop, metaKeySelection, breakpoint (default 960px) and className. MatchMode, Direction and Side are non-exported types; field() and matches() are non-exported helpers where matches takes a string query and the in mode splits it on commas. Four transfer buttons (To Target, All To Target, To Source, All To Source) call transfer(), which emits both sides and clears selection; each side has Move up/top/down/bottom controls that emit that side's reordered array. Each side is a ul with role listbox and li role option; selection is internal, with metaKeySelection reducing plain clicks to one item unless ctrl or meta is held; keyboard supports Enter/Space, arrows and Home/End; dragdrop reorders within a side or moves across sides. Filter inputs are type search with aria-label Filter source or Filter target. A useId-keyed style element writes a responsive rule from breakpoint. It implements its own list markup and does not import UListbox. pickListStyleModule is the local StyleModule using useComponentBase with componentName pick-list. The root barrel and the family subpath expose the same named surface; declared dist paths do not establish publication. The style module is a source-only local StyleModule exported from its style file and not from the family barrel. No component-metadata record or @ultimate/uix-styles entry exists for this family in this revision. The Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context.",
+      "files": [
+        "packages/react/src/pick-list/pick-list-style.ts",
+        "packages/react/src/pick-list/pick-list.tsx",
+        "packages/react/src/pick-list/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UPickList",
+        "@ultimate/react/pick-list#UPickList",
+        "@ultimate/react#UPickListProps",
+        "@ultimate/react/pick-list#UPickListProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/pick-list/index.ts",
+          "contains": "export * from \"./pick-list\";"
+        },
+        {
+          "path": "packages/react/src/pick-list/pick-list.tsx",
+          "contains": "componentName: \"pick-list\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./pick-list\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./pick-list\": {"
+        },
+        {
+          "path": "packages/react/src/pick-list/pick-list-style.ts",
+          "contains": "export const pickListStyleModule"
+        },
+        {
+          "path": "packages/react/src/pick-list/pick-list.tsx",
+          "contains": "export function UPickList"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "picklist: pickList,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed: 5 test files and 63 tests (pick-list 30).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/data-view src/order-list src/organization-chart src/pick-list src/timeline --config vitest-react135.tmp.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 5 passed (5); Tests 63 passed (63): pick-list 30, order-list 13, data-view 10, organization-chart 5, timeline 5.",
+          "limitations": "Temporary config vitest-react135.tmp.config.mjs (copied into packages/react for the run, then removed; not committed) set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence.",
+          "run": "docs/inventory/react-collection-presentation/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    },
+    {
+      "id": "react.timeline",
+      "name": "React UTimeline",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Display-only chain of events with a marker, connector and optional opposite and content slots in vertical or horizontal layout.",
+      "surface": "UTimeline<T = unknown> renders UTimelineProps<T>: value, align left|right|top|bottom (default left), layout vertical|horizontal (default vertical), render-prop slots content, opposite and marker (each (item) => React.ReactNode) and className. Each event renders opposite, separator and content regions; the separator uses the marker render prop or a default marker div and adds a connector for every event except the last; events are keyed by index. The root class comes from cx(\"root\", { layout, align }) but timelineStyleModule, a local {css, classes} object, reads only layout; align is accepted without a style branch. The style file records that no @ultimate/uix-styles/timeline entry exists and cites the same local precedent as messageStyleModule. UTimelineProps is exported as a type from the family index. UTimeline uses useComponentBase with componentName timeline. The root barrel and the ./timeline subpath expose the same named surface; declared dist paths do not establish publication. No component-metadata record exists for this family in this revision. The Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context.",
+      "files": [
+        "packages/react/src/timeline/timeline-style.ts",
+        "packages/react/src/timeline/timeline.tsx",
+        "packages/react/src/timeline/index.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UTimeline",
+        "@ultimate/react/timeline#UTimeline",
+        "@ultimate/react#UTimelineProps",
+        "@ultimate/react/timeline#UTimelineProps"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/timeline/index.ts",
+          "contains": "export { UTimeline } from \"./timeline\";"
+        },
+        {
+          "path": "packages/react/src/timeline/timeline.tsx",
+          "contains": "componentName: \"timeline\""
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./timeline\";"
+        },
+        {
+          "path": "packages/react/package.json",
+          "contains": "\"./timeline\": {"
+        },
+        {
+          "path": "packages/react/src/timeline/timeline-style.ts",
+          "contains": "export const timelineStyleModule"
+        },
+        {
+          "path": "packages/react/src/timeline/timeline.tsx",
+          "contains": "export function UTimeline"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "import { useComponentStyle } from \"../styling/use-component-style\";"
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    timeline,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Inspected component, types, owned composition and local style sources exist. Source interpretation and supporting spec presence are not passing runtime verification."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped React product specifications passed: 5 test files and 63 tests (timeline 5).",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/data-view src/order-list src/organization-chart src/pick-list src/timeline --config vitest-react135.tmp.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 5 passed (5); Tests 63 passed (63): pick-list 30, order-list 13, data-view 10, organization-chart 5, timeline 5.",
+          "limitations": "Temporary config vitest-react135.tmp.config.mjs (copied into packages/react for the run, then removed; not committed) set css.postcss.plugins=[] to bypass host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence.",
+          "run": "docs/inventory/react-collection-presentation/product-run.json"
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured non-docs CI Test step runs root pnpm run test, recursively invoking @ultimate/react vitest run. Workflow configuration only, not an observed successful CI execution or branch-protection claim. test:scripts is provenance-only and does not include inventory tests.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); upstream dependencies may prevent execution. No remote CI observed."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/carousel/ src/galleria/ src/image/ src/image-compare/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+  "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+  "outcome": "passed",
+  "output": "Vitest 2.1.9, Node v24.15.0: Test Files 10 passed (10); Tests 79 passed (79): galleria 21, carousel 9, image 8, splitter 7, scroll-panel 7, fieldset 7, panel 7, card 5, image-compare 4, divider 4.",
+  "preparation": "PATH=\"$HOME/.nvm/versions/node/v24.15.0/bin:$PATH\"; pnpm install already completed in the ticket worktree. Product tests ran in the main checkout /Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate at the same source revision, with dependency artifacts already built; no tracked files were modified. The committed inventory Vue config was used from the start. An initial passing invocation used filters without trailing slashes and additionally selected panel-menu (18 tests; 11 files/97 total). This recorded repeat adds trailing slashes and selects exactly the ten scoped families (10 files/79 tests).",
+  "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence. No warnings were observed."
+}

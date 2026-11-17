@@ -1,0 +1,669 @@
+{
+  "version": 1,
+  "scope": "data-motion-primitives-147",
+  "revision": "75271f0ae536520ff9179f33b4309e7950b7aab4",
+  "ownership": {
+    "ticket": 147,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.uix-data",
+      "record": "uixdata.root"
+    },
+    {
+      "id": "package.ultimate.uix-data.root",
+      "record": "uixdata.root"
+    },
+    {
+      "id": "package.ultimate.uix-data.identity",
+      "record": "uixdata.identity"
+    },
+    {
+      "id": "package.ultimate.uix-data.selection",
+      "record": "uixdata.selection"
+    },
+    {
+      "id": "package.ultimate.uix-data.sort",
+      "record": "uixdata.sort"
+    },
+    {
+      "id": "package.ultimate.uix-data.filter",
+      "record": "uixdata.filter"
+    },
+    {
+      "id": "package.ultimate.uix-data.pagination",
+      "record": "uixdata.pagination"
+    },
+    {
+      "id": "package.ultimate.uix-data.virtualization",
+      "record": "uixdata.virtualization"
+    },
+    {
+      "id": "package.ultimate.uix-motion",
+      "record": "uixmotion.root"
+    },
+    {
+      "id": "package.ultimate.uix-motion.root",
+      "record": "uixmotion.root"
+    },
+    {
+      "id": "package.ultimate.uix-motion.config",
+      "record": "uixmotion.config"
+    },
+    {
+      "id": "package.ultimate.uix-motion.utils",
+      "record": "uixmotion.utils"
+    }
+  ],
+  "packages": [
+    {
+      "path": "packages/uix-data",
+      "roots": ["packages/uix-data/src"],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/uix-data/src/index.ts"
+        }
+      ]
+    },
+    {
+      "path": "packages/uix-motion",
+      "roots": ["packages/uix-motion/src"],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/uix-motion/src/index.ts"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "uixdata.identity",
+      "name": "Identity equality",
+      "framework": "shared",
+      "purpose": "Neutral value-equality primitive re-exported for data identity checks.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export of @ultimate/uix-data only (the package declares a single \".\" export and tsup builds one entry). Runtime function equals, re-exported from @ultimate/uix-utils/object; its implementation is owned by the UIX object utilities inventory (#144).",
+      "files": ["packages/uix-data/src/identity/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-data#equals"],
+      "evidence": [
+        {
+          "path": "packages/uix-data/src/identity/index.ts",
+          "contains": "export { equals } from \"@ultimate/uix-utils/object\";"
+        },
+        {
+          "path": "packages/uix-data/src/index.ts",
+          "contains": "export { equals } from \"./identity/index\";"
+        }
+      ],
+      "relationships": ["uixdata.root", "package.ultimate.uix-utils.object"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Identity equality is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-data/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/data-motion-primitives.json --out docs/inventory/data-motion-primitives (run twice; authored README SHA-256 checked before and after)",
+          "revision": "75271f0ae536520ff9179f33b4309e7950b7aab4",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 11 source files, 34 named symbols, 34 root export identities, 11 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/data-motion-primitives/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixdata.selection",
+      "name": "Selection contract",
+      "framework": "shared",
+      "purpose": "Type contract for selection cardinality.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export of @ultimate/uix-data only (the package declares a single \".\" export and tsup builds one entry). Type only, no runtime value: SelectionMode = \"single\" | \"multiple\". Carries no storage or mutation semantics; those remain framework-owned.",
+      "files": ["packages/uix-data/src/selection/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-data#SelectionMode"],
+      "evidence": [
+        {
+          "path": "packages/uix-data/src/selection/index.ts",
+          "contains": "export type SelectionMode = \"single\" | \"multiple\";"
+        },
+        {
+          "path": "packages/uix-data/src/index.ts",
+          "contains": "export type { SelectionMode } from \"./selection/index\";"
+        }
+      ],
+      "relationships": ["uixdata.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Selection contract is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-data/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/data-motion-primitives.json --out docs/inventory/data-motion-primitives (run twice; authored README SHA-256 checked before and after)",
+          "revision": "75271f0ae536520ff9179f33b4309e7950b7aab4",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 11 source files, 34 named symbols, 34 root export identities, 11 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/data-motion-primitives/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixdata.sort",
+      "name": "Sort contracts",
+      "framework": "shared",
+      "purpose": "Type contracts for sort metadata and sort cardinality.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export of @ultimate/uix-data only (the package declares a single \".\" export and tsup builds one entry). Types only, no runtime values: SortMeta { field: string; order: 1 | 0 | -1 } and SortMode = \"single\" | \"multiple\". No comparator or sort function exists in the package.",
+      "files": ["packages/uix-data/src/sort/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-data#SortMeta", "@ultimate/uix-data#SortMode"],
+      "evidence": [
+        {
+          "path": "packages/uix-data/src/sort/index.ts",
+          "contains": "export interface SortMeta {"
+        },
+        {
+          "path": "packages/uix-data/src/sort/index.ts",
+          "contains": "export type SortMode = \"single\" | \"multiple\";"
+        }
+      ],
+      "relationships": ["uixdata.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Sort contracts is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-data/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/data-motion-primitives.json --out docs/inventory/data-motion-primitives (run twice; authored README SHA-256 checked before and after)",
+          "revision": "75271f0ae536520ff9179f33b4309e7950b7aab4",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 11 source files, 34 named symbols, 34 root export identities, 11 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/data-motion-primitives/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixdata.filter",
+      "name": "Filter contracts",
+      "framework": "shared",
+      "purpose": "Type contracts for filter match modes and simple filter metadata.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export of @ultimate/uix-data only (the package declares a single \".\" export and tsup builds one entry). Types only, no runtime values: FilterMatchMode is a union of 18 string literals (startsWith through custom); FilterMetadata { value: unknown; matchMode: FilterMatchMode }. The operator/constraints variant is deferred in source comments, not modeled. No filter function exists in the package.",
+      "files": ["packages/uix-data/src/filter/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-data#FilterMatchMode", "@ultimate/uix-data#FilterMetadata"],
+      "evidence": [
+        {
+          "path": "packages/uix-data/src/filter/index.ts",
+          "contains": "export type FilterMatchMode ="
+        },
+        {
+          "path": "packages/uix-data/src/filter/index.ts",
+          "contains": "export interface FilterMetadata {"
+        }
+      ],
+      "relationships": ["uixdata.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Filter contracts is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-data/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/data-motion-primitives.json --out docs/inventory/data-motion-primitives (run twice; authored README SHA-256 checked before and after)",
+          "revision": "75271f0ae536520ff9179f33b4309e7950b7aab4",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 11 source files, 34 named symbols, 34 root export identities, 11 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/data-motion-primitives/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixdata.pagination",
+      "name": "Pagination contract and page count",
+      "framework": "shared",
+      "purpose": "Pagination state type and the page-count calculation.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export of @ultimate/uix-data only (the package declares a single \".\" export and tsup builds one entry). Type PaginationState { first, rows, totalRecords, rowsPerPageOptions? } (no runtime value; rowsPerPageOptions is pass-through that no function reads) and runtime function getPageCount(totalRecords: number, rows: number): number, which returns Math.ceil(totalRecords / rows) when rows > 0 and 0 otherwise.",
+      "files": ["packages/uix-data/src/pagination/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-data#PaginationState", "@ultimate/uix-data#getPageCount"],
+      "evidence": [
+        {
+          "path": "packages/uix-data/src/pagination/index.ts",
+          "contains": "export interface PaginationState {"
+        },
+        {
+          "path": "packages/uix-data/src/pagination/index.ts",
+          "contains": "export function getPageCount(totalRecords: number, rows: number): number {"
+        }
+      ],
+      "relationships": ["uixdata.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Pagination contract and page count is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-data/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/data-motion-primitives.json --out docs/inventory/data-motion-primitives (run twice; authored README SHA-256 checked before and after)",
+          "revision": "75271f0ae536520ff9179f33b4309e7950b7aab4",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 11 source files, 34 named symbols, 34 root export identities, 11 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/data-motion-primitives/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixdata.virtualization",
+      "name": "Virtualization math",
+      "framework": "shared",
+      "purpose": "Runtime windowing calculations for virtualized scrolling.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export of @ultimate/uix-data only (the package declares a single \".\" export and tsup builds one entry). Runtime functions only: calculateNumItemsInViewport(contentSize: number, itemSize: number): number (zero-guarded ceil division) and calculateLast(first, numItemsInViewport, numToleratedItems, isColumns?): number, whose isColumns parameter is declared but unused in source. Callers must clamp against their own collection length.",
+      "files": ["packages/uix-data/src/virtualization/index.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-data#calculateLast",
+        "@ultimate/uix-data#calculateNumItemsInViewport"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-data/src/virtualization/index.ts",
+          "contains": "export function calculateNumItemsInViewport("
+        },
+        {
+          "path": "packages/uix-data/src/virtualization/index.ts",
+          "contains": "export function calculateLast("
+        }
+      ],
+      "relationships": ["uixdata.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Virtualization math is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-data/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/data-motion-primitives.json --out docs/inventory/data-motion-primitives (run twice; authored README SHA-256 checked before and after)",
+          "revision": "75271f0ae536520ff9179f33b4309e7950b7aab4",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 11 source files, 34 named symbols, 34 root export identities, 11 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/data-motion-primitives/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixdata.root",
+      "name": "Data package entry",
+      "framework": "shared",
+      "purpose": "The package entry barrel that selects which primitives are public.",
+      "surface": "See [authored signatures and interpretation](README.md). src/index.ts re-exports by name equals, calculateLast, calculateNumItemsInViewport and getPageCount (runtime) and the types SelectionMode, SortMeta, SortMode, FilterMatchMode, FilterMetadata and PaginationState with explicit named re-exports, no star re-exports. packages/uix-data/package.json declares only the root export; there are no subpaths. Workspace dependencies on the package are declared by the Angular, React and Vue component packages. Dependency: @ultimate/uix-utils. Availability is recorded as internal because this barrel file owns no export identities of its own; the public identities it forwards are attributed to the module records that define them.",
+      "files": ["packages/uix-data/src/index.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/uix-data/src/index.ts",
+          "contains": "export { getPageCount } from \"./pagination/index\";"
+        },
+        {
+          "path": "packages/uix-data/package.json",
+          "contains": "\"@ultimate/uix-utils\": \"workspace:*\""
+        },
+        {
+          "path": "packages/uix-data/tsup.config.ts",
+          "contains": "entry: { index: \"src/index.ts\" }"
+        }
+      ],
+      "relationships": [
+        "uixdata.identity",
+        "uixdata.selection",
+        "uixdata.sort",
+        "uixdata.filter",
+        "uixdata.pagination",
+        "uixdata.virtualization",
+        "package.ultimate.uix-utils.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Data package entry is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-data/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/data-motion-primitives.json --out docs/inventory/data-motion-primitives (run twice; authored README SHA-256 checked before and after)",
+          "revision": "75271f0ae536520ff9179f33b4309e7950b7aab4",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 11 source files, 34 named symbols, 34 root export identities, 11 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/data-motion-primitives/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixmotion.config",
+      "name": "Motion configuration and factory",
+      "framework": "shared",
+      "purpose": "Default motion options and the createMotion factory.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export of @ultimate/uix-motion only (single \".\" export; tsup builds one entry). DEFAULT_MOTION_OPTIONS: MotionOptions (name \"p\", safe, enter, leave, autoHeight true; disabled and autoWidth false) and createMotion(element: Element, options?: MotionOptions): MotionInstance, which throws when the element is missing or when both enter and leave are false.",
+      "files": ["packages/uix-motion/src/config/index.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-motion#DEFAULT_MOTION_OPTIONS",
+        "@ultimate/uix-motion#createMotion"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-motion/src/config/index.ts",
+          "contains": "export const DEFAULT_MOTION_OPTIONS: MotionOptions = {"
+        },
+        {
+          "path": "packages/uix-motion/src/config/index.ts",
+          "contains": "export function createMotion(element: Element, options?: MotionOptions): MotionInstance {"
+        }
+      ],
+      "relationships": ["uixmotion.types", "uixmotion.utils", "uixmotion.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Motion configuration and factory is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-motion/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/data-motion-primitives.json --out docs/inventory/data-motion-primitives (run twice; authored README SHA-256 checked before and after)",
+          "revision": "75271f0ae536520ff9179f33b4309e7950b7aab4",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 11 source files, 34 named symbols, 34 root export identities, 11 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/data-motion-primitives/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixmotion.utils",
+      "name": "Motion utilities",
+      "framework": "shared",
+      "purpose": "Runtime helpers and constants for option merging, class names, hooks, metadata and duration.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export of @ultimate/uix-motion only (single \".\" export; tsup builds one entry). Constants ANIMATION and TRANSITION and runtime functions shouldSkipMotion, mergeOptions, resolveClassNames, getMotionHooks, getMotionMetadata, resolveDuration and setAutoDimensionVariables. shouldSkipMotion consults prefers-reduced-motion through @ultimate/uix-utils; getMotionMetadata reads window.getComputedStyle, so these helpers need a DOM.",
+      "files": ["packages/uix-motion/src/utils/index.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-motion#ANIMATION",
+        "@ultimate/uix-motion#TRANSITION",
+        "@ultimate/uix-motion#getMotionHooks",
+        "@ultimate/uix-motion#getMotionMetadata",
+        "@ultimate/uix-motion#mergeOptions",
+        "@ultimate/uix-motion#resolveClassNames",
+        "@ultimate/uix-motion#resolveDuration",
+        "@ultimate/uix-motion#setAutoDimensionVariables",
+        "@ultimate/uix-motion#shouldSkipMotion"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-motion/src/utils/index.ts",
+          "contains": "export function shouldSkipMotion(options: MotionOptions | undefined): boolean {"
+        },
+        {
+          "path": "packages/uix-motion/src/utils/index.ts",
+          "contains": "export const ANIMATION = \"animation\";"
+        }
+      ],
+      "relationships": ["uixmotion.types", "uixmotion.root", "package.ultimate.uix-utils.dom"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Motion utilities is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-motion/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/data-motion-primitives.json --out docs/inventory/data-motion-primitives (run twice; authored README SHA-256 checked before and after)",
+          "revision": "75271f0ae536520ff9179f33b4309e7950b7aab4",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 11 source files, 34 named symbols, 34 root export identities, 11 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/data-motion-primitives/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixmotion.types",
+      "name": "Motion type contracts",
+      "framework": "shared",
+      "purpose": "Type contracts for motion options, hooks, class names, metadata and instances.",
+      "surface": "See [authored signatures and interpretation](README.md). Root export of @ultimate/uix-motion only (single \".\" export; tsup builds one entry). Types only, no runtime values: MotionType, MotionPhase, MotionStage, MotionDuration, ClassNameOptions, MotionClassNames, MotionMetadata, MotionEvent, MotionHooks, MotionHooksWithPhase, MotionClassNamesWithPhase, MotionOptions (extends MotionClassNames and MotionHooks) and MotionInstance.",
+      "files": ["packages/uix-motion/src/types.ts"],
+      "availability": "public",
+      "exports": [
+        "@ultimate/uix-motion#ClassNameOptions",
+        "@ultimate/uix-motion#MotionClassNames",
+        "@ultimate/uix-motion#MotionClassNamesWithPhase",
+        "@ultimate/uix-motion#MotionDuration",
+        "@ultimate/uix-motion#MotionEvent",
+        "@ultimate/uix-motion#MotionHooks",
+        "@ultimate/uix-motion#MotionHooksWithPhase",
+        "@ultimate/uix-motion#MotionInstance",
+        "@ultimate/uix-motion#MotionMetadata",
+        "@ultimate/uix-motion#MotionOptions",
+        "@ultimate/uix-motion#MotionPhase",
+        "@ultimate/uix-motion#MotionStage",
+        "@ultimate/uix-motion#MotionType"
+      ],
+      "evidence": [
+        {
+          "path": "packages/uix-motion/src/types.ts",
+          "contains": "export type MotionType = \"transition\" | \"animation\";"
+        },
+        {
+          "path": "packages/uix-motion/src/types.ts",
+          "contains": "export interface MotionOptions extends MotionClassNames, MotionHooks {"
+        }
+      ],
+      "relationships": ["uixmotion.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Motion type contracts is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-motion/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/data-motion-primitives.json --out docs/inventory/data-motion-primitives (run twice; authored README SHA-256 checked before and after)",
+          "revision": "75271f0ae536520ff9179f33b4309e7950b7aab4",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 11 source files, 34 named symbols, 34 root export identities, 11 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/data-motion-primitives/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixmotion.root",
+      "name": "Motion package entry",
+      "framework": "shared",
+      "purpose": "The package entry barrel and package-level availability.",
+      "surface": "See [authored signatures and interpretation](README.md). src/index.ts re-exports config, utils and types with three relative star re-exports, so every named export of those modules is public from the root. packages/uix-motion/package.json declares only the root export; there are no subpaths. The package is a workspace dependency of the Angular, React and Vue component packages and of the React and Vue cores. Dependency: @ultimate/uix-utils. Availability is recorded as internal because this barrel file owns no export identities of its own; the public identities it forwards are attributed to the module records that define them.",
+      "files": ["packages/uix-motion/src/index.ts"],
+      "availability": "internal",
+      "exports": [],
+      "evidence": [
+        {
+          "path": "packages/uix-motion/src/index.ts",
+          "contains": "export * from \"./config\";"
+        },
+        {
+          "path": "packages/uix-motion/package.json",
+          "contains": "\"@ultimate/uix-utils\": \"workspace:*\""
+        },
+        {
+          "path": "packages/uix-motion/tsup.config.ts",
+          "contains": "entry: { index: \"src/index.ts\" }"
+        }
+      ],
+      "relationships": [
+        "uixmotion.config",
+        "uixmotion.utils",
+        "uixmotion.types",
+        "package.ultimate.react-core.root",
+        "package.ultimate.vue-core.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Motion package entry is present; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "Product behavior and type tests were not run for this documentation-only inventory; no product source was changed. Test files under packages/uix-motion/test exist but their presence is not a passing result."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "The documentation-only CI path runs lint and format checks; build, typecheck and product tests are skipped for docs-only changes.",
+          "workflow": ".github/workflows/ci.yml"
+        },
+        {
+          "state": "verified",
+          "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/data-motion-primitives.json --out docs/inventory/data-motion-primitives (run twice; authored README SHA-256 checked before and after)",
+          "revision": "75271f0ae536520ff9179f33b4309e7950b7aab4",
+          "outcome": "passed",
+          "output": "Scoped reconciliation passed twice with identical generated views: 11 source files, 34 named symbols, 34 root export identities, 11 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+          "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
+          "run": "docs/inventory/data-motion-primitives/pilot-run.json",
+          "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    }
+  ],
+  "dispositions": [],
+  "pending": [
+    {
+      "id": "package.ultimate.uix-utils.object",
+      "batch": "UIX value utilities (#144)",
+      "reason": "equals is re-exported from the object utilities documented in #144; kept pending as a cross-scope reference."
+    },
+    {
+      "id": "package.ultimate.uix-utils.root",
+      "batch": "Inventory closeout root files (#157)",
+      "reason": "Both packages depend on @ultimate/uix-utils; the root barrel is dispositioned in #157 and the utilities it re-exports are documented in #143 and #144. Kept pending as a cross-scope reference."
+    },
+    {
+      "id": "package.ultimate.uix-utils.dom",
+      "batch": "UIX DOM utilities (#143)",
+      "reason": "Motion utilities use DOM helpers documented in #143; kept pending as a cross-scope reference."
+    },
+    {
+      "id": "package.ultimate.react-core.root",
+      "batch": "React core (#149)",
+      "reason": "The React core depends on uix-motion; documented in #149, kept pending as a cross-scope reference."
+    },
+    {
+      "id": "package.ultimate.vue-core.root",
+      "batch": "Vue core (#150)",
+      "reason": "The Vue core depends on uix-motion; documented in #150, kept pending as a cross-scope reference."
+    }
+  ]
+}

@@ -1,0 +1,649 @@
+{
+  "version": 1,
+  "scope": "vue-collection-presentation",
+  "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+  "packages": [
+    {
+      "path": "packages/vue",
+      "roots": [
+        "packages/vue/src/data-view",
+        "packages/vue/src/order-list",
+        "packages/vue/src/organization-chart",
+        "packages/vue/src/pick-list",
+        "packages/vue/src/timeline"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/data-view/index.ts"
+        },
+        {
+          "subpath": "./data-view",
+          "source": "packages/vue/src/data-view/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/order-list/index.ts"
+        },
+        {
+          "subpath": "./order-list",
+          "source": "packages/vue/src/order-list/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/organization-chart/index.ts"
+        },
+        {
+          "subpath": "./organization-chart",
+          "source": "packages/vue/src/organization-chart/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/pick-list/index.ts"
+        },
+        {
+          "subpath": "./pick-list",
+          "source": "packages/vue/src/pick-list/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/timeline/index.ts"
+        },
+        {
+          "subpath": "./timeline",
+          "source": "packages/vue/src/timeline/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/vue/src/data-view/data-view.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/data-view/data-view.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/order-list/order-list.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/order-list/order-list.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/organization-chart/organization-chart.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/organization-chart/organization-chart.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/pick-list/pick-list.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/pick-list/pick-list.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/timeline/timeline.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/timeline/timeline.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.vue-core.base",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship does not assert external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.styling",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship does not assert external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship does not assert external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-data.root",
+      "batch": "ticket-147",
+      "reason": "Detailed inventory remains owned by [#147](https://github.com/majedsiefalnasr/ultimate-packages/issues/147). Reconciled identity: [package index](../packages/packages.md); source relationship does not assert external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue.paginator",
+      "batch": "ticket-133",
+      "reason": "External reconciled identity already inventoried by the completed [#133](https://github.com/majedsiefalnasr/ultimate-packages/issues/133) scope; this batch describes its source relationship without completing the owning ticket."
+    },
+    {
+      "id": "package.ultimate.vue.listbox",
+      "batch": "ticket-118",
+      "reason": "External reconciled identity already inventoried by the completed [#118](https://github.com/majedsiefalnasr/ultimate-packages/issues/118) scope; this batch describes its source relationship without completing the owning ticket."
+    }
+  ],
+  "ownership": {
+    "ticket": 136,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.vue.data-view",
+      "record": "vue.data-view"
+    },
+    {
+      "id": "package.ultimate.vue.order-list",
+      "record": "vue.order-list"
+    },
+    {
+      "id": "package.ultimate.vue.organization-chart",
+      "record": "vue.organization-chart"
+    },
+    {
+      "id": "package.ultimate.vue.pick-list",
+      "record": "vue.pick-list"
+    },
+    {
+      "id": "package.ultimate.vue.timeline",
+      "record": "vue.timeline"
+    }
+  ],
+  "records": [
+    {
+      "id": "vue.data-view",
+      "name": "Vue UDataView",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Present a collection in list or grid layout with optional paging, sorting, lazy-load notification, loading and empty states.",
+      "surface": "UDataView (public component) and source-only createBaseDataView (componentName dataview); source-only dataViewStyleModule. Props: value, layout list|grid (default list), paginator, first, rows, totalRecords, rowsPerPageOptions, paginatorPosition (default bottom), alwaysShowPaginator (default true), currentPageReportTemplate (default \"{first} to {last} of {totalRecords}\" with {currentPage}, {totalPages} and {rows} also substituted), sortField, sortOrder, lazy, loading, loadingIcon (default class u-loading-icon on a span with role status, alongside USpinnerIcon from @ultimate/vue-core), emptyMessage (default \"No results found\"), dataKey, trackBy and itemTemplate (item, layout) => string. Emits page, lazy-load, update:first and update:rows. Non-exported helpers field(), compare() and pageNumber() sort and page non-lazy data; when lazy is true, lazy-load is emitted on mount and when first, rows, sortField, sortOrder or lazy change, with {first, rows, sortField, sortOrder}. Scoped slots grid and list receive {items}; default items render as div role listitem with text interpolation of itemTemplate. It composes the Paginator SFC from ../paginator/Paginator.vue (identity owned by #133) and a rows-per-page select labelled Rows per page, plus an aria-live page report. It declares no filter. The SFC extends its base factory from the family Base file, which is source-only and not exported from the family barrel; the factory extends createBaseComponent from @ultimate/vue-core. The barrel exposes only the component at the root and at the family subpath, and declared dist paths do not establish publication. The style module is source-only: exported from its style file, not from the family barrel. No component-metadata record or @ultimate/uix-styles entry exists for this family in this revision. The Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context.",
+      "files": [
+        "packages/vue/src/data-view/DataView.vue",
+        "packages/vue/src/data-view/BaseDataView.ts",
+        "packages/vue/src/data-view/data-view-style.ts",
+        "packages/vue/src/data-view/index.ts"
+      ],
+      "exports": ["@ultimate/vue#UDataView", "@ultimate/vue/data-view#UDataView"],
+      "evidence": [
+        {
+          "path": "packages/vue/src/data-view/DataView.vue",
+          "contains": "name: \"UDataView\""
+        },
+        {
+          "path": "packages/vue/src/data-view/BaseDataView.ts",
+          "contains": "createBaseDataView"
+        },
+        {
+          "path": "packages/vue/src/data-view/data-view-style.ts",
+          "contains": "export const dataViewStyleModule"
+        },
+        {
+          "path": "packages/vue/src/data-view/index.ts",
+          "contains": "export { default as UDataView } from \"./DataView.vue\";"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./data-view\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./data-view\": {"
+        },
+        {
+          "path": "packages/vue/tsup.config.ts",
+          "contains": "\"data-view/index\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "dataview: dataView,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/src/data-view/DataView.vue",
+          "contains": "import Paginator from \"../paginator/Paginator.vue\";"
+        },
+        {
+          "path": "packages/vue/src/data-view/DataView.vue",
+          "contains": "import { SpinnerIcon as USpinnerIcon } from \"@ultimate/vue-core\";"
+        },
+        {
+          "path": "packages/vue/src/data-view/DataView.vue",
+          "contains": "\"lazy-load\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.vue.paginator"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The SFC, base factory and local style module exist in source; implementation evidence alone is not a passing behavior check."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped Vue product specifications passed: 5 test files and 52 tests (data-view 6).",
+          "run": "docs/inventory/vue-collection-presentation/product-run.json",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/data-view src/order-list src/organization-chart src/pick-list src/timeline --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 5 passed (5); Tests 52 passed (52): pick-list 22, order-list 14, data-view 6, organization-chart 5, timeline 5.",
+          "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured conditional non-docs CI Test step runs root pnpm run test, which invokes the Vue test script; this describes workflow configuration, not a successful run or branch protection. The scoped inventory Node tests are not included in test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); earlier steps can prevent execution. No remote CI run observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.order-list",
+      "name": "Vue UOrderList",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Reorderable single list with move up/top/down/bottom controls and multi-selection, built on the Vue listbox SFC.",
+      "surface": "UOrderList (public component) and source-only createBaseOrderList (componentName orderlist); source-only orderListStyleModule. Props: modelValue (array), dataKey, metaKeySelection, autoOptionFocus (default true), focusOnHover, responsive (default true), breakpoint (default 960px), striped, scrollHeight (default 14rem), tabindex (default 0), disabled, ariaLabel (default Order list), ariaLabelledby, buttonProps and per-direction moveUp/moveTop/moveDown/moveBottom button props. Emits update:modelValue. Four buttons (data-pc-section moveupbutton, movetopbutton, movedownbutton, movebottombutton; text Move up, Move top, Move down, Move bottom) are disabled when nothing is selected; selection is internal state. window.matchMedia on breakpoint toggles the u-order-list-narrow class. The list is the Listbox SFC from ../listbox/Listbox.vue in multiple mode (identity owned by #118). It declares no filter and no drag-and-drop. The SFC extends its base factory from the family Base file, which is source-only and not exported from the family barrel; the factory extends createBaseComponent from @ultimate/vue-core. The barrel exposes only the component at the root and at the family subpath, and declared dist paths do not establish publication. The style module is source-only: exported from its style file, not from the family barrel. No component-metadata record or @ultimate/uix-styles entry exists for this family in this revision. The Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context.",
+      "files": [
+        "packages/vue/src/order-list/OrderList.vue",
+        "packages/vue/src/order-list/BaseOrderList.ts",
+        "packages/vue/src/order-list/order-list-style.ts",
+        "packages/vue/src/order-list/index.ts"
+      ],
+      "exports": ["@ultimate/vue#UOrderList", "@ultimate/vue/order-list#UOrderList"],
+      "evidence": [
+        {
+          "path": "packages/vue/src/order-list/OrderList.vue",
+          "contains": "name: \"UOrderList\""
+        },
+        {
+          "path": "packages/vue/src/order-list/BaseOrderList.ts",
+          "contains": "createBaseOrderList"
+        },
+        {
+          "path": "packages/vue/src/order-list/order-list-style.ts",
+          "contains": "export const orderListStyleModule"
+        },
+        {
+          "path": "packages/vue/src/order-list/index.ts",
+          "contains": "export { default as UOrderList } from \"./OrderList.vue\";"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./order-list\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./order-list\": {"
+        },
+        {
+          "path": "packages/vue/tsup.config.ts",
+          "contains": "\"order-list/index\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "orderlist: orderList,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/src/order-list/OrderList.vue",
+          "contains": "import Listbox from \"../listbox/Listbox.vue\";"
+        },
+        {
+          "path": "packages/vue/src/order-list/OrderList.vue",
+          "contains": "matchMedia"
+        },
+        {
+          "path": "packages/vue/src/order-list/OrderList.vue",
+          "contains": "update:modelValue"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.vue.listbox"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The SFC, base factory and local style module exist in source; implementation evidence alone is not a passing behavior check."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped Vue product specifications passed: 5 test files and 52 tests (order-list 14).",
+          "run": "docs/inventory/vue-collection-presentation/product-run.json",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/data-view src/order-list src/organization-chart src/pick-list src/timeline --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 5 passed (5); Tests 52 passed (52): pick-list 22, order-list 14, data-view 6, organization-chart 5, timeline 5.",
+          "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured conditional non-docs CI Test step runs root pnpm run test, which invokes the Vue test script; this describes workflow configuration, not a successful run or branch protection. The scoped inventory Node tests are not included in test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); earlier steps can prevent execution. No remote CI run observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.organization-chart",
+      "name": "Vue UOrganizationChart",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Render a hierarchy of labelled nodes as an expandable tree with optional single or multiple node selection.",
+      "surface": "UOrganizationChart (public component) and source-only createBaseOrganizationChart (componentName organizationchart); source-only organizationChartStyleModule. Props: value, selectionKeys (object), selectionMode (SelectionMode type imported from @ultimate/uix-data in the base factory), collapsible and collapsedKeys. Emits update:selectionKeys and update:collapsedKeys. The SFC uses a render function with h(): root role tree with aria-label Organization chart, nodes with role treeitem, aria-expanded and aria-selected, a toggle button with aria-label \"Toggle <label>\" showing a minus or plus sign, Enter and Space selection, and local collapsedKeys state. The base factory carries GAP-082 eslint-disable comments. The SFC extends its base factory from the family Base file, which is source-only and not exported from the family barrel; the factory extends createBaseComponent from @ultimate/vue-core. The barrel exposes only the component at the root and at the family subpath, and declared dist paths do not establish publication. The style module is source-only: exported from its style file, not from the family barrel. No component-metadata record or @ultimate/uix-styles entry exists for this family in this revision. The Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context.",
+      "files": [
+        "packages/vue/src/organization-chart/OrganizationChart.vue",
+        "packages/vue/src/organization-chart/BaseOrganizationChart.ts",
+        "packages/vue/src/organization-chart/organization-chart-style.ts",
+        "packages/vue/src/organization-chart/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UOrganizationChart",
+        "@ultimate/vue/organization-chart#UOrganizationChart"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/organization-chart/OrganizationChart.vue",
+          "contains": "name: \"UOrganizationChart\""
+        },
+        {
+          "path": "packages/vue/src/organization-chart/BaseOrganizationChart.ts",
+          "contains": "createBaseOrganizationChart"
+        },
+        {
+          "path": "packages/vue/src/organization-chart/organization-chart-style.ts",
+          "contains": "export const organizationChartStyleModule"
+        },
+        {
+          "path": "packages/vue/src/organization-chart/index.ts",
+          "contains": "export { default as UOrganizationChart } from \"./OrganizationChart.vue\";"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./organization-chart\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./organization-chart\": {"
+        },
+        {
+          "path": "packages/vue/tsup.config.ts",
+          "contains": "\"organization-chart/index\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "organizationchart: organizationChart,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/src/organization-chart/BaseOrganizationChart.ts",
+          "contains": "import type { SelectionMode } from \"@ultimate/uix-data\";"
+        },
+        {
+          "path": "packages/vue/src/organization-chart/OrganizationChart.vue",
+          "contains": "import { h } from \"vue\";"
+        },
+        {
+          "path": "packages/vue/src/organization-chart/OrganizationChart.vue",
+          "contains": "update:selectionKeys"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.uix-data.root"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The SFC, base factory and local style module exist in source; implementation evidence alone is not a passing behavior check."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped Vue product specifications passed: 5 test files and 52 tests (organization-chart 5).",
+          "run": "docs/inventory/vue-collection-presentation/product-run.json",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/data-view src/order-list src/organization-chart src/pick-list src/timeline --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 5 passed (5); Tests 52 passed (52): pick-list 22, order-list 14, data-view 6, organization-chart 5, timeline 5.",
+          "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured conditional non-docs CI Test step runs root pnpm run test, which invokes the Vue test script; this describes workflow configuration, not a successful run or branch protection. The scoped inventory Node tests are not included in test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); earlier steps can prevent execution. No remote CI run observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.pick-list",
+      "name": "Vue UPickList",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Dual-list transfer control that moves items between source and target lists with per-side reordering, built on the Vue listbox SFC.",
+      "surface": "UPickList (public component) and source-only createBasePickList (componentName picklist); source-only pickListStyleModule. Props: modelValue (default a pair of empty arrays), dataKey, metaKeySelection, autoOptionFocus, focusOnHover, responsive, breakpoint, striped, scrollHeight, tabindex, disabled, ariaLabel, ariaLabelledby, buttonProps, showSourceControls, showTargetControls and per-button props for moveUp, moveTop, moveDown, moveBottom, moveToTarget, moveAllToTarget, moveToSource and moveAllToSource. Emits update:modelValue with the source and target pair. Transfer buttons (To Target, All To Target, To Source, All To Source; data-pc-section movetotargetbutton and siblings) call a transfer(side, all) method; each side has its own Move controls. Each side is a Listbox SFC from ../listbox/Listbox.vue (identity owned by #118) with aria-label derived from ariaLabel plus source or target. It carries its own select, move and identity logic, with a pair-valued model. The SFC extends its base factory from the family Base file, which is source-only and not exported from the family barrel; the factory extends createBaseComponent from @ultimate/vue-core. The barrel exposes only the component at the root and at the family subpath, and declared dist paths do not establish publication. The style module is source-only: exported from its style file, not from the family barrel. No component-metadata record or @ultimate/uix-styles entry exists for this family in this revision. The Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context.",
+      "files": [
+        "packages/vue/src/pick-list/PickList.vue",
+        "packages/vue/src/pick-list/BasePickList.ts",
+        "packages/vue/src/pick-list/pick-list-style.ts",
+        "packages/vue/src/pick-list/index.ts"
+      ],
+      "exports": ["@ultimate/vue#UPickList", "@ultimate/vue/pick-list#UPickList"],
+      "evidence": [
+        {
+          "path": "packages/vue/src/pick-list/PickList.vue",
+          "contains": "name: \"UPickList\""
+        },
+        {
+          "path": "packages/vue/src/pick-list/BasePickList.ts",
+          "contains": "createBasePickList"
+        },
+        {
+          "path": "packages/vue/src/pick-list/pick-list-style.ts",
+          "contains": "export const pickListStyleModule"
+        },
+        {
+          "path": "packages/vue/src/pick-list/index.ts",
+          "contains": "export { default as UPickList } from \"./PickList.vue\";"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./pick-list\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./pick-list\": {"
+        },
+        {
+          "path": "packages/vue/tsup.config.ts",
+          "contains": "\"pick-list/index\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "picklist: pickList,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/src/pick-list/PickList.vue",
+          "contains": "import Listbox from \"../listbox/Listbox.vue\";"
+        },
+        {
+          "path": "packages/vue/src/pick-list/PickList.vue",
+          "contains": "movetotargetbutton"
+        },
+        {
+          "path": "packages/vue/src/pick-list/PickList.vue",
+          "contains": "update:modelValue"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.vue.listbox"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The SFC, base factory and local style module exist in source; implementation evidence alone is not a passing behavior check."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped Vue product specifications passed: 5 test files and 52 tests (pick-list 22).",
+          "run": "docs/inventory/vue-collection-presentation/product-run.json",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/data-view src/order-list src/organization-chart src/pick-list src/timeline --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 5 passed (5); Tests 52 passed (52): pick-list 22, order-list 14, data-view 6, organization-chart 5, timeline 5.",
+          "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured conditional non-docs CI Test step runs root pnpm run test, which invokes the Vue test script; this describes workflow configuration, not a successful run or branch protection. The scoped inventory Node tests are not included in test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); earlier steps can prevent execution. No remote CI run observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.timeline",
+      "name": "Vue UTimeline",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Display-only chain of events with marker, connector and opposite and content slots in vertical or horizontal layout.",
+      "surface": "UTimeline and createBaseTimeline (componentName timeline, extending createBaseComponent directly as a display component); source-only timelineStyleModule, a plain {css, classes} object. Props: value, align (default left) and layout (default vertical); inheritAttrs is false. Scoped slots opposite, marker and content receive {item}; the marker falls back to a default div, a connector renders for every event except the last, and events are keyed by index. The root class reads only layout; align is passed to the class map but has no style branch. The style file records that no @ultimate/uix-styles/timeline entry exists and that it follows the messageStyleModule precedent. createBaseTimeline is the only base factory exported by any family barrel in this scope; it extends createBaseComponent from @ultimate/vue-core. The barrel exposes the component and createBaseTimeline at the root and family subpath, and declared dist paths do not establish publication. The style module is source-only: exported from its style file, not from the family barrel. No component-metadata record or @ultimate/uix-styles entry exists for this family in this revision. The Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context.",
+      "files": [
+        "packages/vue/src/timeline/Timeline.vue",
+        "packages/vue/src/timeline/BaseTimeline.ts",
+        "packages/vue/src/timeline/timeline-style.ts",
+        "packages/vue/src/timeline/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UTimeline",
+        "@ultimate/vue/timeline#UTimeline",
+        "@ultimate/vue#createBaseTimeline",
+        "@ultimate/vue/timeline#createBaseTimeline"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/timeline/Timeline.vue",
+          "contains": "name: \"UTimeline\""
+        },
+        {
+          "path": "packages/vue/src/timeline/BaseTimeline.ts",
+          "contains": "createBaseTimeline"
+        },
+        {
+          "path": "packages/vue/src/timeline/timeline-style.ts",
+          "contains": "export const timelineStyleModule"
+        },
+        {
+          "path": "packages/vue/src/timeline/index.ts",
+          "contains": "export { default as UTimeline } from \"./Timeline.vue\";"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./timeline\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./timeline\": {"
+        },
+        {
+          "path": "packages/vue/tsup.config.ts",
+          "contains": "\"timeline/index\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "    timeline,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/src/timeline/index.ts",
+          "contains": "export { createBaseTimeline } from \"./BaseTimeline\";"
+        },
+        {
+          "path": "packages/vue/src/timeline/Timeline.vue",
+          "contains": "inheritAttrs: false"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The SFC, base factory and local style module exist in source; implementation evidence alone is not a passing behavior check."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped Vue product specifications passed: 5 test files and 52 tests (timeline 5).",
+          "run": "docs/inventory/vue-collection-presentation/product-run.json",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/data-view src/order-list src/organization-chart src/pick-list src/timeline --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "3864a1d23b5ef0c5601ff740c104fdec4584d14d",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 5 passed (5); Tests 52 passed (52): pick-list 22, order-list 14, data-view 6, organization-chart 5, timeline 5.",
+          "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured conditional non-docs CI Test step runs root pnpm run test, which invokes the Vue test script; this describes workflow configuration, not a successful run or branch protection. The scoped inventory Node tests are not included in test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); earlier steps can prevent execution. No remote CI run observed."
+        }
+      ]
+    }
+  ]
+}

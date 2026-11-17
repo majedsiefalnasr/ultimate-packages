@@ -1,0 +1,28 @@
+# Scoped validation
+
+Scope: vue-overlays-notifications; source revision: ce6cb351653cbbb19cc0b0246942082dd0aff73d
+
+Global completeness: not asserted.
+
+Scoped reconciliation passed.
+
+Pending references:
+package.ultimate.vue-core.base: ticket-150: Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.vue-core.styling: ticket-150: Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.vue-core.overlay: ticket-150: Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.vue-core.escape: ticket-150: Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.vue-core.focus-trap: ticket-150: Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.vue-core.zindex: ticket-150: Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.vue-core.scroll-lock: ticket-150: Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.vue-core.motion: ticket-150: Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.vue-core.icons: ticket-150: Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.vue-core.service: ticket-150: Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.vue-core.directive: ticket-150: Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.themes.presets: ticket-151: Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.component-metadata.records: ticket-153: Detailed inventory remains owned by [#153](https://github.com/majedsiefalnasr/ultimate-packages/issues/153). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.uix-styles.dialog: ticket-146: Detailed inventory remains owned by [#146](https://github.com/majedsiefalnasr/ultimate-packages/issues/146). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.uix-styles.tooltip: ticket-146: Detailed inventory remains owned by [#146](https://github.com/majedsiefalnasr/ultimate-packages/issues/146). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.uix-utils.dom: ticket-143: Detailed inventory remains owned by [#143](https://github.com/majedsiefalnasr/ultimate-packages/issues/143). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.uix-utils.escape: ticket-144: Detailed inventory remains owned by [#144](https://github.com/majedsiefalnasr/ultimate-packages/issues/144). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.uix-utils.uuid: ticket-144: Detailed inventory remains owned by [#144](https://github.com/majedsiefalnasr/ultimate-packages/issues/144). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.
+package.ultimate.vue.ripple: ticket-142: Detailed inventory remains owned by [#142](https://github.com/majedsiefalnasr/ultimate-packages/issues/142). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion.

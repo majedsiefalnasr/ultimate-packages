@@ -1,0 +1,20 @@
+{
+  "revision": "bad6cc52abbeaa74c357dfcdc0a5a4338c781a86",
+  "runs": [
+    {
+      "command": "pnpm exec eslint scripts/inventory --max-warnings=0",
+      "outcome": "passed",
+      "output": "Exit code 0, no warnings."
+    },
+    {
+      "command": "pnpm exec prettier --check docs/inventory/cli docs/inventory/README.md scripts/inventory",
+      "outcome": "passed",
+      "output": "All matched files use Prettier code style!"
+    },
+    {
+      "command": "pnpm test",
+      "outcome": "not-run",
+      "output": "Product tests were not run for this documentation-only inventory."
+    }
+  ]
+}

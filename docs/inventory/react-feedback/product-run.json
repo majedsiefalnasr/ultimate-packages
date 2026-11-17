@@ -1,0 +1,8 @@
+{
+  "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/react exec vitest run src/progress-bar/ src/progress-spinner/ src/meter-group/ src/skeleton/ src/terminal/ src/inplace/ src/scroll-top/ src/deferred-content/ src/key-filter/ src/style-class/ --config /tmp/react141-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+  "revision": "e3add69e5d93fea60f7a0d3f96ca986c0c8c9738",
+  "outcome": "passed",
+  "output": "Vitest 2.1.9, Node v24.15.0: 10 test files passed, 59 tests passed (progress-bar 5, progress-spinner 4, meter-group 5, skeleton 7, terminal 6, inplace 7, scroll-top 5, deferred-content 5, key-filter 8, style-class 7). Terminal emitted React act(...) warnings.",
+  "preparation": "Node v24.15.0; pnpm install --frozen-lockfile and workspace builds of uix-utils, uix-styled, uix-data, uix-motion, uix-styles and react-core completed in this worktree. Initial direct scoped Vitest failed before tests because host ancestor /Users/majedsiefalnasr/postcss.config.mjs requires missing postcss-import. Temporary /tmp/react141-vitest.config.mjs set css.postcss.plugins=[] with jsdom, globals=true and this worktree React vitest.setup.ts.",
+  "limitations": "Local jsdom unit tests only, with css.postcss.plugins=[]; PostCSS plugin processing, real browser layout, accessibility, visual, Storybook, publication and remote CI are not established. Deferred-content uses a mocked IntersectionObserver; style-class uses offsetParent stubs and synthetic animationend. Terminal emitted React act(...) warnings."
+}

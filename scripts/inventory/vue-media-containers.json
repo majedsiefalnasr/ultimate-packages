@@ -1,0 +1,1221 @@
+{
+  "version": 1,
+  "scope": "vue-media-containers",
+  "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+  "packages": [
+    {
+      "path": "packages/vue",
+      "roots": [
+        "packages/vue/src/carousel",
+        "packages/vue/src/galleria",
+        "packages/vue/src/image",
+        "packages/vue/src/image-compare",
+        "packages/vue/src/card",
+        "packages/vue/src/panel",
+        "packages/vue/src/fieldset",
+        "packages/vue/src/splitter",
+        "packages/vue/src/divider",
+        "packages/vue/src/scroll-panel"
+      ],
+      "entries": [
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/carousel/index.ts"
+        },
+        {
+          "subpath": "./carousel",
+          "source": "packages/vue/src/carousel/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/galleria/index.ts"
+        },
+        {
+          "subpath": "./galleria",
+          "source": "packages/vue/src/galleria/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/image/index.ts"
+        },
+        {
+          "subpath": "./image",
+          "source": "packages/vue/src/image/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/image-compare/index.ts"
+        },
+        {
+          "subpath": "./image-compare",
+          "source": "packages/vue/src/image-compare/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/card/index.ts"
+        },
+        {
+          "subpath": "./card",
+          "source": "packages/vue/src/card/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/panel/index.ts"
+        },
+        {
+          "subpath": "./panel",
+          "source": "packages/vue/src/panel/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/fieldset/index.ts"
+        },
+        {
+          "subpath": "./fieldset",
+          "source": "packages/vue/src/fieldset/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/splitter/index.ts"
+        },
+        {
+          "subpath": "./splitter",
+          "source": "packages/vue/src/splitter/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/divider/index.ts"
+        },
+        {
+          "subpath": "./divider",
+          "source": "packages/vue/src/divider/index.ts"
+        },
+        {
+          "subpath": ".",
+          "source": "packages/vue/src/scroll-panel/index.ts"
+        },
+        {
+          "subpath": "./scroll-panel",
+          "source": "packages/vue/src/scroll-panel/index.ts"
+        }
+      ]
+    }
+  ],
+  "dispositions": [
+    {
+      "path": "packages/vue/src/carousel/carousel.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/carousel/carousel.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/galleria/galleria.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/galleria/galleria.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/image/image.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/image/image.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/image-compare/image-compare.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/image-compare/image-compare.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/card/card.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/card/card.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/panel/panel.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/panel/panel.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/fieldset/fieldset.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/fieldset/fieldset.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/splitter/splitter.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/splitter/splitter.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/divider/divider.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/divider/divider.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/scroll-panel/scroll-panel.spec.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    },
+    {
+      "path": "packages/vue/src/scroll-panel/scroll-panel.stories.ts",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence alone is not executed passing evidence."
+    }
+  ],
+  "pending": [
+    {
+      "id": "package.ultimate.vue-core.base",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); this source relationship does not assert external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.styling",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); this source relationship does not assert external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.icons",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); this source relationship does not assert external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.overlay",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); this source relationship does not assert external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.focus-trap",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); this source relationship does not assert external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue-core.escape",
+      "batch": "ticket-150",
+      "reason": "Detailed inventory remains owned by [#150](https://github.com/majedsiefalnasr/ultimate-packages/issues/150). Reconciled identity: [package index](../packages/packages.md); this source relationship does not assert external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.themes.presets",
+      "batch": "ticket-151",
+      "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); this source relationship does not assert external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-utils.escape",
+      "batch": "ticket-144",
+      "reason": "Detailed inventory remains owned by [#144](https://github.com/majedsiefalnasr/ultimate-packages/issues/144). Reconciled identity: [package index](../packages/packages.md); this source relationship does not assert external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.vue.button",
+      "batch": "ticket-109",
+      "reason": "Detailed inventory remains owned by [#109](https://github.com/majedsiefalnasr/ultimate-packages/issues/109). Reconciled identity: [package index](../packages/packages.md); this source relationship does not assert external-ticket completion."
+    }
+  ],
+  "ownership": {
+    "ticket": 139,
+    "path": "scripts/inventory/package-coverage.json"
+  },
+  "aliases": [
+    {
+      "id": "package.ultimate.vue.carousel",
+      "record": "vue.carousel"
+    },
+    {
+      "id": "package.ultimate.vue.galleria",
+      "record": "vue.galleria"
+    },
+    {
+      "id": "package.ultimate.vue.image",
+      "record": "vue.image"
+    },
+    {
+      "id": "package.ultimate.vue.image-compare",
+      "record": "vue.image-compare"
+    },
+    {
+      "id": "package.ultimate.vue.card",
+      "record": "vue.card"
+    },
+    {
+      "id": "package.ultimate.vue.panel",
+      "record": "vue.panel"
+    },
+    {
+      "id": "package.ultimate.vue.fieldset",
+      "record": "vue.fieldset"
+    },
+    {
+      "id": "package.ultimate.vue.splitter",
+      "record": "vue.splitter"
+    },
+    {
+      "id": "package.ultimate.vue.divider",
+      "record": "vue.divider"
+    },
+    {
+      "id": "package.ultimate.vue.scroll-panel",
+      "record": "vue.scroll-panel"
+    }
+  ],
+  "records": [
+    {
+      "id": "vue.carousel",
+      "name": "Vue UCarousel",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Paged media collection with item slots, navigators, indicators and optional autoplay.",
+      "surface": "UCarousel and createBaseCarousel are public; source-only carouselStyleModule. Props value (readonly array, default []), page (0), numVisible (1), numScroll (1), circular (false), showIndicators and showNavigators (true), autoplayInterval (0), orientation (horizontal). Emits update:page(index) and page-change({page:index}); item slot receives {data,index}. Page prop is watched. navBackward()/navForward() stop autoplay; indicator navigation does not. Autoplay wraps at the last page regardless of circular. The translate3d item window uses region/group roles and aria-hidden. Source-only CarouselRootParams {vertical?:boolean} and CarouselIndicatorParams {active?:boolean} are style parameter interfaces. The SFC has inheritAttrs:false and extends its family base factory, which extends createBaseComponent from @ultimate/vue-core. Both the component and base factory are public at the package root and family subpath; declared dist paths do not establish publication. The local style module exports css/classes from its source file but is not barrel-exported. No component-metadata record or @ultimate/uix-styles entry exists for this family at this revision. Aura preset registration is a source relationship, not rendered appearance evidence. Prime references are neutral provenance context.",
+      "files": [
+        "packages/vue/src/carousel/BaseCarousel.ts",
+        "packages/vue/src/carousel/Carousel.vue",
+        "packages/vue/src/carousel/carousel-style.ts",
+        "packages/vue/src/carousel/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UCarousel",
+        "@ultimate/vue#createBaseCarousel",
+        "@ultimate/vue/carousel#UCarousel",
+        "@ultimate/vue/carousel#createBaseCarousel"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/carousel/Carousel.vue",
+          "contains": "name: \"UCarousel\""
+        },
+        {
+          "path": "packages/vue/src/carousel/BaseCarousel.ts",
+          "contains": "createBaseCarousel"
+        },
+        {
+          "path": "packages/vue/src/carousel/carousel-style.ts",
+          "contains": "export const carouselStyleModule"
+        },
+        {
+          "path": "packages/vue/src/carousel/index.ts",
+          "contains": "export { createBaseCarousel } from \"./BaseCarousel\";"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./carousel\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./carousel\": {"
+        },
+        {
+          "path": "packages/vue/tsup.config.ts",
+          "contains": "\"carousel/index\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "carousel,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/src/carousel/Carousel.vue",
+          "contains": "navBackward() {"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The SFC, base factory and local style module exist in source; implementation evidence alone is not a passing behavior check."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped Vue product specifications passed: 10 files and 79 tests.",
+          "run": "docs/inventory/vue-media-containers/product-run.json",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/carousel/ src/galleria/ src/image/ src/image-compare/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 10 passed (10); Tests 79 passed (79): galleria 21, carousel 9, image 8, splitter 7, scroll-panel 7, fieldset 7, panel 7, card 5, image-compare 4, divider 4.",
+          "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence. No warnings were observed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured conditional non-docs CI Test step runs root pnpm run test, which invokes the Vue test script; this describes workflow configuration, not a successful run or branch protection. The scoped inventory Node tests are not included in test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); earlier steps can prevent execution. No remote CI run observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.galleria",
+      "name": "Vue UGalleria",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Media gallery with thumbnails, item navigation, autoplay and optional fullscreen overlay.",
+      "surface": "UGalleria and createBaseGalleria are public; source-only galleriaStyleModule. Props value ([]), activeIndex (0), showItemNavigators and showThumbnails (true), circular (false), autoplayInterval (0), fullScreen and fullScreenActive (false). Emits update:activeIndex and update:fullScreenActive. Internal UGalleriaContent (GalleriaContent.vue, not barrel-exported) owns props value, activeIndex, activeItem, showItemNavigators, showThumbnails, isForwardDisabled, isBackwardDisabled and cx; emits navForward, navBackward, goTo and escape. Forwarded item and thumbnail slots receive {item}; thumbnails fall back to rendering the item slot with the same item. The internal component handles Left/Right/Home/End/Escape except editable descendants, with Enter/Space on thumbnails. openFullScreen() and closeFullScreen() control the portal dialog; focusTrapDirective and TimesIcon come from @ultimate/vue-core. fullScreenActive is watched; activeIndex is copied initially without a prop watcher. Autoplay starts on mount and stops on previous/next navigation and unmount; thumbnail and Home/End goTo navigation leave it running. Autoplay wraps regardless of circular and has no interval prop watcher. The local mask style uses z-index 1100. The SFC has inheritAttrs:false and extends its family base factory, which extends createBaseComponent from @ultimate/vue-core. Both the component and base factory are public at the package root and family subpath; declared dist paths do not establish publication. The local style module exports css/classes from its source file but is not barrel-exported. No component-metadata record or @ultimate/uix-styles entry exists for this family at this revision. Aura preset registration is a source relationship, not rendered appearance evidence. Prime references are neutral provenance context.",
+      "files": [
+        "packages/vue/src/galleria/BaseGalleria.ts",
+        "packages/vue/src/galleria/Galleria.vue",
+        "packages/vue/src/galleria/GalleriaContent.vue",
+        "packages/vue/src/galleria/galleria-style.ts",
+        "packages/vue/src/galleria/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UGalleria",
+        "@ultimate/vue#createBaseGalleria",
+        "@ultimate/vue/galleria#UGalleria",
+        "@ultimate/vue/galleria#createBaseGalleria"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/galleria/Galleria.vue",
+          "contains": "name: \"UGalleria\""
+        },
+        {
+          "path": "packages/vue/src/galleria/BaseGalleria.ts",
+          "contains": "createBaseGalleria"
+        },
+        {
+          "path": "packages/vue/src/galleria/galleria-style.ts",
+          "contains": "export const galleriaStyleModule"
+        },
+        {
+          "path": "packages/vue/src/galleria/index.ts",
+          "contains": "export { createBaseGalleria } from \"./BaseGalleria\";"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./galleria\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./galleria\": {"
+        },
+        {
+          "path": "packages/vue/tsup.config.ts",
+          "contains": "\"galleria/index\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "galleria,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/src/galleria/GalleriaContent.vue",
+          "contains": "<slot name=\"thumbnail\" :item=\"item\">"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.vue-core.icons",
+        "package.ultimate.vue-core.overlay",
+        "package.ultimate.vue-core.focus-trap"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The SFC, base factory and local style module exist in source; implementation evidence alone is not a passing behavior check."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped Vue product specifications passed: 10 files and 79 tests.",
+          "run": "docs/inventory/vue-media-containers/product-run.json",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/carousel/ src/galleria/ src/image/ src/image-compare/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 10 passed (10); Tests 79 passed (79): galleria 21, carousel 9, image 8, splitter 7, scroll-panel 7, fieldset 7, panel 7, card 5, image-compare 4, divider 4.",
+          "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence. No warnings were observed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured conditional non-docs CI Test step runs root pnpm run test, which invokes the Vue test script; this describes workflow configuration, not a successful run or branch protection. The scoped inventory Node tests are not included in test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); earlier steps can prevent execution. No remote CI run observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.image",
+      "name": "Vue UImage",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Image thumbnail with optional preview overlay, rotation and zoom controls.",
+      "surface": "UImage and createBaseImage are public; source-only imageStyleModule. Props src, alt, width and height (nullable strings), preview (false). Emits show, hide and imageError; declares no slots. Preview uses a portal dialog with focusTrapDirective, TimesIcon, createGlobalEscapeKeyMixin and createDisplayOrderMixin from @ultimate/vue-core plus ESCAPE_PRIORITIES from @ultimate/uix-utils/escape. Mask click and Escape close it; opening focuses the close button. Rotate controls change by 90 degrees; zoom changes by 0.1 with guards at 0.5 and 1.5. Closing resets rotation and scale. The thumbnail binds alt; the preview image does not. The local mask style uses z-index 1100. The SFC has inheritAttrs:false and extends its family base factory, which extends createBaseComponent from @ultimate/vue-core. Both the component and base factory are public at the package root and family subpath; declared dist paths do not establish publication. The local style module exports css/classes from its source file but is not barrel-exported. No component-metadata record or @ultimate/uix-styles entry exists for this family at this revision. Aura preset registration is a source relationship, not rendered appearance evidence. Prime references are neutral provenance context.",
+      "files": [
+        "packages/vue/src/image/BaseImage.ts",
+        "packages/vue/src/image/Image.vue",
+        "packages/vue/src/image/image-style.ts",
+        "packages/vue/src/image/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UImage",
+        "@ultimate/vue#createBaseImage",
+        "@ultimate/vue/image#UImage",
+        "@ultimate/vue/image#createBaseImage"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/image/Image.vue",
+          "contains": "name: \"UImage\""
+        },
+        {
+          "path": "packages/vue/src/image/BaseImage.ts",
+          "contains": "createBaseImage"
+        },
+        {
+          "path": "packages/vue/src/image/image-style.ts",
+          "contains": "export const imageStyleModule"
+        },
+        {
+          "path": "packages/vue/src/image/index.ts",
+          "contains": "export { createBaseImage } from \"./BaseImage\";"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./image\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./image\": {"
+        },
+        {
+          "path": "packages/vue/tsup.config.ts",
+          "contains": "\"image/index\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "image,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/src/image/Image.vue",
+          "contains": "createDisplayOrderMixin,"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.vue-core.icons",
+        "package.ultimate.vue-core.overlay",
+        "package.ultimate.vue-core.focus-trap",
+        "package.ultimate.vue-core.escape",
+        "package.ultimate.uix-utils.escape"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The SFC, base factory and local style module exist in source; implementation evidence alone is not a passing behavior check."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped Vue product specifications passed: 10 files and 79 tests.",
+          "run": "docs/inventory/vue-media-containers/product-run.json",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/carousel/ src/galleria/ src/image/ src/image-compare/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 10 passed (10); Tests 79 passed (79): galleria 21, carousel 9, image 8, splitter 7, scroll-panel 7, fieldset 7, panel 7, card 5, image-compare 4, divider 4.",
+          "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence. No warnings were observed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured conditional non-docs CI Test step runs root pnpm run test, which invokes the Vue test script; this describes workflow configuration, not a successful run or branch protection. The scoped inventory Node tests are not included in test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); earlier steps can prevent execution. No remote CI run observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.image-compare",
+      "name": "Vue UImageCompare",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Two slotted images compared with a range-controlled clipping boundary.",
+      "surface": "UImageCompare and createBaseImageCompare are public; source-only imageCompareStyleModule. Props tabindex (0), ariaLabelledby and ariaLabel (null). Slots left and right; no own emits or model binding. A range input from 0 to 100 starts at 50. onSlide writes right.style.clipPath directly with a left-to-right polygon. The local stylesheet starts from imagecompare.scope.x (fallback 50%) and includes an RTL selector; user input applies an inline clip path. The SFC has inheritAttrs:false and extends its family base factory, which extends createBaseComponent from @ultimate/vue-core. Both the component and base factory are public at the package root and family subpath; declared dist paths do not establish publication. The local style module exports css/classes from its source file but is not barrel-exported. No component-metadata record or @ultimate/uix-styles entry exists for this family at this revision. Aura preset registration is a source relationship, not rendered appearance evidence. Prime references are neutral provenance context.",
+      "files": [
+        "packages/vue/src/image-compare/BaseImageCompare.ts",
+        "packages/vue/src/image-compare/ImageCompare.vue",
+        "packages/vue/src/image-compare/image-compare-style.ts",
+        "packages/vue/src/image-compare/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UImageCompare",
+        "@ultimate/vue#createBaseImageCompare",
+        "@ultimate/vue/image-compare#UImageCompare",
+        "@ultimate/vue/image-compare#createBaseImageCompare"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/image-compare/ImageCompare.vue",
+          "contains": "name: \"UImageCompare\""
+        },
+        {
+          "path": "packages/vue/src/image-compare/BaseImageCompare.ts",
+          "contains": "createBaseImageCompare"
+        },
+        {
+          "path": "packages/vue/src/image-compare/image-compare-style.ts",
+          "contains": "export const imageCompareStyleModule"
+        },
+        {
+          "path": "packages/vue/src/image-compare/index.ts",
+          "contains": "export { createBaseImageCompare } from \"./BaseImageCompare\";"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./image-compare\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./image-compare\": {"
+        },
+        {
+          "path": "packages/vue/tsup.config.ts",
+          "contains": "\"image-compare/index\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "imagecompare: imageCompare,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/src/image-compare/ImageCompare.vue",
+          "contains": "this.$refs.right.style.clipPath"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The SFC, base factory and local style module exist in source; implementation evidence alone is not a passing behavior check."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped Vue product specifications passed: 10 files and 79 tests.",
+          "run": "docs/inventory/vue-media-containers/product-run.json",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/carousel/ src/galleria/ src/image/ src/image-compare/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 10 passed (10); Tests 79 passed (79): galleria 21, carousel 9, image 8, splitter 7, scroll-panel 7, fieldset 7, panel 7, card 5, image-compare 4, divider 4.",
+          "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence. No warnings were observed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured conditional non-docs CI Test step runs root pnpm run test, which invokes the Vue test script; this describes workflow configuration, not a successful run or branch protection. The scoped inventory Node tests are not included in test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); earlier steps can prevent execution. No remote CI run observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.card",
+      "name": "Vue UCard",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Card structure with named header, caption, content and footer slots.",
+      "surface": "UCard and createBaseCard are public; source-only cardStyleModule. No own props or emits. Named slots header, title, subtitle, content and footer; no default slot. Caption is conditional on title/subtitle; body and content wrappers are always rendered. The SFC has inheritAttrs:false and extends its family base factory, which extends createBaseComponent from @ultimate/vue-core. Both the component and base factory are public at the package root and family subpath; declared dist paths do not establish publication. The local style module exports css/classes from its source file but is not barrel-exported. No component-metadata record or @ultimate/uix-styles entry exists for this family at this revision. Aura preset registration is a source relationship, not rendered appearance evidence. Prime references are neutral provenance context.",
+      "files": [
+        "packages/vue/src/card/BaseCard.ts",
+        "packages/vue/src/card/Card.vue",
+        "packages/vue/src/card/card-style.ts",
+        "packages/vue/src/card/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UCard",
+        "@ultimate/vue#createBaseCard",
+        "@ultimate/vue/card#UCard",
+        "@ultimate/vue/card#createBaseCard"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/card/Card.vue",
+          "contains": "name: \"UCard\""
+        },
+        {
+          "path": "packages/vue/src/card/BaseCard.ts",
+          "contains": "createBaseCard"
+        },
+        {
+          "path": "packages/vue/src/card/card-style.ts",
+          "contains": "export const cardStyleModule"
+        },
+        {
+          "path": "packages/vue/src/card/index.ts",
+          "contains": "export { createBaseCard } from \"./BaseCard\";"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./card\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./card\": {"
+        },
+        {
+          "path": "packages/vue/tsup.config.ts",
+          "contains": "\"card/index\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "card,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/src/card/Card.vue",
+          "contains": "<slot name=\"subtitle\" />"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The SFC, base factory and local style module exist in source; implementation evidence alone is not a passing behavior check."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped Vue product specifications passed: 10 files and 79 tests.",
+          "run": "docs/inventory/vue-media-containers/product-run.json",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/carousel/ src/galleria/ src/image/ src/image-compare/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 10 passed (10); Tests 79 passed (79): galleria 21, carousel 9, image 8, splitter 7, scroll-panel 7, fieldset 7, panel 7, card 5, image-compare 4, divider 4.",
+          "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence. No warnings were observed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured conditional non-docs CI Test step runs root pnpm run test, which invokes the Vue test script; this describes workflow configuration, not a successful run or branch protection. The scoped inventory Node tests are not included in test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); earlier steps can prevent execution. No remote CI run observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.panel",
+      "name": "Vue UPanel",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Header and content container with optional collapse controls and footer.",
+      "surface": "UPanel and createBasePanel are public; source-only panelStyleModule. Props header (null), toggleable (false), collapsed (false), showHeader (true). Slots header, default and footer. Emits before-toggle with {originalEvent,collapsed:old}, update:collapsed with the new boolean, and after-toggle with {originalEvent,collapsed:new}. The collapsed prop is watched; content renders when !toggleable || !d_collapsed. Composes UButton from ../button with pi pi-plus/minus icon strings (owned by #109). Generated headerId/contentId connect content aria-labelledby to the string header span; a header slot does not receive that span id. The SFC has inheritAttrs:false and extends its family base factory, which extends createBaseComponent from @ultimate/vue-core. Both the component and base factory are public at the package root and family subpath; declared dist paths do not establish publication. The local style module exports css/classes from its source file but is not barrel-exported. No component-metadata record or @ultimate/uix-styles entry exists for this family at this revision. Aura preset registration is a source relationship, not rendered appearance evidence. Prime references are neutral provenance context.",
+      "files": [
+        "packages/vue/src/panel/BasePanel.ts",
+        "packages/vue/src/panel/Panel.vue",
+        "packages/vue/src/panel/index.ts",
+        "packages/vue/src/panel/panel-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UPanel",
+        "@ultimate/vue#createBasePanel",
+        "@ultimate/vue/panel#UPanel",
+        "@ultimate/vue/panel#createBasePanel"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/panel/Panel.vue",
+          "contains": "name: \"UPanel\""
+        },
+        {
+          "path": "packages/vue/src/panel/BasePanel.ts",
+          "contains": "createBasePanel"
+        },
+        {
+          "path": "packages/vue/src/panel/panel-style.ts",
+          "contains": "export const panelStyleModule"
+        },
+        {
+          "path": "packages/vue/src/panel/index.ts",
+          "contains": "export { createBasePanel } from \"./BasePanel\";"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./panel\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./panel\": {"
+        },
+        {
+          "path": "packages/vue/tsup.config.ts",
+          "contains": "\"panel/index\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "panel,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/src/panel/Panel.vue",
+          "contains": "emits: [\"update:collapsed\", \"before-toggle\", \"after-toggle\"],"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.vue.button"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The SFC, base factory and local style module exist in source; implementation evidence alone is not a passing behavior check."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped Vue product specifications passed: 10 files and 79 tests.",
+          "run": "docs/inventory/vue-media-containers/product-run.json",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/carousel/ src/galleria/ src/image/ src/image-compare/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 10 passed (10); Tests 79 passed (79): galleria 21, carousel 9, image 8, splitter 7, scroll-panel 7, fieldset 7, panel 7, card 5, image-compare 4, divider 4.",
+          "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence. No warnings were observed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured conditional non-docs CI Test step runs root pnpm run test, which invokes the Vue test script; this describes workflow configuration, not a successful run or branch protection. The scoped inventory Node tests are not included in test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); earlier steps can prevent execution. No remote CI run observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.fieldset",
+      "name": "Vue UFieldset",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Native fieldset and legend with optional collapsible content.",
+      "surface": "UFieldset and createBaseFieldset are public; source-only fieldsetStyleModule. Props legend (null), toggleable (false), collapsed (false). Native fieldset/legend with default slot, no legend override slot. Emits update:collapsed(boolean) and toggle({originalEvent,value:newCollapsed}). The collapsed prop is watched. The toggle button uses plus/minus text and Enter/NumpadEnter/Space handling, aria-controls and aria-expanded. Content renders when !toggleable || !d_collapsed. The content region aria-labelledby references headerId, which is assigned only to the toggle button. The SFC has inheritAttrs:false and extends its family base factory, which extends createBaseComponent from @ultimate/vue-core. Both the component and base factory are public at the package root and family subpath; declared dist paths do not establish publication. The local style module exports css/classes from its source file but is not barrel-exported. No component-metadata record or @ultimate/uix-styles entry exists for this family at this revision. Aura preset registration is a source relationship, not rendered appearance evidence. Prime references are neutral provenance context.",
+      "files": [
+        "packages/vue/src/fieldset/BaseFieldset.ts",
+        "packages/vue/src/fieldset/Fieldset.vue",
+        "packages/vue/src/fieldset/fieldset-style.ts",
+        "packages/vue/src/fieldset/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UFieldset",
+        "@ultimate/vue#createBaseFieldset",
+        "@ultimate/vue/fieldset#UFieldset",
+        "@ultimate/vue/fieldset#createBaseFieldset"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/fieldset/Fieldset.vue",
+          "contains": "name: \"UFieldset\""
+        },
+        {
+          "path": "packages/vue/src/fieldset/BaseFieldset.ts",
+          "contains": "createBaseFieldset"
+        },
+        {
+          "path": "packages/vue/src/fieldset/fieldset-style.ts",
+          "contains": "export const fieldsetStyleModule"
+        },
+        {
+          "path": "packages/vue/src/fieldset/index.ts",
+          "contains": "export { createBaseFieldset } from \"./BaseFieldset\";"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./fieldset\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./fieldset\": {"
+        },
+        {
+          "path": "packages/vue/tsup.config.ts",
+          "contains": "\"fieldset/index\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "fieldset,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/src/fieldset/Fieldset.vue",
+          "contains": "\"update:collapsed\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The SFC, base factory and local style module exist in source; implementation evidence alone is not a passing behavior check."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped Vue product specifications passed: 10 files and 79 tests.",
+          "run": "docs/inventory/vue-media-containers/product-run.json",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/carousel/ src/galleria/ src/image/ src/image-compare/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 10 passed (10); Tests 79 passed (79): galleria 21, carousel 9, image 8, splitter 7, scroll-panel 7, fieldset 7, panel 7, card 5, image-compare 4, divider 4.",
+          "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence. No warnings were observed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured conditional non-docs CI Test step runs root pnpm run test, which invokes the Vue test script; this describes workflow configuration, not a successful run or branch protection. The scoped inventory Node tests are not included in test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); earlier steps can prevent execution. No remote CI run observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.splitter",
+      "name": "Vue USplitter",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Config-driven resizable panels with mouse, touch and keyboard gutters.",
+      "surface": "USplitter and createBaseSplitter are public; source-only splitterStyleModule. Props panels (readonly array, default []), layout (horizontal), gutterSize (4), step (5). Emits resizestart and resizeend with {originalEvent,sizes:[...]}. Default scoped slot receives {item,index}. Panels are configuration objects with minSize; there is no SplitterPanel composition component. Panel sizes initialize equally without a panels watcher; flex basis subtracts total gutter size. Focusable gutter handles have separator role, orientation and value ARIA. Mouse/touch drag uses document listeners and minSize clamping. Horizontal arrows decrement/increment for Left/Right; vertical Down decrements and Up increments. Keyboard resizing starts immediately and repeats with setInterval at 40ms; keyup clears the timer and emits resizeend with a synthetic keyup event. Unmount cleans listeners and timer. The SFC has inheritAttrs:false and extends its family base factory, which extends createBaseComponent from @ultimate/vue-core. Both the component and base factory are public at the package root and family subpath; declared dist paths do not establish publication. The local style module exports css/classes from its source file but is not barrel-exported. No component-metadata record or @ultimate/uix-styles entry exists for this family at this revision. Aura preset registration is a source relationship, not rendered appearance evidence. Prime references are neutral provenance context.",
+      "files": [
+        "packages/vue/src/splitter/BaseSplitter.ts",
+        "packages/vue/src/splitter/Splitter.vue",
+        "packages/vue/src/splitter/index.ts",
+        "packages/vue/src/splitter/splitter-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#USplitter",
+        "@ultimate/vue#createBaseSplitter",
+        "@ultimate/vue/splitter#USplitter",
+        "@ultimate/vue/splitter#createBaseSplitter"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/splitter/Splitter.vue",
+          "contains": "name: \"USplitter\""
+        },
+        {
+          "path": "packages/vue/src/splitter/BaseSplitter.ts",
+          "contains": "createBaseSplitter"
+        },
+        {
+          "path": "packages/vue/src/splitter/splitter-style.ts",
+          "contains": "export const splitterStyleModule"
+        },
+        {
+          "path": "packages/vue/src/splitter/index.ts",
+          "contains": "export { createBaseSplitter } from \"./BaseSplitter\";"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./splitter\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./splitter\": {"
+        },
+        {
+          "path": "packages/vue/tsup.config.ts",
+          "contains": "\"splitter/index\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "splitter,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/src/splitter/Splitter.vue",
+          "contains": "this.repeatTimer = setInterval(repeat, 40);"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The SFC, base factory and local style module exist in source; implementation evidence alone is not a passing behavior check."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped Vue product specifications passed: 10 files and 79 tests.",
+          "run": "docs/inventory/vue-media-containers/product-run.json",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/carousel/ src/galleria/ src/image/ src/image-compare/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 10 passed (10); Tests 79 passed (79): galleria 21, carousel 9, image 8, splitter 7, scroll-panel 7, fieldset 7, panel 7, card 5, image-compare 4, divider 4.",
+          "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence. No warnings were observed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured conditional non-docs CI Test step runs root pnpm run test, which invokes the Vue test script; this describes workflow configuration, not a successful run or branch protection. The scoped inventory Node tests are not included in test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); earlier steps can prevent execution. No remote CI run observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.divider",
+      "name": "Vue UDivider",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Horizontal or vertical separator with optional centered slot content.",
+      "surface": "UDivider and createBaseDivider are public; source-only dividerStyleModule. Prop layout (horizontal). Optional default slot; no own emits, type or align prop. Separator role and aria-orientation follow layout. Local CSS draws a solid line and centers slot content. The SFC has inheritAttrs:false and extends its family base factory, which extends createBaseComponent from @ultimate/vue-core. Both the component and base factory are public at the package root and family subpath; declared dist paths do not establish publication. The local style module exports css/classes from its source file but is not barrel-exported. No component-metadata record or @ultimate/uix-styles entry exists for this family at this revision. Aura preset registration is a source relationship, not rendered appearance evidence. Prime references are neutral provenance context.",
+      "files": [
+        "packages/vue/src/divider/BaseDivider.ts",
+        "packages/vue/src/divider/Divider.vue",
+        "packages/vue/src/divider/divider-style.ts",
+        "packages/vue/src/divider/index.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UDivider",
+        "@ultimate/vue#createBaseDivider",
+        "@ultimate/vue/divider#UDivider",
+        "@ultimate/vue/divider#createBaseDivider"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/divider/Divider.vue",
+          "contains": "name: \"UDivider\""
+        },
+        {
+          "path": "packages/vue/src/divider/BaseDivider.ts",
+          "contains": "createBaseDivider"
+        },
+        {
+          "path": "packages/vue/src/divider/divider-style.ts",
+          "contains": "export const dividerStyleModule"
+        },
+        {
+          "path": "packages/vue/src/divider/index.ts",
+          "contains": "export { createBaseDivider } from \"./BaseDivider\";"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./divider\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./divider\": {"
+        },
+        {
+          "path": "packages/vue/tsup.config.ts",
+          "contains": "\"divider/index\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "divider,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/src/divider/Divider.vue",
+          "contains": ":aria-orientation=\"layout\""
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The SFC, base factory and local style module exist in source; implementation evidence alone is not a passing behavior check."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped Vue product specifications passed: 10 files and 79 tests.",
+          "run": "docs/inventory/vue-media-containers/product-run.json",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/carousel/ src/galleria/ src/image/ src/image-compare/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 10 passed (10); Tests 79 passed (79): galleria 21, carousel 9, image 8, splitter 7, scroll-panel 7, fieldset 7, panel 7, card 5, image-compare 4, divider 4.",
+          "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence. No warnings were observed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured conditional non-docs CI Test step runs root pnpm run test, which invokes the Vue test script; this describes workflow configuration, not a successful run or branch protection. The scoped inventory Node tests are not included in test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); earlier steps can prevent execution. No remote CI run observed."
+        }
+      ]
+    },
+    {
+      "id": "vue.scroll-panel",
+      "name": "Vue UScrollPanel",
+      "framework": "vue",
+      "availability": "public",
+      "purpose": "Scrollable content container with custom scrollbar thumbs and keyboard controls.",
+      "surface": "UScrollPanel and createBaseScrollPanel are public; source-only scrollPanelStyleModule. Prop step (5); default slot, no own emits. Native content scrolling drives horizontal and vertical custom scrollbar thumbs with aria-valuenow and aria-controls. contentId is generated for those controls but is not bound as the content div id. lastScrollLeft/lastScrollTop drive reactive values; requestAnimationFrame positions thumbs with a minimum size of 10%. Mouse drag uses document listeners. Keyboard setTimer schedules one setTimeout at 40ms rather than a repeating interval. scrollTop(value) clamps vertical position and refresh() calls moveBar. Unmount removes window/document listeners and cancels the tracked frame/timer. Local CSS includes scrollpanel.barfocus.ring.width and scrollpanel.barfocus.ring.offset tokens. The SFC has inheritAttrs:false and extends its family base factory, which extends createBaseComponent from @ultimate/vue-core. Both the component and base factory are public at the package root and family subpath; declared dist paths do not establish publication. The local style module exports css/classes from its source file but is not barrel-exported. No component-metadata record or @ultimate/uix-styles entry exists for this family at this revision. Aura preset registration is a source relationship, not rendered appearance evidence. Prime references are neutral provenance context.",
+      "files": [
+        "packages/vue/src/scroll-panel/BaseScrollPanel.ts",
+        "packages/vue/src/scroll-panel/ScrollPanel.vue",
+        "packages/vue/src/scroll-panel/index.ts",
+        "packages/vue/src/scroll-panel/scroll-panel-style.ts"
+      ],
+      "exports": [
+        "@ultimate/vue#UScrollPanel",
+        "@ultimate/vue#createBaseScrollPanel",
+        "@ultimate/vue/scroll-panel#UScrollPanel",
+        "@ultimate/vue/scroll-panel#createBaseScrollPanel"
+      ],
+      "evidence": [
+        {
+          "path": "packages/vue/src/scroll-panel/ScrollPanel.vue",
+          "contains": "name: \"UScrollPanel\""
+        },
+        {
+          "path": "packages/vue/src/scroll-panel/BaseScrollPanel.ts",
+          "contains": "createBaseScrollPanel"
+        },
+        {
+          "path": "packages/vue/src/scroll-panel/scroll-panel-style.ts",
+          "contains": "export const scrollPanelStyleModule"
+        },
+        {
+          "path": "packages/vue/src/scroll-panel/index.ts",
+          "contains": "export { createBaseScrollPanel } from \"./BaseScrollPanel\";"
+        },
+        {
+          "path": "packages/vue/src/index.ts",
+          "contains": "export * from \"./scroll-panel\";"
+        },
+        {
+          "path": "packages/vue/package.json",
+          "contains": "\"./scroll-panel\": {"
+        },
+        {
+          "path": "packages/vue/tsup.config.ts",
+          "contains": "\"scroll-panel/index\""
+        },
+        {
+          "path": "packages/themes/src/presets/aura/index.ts",
+          "contains": "scrollpanel: scrollPanel,"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "contains": "run: pnpm run test"
+        },
+        {
+          "path": "package.json",
+          "contains": "\"test:scripts\": \"node --test scripts/provenance/*.test.mjs\""
+        },
+        {
+          "path": "packages/vue/src/scroll-panel/ScrollPanel.vue",
+          "contains": "this.timer = setTimeout(() => this.repeat(bar, step), 40);"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.vue-core.base",
+        "package.ultimate.vue-core.styling",
+        "package.ultimate.themes.presets"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "The SFC, base factory and local style module exist in source; implementation evidence alone is not a passing behavior check."
+        },
+        {
+          "state": "verified",
+          "behavior": "Existing scoped Vue product specifications passed: 10 files and 79 tests.",
+          "run": "docs/inventory/vue-media-containers/product-run.json",
+          "command": "NODE_OPTIONS=--max-old-space-size=1024 pnpm --filter @ultimate/vue exec vitest run src/carousel/ src/galleria/ src/image/ src/image-compare/ src/card/ src/panel/ src/fieldset/ src/splitter/ src/divider/ src/scroll-panel/ --config ../../scripts/inventory/vue-disclosure-vitest.config.mjs --maxWorkers=1 --no-file-parallelism",
+          "revision": "cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6",
+          "outcome": "passed",
+          "output": "Vitest 2.1.9, Node v24.15.0: Test Files 10 passed (10); Tests 79 passed (79): galleria 21, carousel 9, image 8, splitter 7, scroll-panel 7, fieldset 7, panel 7, card 5, image-compare 4, divider 4.",
+          "limitations": "The repository config scripts/inventory/vue-disclosure-vitest.config.mjs extends the Vue package config with css.postcss.plugins=[] to bypass the host ancestor /Users/majedsiefalnasr/postcss.config.mjs requiring missing postcss-import; PostCSS processing was not exercised. Workspace dependencies were already built. Local jsdom unit tests only; not browser, accessibility, visual, Storybook, publication or remote CI evidence. No warnings were observed."
+        },
+        {
+          "state": "ci-enforced",
+          "behavior": "Configured conditional non-docs CI Test step runs root pnpm run test, which invokes the Vue test script; this describes workflow configuration, not a successful run or branch protection. The scoped inventory Node tests are not included in test:scripts.",
+          "workflow": ".github/workflows/ci.yml",
+          "limitations": "Conditional on scope != docs and !cancelled(); earlier steps can prevent execution. No remote CI run observed."
+        }
+      ]
+    }
+  ]
+}
