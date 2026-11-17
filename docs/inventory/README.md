@@ -55,6 +55,8 @@ Read the [styled runtime inventory](styled-runtime/index.md), [authored signatur
 
 Read the [shared component styles inventory](shared-component-styles/index.md), [authored signatures and interpretation](shared-component-styles/README.md), and [scoped validation](shared-component-styles/validation.md) for ticket #146. Its structured input is `scripts/inventory/shared-component-styles.json`; regenerate it with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/shared-component-styles.json --out docs/inventory/shared-component-styles`.
 
+Read the [data and motion primitives inventory](data-motion-primitives/index.md), [authored signatures and interpretation](data-motion-primitives/README.md), and [scoped validation](data-motion-primitives/validation.md) for ticket #147. Its structured input is `scripts/inventory/data-motion-primitives.json`; regenerate it with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/data-motion-primitives.json --out docs/inventory/data-motion-primitives`.
+
 ## Why this sample
 
 Button illustrates real contract differences: Angular signal inputs/output events and root-only export; React forwarded DOM ref and native props; Vue props factory plus SFC slots/dynamic root. Shared UIX button CSS is independently public. Angular and Vue import it, while React embeds separate CSS. Style adapters/render helpers belong to their component owner; Vue's exported base factory is explicitly public, not mislabeled internal. Test/story/doc files receive explicit exclusions from product accounting.
