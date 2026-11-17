@@ -67,6 +67,8 @@ Read the [theme contract and Aura inventory](theme-contract/index.md), [authored
 
 Read the [component schema inventory](component-schema/index.md), [authored signatures and interpretation](component-schema/README.md), and [scoped validation](component-schema/validation.md) for ticket #152. Its structured input is `scripts/inventory/component-schema.json`; regenerate it with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/component-schema.json --out docs/inventory/component-schema`.
 
+Read the [metadata registry inventory](metadata-registry/index.md), [authored signatures and interpretation](metadata-registry/README.md), and [scoped validation](metadata-registry/validation.md) for ticket #153. Its structured input is `scripts/inventory/metadata-registry.json`; regenerate it with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/metadata-registry.json --out docs/inventory/metadata-registry`.
+
 ## Why this sample
 
 Button illustrates real contract differences: Angular signal inputs/output events and root-only export; React forwarded DOM ref and native props; Vue props factory plus SFC slots/dynamic root. Shared UIX button CSS is independently public. Angular and Vue import it, while React embeds separate CSS. Style adapters/render helpers belong to their component owner; Vue's exported base factory is explicitly public, not mislabeled internal. Test/story/doc files receive explicit exclusions from product accounting.
