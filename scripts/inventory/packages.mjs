@@ -193,7 +193,8 @@ export function reconcilePackages({ root, input }) {
         for (const [key, source] of buildSources)
           if (key !== "index") {
             const name = key.replace(/\/index$/, "");
-            const expanded = subpath.replace("*", name);
+            // The supported pattern above is exactly "./*".
+            const expanded = `./${name}`;
             // Exact declarations take precedence even when they block public access.
             if (Object.hasOwn(publicEntries, expanded)) continue;
             addEntry(expanded, source, "manifest-pattern", target);

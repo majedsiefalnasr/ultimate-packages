@@ -26,6 +26,14 @@ Commands below were run against the reviewed revision before this documentation-
 
 Remote CI execution and the final merge outcome are available on PR #158. Local success is not a claim that remote CI passed.
 
+## CodeQL follow-up
+
+At `58477ce0`, the required remote `ci` job and Browser jobs passed, but the separate CodeQL result reported five new alerts in inventory tooling (alerts #24–#28). The owner requested fixes before integration, rather than merging with these alerts recorded as limitations.
+
+The follow-up constructs the only supported wildcard expansion (`./*`) directly, removes an identity replacement in a React source assertion, separates source tokens across HTML comments instead of concatenating them, and uses TypeScript syntax parsing for the first Vue script statement instead of a nested comment-matching regular expression. Product source is unchanged.
+
+Verification after these changes: 210 inventory tests passed; inventory ESLint and Prettier and repository typecheck passed; all 513 scoped/package/historical views and the three global views still matched byte-for-byte with zero reconciliation problems. The remote CodeQL outcome for the follow-up revision is recorded on PR #158 rather than predicted here.
+
 ## Limits retained
 
 The repository-wide lint and formatting environment limitations in [README.md](README.md) remain disclosed. Product suites were not rerun for this documentation closeout. Earlier product results apply only to the commands, revisions and limitations recorded by their scopes. The Angular root-barrel omission and other recorded product findings are not repaired here. Inventory closeout establishes a supported census, not a defect-free product.

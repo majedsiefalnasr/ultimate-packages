@@ -39,7 +39,8 @@ const src = (family) => read(`${dir(family)}/${componentFile[family]}`);
 const code = (text) =>
   text
     .replace(/\/\*[\s\S]*?\*\//g, "")
-    .replace(/<!--[\s\S]*?-->/g, "")
+    // Separate source tokens rather than joining text across HTML comments.
+    .replace(/<!--[\s\S]*?-->/g, " ")
     .replace(/^\s*\/\/.*$/gm, "");
 const csrc = (family) => code(src(family));
 const style = (family) => read(`${dir(family)}/${family}-style.ts`);
@@ -220,11 +221,18 @@ test("component shape, overlay behaviour and cleanup recorded in surfaces match 
   const dflt = (f) => csrc(f);
   // Single-file components are Options API with plain scripts.
   for (const f of families.filter((x) => x !== "tooltip")) {
-    assert.ok(
-      /<script>\s*import/.test(src(f).replace(/<!--[\s\S]*?-->/g, "")) ||
-        /<script>\s*(\/\/.*\s*)*import/.test(src(f)),
-      f
+    const text = src(f);
+    const start = text.indexOf("<script>");
+    const end = text.indexOf("</script>", start);
+    assert.ok(start >= 0 && end > start, f);
+    const script = ts.createSourceFile(
+      `${f}.js`,
+      text.slice(start + "<script>".length, end),
+      ts.ScriptTarget.Latest,
+      true,
+      ts.ScriptKind.JS
     );
+    assert.ok(ts.isImportDeclaration(script.statements[0]), f);
     assert.ok(!/<script[^>]*(setup|lang)/.test(src(f)), f);
     assert.ok(/^export default \{/m.test(src(f)), f);
   }

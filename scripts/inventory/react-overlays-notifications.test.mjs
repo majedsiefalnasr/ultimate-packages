@@ -575,11 +575,8 @@ test("props, defaults and conditions recorded from source hold", () => {
   assert.ok(/header !== undefined &&/.test(src("dialog")));
   assert.ok(/closable && showCloseIcon &&/.test(src("dialog")));
   assert.ok(
-    /closable && \(\s*<button/.test(
-      src("drawer")
-        .replace(/\n/g, " ")
-        .replace(/const closeButton = /, "const closeButton = ")
-    ) || /const closeButton = closable && \(/.test(src("drawer"))
+    /closable && \(\s*<button/.test(src("drawer")) ||
+      /const closeButton = closable && \(/.test(src("drawer"))
   );
   assert.ok(/<div className=\{cx\("footer"\)\}><\/div>/.test(src("drawer")));
 });
