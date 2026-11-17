@@ -61,6 +61,8 @@ Read the [Angular core inventory](angular-core/index.md), [authored signatures a
 
 Read the [React core inventory](react-core/index.md), [authored signatures and interpretation](react-core/README.md), and [scoped validation](react-core/validation.md) for ticket #149. Its structured input is `scripts/inventory/react-core.json`; regenerate it with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core`.
 
+Read the [Vue core inventory](vue-core/index.md), [authored signatures and interpretation](vue-core/README.md), and [scoped validation](vue-core/validation.md) for ticket #150. Its structured input is `scripts/inventory/vue-core.json`; regenerate it with `node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core`.
+
 ## Why this sample
 
 Button illustrates real contract differences: Angular signal inputs/output events and root-only export; React forwarded DOM ref and native props; Vue props factory plus SFC slots/dynamic root. Shared UIX button CSS is independently public. Angular and Vue import it, while React embeds separate CSS. Style adapters/render helpers belong to their component owner; Vue's exported base factory is explicitly public, not mislabeled internal. Test/story/doc files receive explicit exclusions from product accounting.
