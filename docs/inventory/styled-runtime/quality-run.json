@@ -14,12 +14,17 @@
     {
       "command": "node --test scripts/inventory/pilot.test.mjs",
       "outcome": "passed",
-      "output": "19 of 19 inventory tool tests passed, including new coverage for relative star re-exports and failing-closed external or namespace star re-exports."
+      "output": "19 of 19 inventory tool tests passed, including coverage that relative star re-exports are followed, default exports are not counted as named exports, and external, missing or namespace star re-exports fail closed."
     },
     {
-      "command": "pnpm exec tsc --noEmit -p packages/uix-styled",
-      "outcome": "failed",
-      "output": "Failed with TS2307 (cannot find module '@ultimate/uix-utils/object') and a dependent TS2345 in packages/uix-styled/src/utils/themeUtils.ts, because the uix-utils dist declarations were not built in this worktree. Not repaired: this documentation-only ticket changes no product source."
+      "command": "node scripts/inventory/pilot.mjs --root . --input <each scripts/inventory/*.json with records> (before and after the tool change)",
+      "outcome": "passed",
+      "output": "All 39 previously committed scoped inputs report the same zero problems and identical export counts with the extended tool; only styled-runtime.json changes, from 27 discovery problems to none."
+    },
+    {
+      "command": "pnpm --filter @ultimate/uix-utils build && pnpm --filter @ultimate/uix-styled typecheck",
+      "outcome": "passed",
+      "output": "tsc --noEmit passed for @ultimate/uix-styled after building the ignored @ultimate/uix-utils dist declarations it resolves through package exports. Without that build the check fails with TS2307 for '@ultimate/uix-utils/object'."
     },
     {
       "command": "pnpm test",

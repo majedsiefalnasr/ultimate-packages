@@ -264,6 +264,11 @@ test("relative star re-exports are followed to their named exports", (t) => {
   const result = inventory({ root, input });
   assert.deepEqual(result.problems, []);
   assert.deepEqual(result.facts.exports, ["@test/ui/button#Button"]);
+  writeFileSync(
+    join(root, "pkg/src/button.ts"),
+    "export const Button = 1;\nexport default function Hidden() {}\n"
+  );
+  assert.deepEqual(inventory({ root, input }).facts.exports, ["@test/ui/button#Button"]);
   writeFileSync(join(root, "pkg/src/index.ts"), 'export * from "./missing";');
   assert.ok(inventory({ root, input }).problems.some((p) => p.kind === "discovery"));
 });

@@ -104,7 +104,10 @@ export function inventory({ root, input }) {
             detail:
               "Star and namespace re-exports require an explicit bounded entry mapping; not silently expanded",
           });
-      } else if (statement.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)) {
+      } else if (
+        statement.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword) &&
+        !statement.modifiers.some((m) => m.kind === ts.SyntaxKind.DefaultKeyword)
+      ) {
         if (ts.isVariableStatement(statement))
           for (const d of statement.declarationList.declarations)
             exports.push(`${prefix}#${d.name.getText(source)}`);
