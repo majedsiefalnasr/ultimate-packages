@@ -10,7 +10,7 @@ The public Aura-derived preset object built with definePreset from the primitive
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). Root exports the value auraPreset only. src/presets/aura/index.ts builds it with definePreset({ primitive, semantic, components }) and registers 79 component modules under lower-case upstream-style keys (for example blockui, cascadeselect, datepicker). The base tier is attributed to themes.aura-base and the component modules to themes.aura-components; neither is a separate root entry point.
+See [authored signatures and interpretation](README.md). Root exports the value auraPreset only. src/presets/aura/index.ts builds it with definePreset({ primitive, semantic, css, components }) and registers 79 component modules under lower-case upstream-style keys (for example blockui, cascadeselect, datepicker). The top-level css string comes from src/presets/aura/css.ts (selectors for option rows and menu and table rows with one transition: none declaration; ticket #172, F4). The base tier is attributed to themes.aura-base and the component modules to themes.aura-components; neither is a separate root entry point.
 
 ## Public exports
 
@@ -19,11 +19,14 @@ See [authored signatures and interpretation](README.md). Root exports the value 
 ## Owned source and evidence
 
 packages/themes/src/presets/aura/index.ts
+packages/themes/src/presets/aura/css.ts
 
 ```text
 packages/themes/src/presets/aura/index.ts: export const auraPreset = definePreset({
 packages/themes/src/presets/aura/index.ts:   primitive,
 packages/themes/src/presets/aura/index.ts:   semantic,
+packages/themes/src/presets/aura/index.ts:   css,
+packages/themes/src/presets/aura/css.ts: export const css = `
 packages/themes/src/presets/aura/index.ts:     tooltip,
 ```
 

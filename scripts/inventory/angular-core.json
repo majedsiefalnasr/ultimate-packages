@@ -921,6 +921,10 @@
       "reason": "Supporting behavioral tests; presence alone is not passing execution."
     },
     {
+      "path": "packages/ng-core/src/basecomponent/global-style.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
       "path": "packages/ng-core/src/basecomponent/base-component.spec.ts",
       "reason": "Supporting behavioral tests; presence alone is not passing execution."
     },

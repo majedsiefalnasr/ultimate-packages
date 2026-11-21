@@ -10,6 +10,13 @@ import type StyleSheet from "./index";
  */
 const COMMON_KEY = "u-common-variables";
 
+/**
+ * Registration key for the preset's top-level `css` (Aura's `css`). Mirrors
+ * the `global-style` entry PrimeNG and PrimeVue load next to the common
+ * variables.
+ */
+const GLOBAL_STYLE_KEY = "u-global-style";
+
 /** Registration key for one component's own variable block. */
 function componentKey(componentName: string): string {
   return `${componentName}-variables`;
@@ -18,6 +25,11 @@ function componentKey(componentName: string): string {
 function commonVariablesCss(): string {
   const { primitive, semantic, global } = Theme.getCommon("", {}) ?? {};
   return `${primitive?.css ?? ""}${semantic?.css ?? ""}${global?.css ?? ""}`;
+}
+
+function globalStyleCss(): string {
+  const { style } = Theme.getCommon("", {}) ?? {};
+  return style ? Theme.transformCSS("global-style", style) : "";
 }
 
 function componentVariablesCss(componentName: string): string {
@@ -43,6 +55,10 @@ const followedSheets = new WeakMap<StyleSheet<any>, FollowedSheet>();
 function refreshSheet(sheet: StyleSheet<any>, followed: FollowedSheet): void {
   if (Theme.getTheme()) {
     sheet.update(COMMON_KEY, commonVariablesCss());
+    const globalStyle = globalStyleCss();
+    if (globalStyle || sheet.has(GLOBAL_STYLE_KEY)) {
+      sheet.update(GLOBAL_STYLE_KEY, globalStyle);
+    }
     for (const componentName of followed.variableNames) {
       sheet.update(componentKey(componentName), componentVariablesCss(componentName));
     }
@@ -91,9 +107,9 @@ function followThemeChanges(sheet: StyleSheet<any>): FollowedSheet {
  * Two tiers, matching PrimeVue's `BaseComponent._loadThemeStyles()`
  * (`packages/core/src/basecomponent/BaseComponent.vue`):
  *
- * - **common** — primitive + semantic + global variables. Global to the app,
- *   registered once under a single shared key by whichever component mounts
- *   first.
+ * - **common** — primitive + semantic + global variables, then the preset's
+ *   top-level `css` as global style. Global to the app, registered once by
+ *   whichever component mounts first.
  * - **component** — that one component's own variables, registered once per
  *   component name.
  *
@@ -116,6 +132,8 @@ export function registerThemeVariables(sheet: StyleSheet<any>, componentName: st
 
   if (!sheet.has(COMMON_KEY)) {
     sheet.add(COMMON_KEY, commonVariablesCss());
+    const globalStyle = globalStyleCss();
+    if (globalStyle) sheet.add(GLOBAL_STYLE_KEY, globalStyle);
   }
 
   const key = componentKey(componentName);

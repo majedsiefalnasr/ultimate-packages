@@ -792,6 +792,10 @@
       "reason": "Supporting behavioral tests; presence alone is not passing execution."
     },
     {
+      "path": "packages/react-core/src/styling/global-style.spec.tsx",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
       "path": "packages/react-core/src/styling/hidden-accessible.spec.tsx",
       "reason": "Supporting behavioral tests; presence alone is not passing execution."
     },
