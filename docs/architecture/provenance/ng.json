@@ -952,5 +952,11 @@
     "ultimateDestination": "packages/ng/src/toolbar/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 3). The same-named PrimeNG 21.1.9 toolbar/ entry public_api.ts re-exports primeng/types/toolbar, ./toolbar and ./style/toolbarstyle with export *; this barrel shares only the component re-export (export { UToolbar } from ./toolbar). Added in be9f35e4."
+  },
+  {
+    "originalPath": "packages/primeng/src/card/card.ts",
+    "ultimateDestination": "packages/ng/src/card/card.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG 21.1.9 card.ts: the template keeps upstream's section structure and `[pBind]=\"ptm('x')\" [class]=\"cx('x')\"` pairing per section (header, body, title, subtitle, content, footer), renamed to uBind and the u- style module. Subset: the template-override facets (headerTemplate, PrimeTemplate, BlockableUI), the styleClass and style inputs and the ptms(['host', 'root']) host binding are replaced by plain ng-content slots and header/subheader inputs. Ultimate's A0 pilot (#170) wires the sections to ptm, adds hostDirectives UBind, a setAttrs of the root section in ngAfterViewChecked, and provides U_PARENT_INSTANCE for the card. Existing file, entry added in A0 (#170) because the file now carries the passthrough wiring."
   }
 ]

@@ -6,6 +6,7 @@ import {
   registerComponentStyle,
   vueCoreStyleSheet,
 } from "../styling/vue-style-sheet";
+import { createPassThroughMixin } from "./passthrough";
 
 export type ClassValue = string | Record<string, boolean> | (string | Record<string, boolean>)[];
 
@@ -17,6 +18,7 @@ export interface StyleModule {
 export interface BaseComponentOptions {
   componentName: string;
   styleModule: StyleModule;
+  hostName?: string;
 }
 
 function resolveClassValue(
@@ -70,9 +72,10 @@ function applyScopedTheme(host: ScopedHost, componentName: string): void {
 // the result, matching verified BaseComponent.vue's own extends: mechanism
 // exactly (spec §7) — informed by, not copied from, PrimeVue's real source.
 export function createBaseComponent(options: BaseComponentOptions) {
-  const { componentName, styleModule } = options;
+  const { componentName, styleModule, hostName } = options;
 
   return defineComponent({
+    mixins: [createPassThroughMixin(componentName, hostName)],
     props: {
       // `default: undefined` keeps an absent prop `undefined` instead of
       // Vue's Boolean cast to `false`, like PrimeVue's BaseComponent.

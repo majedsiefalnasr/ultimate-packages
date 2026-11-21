@@ -49,9 +49,9 @@ package.ultimate.uix-motion.root (pending cross-batch)
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
-    "revision": "fb15ca0ee9bc50d3a84b4b19367af0dd192359ac",
+    "revision": "2b9a684df33d0e7dc1e2120eb6ca981fd2865932",
     "outcome": "passed",
-    "output": "Scoped reconciliation completed with no problems: 37 source files accounted for, 39 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+    "output": "Scoped reconciliation completed with no problems: 56 source files accounted for, 46 root export identities each attributed to one public record, cross-scope references recorded as pending.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
     "run": "docs/inventory/react-core/pilot-run.json",
     "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."

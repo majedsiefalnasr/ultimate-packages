@@ -1,3 +1,5 @@
+import { mergeProps } from "@ultimate/uix-utils/mergeprops";
+import { resolve } from "@ultimate/uix-utils/object";
 import {
   DestroyRef,
   Directive,
@@ -25,20 +27,28 @@ import {
 } from "@ultimate/uix-styled";
 import { UltimateConfig } from "../config/ultimate-config";
 import { ngCoreStyleSheetFor } from "./style-sheet";
+import { U_PARENT_INSTANCE } from "./parent-instance.token";
+import {
+  getPassThroughValue,
+  type PassThrough,
+  type PassThroughAttributes,
+  type PassThroughOptions,
+  type PassThroughParams,
+} from "./passthrough";
 
 /**
  * Ultimate-owned, scoped-down reimplementation of PrimeNG's own
- * `BaseComponent`. Covers DI wiring, the `dt`/`unstyled` input pair, a
- * `cx()` class-name-slot resolver, and `@ultimate/uix-styled`-backed style
+ * `BaseComponent`. Covers DI wiring, the `dt`/`unstyled` input pair, the
+ * `pt`/`ptOptions` input pair with `ptm`/`ptms`/`ptmo` (ADR-077), a `cx()`
+ * class-name-slot resolver, and `@ultimate/uix-styled`-backed style
  * registration on init.
  *
- * Deliberately excludes PrimeNG's passthrough (`pt`/`ptOptions`/`ptm`/
- * `ptms`/`ptmo`) system, full global-config surface, and `$parentInstance`
- * DI-token lookup — all explicitly deferred per the approved Phase 2 spec
- * (Option B architecture decision).
+ * Deliberately excludes the full global-config surface (and with it the
+ * global and default `pt` sources), `pt` lifecycle hooks and the `hostName`
+ * lookup, per ADR-056, ADR-077, ADR-079 and ADR-080.
  */
 @Directive({ standalone: true })
-export abstract class UBaseComponent {
+export abstract class UBaseComponent<PT = Record<string, unknown>> {
   protected readonly document: Document = inject(DOCUMENT);
   protected readonly platformId: object = inject(PLATFORM_ID);
   protected readonly el: ElementRef = inject(ElementRef);
@@ -48,6 +58,14 @@ export abstract class UBaseComponent {
   /** Scoped design tokens (per-instance token override). */
   dt = input<Record<string, unknown> | undefined>();
   unstyled = input<boolean | undefined>();
+  /** Attributes for the elements inside the component, by section name. */
+  pt = input<PassThrough<PT> | undefined>();
+  /** How `pt` sections are merged. */
+  ptOptions = input<PassThroughOptions | undefined>();
+
+  /** Nearest ancestor that provides `U_PARENT_INSTANCE`, if any. */
+  readonly $parentInstance: UBaseComponent | undefined =
+    inject(U_PARENT_INSTANCE, { optional: true, skipSelf: true }) ?? undefined;
 
   /** e.g. "button" — used as the uix-styled registration key. */
   protected abstract readonly componentName: string;
@@ -56,10 +74,45 @@ export abstract class UBaseComponent {
     classes: Record<string, unknown>;
   };
 
+  /** The `pt` input with a function value resolved against `$params`. */
+  readonly $pt = computed(() => resolve(this.pt(), this.$params));
+
+  get $params(): PassThroughParams & { parent: { instance: UBaseComponent | undefined } } {
+    return { instance: this, parent: { instance: this.$parentInstance } };
+  }
+
+  /** Attributes for one section of the template, from `pt`; spread with `uBind`. */
+  ptm(key = "", params: PassThroughParams = {}): PassThroughAttributes {
+    return getPassThroughValue(
+      this.$pt(),
+      key,
+      { ...this.$params, ...params },
+      { name: this.componentName, options: this.ptOptions() }
+    );
+  }
+
+  /** `ptm` for several sections, merged in order. */
+  ptms(keys: string[], params: PassThroughParams = {}): PassThroughAttributes {
+    return keys.reduce<PassThroughAttributes>(
+      (merged, key) => (mergeProps(merged, this.ptm(key, params)) ?? {}) as PassThroughAttributes,
+      {}
+    );
+  }
+
+  /** `ptm` against an explicit passthrough object instead of the `pt` input. */
+  ptmo(obj: unknown = {}, key = "", params: PassThroughParams = {}): PassThroughAttributes {
+    return getPassThroughValue(
+      obj,
+      key,
+      { instance: this, ...params },
+      { name: this.componentName, options: this.ptOptions() }
+    );
+  }
+
   /**
    * Resolves a class-name slot from `styleModule.classes` via
    * `@ultimate/uix-utils`'s `cn()`, matching PrimeNG's own `cx()` contract
-   * but without the `pt`/passthrough merge layer.
+   * but without the `pt` merge layer, which sections apply through `ptm()`.
    */
   protected cx(key: string, params?: Record<string, unknown>): string | undefined {
     if (this.$unstyled()) return undefined;

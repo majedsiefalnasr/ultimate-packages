@@ -1,6 +1,6 @@
 # Scoped validation
 
-Scope: vue-core-150; source revision: fb15ca0ee9bc50d3a84b4b19367af0dd192359ac
+Scope: vue-core-150; source revision: 2b9a684df33d0e7dc1e2120eb6ca981fd2865932
 
 Global completeness: not asserted.
 

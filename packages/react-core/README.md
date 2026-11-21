@@ -6,9 +6,24 @@ React-specific foundation for the Ultimate Platform: base component architecture
 
 ## Architecture
 
-`react-core`'s `useComponentBase` hook is **Option B**: informed by PrimeReact's own `ComponentBase.js` pattern, but independently authored and deliberately scoped down. It covers class-name-slot resolution (`cx()`) and one-time-per-`componentName` style registration against a module-level `StyleSheet` instance only.
+`react-core`'s `useComponentBase` hook is **Option B**: informed by PrimeReact's own `ComponentBase.js` pattern, but independently authored and deliberately scoped down. It covers class-name-slot resolution (`cx()`) and one-time-per-`componentName` style registration against a module-level `StyleSheet` instance. The instance-level passthrough mechanism lives next to it in `createPassThrough` (ADR-077).
 
-PrimeReact's full passthrough (`pt`/`ptm`/`ptmo`) system (~150 lines of resolution logic in `ComponentBase.js`) is explicitly excluded — same posture as Angular's `ng-core` (ADR-018) and `react-core`'s own ADR-024. See `docs/architecture/PROVENANCE.md` and `docs/architecture/provenance/react-core.json` for the full provenance record.
+### Passthrough
+
+`createPassThrough(componentName, { props, state?, parent?, hostName? })` returns `{ ptm, ptmo }`. A component calls it in render and spreads the result on the element a section names, through `useMergeProps`:
+
+```tsx
+const { ptm } = createPassThrough("card", { props });
+<div {...mergeProps({ className: cx("root") }, ptm("root"))} />;
+```
+
+- `ptm(key, params?)` reads `props.pt` and returns the attributes of section `key`, plus `data-pc-name` and `data-pc-section`. `ptmo(obj, key, params?)` reads an explicit passthrough object.
+- `pt` is an object of sections. A section value is an attribute object, a string or array that becomes `className`, or a function of `{ props, state, parent, ... }`. Keys match without regard to case, dashes or underscores, and `a.b` reaches a nested section.
+- `props.ptOptions` holds `mergeSections` and `mergeProps`. They decide how a global section value and the instance value merge. A global source is not built yet (ADR-080), so `ptOptions` has no visible effect today.
+- React has no automatic host lookup, as in PrimeReact. A sub-component receives `parent` (the host's metadata) from its caller and passes it in the metadata. `pt` functions read it as `parent.instance` (ADR-079). `hostName` only sets `data-pc-name`.
+- Oracle behavior kept as it is (ADR-080): a `className` array drops the sibling attributes of its section.
+
+Not built (ADR-080): the global and default `pt` from the provider, `usePassThrough`, `pt.hooks`, and the `$attrSelector` attribute (scoped `dt`). See `docs/architecture/PROVENANCE.md` and `docs/architecture/provenance/react-core.json` for the provenance record.
 
 ## Modules
 
@@ -63,7 +78,7 @@ document during server rendering and adopts them on hydration (GAP-078).
 - **FocusTrap** — sentinel-span mechanism preserved, Ultimate-owned implementation reusing existing `getFirstFocusableElement`/`getLastFocusableElement` (see `focus-trap` above, ADR-025).
 - **Motion** — `@ultimate/uix-motion`'s `createMotion` used instead of `react-transition-group`'s `CSSTransition` — no new runtime dependency (see `motion` above, ADR-028).
 - **Styling** — `@ultimate/uix-styled`'s `StyleSheet` class plus a new React-only subclass adapter (`ReactStyleSheet`) delegating to `@ultimate/uix-utils/dom`'s `createStyleElement`, instead of PrimeReact's `useStyle` hook (see `styling` above, ADR-029).
-- **Passthrough** — PrimeReact's full `pt`/`ptm`/`ptmo` system is excluded entirely (Option B, same posture as Angular's ADR-018) — see `base` above, ADR-024.
+- **Passthrough** — the instance-level `pt`/`ptOptions` mechanism is built (`createPassThrough`, ADR-077/079/080); the global `pt` source, `usePassThrough` and `pt.hooks` are not built — see the Passthrough section above.
 - **Dialog scroll registry** — a private, module-scoped `Set`-based registry replaces PrimeReact's `document.primeDialogParams` global-mutation pattern (see `scroll-lock` above).
 
 ## Dependencies

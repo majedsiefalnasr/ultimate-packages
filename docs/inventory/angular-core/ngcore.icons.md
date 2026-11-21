@@ -61,9 +61,9 @@ None recorded.
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
-    "revision": "fb15ca0ee9bc50d3a84b4b19367af0dd192359ac",
+    "revision": "2b9a684df33d0e7dc1e2120eb6ca981fd2865932",
     "outcome": "passed",
-    "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+    "output": "Scoped reconciliation completed with no problems: 60 source files accounted for, 33 root export identities each attributed to one public record, cross-scope references recorded as pending.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
     "run": "docs/inventory/angular-core/pilot-run.json",
     "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."

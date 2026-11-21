@@ -10,7 +10,7 @@ Default motion options and the createMotion factory.
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). Root export of @ultimate/uix-motion only (single "." export; tsup builds one entry). DEFAULT_MOTION_OPTIONS: MotionOptions (name "p", safe, enter, leave, autoHeight true; disabled and autoWidth false) and createMotion(element: Element, options?: MotionOptions): MotionInstance, which throws when the element is missing or when both enter and leave are false.
+See [authored signatures and interpretation](README.md). Root export of @ultimate/uix-motion only (single "." export; tsup builds one entry). DEFAULT_MOTION_OPTIONS: MotionOptions (name "u" since ticket #177 (F13), safe, enter, leave, autoHeight true; disabled and autoWidth false) and createMotion(element: Element, options?: MotionOptions): MotionInstance, which throws when the element is missing or when both enter and leave are false.
 
 ## Public exports
 

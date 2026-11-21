@@ -21,7 +21,7 @@ The two package barrels differ in shape: `uix-data` uses explicit named re-expor
 
 ## Motion details
 
-`DEFAULT_MOTION_OPTIONS` sets `name: "p"`, `safe`, `enter`, `leave` and `autoHeight` to true, and `disabled` and `autoWidth` to false. `createMotion(element, options?)` throws when the element is missing or when both enter and leave are false. `shouldSkipMotion` consults `isPrefersReducedMotion` from `@ultimate/uix-utils`; `getMotionMetadata` reads `window.getComputedStyle`, so these helpers need a DOM. No package-wide SSR guarantee is claimed.
+`DEFAULT_MOTION_OPTIONS` sets `name: "u"` (changed from upstream's `p` in ticket #177, F13; the default classes are `u-enter-*` and `u-leave-*`, and the Dialog and Menu call sites pass their own `u-dialog` or `u-menu` name), `safe`, `enter`, `leave` and `autoHeight` to true, and `disabled` and `autoWidth` to false. `createMotion(element, options?)` throws when the element is missing or when both enter and leave are false. `shouldSkipMotion` consults `isPrefersReducedMotion` from `@ultimate/uix-utils`; `getMotionMetadata` reads `window.getComputedStyle`, so these helpers need a DOM. No package-wide SSR guarantee is claimed.
 
 ## Relationships
 

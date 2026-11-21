@@ -11,7 +11,7 @@ Batch inputs:
 - scripts/inventory/angular-actions.json: ticket #107; scope angular-actions; revision 4ad393323af126b83c46c40a53d34cdadf2070ef
 - scripts/inventory/angular-choice-range.json: ticket #113; scope angular-choice-range; revision d2e8101bf77e8e440c7166211ad5eae0e0ac6df8
 - scripts/inventory/angular-collection-presentation.json: ticket #134; scope angular-collection-presentation; revision 3864a1d23b5ef0c5601ff740c104fdec4584d14d
-- scripts/inventory/angular-core.json: ticket #148; scope angular-core-148; revision fb15ca0ee9bc50d3a84b4b19367af0dd192359ac
+- scripts/inventory/angular-core.json: ticket #148; scope angular-core-148; revision 2b9a684df33d0e7dc1e2120eb6ca981fd2865932
 - scripts/inventory/angular-disclosure-steps.json: ticket #128; scope angular-disclosure-steps; revision fcd2e02d28e0b9a678262d4731bb7ae31732d574
 - scripts/inventory/angular-feedback.json: ticket #140; scope angular-feedback; revision c531e881dfa14e18449553ecfe45b0ab17d3210a
 - scripts/inventory/angular-media-containers.json: ticket #137; scope angular-media-containers; revision cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6
@@ -29,7 +29,7 @@ Batch inputs:
 - scripts/inventory/react-actions.json: ticket #108; scope react-actions; revision c7a8d706e9ebfb22ebf6cc6635a77819cce95576
 - scripts/inventory/react-choice-range.json: ticket #114; scope react-choice-range; revision 8d8d52094058993d3ca29823d1c2cd922805570e
 - scripts/inventory/react-collection-presentation.json: ticket #135; scope react-collection-presentation; revision 3864a1d23b5ef0c5601ff740c104fdec4584d14d
-- scripts/inventory/react-core.json: ticket #149; scope react-core-149; revision fb15ca0ee9bc50d3a84b4b19367af0dd192359ac
+- scripts/inventory/react-core.json: ticket #149; scope react-core-149; revision 2b9a684df33d0e7dc1e2120eb6ca981fd2865932
 - scripts/inventory/react-disclosure-steps.json: ticket #129; scope react-disclosure-steps; revision ac4fc25447d81612681a7a7a075ce569e0490498
 - scripts/inventory/react-feedback.json: ticket #141; scope react-feedback; revision e3add69e5d93fea60f7a0d3f96ca986c0c8c9738
 - scripts/inventory/react-media-containers.json: ticket #138; scope react-media-containers; revision cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6
@@ -41,14 +41,14 @@ Batch inputs:
 - scripts/inventory/react-text-entry.json: ticket #111; scope react-text-entry; revision c49aa4e6906a9d72a1893b3fc006fce55489d0b7
 - scripts/inventory/root-files.json: ticket #157; scope root-files-157; revision 70b74575698fb77a72a18022b91181c66df41484
 - scripts/inventory/shared-component-styles.json: ticket #146; scope shared-component-styles-146; revision 54f81ae85b0cfe3583541471bd4114fe8d8d7bac
-- scripts/inventory/styled-runtime.json: ticket #145; scope styled-runtime-145; revision fb15ca0ee9bc50d3a84b4b19367af0dd192359ac
+- scripts/inventory/styled-runtime.json: ticket #145; scope styled-runtime-145; revision 2b9a684df33d0e7dc1e2120eb6ca981fd2865932
 - scripts/inventory/theme-contract.json: ticket #151; scope theme-contract-151; revision bced8db5905c1e1f38463c585063e110a93624ca
 - scripts/inventory/uix-utils-dom.json: ticket #143; scope uix-utils-dom-143; revision 41e8047c4ed60eed2789c89c1bb67b27469cd039
 - scripts/inventory/uix-utils-values.json: ticket #144; scope uix-utils-values-144; revision 7a06beb32487f04ccd84a765f7722ac606825c74
 - scripts/inventory/vue-actions.json: ticket #109; scope vue-actions; revision 37aa7ce8525c6f1622127eb1735ec41beb4096c5
 - scripts/inventory/vue-choice-range.json: ticket #115; scope vue-choice-range; revision 638b5a660b62be5b39a9402db09bccc2a9e9d2e4
 - scripts/inventory/vue-collection-presentation.json: ticket #136; scope vue-collection-presentation; revision 3864a1d23b5ef0c5601ff740c104fdec4584d14d
-- scripts/inventory/vue-core.json: ticket #150; scope vue-core-150; revision fb15ca0ee9bc50d3a84b4b19367af0dd192359ac
+- scripts/inventory/vue-core.json: ticket #150; scope vue-core-150; revision 2b9a684df33d0e7dc1e2120eb6ca981fd2865932
 - scripts/inventory/vue-disclosure-steps.json: ticket #130; scope vue-disclosure-steps; revision 3864a1d23b5ef0c5601ff740c104fdec4584d14d
 - scripts/inventory/vue-feedback.json: ticket #142; scope vue-feedback; revision fdd42818185ed77ae0c025f732310672581c1cea
 - scripts/inventory/vue-media-containers.json: ticket #139; scope vue-media-containers; revision cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6
