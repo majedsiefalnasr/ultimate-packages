@@ -1,6 +1,6 @@
 # @ultimate/react
 
-Ultimate Platform React components. See `docs/architecture/COMPONENT_INVENTORY.md` for the component inventory.
+Ultimate Platform React components. See `docs/inventory/README.md` for the current component inventory.
 
 **Status:** unstable (pre-1.0). No semver guarantee yet.
 
