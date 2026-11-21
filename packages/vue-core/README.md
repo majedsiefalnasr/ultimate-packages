@@ -23,6 +23,14 @@ PrimeVue's full passthrough (`pt`/`ptOptions`/`ptm`/`ptmi`/`ptmo`) system and `i
 - `styling` — `VueStyleSheet` (Vue-only `StyleSheet` subclass delegating to `@ultimate/uix-utils/dom`'s `createStyleElement`), `registerComponentStyle(componentName, styleModule, additionalPresetKeys?)` (called from `createBaseComponent`'s `mounted()` hook; the optional `additionalPresetKeys` also registers the theme variables of further Aura preset keys the component's CSS consumes, never structural CSS under them — ADR-051).
 - `icons` — six standalone icon components (`SpinnerIcon`, `TimesIcon`, `WindowMaximizeIcon`, `WindowMinimizeIcon`, `CheckIcon`, `MinusIcon`), each rendering its own inline `<svg role="img">`, matching `ng-core`'s/`react-core`'s established icon pattern. `MinusIcon` was added to close a gap identified while wiring `UCheckbox`'s indeterminate state (its only current consumer).
 
+## Per-instance `unstyled` and `dt`
+
+The base component declares the `unstyled` and `dt` props, so every component that extends it inherits them with no per-component code (ADR-085):
+
+- `unstyled` — a boolean, default `undefined`. The computed `isUnstyled` is the prop. While it is true, `cx()` returns `undefined` and the instance registers only the shared base rules. There is no global fallback yet, because Ultimate Vue has no config plugin.
+- `dt` — an object of token overrides scoped to the instance. It is written when the component mounts, rewritten when `dt` or the theme changes, and removed when `dt` is cleared or the component unmounts. The instance carries a `pcN` attribute while `dt` is set.
+- A template that builds a class list must filter the `cx()` result instead of concatenating it with a string.
+
 ## Usage
 
 ```typescript
