@@ -8,8 +8,9 @@ name: Quality gate
 on:
   push:
     branches: [main, develop]
+  # No base-branch filter: a ticket pull request into an integration branch
+  # (ADR-073) runs the same checks as one into develop.
   pull_request:
-    branches: [main, develop]
 
 # A new push to a pull request cancels that PR's older run. Push runs are
 # keyed by ref and SHA, so they are never cancelled (ADR-070, CO-3).

@@ -642,6 +642,19 @@ test("R6: a pull request into main runs everything, even when docs-only", () => 
   );
 });
 
+test("ADR-073: a pull request into an integration branch is scoped like one into develop", () => {
+  const options = { ...PRC, baseRef: "origin/feat/some-spec" };
+  assert.deepEqual(classifyChanges(["docs/a.md"], options), { scope: "docs", frameworks: [] });
+  assert.deepEqual(classifyChanges(["packages/cli/src/x.ts"], options), {
+    scope: "full",
+    frameworks: [],
+  });
+  assert.deepEqual(classifyChanges(["packages/uix-utils/x"], options), {
+    scope: "full",
+    frameworks: ALL,
+  });
+});
+
 test("CLI: closures that cannot be derived leave packages selecting all, and exit 0", () => {
   const root = makeTree(
     defaultRoots({
