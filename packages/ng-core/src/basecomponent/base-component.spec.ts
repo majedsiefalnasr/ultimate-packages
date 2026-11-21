@@ -192,7 +192,7 @@ describe("UBaseComponent", () => {
 class TestTokensComponent extends UBaseComponent {
   protected override readonly componentName = "test-component";
   protected override readonly styleModule = {
-    css: ".u-test-component-root { border-radius: dt('test-component.border.radius'); }",
+    css: ".u-test-component-root { border-radius: dt('testcomponent.border.radius'); }",
     classes: {},
   };
 }
@@ -202,7 +202,7 @@ describe("UBaseComponent theme changes (A1)", () => {
   const presetOf = (color: string, radius: string) => ({
     primitive: { blue: { 500: color } },
     semantic: { primary: { color: "{blue.500}" } },
-    components: { "test-component": { borderRadius: radius } },
+    components: { testcomponent: { borderRadius: radius } },
   });
 
   beforeEach(() => {
@@ -218,13 +218,13 @@ describe("UBaseComponent theme changes (A1)", () => {
 
   it("updates the variables of a mounted component after Theme.setTheme, without a second <style>", () => {
     TestBed.createComponent(TestHostComponent).detectChanges();
-    expect(injectedCss()).toContain("--u-test-component-border-radius:6px");
+    expect(injectedCss()).toContain("--u-testcomponent-border-radius:6px");
     const count = document.head.querySelectorAll("style[data-u-ng-style]").length;
 
     Theme.setTheme({ preset: presetOf("#ef4444", "12px"), options });
 
     expect(injectedCss()).toContain("--u-blue-500:#ef4444");
-    expect(injectedCss()).toContain("--u-test-component-border-radius:12px");
+    expect(injectedCss()).toContain("--u-testcomponent-border-radius:12px");
     expect(injectedCss()).not.toContain("#3b82f6");
     expect(document.head.querySelectorAll("style[data-u-ng-style]").length).toBe(count);
   });
@@ -235,7 +235,7 @@ describe("UBaseComponent theme changes (A1)", () => {
     Theme.setPreset(presetOf("#22c55e", "2px"));
 
     expect(injectedCss()).toContain("--u-blue-500:#22c55e");
-    expect(injectedCss()).toContain("--u-test-component-border-radius:2px");
+    expect(injectedCss()).toContain("--u-testcomponent-border-radius:2px");
     expect(injectedCss()).not.toContain("#3b82f6");
   });
 
@@ -244,9 +244,9 @@ describe("UBaseComponent theme changes (A1)", () => {
 
     Theme.setOptions({ ...options, prefix: "x" });
 
-    expect(injectedCss()).toContain("--x-test-component-border-radius:6px");
-    expect(injectedCss()).not.toContain("--u-test-component-border-radius");
-    expect(injectedCss()).toContain("var(--x-test-component-border-radius");
+    expect(injectedCss()).toContain("--x-testcomponent-border-radius:6px");
+    expect(injectedCss()).not.toContain("--u-testcomponent-border-radius");
+    expect(injectedCss()).toContain("var(--x-testcomponent-border-radius");
   });
 
   it("updates the variables written into an injected DOCUMENT", () => {
@@ -264,6 +264,6 @@ describe("UBaseComponent theme changes (A1)", () => {
     const css = Array.from(doc.head.querySelectorAll("style[data-u-ng-style]"))
       .map((el) => el.textContent ?? "")
       .join("\n");
-    expect(css).toContain("--u-test-component-border-radius:2px");
+    expect(css).toContain("--u-testcomponent-border-radius:2px");
   });
 });

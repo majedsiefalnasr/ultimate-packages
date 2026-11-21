@@ -22,6 +22,17 @@ function componentKey(componentName: string): string {
   return `${componentName}-variables`;
 }
 
+/**
+ * The preset key a registration name looks up. Aura keys are flat
+ * (`inputtext`, `datepicker`), while a React component registers under its
+ * kebab-case name (`input-text`). Stripping the hyphens here, once, is the
+ * only place the lookup changes: the block stays registered under the name
+ * it was given, and a name that is already flat resolves exactly as before.
+ */
+function presetKey(componentName: string): string {
+  return componentName.replaceAll("-", "");
+}
+
 function commonVariablesCss(): string {
   const { primitive, semantic, global } = Theme.getCommon("", {}) ?? {};
   return `${primitive?.css ?? ""}${semantic?.css ?? ""}${global?.css ?? ""}`;
@@ -33,7 +44,7 @@ function globalStyleCss(): string {
 }
 
 function componentVariablesCss(componentName: string): string {
-  const { css } = Theme.getComponent(componentName, {}) ?? {};
+  const { css } = Theme.getComponent(presetKey(componentName), {}) ?? {};
   return css ?? "";
 }
 
@@ -111,7 +122,9 @@ function followThemeChanges(sheet: StyleSheet<any>): FollowedSheet {
  *   top-level `css` as global style. Global to the app, registered once by
  *   whichever component mounts first.
  * - **component** — that one component's own variables, registered once per
- *   component name.
+ *   component name. The preset is read under the name with its hyphens
+ *   removed (`input-text` reads `inputtext`), so kebab-case registrations
+ *   (React) find the flat Aura key.
  *
  * Both tiers are idempotent via `StyleSheet.has()`, so repeated mounts of the
  * same or different components never inject duplicate `<style>` elements.
