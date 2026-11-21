@@ -3981,6 +3981,10 @@
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
+          "path": "packages/ng-core/src/basecomponent/layer-order.spec.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
           "path": "packages/ng-core/src/basecomponent/style-sheet.spec.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
@@ -5302,6 +5306,10 @@
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
+          "path": "packages/react-core/src/styling/layer-order.spec.tsx",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
           "path": "packages/react-core/src/styling/ssr-contract.spec.tsx",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
@@ -5744,6 +5752,10 @@
         },
         {
           "path": "packages/uix-styled/test/icon-spin.test.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
+          "path": "packages/uix-styled/test/layer-order.test.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
@@ -9200,6 +9212,10 @@
         },
         {
           "path": "packages/vue-core/src/styling/icon-spin.spec.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
+          "path": "packages/vue-core/src/styling/layer-order.spec.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
