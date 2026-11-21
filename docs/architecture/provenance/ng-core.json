@@ -3,19 +3,19 @@
     "originalPath": "packages/primeng/src/basecomponent/basecomponent.ts",
     "ultimateDestination": "packages/ng-core/src/basecomponent/base-component.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Ultimate-owned, scoped-down reimplementation of PrimeNG's BaseComponent (Option B). Covers DI wiring (document/platformId/el/renderer/config), the dt/unstyled input pair, a cx() class-name-slot resolver, and @ultimate/uix-styled-backed style registration on init. Deliberately excludes PrimeNG's full passthrough (pt/ptOptions/ptm/ptms/ptmo) system, $parentInstance DI-token lookup, and full global-config surface — all explicitly deferred per the approved Phase 2 spec (Needs Architecture Decision)."
+    "modificationDescription": "Ultimate-owned, scoped-down reimplementation of PrimeNG's BaseComponent (Option B). Covers DI wiring (document/platformId/el/renderer/config), the dt/unstyled input pair, a cx() class-name-slot resolver, and @ultimate/uix-styled-backed style registration on init. Deliberately excludes PrimeNG's full passthrough (pt/ptOptions/ptm/ptms/ptmo) system, $parentInstance DI-token lookup, and full global-config surface — all explicitly deferred per the approved Phase 2 spec (Needs Architecture Decision). A1 (#171): ngOnInit registers its structural CSS through registerComponentCss from @ultimate/uix-styled instead of a local has()/add() guard, so it follows theme:change. PrimeNG 21.1.9 basecomponent.ts:395-401 (_themeChangeListener) is the reference; only the behavior is shared."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng-core/src/basecomponent/base-component.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies cx() class-name-slot resolution and idempotent style registration via a spy on the real @ultimate/uix-styled StyleSheet.add method."
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies cx() class-name-slot resolution and idempotent style registration via a spy on the real @ultimate/uix-styled StyleSheet.add method. A1 (#171): adds tests that already-mounted components pick up new tokens after Theme.setTheme, setPreset and setOptions, including a component writing into an injected DOCUMENT."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng-core/src/basecomponent/style-sheet.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored module-level StyleSheet singleton wrapper. @ultimate/uix-styled's StyleSheet is a plain class, not an Angular-injectable providedIn:'root' service, so ng-core owns a single shared instance here for all UBaseComponent subclasses to register against."
+    "modificationDescription": "Ultimate-authored module-level StyleSheet singleton wrapper. @ultimate/uix-styled's StyleSheet is a plain class, not an Angular-injectable providedIn:'root' service, so ng-core owns a single shared instance here for all UBaseComponent subclasses to register against. A1 (#171): overrides updateStyleElement to write the new css into the adopted or created <style> element. A one-line standard DOM write; no upstream expression retained."
   },
   {
     "originalPath": "n/a",

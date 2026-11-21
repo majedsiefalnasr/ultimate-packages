@@ -1,4 +1,6 @@
 import Theme from "../config/index";
+import { css as renderCss } from "../helpers/css";
+import ThemeService from "../service/index";
 import type StyleSheet from "./index";
 
 /**
@@ -11,6 +13,67 @@ const COMMON_KEY = "u-common-variables";
 /** Registration key for one component's own variable block. */
 function componentKey(componentName: string): string {
   return `${componentName}-variables`;
+}
+
+function commonVariablesCss(): string {
+  const { primitive, semantic, global } = Theme.getCommon("", {}) ?? {};
+  return `${primitive?.css ?? ""}${semantic?.css ?? ""}${global?.css ?? ""}`;
+}
+
+function componentVariablesCss(componentName: string): string {
+  const { css } = Theme.getComponent(componentName, {}) ?? {};
+  return css ?? "";
+}
+
+interface FollowedSheet {
+  variableNames: Set<string>;
+  structuralCss: Map<string, string>;
+}
+
+const followedSheets = new WeakMap<StyleSheet<any>, FollowedSheet>();
+
+/**
+ * Rewrites the variable blocks and the structural CSS `sheet` holds from the
+ * current theme, so components that are already mounted pick up the new
+ * tokens. Matches PrimeNG's and PrimeVue's `theme:change` listener, which
+ * reruns the same variable loading and reloads the component CSS. The
+ * structural CSS is rendered again because `dt()` bakes the current variable
+ * prefix into it.
+ */
+function refreshSheet(sheet: StyleSheet<any>, followed: FollowedSheet): void {
+  if (Theme.getTheme()) {
+    sheet.update(COMMON_KEY, commonVariablesCss());
+    for (const componentName of followed.variableNames) {
+      sheet.update(componentKey(componentName), componentVariablesCss(componentName));
+    }
+  }
+
+  for (const [componentName, rawCss] of followed.structuralCss) {
+    sheet.update(componentName, renderCss`${rawCss}`);
+  }
+}
+
+/**
+ * Subscribes `sheet` to `theme:change` once and returns what it keeps
+ * current. The subscription holds the sheet weakly, so a per-request sheet
+ * (Angular SSR) is not kept alive by the global theme service; the listener
+ * removes itself after the sheet is gone.
+ */
+function followThemeChanges(sheet: StyleSheet<any>): FollowedSheet {
+  const known = followedSheets.get(sheet);
+  if (known) return known;
+
+  const followed: FollowedSheet = { variableNames: new Set(), structuralCss: new Map() };
+  const sheetRef = new WeakRef(sheet);
+  const listener = () => {
+    const target = sheetRef.deref();
+    if (target) refreshSheet(target, followed);
+    else queueMicrotask(() => ThemeService.off("theme:change", listener));
+  };
+
+  followedSheets.set(sheet, followed);
+  ThemeService.on("theme:change", listener);
+  return followed;
 }
 
 /**
@@ -36,6 +99,8 @@ function componentKey(componentName: string): string {
  *
  * Both tiers are idempotent via `StyleSheet.has()`, so repeated mounts of the
  * same or different components never inject duplicate `<style>` elements.
+ * After a theme change (`Theme.setTheme`, `setPreset`, `setOptions`) both
+ * tiers are rewritten in place for every component registered on `sheet`.
  * SSR-safety is inherited from the `sheet` passed in: the React and Vue
  * cores guard `createStyleElement` on `typeof document`, and Angular passes
  * the registry of its injected document (inert when there is no document).
@@ -45,16 +110,33 @@ function componentKey(componentName: string): string {
  * that consumes them.
  */
 export function registerThemeVariables(sheet: StyleSheet<any>, componentName: string): void {
+  followThemeChanges(sheet).variableNames.add(componentName);
+
   if (!Theme.getTheme()) return; // no theme applied — nothing to define
 
   if (!sheet.has(COMMON_KEY)) {
-    const { primitive, semantic, global } = Theme.getCommon("", {}) ?? {};
-    sheet.add(COMMON_KEY, `${primitive?.css ?? ""}${semantic?.css ?? ""}${global?.css ?? ""}`);
+    sheet.add(COMMON_KEY, commonVariablesCss());
   }
 
   const key = componentKey(componentName);
   if (!sheet.has(key)) {
-    const { css } = Theme.getComponent(componentName, {}) ?? {};
-    sheet.add(key, css ?? "");
+    sheet.add(key, componentVariablesCss(componentName));
+  }
+}
+
+/**
+ * Registers a component's structural CSS into `sheet` under its own name,
+ * resolving `dt()` references, and keeps it current after theme changes (see
+ * `refreshSheet`). Idempotent per component name via `StyleSheet.has()`.
+ */
+export function registerComponentCss(
+  sheet: StyleSheet<any>,
+  componentName: string,
+  rawCss: string
+): void {
+  followThemeChanges(sheet).structuralCss.set(componentName, rawCss);
+
+  if (!sheet.has(componentName)) {
+    sheet.add(componentName, renderCss`${rawCss}`);
   }
 }

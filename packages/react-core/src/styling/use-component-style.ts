@@ -1,5 +1,5 @@
 import {
-  css,
+  registerComponentCss,
   registerBoxModel,
   registerHiddenAccessible,
   registerThemeVariables,
@@ -23,10 +23,6 @@ export function useComponentStyle(componentName: string, styleModule: StyleModul
     // key, before the component CSS. A no-op for an empty name or no roots.
     registerBoxModel(reactCoreStyleSheet, componentName, scopeRootsOf(styleModule.classes));
 
-    if (!reactCoreStyleSheet.has(componentName)) {
-      // Keep the style module's CSS bytes intact; the registered value is used as-is.
-      const renderCss = css;
-      reactCoreStyleSheet.add(componentName, renderCss`${styleModule.css}`);
-    }
+    registerComponentCss(reactCoreStyleSheet, componentName, styleModule.css);
   });
 }

@@ -40,6 +40,10 @@ class NgCoreStyleSheet extends StyleSheet<HTMLStyleElement> {
     head.appendChild(el);
     return el;
   }
+
+  override updateStyleElement(element: HTMLStyleElement, meta: StyleMeta<HTMLStyleElement>): void {
+    element.textContent = meta.css ?? "";
+  }
 }
 
 const sheets = new WeakMap<Document, NgCoreStyleSheet>();

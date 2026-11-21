@@ -6,6 +6,9 @@ class ReactStyleSheet extends StyleSheet<HTMLStyleElement> {
     if (typeof document === "undefined") return undefined; // SSR guard
     return createStyleElement(meta.css ?? "", meta.attrs, document.head);
   }
+  override updateStyleElement(element: HTMLStyleElement, meta: StyleMeta<HTMLStyleElement>): void {
+    element.textContent = meta.css ?? "";
+  }
 }
 
 // Single module-level instance — every Ultimate React component registers

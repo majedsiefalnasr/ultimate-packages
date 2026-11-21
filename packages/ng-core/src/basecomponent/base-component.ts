@@ -2,7 +2,7 @@ import { Directive, ElementRef, PLATFORM_ID, Renderer2, inject, input } from "@a
 import { DOCUMENT } from "@angular/common";
 import { cn } from "@ultimate/uix-utils/classnames";
 import {
-  css,
+  registerComponentCss,
   registerBoxModel,
   registerHiddenAccessible,
   registerIconSpin,
@@ -69,10 +69,6 @@ export abstract class UBaseComponent {
     // key, before the component CSS. A no-op for an empty name or no roots.
     registerBoxModel(sheet, this.componentName, scopeRootsOf(this.styleModule.classes));
 
-    if (!sheet.has(this.componentName)) {
-      // Keep the style module's CSS bytes intact; the registered value is used as-is.
-      const renderCss = css;
-      sheet.add(this.componentName, renderCss`${this.styleModule.css}`);
-    }
+    registerComponentCss(sheet, this.componentName, this.styleModule.css);
   }
 }
