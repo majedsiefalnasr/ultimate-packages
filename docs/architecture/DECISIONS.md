@@ -913,3 +913,28 @@ Status: Accepted (user decision, 2026-10-21). Implemented once authorized.
 - Backfill batch PRs also edit the list. The GAP-094 Specification's resolved condition is amended accordingly.
 - The advisory job stays a non-required check. Making it required is a separate decision.
 - Not a change to the production-scope classifier (ADR-062), the diff check, or the `ci` job.
+
+## ADR-073 — Hierarchical work branches: a spec gets an integration branch and each ticket branches from it (amends ADR-068)
+
+Status: Accepted (user decision, 2026-11-21). The rule applies once the CI and protection follow-ups under Consequences are in place.
+
+**Context.** ADR-068 sends every work branch from `develop` into `develop`. A spec with many tickets then lands piecemeal on `develop`, so `develop` carries half-finished features and can no longer be cut into a release at any time. Established projects separate the stable line from unfinished work. Gitflow keeps `develop` integrable and uses `release/*` and `hotfix/*` for the release line. Kubernetes and GitLab flow fix defects upstream first and cherry-pick them to release branches. Trunk-based teams keep branches short and rely on feature flags to hide unfinished work. Stacked pull requests show that a branch cut from a feature branch works, and that maintenance cost grows once a stack passes two or three levels.
+
+**Decision.**
+
+- **Parent rule.** Every work branch is cut from its parent branch and its PR targets that parent. Standalone work has `develop` as its parent.
+- **Spec level.** A spec with several tickets gets one integration branch `feat/<spec-slug>` from `develop`. Each ticket branch `type/<ticket-id>-slug` is cut from it and merges into it.
+- **Depth.** A ticket that must be split further becomes the integration branch of its sub-tickets. Nothing nests deeper. A larger tree means the spec is split instead.
+- **Merging.** Every merge is a merge commit (ADR-068 is unchanged). A child merges its parent before its PR is opened. An integration branch merges `develop` whenever `develop` has moved and before its final PR. Shared branches are not rebased.
+- **Reaching `develop`.** An integration branch merges into `develop` in one PR, after all its tickets are merged and the checks are green. Unfinished integration work never reaches `develop`.
+- **Release and hotfix.** `release/*` and `hotfix/*` are unchanged. After a hotfix is merged back into `develop`, open integration branches merge `develop`. A release is cut from `develop`, so an integration branch that has not merged is not in it by construction.
+- **Not adopted now.** `support/*` maintenance branches and upstream-first cherry-picks onto released lines. Adopt them when Ultimate has to patch an already released version while `develop` moves on.
+
+**Consequences.**
+
+- ADR-068's "Work branches from `develop` and merges into it" now applies at the spec level only.
+- Conflicts concentrate in the integration branch, mainly in `PROVENANCE.md` and `docs/architecture/provenance/*.json`, which every ticket touching `packages/{ng,react,vue,uix*}` must update. Merging the parent often keeps each conflict small.
+- `ci.yml` and `browser.yml` trigger on pushes and PRs for `main` and `develop` only, so a ticket PR into an integration branch runs no CI today. Extending the triggers (for example to `feat/**`) needs a check of how the change classifier treats a base other than `develop` (ADR-069, ADR-070), and is a separate change.
+- `develop` is the only protected work branch today. Requiring `ci` on integration branches is a GitHub setting and is a separate change.
+- Deleting an integration or ticket branch after its merge still needs explicit authorization (`AGENTS.md` section 5.1).
+- The final integration PR is large. Its full CI run is the gate that ADR-068 gave every PR.
