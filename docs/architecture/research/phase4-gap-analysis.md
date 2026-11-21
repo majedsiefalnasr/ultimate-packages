@@ -13,8 +13,8 @@ Product: Ultimate, branch develop, pinned revision 91a8472547e34c6e92456f2b98270
 
 ## Open items at closeout
 
-- MeterGroup Angular row 5 (vertical geometry) is the only unresolved cell (U). It stays U: a rendered check is outside this evidence-only phase and is a candidate for a later phase.
-- Timeline Angular row 8 (root class and style) is classified C by precedent from the Card ruling, not by a Timeline probe. Timeline uses the same host-binding shape as Card, so C stays. The user may object; that would be a one-cell change.
+- Two unresolved cells (U) remain: MeterGroup Angular row 5 (vertical geometry) and Timeline Angular row 8 (root class and style). MeterGroup stays U: a rendered check needs a browser and a PostCSS-enabled build, which this evidence-only phase does not run. Timeline stays U until the same Angular host probe used for Card runs.
+- Timeline Angular row 8 (root class and style) was first classified C by precedent from the Card ruling. The Card ruling required a runtime probe, and none was run for Timeline, so the cell is U.
 - Card, Chip, ToggleButton, Tag, Paginator and Carousel (Angular) were settled for class and style only; aria and other root attributes were not probed.
 - The Table pilot is bounded to 43 rows. Excluded capabilities are not researched.
 
@@ -73,8 +73,8 @@ Editor rows keep their classes (ruling 2026-11-20). No ADR defers Editor, so non
 ### 4. Intentional and unresolved
 
 - I cells (3): InputMask Angular (1), Mention React (1), ScrollTop React (1, token consumption only, ADR-067).
-- U cells (1): MeterGroup Angular row 5 (needs a rendered vertical group; percentage heights depend on layout). ConfirmDialog Angular row 8 was ruled N + reference defect on 2026-11-21 (see `batch7/confirmdialog.md`).
-- Twelve further U cells were resolved on 2026-11-21 by reading source only: Textarea Vue 4 (partial), Dock React positions and Vue hidden-item filtering (complete), Breadcrumb React/Vue home icon (n/a) and Vue item class (missing), Timeline Angular 8 (complete, by the Card ruling's precedent rather than a Timeline probe), SpeedDial Angular 18 (partial), Splitter row 3 in all three frameworks (partial with a source-read clamp defect when a splitter has three or more panels), DynamicDialog Vue 9 (partial). None was rendered or run.
+- U cells (2): MeterGroup Angular row 5 (needs a rendered vertical group; percentage heights depend on layout) and Timeline Angular row 8 (needs the Card-style host probe). ConfirmDialog Angular row 8 was ruled N + reference defect on 2026-11-21 (see `batch7/confirmdialog.md`).
+- Eleven further U cells were resolved on 2026-11-21 by reading source only: Textarea Vue 4 (partial), Dock React positions and Vue hidden-item filtering (complete), Breadcrumb React/Vue home icon (n/a) and Vue item class (missing), SpeedDial Angular 18 (partial), Splitter row 3 in all three frameworks (partial with a source-read clamp defect when a splitter has three or more panels), DynamicDialog Vue 9 (partial). None was rendered or run.
 - Card, Chip, ToggleButton, Tag, Paginator and Carousel Angular were settled by the 2026-11-21 host probe for class and style only; aria and other root attributes were not probed.
 
 ### 5. Shared foundations (outside family counts)
