@@ -1286,8 +1286,7 @@ docs/architecture/
 ├── PROVENANCE.md
 ├── DEPENDENCIES.md
 ├── COMPATIBILITY.md
-├── PACKAGE_ARCHITECTURE.md
-└── AI_ARCHITECTURE.md
+└── PACKAGE_ARCHITECTURE.md
 ```
 
 `BLUEPRINT.md` is the baseline.
