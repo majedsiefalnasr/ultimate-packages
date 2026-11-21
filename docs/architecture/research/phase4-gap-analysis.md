@@ -7,15 +7,14 @@ Product: Ultimate, branch develop, pinned revision 91a8472547e34c6e92456f2b98270
 ## Scope and limits
 
 - Evidence is source reads only. No product tests, browser, visual, assistive-technology or runtime checks were run, except one Angular host probe for class and style coexistence (2026-11-21).
-- This record keeps the synthesis, the user rulings, and the reference-defect notes from the evidence archive. Per-family capability matrices are not reproduced; their counts are in the synthesis.
-- Reference-defect notes are kept verbatim from standalone report lines. Table cells that cite a defect are not repeated; their classifications are reflected in the counts.
-- References such as batch8/confirmdialog.md or pilot/table.md point to the evidence archive, which is deleted after this closeout. They are kept as provenance labels.
+- Family reports are kept in `docs/architecture/research/phase4/` (102 files: `batch2`–`batch8`, `pilot`, `foundations`). Candidate drafts, review logs and recovery notes are process records and are not kept.
+- Report references such as batch8/confirmdialog.md or pilot/table.md are relative to `docs/architecture/research/phase4/`.
 - Rulings superseded later are marked in place so the audit trail stays intact.
 
 ## Open items at closeout
 
-- MeterGroup Angular row 5 (vertical geometry) is the only unresolved cell. It needs a rendered check.
-- Timeline Angular row 8 (root class and style) is classified C by precedent from the Card ruling, not by a Timeline probe. It is pending user objection.
+- MeterGroup Angular row 5 (vertical geometry) is the only unresolved cell (U). It stays U: a rendered check is outside this evidence-only phase and is a candidate for a later phase.
+- Timeline Angular row 8 (root class and style) is classified C by precedent from the Card ruling, not by a Timeline probe. Timeline uses the same host-binding shape as Card, so C stays. The user may object; that would be a one-cell change.
 - Card, Chip, ToggleButton, Tag, Paginator and Carousel (Angular) were settled for class and style only; aria and other root attributes were not probed.
 - The Table pilot is bounded to 43 rows. Excluded capabilities are not researched.
 
@@ -122,9 +121,9 @@ From `DECISIONS.md` (D-PT, D-SHARED, rulings):
 
 ### 8. Rulings and reference defects
 
-- `DECISIONS.md` has about 75 bullet entries after its Open rulings heading; about 42 of them mention a reference defect (docs promise versus pinned source). This is an approximate text search, not a per-ruling audit. The closeout will list them exactly.
+- `DECISIONS.md` has about 75 bullet entries after its Open rulings heading; about 42 of them mention a reference defect (docs promise versus pinned source). This is an approximate text search, not a per-ruling audit. Exact per-ruling listing is not done.
 - The pinned source is the oracle where docs and source differ. A ruling is individual, never a blanket authorization.
-- The closeout document will carry the rulings and reference defects in curated form, taken from `DECISIONS.md` and the family reports.
+- This record carries the rulings and reference defects in curated form, taken from `DECISIONS.md` and the family reports.
 
 ### 9. Known issues and limits
 
