@@ -7,7 +7,7 @@ Product: Ultimate, branch develop, pinned revision 91a8472547e34c6e92456f2b98270
 ## Scope and limits
 
 - Evidence is source reads only. No product tests, browser, visual, assistive-technology or runtime checks were run, except one Angular host probe for class and style coexistence (2026-11-21).
-- Family reports are kept in `docs/architecture/research/phase4/` (102 files: `batch1`–`batch7`, `pilot`, `foundations`). Candidate drafts, review logs, the working decision log and recovery notes are process records and are not kept.
+- Family reports are kept in `docs/architecture/research/phase4/` (102 files: `batch1`–`batch7`, `pilot`, `foundations`). Candidate drafts and review logs are process records and are not kept. The working logs (decision log, synthesis, status, coverage and pilot recovery notes, agent brief) are kept in `phase4/working-logs/`.
 - Report references such as batch7/confirmdialog.md or pilot/table.md are relative to `docs/architecture/research/phase4/`.
 - Rulings superseded later are marked in place so the audit trail stays intact.
 
@@ -103,7 +103,7 @@ Distribution of the 15 items: Angular 6/8/1/0, React 4/9/2/0, Vue 6/7/2/0 (C/P/M
 
 ### 6. Cross-cutting findings recorded once
 
-From the working decision log, not kept in this repository (D-PT, D-SHARED, rulings):
+From the working decision log, kept in `phase4/working-logs/DECISIONS.md` (D-PT, D-SHARED, rulings):
 
 - React token architecture (ADR-067): every non-exception React family carries an explicit Aura-token row, classed P with the style-file and key evidence (user ruling option B, 2026-11-21).
 - Angular and Vue declare Ultimate-only `dt()` paths that do not resolve for nine families; their Aura-token rows are P (user ruling 2026-11-19).
@@ -306,7 +306,7 @@ At the end of Phase 4, one curated closeout document is saved inside the product
 
 ## Reference-defect notes
 
-Standalone reference-defect notes from the family and pilot reports, kept verbatim under the batch or family they belong to (88 notes). Review logs, candidate drafts and recovery notes are not kept in the repository, so their notes are labelled by batch or family instead of by file.
+Standalone reference-defect notes from the family and pilot reports, kept verbatim under the batch or family they belong to (88 notes). Review logs and candidate drafts are not kept in the repository, so their notes are labelled by batch or family instead of by file.
 
 ### Pilot recovery notes
 
