@@ -3977,6 +3977,10 @@
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
+          "path": "packages/ng-core/src/basecomponent/global-style.spec.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
           "path": "packages/ng-core/src/basecomponent/style-sheet.spec.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
@@ -5290,6 +5294,10 @@
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
+          "path": "packages/react-core/src/styling/global-style.spec.tsx",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
           "path": "packages/react-core/src/styling/hidden-accessible.spec.tsx",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
@@ -5368,6 +5376,10 @@
         },
         {
           "path": "packages/themes/test/aura-form-presets.test.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
+          "path": "packages/themes/test/aura-global-css.test.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
@@ -5740,6 +5752,10 @@
         },
         {
           "path": "packages/uix-styled/test/theme-utils.test.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
+          "path": "packages/uix-styled/test/theme-variables.test.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
@@ -9160,6 +9176,10 @@
         },
         {
           "path": "packages/vue-core/src/styling/additional-preset-keys.spec.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
+          "path": "packages/vue-core/src/styling/global-style.spec.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
@@ -12708,6 +12728,7 @@
         "packages/themes/src/presets/aura/confirm-dialog.ts",
         "packages/themes/src/presets/aura/confirm-popup.ts",
         "packages/themes/src/presets/aura/context-menu.ts",
+        "packages/themes/src/presets/aura/css.ts",
         "packages/themes/src/presets/aura/data-view.ts",
         "packages/themes/src/presets/aura/date-picker.ts",
         "packages/themes/src/presets/aura/dialog.ts",

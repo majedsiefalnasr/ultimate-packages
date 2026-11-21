@@ -199,6 +199,10 @@ The shared `.u-icon-spin` rule in `packages/uix-styled/src/stylesheet/icon-spin.
 
 The per-component `border-box` rule built by `packages/uix-styled/src/stylesheet/box-model.ts` is reference-derived from PrimeReact 10.9.9 `components/lib/componentbase/ComponentBase.js` (`.p-component, .p-component * { box-sizing: border-box }`) and `@primeuix/styles` 2.0.3 `base` (`*, ::before, ::after { box-sizing: border-box }`). Ultimate's form is authored (ADR-063): one rule per component, scoped to that component's own root, overlay, panel, mask and list classes (and `*Root`/`*Overlay`/`*Mask` keys), with `:where()` zero specificity and no page-wide selector; the Angular, Vue and React cores register it from their existing style-registration points. Per-file records are in `docs/architecture/provenance/uix-styled.json`.
 
+### F4 preset global style source disclosure
+
+`packages/themes/src/presets/aura/css.ts` is the Aura preset's top-level `css` string, copied from `@primeuix/themes` 2.0.3 `aura/css` (source class COPY, ADR-064): one selector list and one `transition: none` declaration block. Ultimate renames the class names to its own (`u-` prefix; `cascade-select`, `multi-select` and `table` for upstream's `cascadeselect`, `multiselect` and `datatable`) and leaves out the selectors for Tree, TreeTable and PanelMenu item content, which have no Ultimate class yet. `registerThemeVariables()` in `packages/uix-styled/src/stylesheet/theme-variables.ts` registers that string as the global style (`u-global-style`), after the common variables, following PrimeNG 21.1.9 `basecomponent.ts:355-360` and PrimeVue 4.5.5 `BaseComponent.vue:170-175`; the Angular, React and Vue cores call it from their existing registration points. Per-file records are in `docs/architecture/provenance/themes.json` and `docs/architecture/provenance/uix-styled.json`.
+
 ### GAP-132 batch 2 correction source disclosure
 
 The GAP-132 correction of GAP-094 batch 2 (2026-10-16) recorded two kinds of source lineage beyond the per-package entries above.

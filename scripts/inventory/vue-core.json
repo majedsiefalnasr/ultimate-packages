@@ -808,6 +808,10 @@
       "reason": "Supporting behavioral tests; presence alone is not passing execution."
     },
     {
+      "path": "packages/vue-core/src/styling/global-style.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
       "path": "packages/vue-core/src/styling/hidden-accessible.spec.ts",
       "reason": "Supporting behavioral tests; presence alone is not passing execution."
     },
