@@ -10,7 +10,7 @@ Options-API factories producing base components: class resolution with style reg
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). Root exports createBaseComponent, createBaseEditableHolder, createBaseInput and the types ClassValue, StyleModule and BaseComponentOptions. createBaseComponent adds a cx method and registers the style module on mount; createBaseEditableHolder adds modelValue and defaultValue props, update:modelValue and value-change emits, dValue, controlled and filled; createBaseInput adds size, fluid and variant props and injects pcFluid.
+See [authored signatures and interpretation](README.md). Root exports createBaseComponent, createBaseEditableHolder, createBaseInput and the types ClassValue, StyleModule and BaseComponentOptions. createBaseComponent adds a cx method and registers the style module on mount; createBaseEditableHolder adds modelValue and defaultValue props, update:modelValue and value-change emits, dValue, controlled and filled; createBaseInput adds size, fluid and variant props and injects pcFluid. createBaseComponent mixes in createPassThroughMixin (passthrough.ts, ADR-077): the pt and ptOptions props, ptm, ptmi, ptmo, the pt:section:attribute attributes and the $parentInstance provide and inject, with an optional hostName in BaseComponentOptions (ADR-079). The global and default pt sources, usePassThrough, pt.hooks, the $attrSelector dataset and the ptmi id fallback are not implemented (ADR-080), so ptOptions has no visible effect yet.
 
 ## Public exports
 
@@ -20,6 +20,12 @@ See [authored signatures and interpretation](README.md). Root exports createBase
 @ultimate/vue-core#BaseComponentOptions
 @ultimate/vue-core#createBaseEditableHolder
 @ultimate/vue-core#createBaseInput
+@ultimate/vue-core#createPassThroughMixin
+@ultimate/vue-core#getPassThroughValue
+@ultimate/vue-core#PassThrough
+@ultimate/vue-core#PassThroughAttributes
+@ultimate/vue-core#PassThroughContext
+@ultimate/vue-core#PassThroughOptions
 
 ## Owned source and evidence
 
@@ -27,11 +33,13 @@ packages/vue-core/src/base/index.ts
 packages/vue-core/src/base/base-component.ts
 packages/vue-core/src/base/base-editable-holder.ts
 packages/vue-core/src/base/base-input.ts
+packages/vue-core/src/base/passthrough.ts
 
 ```text
 packages/vue-core/src/base/base-component.ts: export function createBaseComponent(options: BaseComponentOptions) {
 packages/vue-core/src/base/base-editable-holder.ts: export function createBaseEditableHolder(
 packages/vue-core/src/base/base-input.ts: export function createBaseInput() {
+packages/vue-core/src/base/passthrough.ts: export function createPassThroughMixin(
 ```
 
 ## Relationships
@@ -59,9 +67,9 @@ package.ultimate.uix-utils.classnames (pending cross-batch)
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-    "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+    "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
     "outcome": "passed",
-    "output": "Scoped reconciliation completed with no problems: 34 source files accounted for, 47 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+    "output": "Scoped reconciliation completed with no problems: 35 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
     "run": "docs/inventory/vue-core/pilot-run.json",
     "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."

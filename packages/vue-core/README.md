@@ -6,9 +6,22 @@ Vue-specific foundation for the Ultimate Platform: Options-API base component ar
 
 ## Architecture
 
-`vue-core`'s `createBaseComponent` is **Option B**: informed by PrimeVue's own `BaseComponent.vue` pattern, but independently authored and deliberately scoped down. It covers class-name-slot resolution (`cx()`) and one-time-per-`componentName` style registration against a module-level `VueStyleSheet` instance only — an Options-API mixin factory, not a class (unlike Angular's `ng-core`) and not a hook (unlike React's `react-core`).
+`vue-core`'s `createBaseComponent` is **Option B**: informed by PrimeVue's own `BaseComponent.vue` pattern, but independently authored and deliberately scoped down. It covers class-name-slot resolution (`cx()`), one-time-per-`componentName` style registration against a module-level `VueStyleSheet` instance, and the instance-level passthrough mixin (ADR-077) — an Options-API mixin factory, not a class (unlike Angular's `ng-core`) and not a hook (unlike React's `react-core`).
 
-PrimeVue's full passthrough (`pt`/`ptOptions`/`ptm`/`ptmi`/`ptmo`) system and `inject: { $parentInstance }` host-lookup are explicitly excluded — same posture as Angular's `ng-core` (ADR-018), `react-core` (ADR-024), and `vue-core`'s own ADR-032. Directives (`v-focustrap`) use a genuinely separate mechanism (`createDirective`, ADR-033) since Vue's directive lifecycle hooks differ structurally from a component's `extends:`-consumed mixin chain — this is not true of Angular's or React's foundation tier, which have no equivalent native-directive concept. See `docs/architecture/PROVENANCE.md` and `docs/architecture/provenance/vue-core.json` for the full provenance record.
+Directives (`v-focustrap`) use a genuinely separate mechanism (`createDirective`, ADR-033) since Vue's directive lifecycle hooks differ structurally from a component's `extends:`-consumed mixin chain — this is not true of Angular's or React's foundation tier, which have no equivalent native-directive concept. They do not take `pt`. See `docs/architecture/PROVENANCE.md` and `docs/architecture/provenance/vue-core.json` for the full provenance record.
+
+### Passthrough
+
+`createBaseComponent` mixes in `createPassThroughMixin(componentName, hostName?)`, which adds two props, `pt` and `ptOptions`, and three methods:
+
+- `ptm(key, params?)` returns the attributes of section `key`, plus `data-pc-name` and `data-pc-section`. Bind them with `v-bind="ptm('header')"`.
+- `ptmi(key, params?)` is `ptm` merged with the component's own `$attrs` (without `pt`). Bind it on the root element: `v-bind="ptmi('root')"`.
+- `ptmo(obj, key, params?)` reads an explicit passthrough object instead of the `pt` prop.
+- `pt` is an object of sections. A section value is an attribute object, a string that becomes the `class`, or a function of `{ instance, props, state, attrs, parent, ... }`. Keys match without regard to case, dashes or underscores, and `a.b` reaches a nested section. A `pt:section:attribute` attribute on the component (`pt:root:class="..."`) feeds the same sections.
+- `ptOptions` holds `mergeSections` and `mergeProps`. They decide how a global section value and the instance value merge. A global source is not built yet (ADR-080), so `ptOptions` has no visible effect today.
+- Every instance provides itself as `$parentInstance` and injects the nearest one. `createBaseComponent({ hostName })` walks up to the instance with that component name. `pt` functions read the result as `parent.instance` (ADR-079).
+
+Not built (ADR-080): the global and default `pt` from the plugin options, `usePassThrough`, `pt.hooks`, the `$attrSelector` attribute (scoped `dt`), and the `id` fallback of `ptmi`.
 
 ## Modules
 
@@ -56,7 +69,7 @@ document during server rendering and adopts them on hydration (GAP-078).
 - **FocusTrap/Tooltip/Ripple** — Vue custom directives, not components, matching verified upstream artifact shape exactly (ADR-034). FocusTrap's `MutationObserver` dynamic-content handling carried forward (ADR-035).
 - **Escape** — extracted to shared `@ultimate/uix-utils/escape`, consumed via a thin adapter, not a `react-core` dependency (ADR-036).
 - **Scroll-lock** — extracted to shared `@ultimate/uix-utils/scroll-lock` in full (ADR-036).
-- **Passthrough** — PrimeVue's full `pt`/`ptOptions`/`ptm`/`ptmi`/`ptmo` system excluded entirely from both the component-mixin and directive-factory mechanisms (Option B, ADR-032/033).
+- **Passthrough** — the instance-level `pt`/`ptOptions` mixin is built for components (ADR-077/079/080); the global `pt` source, `usePassThrough` and `pt.hooks` are not built, and directives do not take `pt` — see the Passthrough section above.
 - **Forms** — `@primevue/forms` excluded, a deliberate cut of a real, working PrimeVue feature (ADR-039).
 
 ## Dependencies

@@ -4,7 +4,12 @@ import { createStyleElement } from "@ultimate/uix-utils";
 class ReactStyleSheet extends StyleSheet<HTMLStyleElement> {
   override createStyleElement(meta: StyleMeta): HTMLStyleElement | undefined {
     if (typeof document === "undefined") return undefined; // SSR guard
-    return createStyleElement(meta.css ?? "", meta.attrs, document.head);
+    const element = createStyleElement(meta.css ?? "", meta.attrs, document.head);
+    if (meta.first) document.head.prepend(element);
+    return element;
+  }
+  override updateStyleElement(element: HTMLStyleElement, meta: StyleMeta<HTMLStyleElement>): void {
+    element.textContent = meta.css ?? "";
   }
 }
 

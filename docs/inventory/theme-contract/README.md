@@ -1,6 +1,6 @@
 # Theme contract and Aura — ticket #151
 
-This is a bounded, source-backed inventory of `@ultimate/themes`: the framework-neutral theme contract (token types, mode and direction), `applyUltimateTheme`, and the public Aura preset with its imported and registered token constituents. It describes current source and package configuration only, makes no framework parity claims and does not assert platform-wide completeness. Source facts were inspected at `bced8db5905c1e1f38463c585063e110a93624ca`; the structured input and generated views account for 93 source files under `packages/themes/src`, 10 named root export identities and 6 records. `packages/themes/test` (27 files) lies outside the inventoried roots. See the [generated index](index.md), [scoped validation](validation.md), and [structured input](../../../scripts/inventory/theme-contract.json).
+This is a bounded, source-backed inventory of `@ultimate/themes`: the framework-neutral theme contract (token types, mode and direction), `applyUltimateTheme`, and the public Aura preset with its imported and registered token constituents. It describes current source and package configuration only, makes no framework parity claims and does not assert platform-wide completeness. Source facts were inspected at `bced8db5905c1e1f38463c585063e110a93624ca`; the structured input and generated views account for 94 source files under `packages/themes/src` (`presets/aura/css.ts` was added by ticket #172 after that inspection), 10 named root export identities and 6 records. `packages/themes/test` (27 files) lies outside the inventoried roots. See the [generated index](index.md), [scoped validation](validation.md), and [structured input](../../../scripts/inventory/theme-contract.json).
 
 ## Package availability
 
@@ -10,7 +10,7 @@ The package declares a single `"."` export (types, import and default point at `
 
 - Contract (`themes.contract`): `ColorScale`, `PrimitiveTokens`, `SemanticColorScheme<T>`, `SemanticTokens<T>`, `ComponentTokens<T>`, `UltimateThemeMode`, `UltimateThemeDirection`. Types only; no runtime behavior.
 - Application (`themes.apply`): `applyUltimateTheme(options?: ApplyUltimateThemeOptions): void` and `ApplyUltimateThemeOptions { preset?, darkModeSelector?, cssLayer? }`. Defaults: `auraPreset`, `"system"`, `false`. Calls `Theme.setTheme({ preset, options: { prefix: "u", darkModeSelector, cssLayer } })` from `@ultimate/uix-styled`.
-- Preset (`themes.aura`): `auraPreset`, built with `definePreset({ primitive, semantic, components })` registering 79 component modules under lower-case keys.
+- Preset (`themes.aura`): `auraPreset`, built with `definePreset({ primitive, semantic, css, components })` registering 79 component modules under lower-case keys. `css` is the string exported by `src/presets/aura/css.ts`: one `transition: none` rule for option rows and menu and table rows, with Ultimate class names.
 - Constituents, attributed and not separately public: `themes.aura-base` (`primitive`, `semantic`) and `themes.aura-components` (79 modules). Their constants and token interfaces are not importable from the package root.
 
 ## Source observations retained without repair

@@ -74,9 +74,9 @@ package.ultimate.uix-utils.object (pending cross-batch)
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/styled-runtime.json --out docs/inventory/styled-runtime (run twice; authored README SHA-256 checked before and after)",
-    "revision": "f0b7e867d6edf346284af3400e28e6ec6fbe4500",
+    "revision": "b93f4d6708ab4a00da820df86124a4e8a30687b0",
     "outcome": "passed",
-    "output": "Scoped reconciliation passed twice with identical generated views: 26 source files, 55 named symbols, 55 root export identities, 8 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+    "output": "Scoped reconciliation passed twice with identical generated views: 26 source files, 57 named symbols, 57 root export identities, 8 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
     "run": "docs/inventory/styled-runtime/pilot-run.json",
     "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."

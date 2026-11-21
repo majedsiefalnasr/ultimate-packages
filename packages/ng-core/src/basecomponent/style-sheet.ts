@@ -37,8 +37,13 @@ class NgCoreStyleSheet extends StyleSheet<HTMLStyleElement> {
     const el = this.doc!.createElement("style");
     el.setAttribute(NG_CORE_STYLE_KEY_ATTR, key);
     el.textContent = meta.css ?? "";
-    head.appendChild(el);
+    if (meta.first) head.prepend(el);
+    else head.appendChild(el);
     return el;
+  }
+
+  override updateStyleElement(element: HTMLStyleElement, meta: StyleMeta<HTMLStyleElement>): void {
+    element.textContent = meta.css ?? "";
   }
 }
 

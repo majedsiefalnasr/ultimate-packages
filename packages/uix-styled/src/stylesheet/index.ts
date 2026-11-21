@@ -10,6 +10,17 @@ export interface StyleMeta<E = HTMLStyleElement> {
   attrs?: Record<string, unknown>;
   markup?: string;
   element?: E;
+  /** The entry belongs before every other entry (see `StyleAddOptions`). */
+  first?: boolean;
+}
+
+export interface StyleAddOptions {
+  /**
+   * Places the entry before every other entry in registry order and tells
+   * `createStyleElement` to put the element at the start of its container,
+   * as PrimeNG and PrimeVue load their `layer-order` style with `first: true`.
+   */
+  first?: boolean;
 }
 
 class StyleSheet<E = HTMLStyleElement> {
@@ -31,23 +42,48 @@ class StyleSheet<E = HTMLStyleElement> {
   clear() {
     this._styles.clear();
   }
-  add(key: string, css?: string) {
+  add(key: string, css?: string, options: StyleAddOptions = {}) {
     if (isNotEmpty(css)) {
       const meta = {
         name: key,
         css,
         attrs: this._attrs,
         markup: createStyleMarkup(css, this._attrs),
+        ...(options.first ? { first: true } : {}),
       } satisfies StyleMeta<E>;
 
-      this._styles.set(key, {
+      const entry = {
         ...meta,
         element: this.createStyleElement(meta),
-      });
+      };
+
+      if (options.first) {
+        const rest = [...this._styles].filter(([name]) => name !== key);
+        this._styles.clear();
+        this._styles.set(key, entry);
+        for (const [name, other] of rest) this._styles.set(name, other);
+      } else {
+        this._styles.set(key, entry);
+      }
     }
   }
-  update() {
-    // @todo
+  update(key: string, css = "", options: StyleAddOptions = {}) {
+    const current = this._styles.get(key);
+
+    if (!current) {
+      this.add(key, css, options);
+      return;
+    }
+
+    const meta = {
+      ...current,
+      css,
+      markup: isNotEmpty(css) ? createStyleMarkup(css, this._attrs) : "",
+    } satisfies StyleMeta<E>;
+
+    this._styles.set(key, meta);
+
+    if (meta.element) this.updateStyleElement(meta.element, meta);
   }
   getStyles() {
     return this._styles;
@@ -70,6 +106,14 @@ class StyleSheet<E = HTMLStyleElement> {
   createStyleElement(meta: StyleMeta = {}): E | undefined {
     return undefined;
   }
+  /**
+   * Used to write new css into an element previously returned by
+   * `createStyleElement`.
+   *
+   * @param {E} element
+   * @param {StyleMeta} meta
+   */
+  updateStyleElement(element: E, meta: StyleMeta<E> = {}): void {}
 }
 
 export default StyleSheet;
