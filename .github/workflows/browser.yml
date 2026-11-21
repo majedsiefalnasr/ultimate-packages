@@ -3,15 +3,16 @@
 # holds only the fast checks. With track-a sharded (ADR-071), a full run's
 # longest job took about 10 minutes when measured on 2026-10-20. On a pull
 # request into develop, track-a and SSR run only the frameworks the change can
-# affect; on a push or a pull request into main they run all three (ADR-069,
-# ADR-070).
+# affect, and so does a pull request into any branch other than main (an
+# integration branch, ADR-073); on a push or a pull request into main they run
+# all three (ADR-069, ADR-070).
 name: Browser
 
 on:
   push:
     branches: [main, develop]
+  # No base-branch filter, as in ci.yml.
   pull_request:
-    branches: [main, develop]
 
 # A new push to a pull request cancels that PR's older run. Push runs are
 # keyed by ref and SHA, so they are never cancelled (ADR-070, CO-3).
