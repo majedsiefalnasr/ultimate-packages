@@ -18,7 +18,7 @@ import {
 } from "../utils";
 
 export const DEFAULT_MOTION_OPTIONS: MotionOptions = {
-  name: "p",
+  name: "u",
   safe: true,
   disabled: false,
   enter: true,
