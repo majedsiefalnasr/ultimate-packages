@@ -3981,6 +3981,10 @@
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
+          "path": "packages/ng-core/src/basecomponent/passthrough.spec.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
           "path": "packages/ng-core/src/basecomponent/style-sheet.spec.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
@@ -5255,6 +5259,10 @@
         },
         {
           "path": "packages/react-core/src/base/component-base.spec.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
+          "path": "packages/react-core/src/base/passthrough.spec.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
@@ -9143,6 +9151,10 @@
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
+          "path": "packages/vue-core/src/base/passthrough.spec.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
           "path": "packages/vue-core/src/directive/base-directive.spec.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
@@ -10918,6 +10930,8 @@
       "files": [
         "packages/ng-core/src/basecomponent/base-component.ts",
         "packages/ng-core/src/basecomponent/index.ts",
+        "packages/ng-core/src/basecomponent/parent-instance.token.ts",
+        "packages/ng-core/src/basecomponent/passthrough.ts",
         "packages/ng-core/src/basecomponent/style-sheet.ts"
       ],
       "coverage": {
@@ -12499,7 +12513,8 @@
       "name": "base",
       "files": [
         "packages/react-core/src/base/component-base.ts",
-        "packages/react-core/src/base/index.ts"
+        "packages/react-core/src/base/index.ts",
+        "packages/react-core/src/base/passthrough.ts"
       ],
       "coverage": {
         "id": "package.ultimate.react-core.base",
@@ -15158,7 +15173,8 @@
         "packages/vue-core/src/base/base-component.ts",
         "packages/vue-core/src/base/base-editable-holder.ts",
         "packages/vue-core/src/base/base-input.ts",
-        "packages/vue-core/src/base/index.ts"
+        "packages/vue-core/src/base/index.ts",
+        "packages/vue-core/src/base/passthrough.ts"
       ],
       "coverage": {
         "id": "package.ultimate.vue-core.base",

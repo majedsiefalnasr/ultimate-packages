@@ -1,5 +1,11 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, input } from "@angular/core";
-import { UBaseComponent } from "@ultimate/ng-core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  inject,
+  input,
+} from "@angular/core";
+import { UBaseComponent, UBind, U_PARENT_INSTANCE } from "@ultimate/ng-core";
 import { cardStyleModule } from "./card-style";
 
 /**
@@ -21,37 +27,46 @@ import { cardStyleModule } from "./card-style";
 @Component({
   standalone: true,
   selector: "u-card",
+  imports: [UBind],
   template: `
-    <div [class]="cx('header')">
+    <div [uBind]="ptm('header')" [class]="cx('header')">
       <ng-content select="[card-header]"></ng-content>
     </div>
-    <div [class]="cx('body')">
+    <div [uBind]="ptm('body')" [class]="cx('body')">
       @if (header()) {
-        <div [class]="cx('title')">{{ header() }}</div>
+        <div [uBind]="ptm('title')" [class]="cx('title')">{{ header() }}</div>
       }
       @if (subheader()) {
-        <div [class]="cx('subtitle')">{{ subheader() }}</div>
+        <div [uBind]="ptm('subtitle')" [class]="cx('subtitle')">{{ subheader() }}</div>
       }
-      <div [class]="cx('content')">
+      <div [uBind]="ptm('content')" [class]="cx('content')">
         <ng-content></ng-content>
       </div>
-      <div [class]="cx('footer')">
+      <div [uBind]="ptm('footer')" [class]="cx('footer')">
         <ng-content select="[card-footer]"></ng-content>
       </div>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  providers: [{ provide: U_PARENT_INSTANCE, useExisting: UCard }],
   host: {
     "[class]": "cx('root')",
   },
+  hostDirectives: [UBind],
 })
 export class UCard extends UBaseComponent {
   protected override readonly componentName = "card";
   protected override readonly styleModule = cardStyleModule;
 
+  private readonly bindDirective = inject(UBind, { self: true });
+
   /** Header of the card. */
   header = input<string>();
   /** Subheader of the card. */
   subheader = input<string>();
+
+  ngAfterViewChecked(): void {
+    this.bindDirective.setAttrs(this.ptms(["host", "root"]));
+  }
 }

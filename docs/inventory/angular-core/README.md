@@ -10,7 +10,7 @@ The root `src/index.ts` star-re-exports 15 modules; the inventory tool follows t
 
 ## Interface summary
 
-- Foundation classes: `UBaseComponent` (abstract directive with `dt` and `unstyled` inputs, `cx()`, theme registration through `@ultimate/uix-styled`), `UModelHolder` (`modelValue` signal, `$filled`), `UBaseEditableHolder` (`ControlValueAccessor`, `disabled`), `UBaseInput` (`fluid`, `variant`, `size`, `inputSize` and native constraint inputs; `U_FLUID_ANCESTOR` token).
+- Foundation classes: `UBaseComponent` (abstract directive with `dt`, `unstyled`, `pt` and `ptOptions` inputs, `cx()`, `ptm`/`ptms`/`ptmo`, a `U_PARENT_INSTANCE` host lookup, theme registration through `@ultimate/uix-styled`), `UModelHolder` (`modelValue` signal, `$filled`), `UBaseEditableHolder` (`ControlValueAccessor`, `disabled`), `UBaseInput` (`fluid`, `variant`, `size`, `inputSize` and native constraint inputs; `U_FLUID_ANCESTOR` token).
 - Directives: `UBind` (`[uBind]`), `UOverlay` (`[uOverlay]`, `visible`, `appendTo`, `visibleChange`, z-index registration), `UFocusTrap` (`[uFocusTrap]`, `uFocusTrapDisabled`).
 - Services: `UltimateConfig` (root, `unstyled` and `ripple` signals), `UConfirmationService`, `UDialogService` with `UDynamicDialogRef`, `UTerminalService`, `UToastService`; `ComponentIdGenerator` is `@Injectable()` without `providedIn`.
 - Icons: `UBaseIcon` (abstract; `label`, `spin`), `USpinnerIcon`, `UTimesIcon`, `UWindowMaximizeIcon`, `UWindowMinimizeIcon`.

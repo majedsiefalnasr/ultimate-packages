@@ -10,7 +10,7 @@ Group content into optional header, title, subtitle and footer regions around bo
 
 ## Framework surface
 
-UCard is React.forwardRef<HTMLDivElement, UCardProps>. UCardProps exposes header, title, subTitle, footer and children as React.ReactNode, plus className. The ref targets the outer div. Header is outside body; title, subtitle, content and footer render inside body. Each optional region uses a truthiness condition, so numeric zero does not produce that region. There are no callbacks, factories or exported Card region components. cardStyleModule is a source-only local {css, classes} object consumed by useComponentBase with componentName card; it is exported from the style file but not the family barrel. No family @ultimate/uix-styles entry or component-metadata record exists in this revision. Each family barrel explicitly exports the component and public types; root and family subpath expose the same named surface. Declared dist paths do not establish publication. Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context. Props are explicitly declared; no arbitrary native-attribute spread is implemented.
+UCard is React.forwardRef<HTMLDivElement, UCardProps>. UCardProps exposes header, title, subTitle, footer and children as React.ReactNode, plus className. The ref targets the outer div. Header is outside body; title, subtitle, content and footer render inside body. Each optional region uses a truthiness condition, so numeric zero does not produce that region. There are no callbacks, factories or exported Card region components. cardStyleModule is a source-only local {css, classes} object consumed by useComponentBase with componentName card; it is exported from the style file but not the family barrel. No family @ultimate/uix-styles entry or component-metadata record exists in this revision. Each family barrel explicitly exports the component and public types; root and family subpath expose the same named surface. Declared dist paths do not establish publication. Aura preset registration does not prove rendered appearance. Prime references in source are neutral provenance context. Props are explicitly declared; no arbitrary native-attribute spread is implemented. A0 (#170, ADR-077): UCardProps also takes pt (sections root, header, body, title, subTitle, content, footer) and ptOptions, resolved by createPassThrough from @ultimate/react-core and merged into each region through useMergeProps.
 
 ## Public exports
 
@@ -35,7 +35,7 @@ packages/react-core/src/base/component-base.ts: import { useComponentStyle } fro
 packages/themes/src/presets/aura/index.ts:     card,
 .github/workflows/ci.yml: run: pnpm run test
 package.json: "test:scripts": "node --test scripts/provenance/*.test.mjs"
-packages/react/src/card/card.tsx: {children && <div className={cx("content")}>{children}</div>}
+packages/react/src/card/card.tsx: <div {...mergeProps({ className: cx("content") }, ptm("content"))}>{children}</div>
 ```
 
 ## Relationships

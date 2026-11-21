@@ -1079,3 +1079,72 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 - Third-party presets must use flat component keys, as Aura and Prime do. A preset that keyed a component with a hyphen (for example `"test-component"`) is no longer found. The `ng-core` A1 spec used such a key and now uses `testcomponent`.
 - React components now inject their Aura variable blocks. Most React style modules still do not read them through `dt()` (F8). The React Aura-token rows stay P until the family tickets add `dt()` consumption; this ADR closes only the key mismatch.
 - ADR-051 and ADR-067 each carry a note that points here. Their original text stays as history.
+
+## ADR-079 — `pt` functions receive `parent.instance` through host-instance lookup (A0 design decision, amends ADR-077)
+
+Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), ticket [#170](https://github.com/majedsiefalnasr/ultimate-packages/issues/170) A0). Needs the user's approval. ADR-077 left this open on purpose.
+
+**Context.**
+
+- A `pt` value can be a function. In all three pinned oracles it receives `{ instance, parent: { instance }, ... }`. `parent.instance` is the component that renders this one. A sub-component (a tree node inside a tree, a menu item inside a menu) uses it to style itself from its host's state.
+- The oracles find that parent in different ways:
+  - **PrimeNG 21.1.9** injects a `PARENT_INSTANCE` token (`inject(PARENT_INSTANCE, { optional: true, skipSelf: true })`). A component provides itself with `{ provide: PARENT_INSTANCE, useExisting: Self }`. An optional `hostName` input narrows the search, but `_getHostInstance` (`basecomponent.ts`) compares `this.$name` with `hostName` instead of the visited instance's name. For any component whose `hostName` differs from its own name the search therefore ends in `undefined`. This is a reference defect.
+  - **PrimeVue 4.5.5** injects `$parentInstance`. Each component provides itself. A `hostName` option walks `$parentInstance` up to the instance whose component name equals `hostName`. The fallback is `this.$parent`.
+  - **PrimeReact 10.9.9** has no lookup. Each component passes `parent` (the parent's metadata) and `hostName` in the params of its own `ptm(...)` call.
+- Without this, a `pt` function in a sub-component family cannot read its host, so those rows stay M in Track B.
+
+**Options.**
+
+- **A (recommended, implemented): lookup per framework as the oracle does it.** Angular gets the `U_PARENT_INSTANCE` token. Vue gets `$parentInstance` and the `hostName` option. React takes `parent` and `hostName` in the `ptm` params. Choosing it means the family tickets for sub-components only wire names. Ultimate Angular drops `hostName` and does not copy the PrimeNG defect.
+- **B: no lookup now.** `parent.instance` stays `undefined`. Each sub-component family would add its own lookup later, which is the duplication ADR-077 set out to avoid.
+
+**Decision (as implemented, pending approval).** Option A.
+
+- **Angular (`ng-core`).** `UBaseComponent.$parentInstance` is `inject(U_PARENT_INSTANCE, { optional: true, skipSelf: true })`. A component that renders other `UBaseComponent`s provides `{ provide: U_PARENT_INSTANCE, useExisting: Self }`. `$params.parent.instance` is that nearest provider. There is no `hostName`.
+- **Vue (`vue-core`).** The base mixin provides every instance as `$parentInstance` and injects the nearest one. `createBaseComponent({ hostName })` walks up to the instance whose `componentName` equals `hostName`. `parent.instance` is that host, else `$parentInstance`, else `$parent`.
+- **React (`react-core`).** `createPassThrough(name, { props, state, parent, hostName })` spreads the metadata into the `ptm` params. The caller supplies `parent`. React has no automatic lookup, same as PrimeReact. `PassThroughMetadata.hostName` only sets `data-pc-name`.
+
+**Consequences.**
+
+- A Vue component whose `ptm` runs under a parent receives the parent's `$props`, `$data` and `$attrs` in the `parent` params, as PrimeVue does.
+- A Vue component that provides its own `$parentInstance` through a different mechanism would override the base mixin's provider. None exists today.
+- The `hostName` lookup also decides which instance supplies `ptOptions` when a sub-component sets none. That path has no effect until a global `pt` source exists (ADR-080).
+
+## ADR-080 — A0 builds the instance-level `pt` and `ptOptions` only; global `pt`, `usePassThrough`, `pt.hooks` and `$attrSelector` are not built (A0 scope decision, amends ADR-077)
+
+Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), ticket [#170](https://github.com/majedsiefalnasr/ultimate-packages/issues/170) A0). Needs the user's approval, in particular the recommendation on the global source.
+
+**Context.**
+
+- ADR-077 builds `pt` and `ptOptions` once in the cores and keeps the rest of ADR-056: no new `config` surface.
+- In the three oracles `ptOptions` (`mergeSections`, `mergeProps`) decides how the **global/default `pt`** from the config (`PrimeNG.pt`, `app.use(PrimeVue, { pt })`, `PrimeReactProvider value.pt`) is merged with the instance `pt`. The merge formula is `{ ...global, ...self, ...datasets }`, or `mergeProps(global, self, datasets)` when `ptOptions.mergeProps` is set. With no global value, the instance `pt` and the `data-pc-*` datasets share no keys that those options change. So **`ptOptions` has no observable effect on a rendered component until a global source exists.**
+- The oracles carry three more `pt` features beyond the instance prop:
+  - the `_usept` wrapper that `usePassThrough(globalPt, customPt, options)` produces;
+  - `pt.hooks.onMounted` and the other lifecycle hooks;
+  - the per-instance `$attrSelector` attribute that `ptm('root')` emits next to the datasets. It belongs to scoped `dt` (ticket #175), which owns that selector.
+
+**Options for the global source.**
+
+- **A (recommended): do it as its own Track A ticket after A0.** The resolvers already take the global section value as an input (`context.global`), so a later ticket supplies it from the config without touching any family. That ticket needs the config-surface decision ADR-056 deferred: an Angular `UltimateConfig` field, a React provider and a Vue plugin option. Waiting costs nothing in Track B, because families only call `ptm`.
+- **B: build it inside A0.** It adds a config surface in all three frameworks at once and contradicts "no new `config` surface" in ADR-077 without a ruling.
+
+**Decision (as implemented, pending approval).** Option A for the global source. A0 builds, in all three cores:
+
+- the `pt` and `ptOptions` inputs (props), `ptm`, `ptmo`, plus `ptms` (Angular, as PrimeNG) and `ptmi` and `pt:section:attribute` attributes (Vue, as PrimeVue);
+- nested keys (`a.b`), flat-case key matching, function values and function `pt`, string/array to class, the `data-pc-name`, `data-pc-section` and `data-pc-extend` datasets, `searchOut` for keys whose first segment is a param, and the `mergeSections` and `mergeProps` branches of the merge formula;
+- the host-instance lookup of ADR-079.
+
+It does not build the global/default `pt` source, `usePassThrough`, `pt.hooks`, the `$attrSelector` dataset or the `ptmi` `id` fallback (PrimeVue assigns a generated id there). These stay open rows for the global-source ticket or for a ruling that removes them.
+
+**Oracle behavior ported as it is.** The pinned sources govern. Each of these is a reference defect or an oddity the user may want to rule on separately; none is changed here:
+
+- With `mergeSections: false` the merge formula `mergeSections || (!mergeSections && self)` still merges when the instance has the section. It only drops the global value when the instance has none. PrimeVue's `self` is always an object, so there `mergeSections: false` never drops it.
+- PrimeReact turns `{ className: [..], id }` into `{ className }` and loses `id`.
+- PrimeNG derives `data-pc-section` from the last segment of a dotted key, PrimeVue from the whole key, PrimeReact from the second segment when the first names a param.
+- The `searchOut` test is `/./g.test(key) && !!params[key.split('.')[0]]`, so it is true for any non-empty key whose first segment names a param.
+
+**Consequences.**
+
+- `ptOptions` is accepted, typed and tested against the merge formula (with a stand-in global value), but a component cannot observe it until the global source ticket lands. Phase 4 should keep the `ptOptions` rows P, not C, until then.
+- The root `data-pc-name` is the component's `componentName`, flat-cased (`card`, `inputtext`). It equals Prime's value wherever Ultimate's name is Prime's name flat-cased.
+- READMEs of `ng-core`, `react-core` and `vue-core` document the API and these limits.
