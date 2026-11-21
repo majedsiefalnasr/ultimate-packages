@@ -10,7 +10,7 @@ Path shorthands:
 - U-NG = `packages/ng/src/chip/chip.ts`, U-NG-S = `chip-style.ts`; U-R = `packages/react/src/chip/chip.tsx`, U-R-S = `chip-style.ts`; U-V = `packages/vue/src/chip/Chip.vue`, U-V-B = `BaseChip.ts`, U-V-S = `chip-style.ts`
 - R = `docs/prime-reference/components/chip.md`
 
-Not to be confused with InputChips/Chips (separate family, `batch2/chips.md`).
+Not to be confused with InputChips/Chips (separate family, `batch1/chips.md`).
 
 ## 1. Mapping
 

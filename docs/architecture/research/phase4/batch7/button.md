@@ -1,4 +1,4 @@
-# Button: Phase 4 candidate matrix (batch8, source-only)
+# Button: Phase 4 candidate matrix (batch7, source-only)
 
 Status: candidate written early, pending lead review. Ultimate HEAD 91a8472547e34c6e92456f2b98270a1555e3a2db. Pins: PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5. Source-only; no tests, builds or browser checks. Classes: C complete, P partial, M missing, I intentional, N not applicable, U unresolved.
 Path shorthand: `PN` = PrimeNG `packages/primeng/src`; `PR` = PrimeReact `components/lib`; `PV` = PrimeVue `packages/primevue/src`, all under `.vendor-cache/extracted/`. Product paths are relative to the Ultimate repo. Citations come from line-numbered reads of the product and pinned Prime source.

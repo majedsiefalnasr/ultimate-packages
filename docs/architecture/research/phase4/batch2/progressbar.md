@@ -1,4 +1,4 @@
-# ProgressBar — Phase 4 gap analysis (batch3)
+# ProgressBar — Phase 4 gap analysis (batch2)
 
 Cross-cutting findings are in DECISIONS.md D-SHARED (not repeated here). pt follows D-PT (missing wherever Prime offers it).
 Evidence kind for every row: source-read only (no test runs, no visual check). Repo rev 91a8472547e34c6e92456f2b98270a1555e3a2db.
