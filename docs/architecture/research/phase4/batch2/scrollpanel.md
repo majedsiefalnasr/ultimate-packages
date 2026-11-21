@@ -50,10 +50,14 @@ Prefixes: `PNG` = `.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cd
 
 Not a reference defect (unverified mechanism, see §6): REC:66 says arrow keys repeat by `step` while held. All three pinned sources schedule one 40 ms `setTimeout` per keydown (`PNG/scrollpanel/scrollpanel.ts:331-336`, `PRA/scrollpanel/ScrollPanel.js:247-252`, `PVA/scrollpanel/ScrollPanel.vue:249-254`). Ultimate uses the same code in all three (`packages/ng/src/scroll-panel/scroll-panel.ts:260-268`, `packages/react/src/scroll-panel/scroll-panel.tsx:112-120`, `packages/vue/src/scroll-panel/ScrollPanel.vue:215-221`). This does not disprove repeat-while-held, because the browser may dispatch repeated keydown events. No reference defect is asserted, and no parity difference exists in source.
 
+<!-- prettier-ignore-start -->
+
 1. `aria-controls`. REC:65 says the bars control the content element. Only PrimeVue assigns the content id; PrimeNG and PrimeReact leave `aria-controls` dangling (REC:67-68 records this correctly).
 2. PrimeReact swaps `aria-valuenow` between the bars (`PRA/scrollpanel/ScrollPanel.js:327,345`; REC:69). Ultimate React does not copy the swap.
-3. Focus-ring token path. `@primeuix/styles` 2.0.3 reads `scrollpanel.barfocus.ring.width` and `.offset` (`PUS/scrollpanel/index.mjs`), not the `bar.focus.ring.*` tokens listed in REC:77. This is an upstream defect that Ultimate NG and Vue inherit.
-4. Touch. No touch handling exists in any pinned ScrollPanel source. The "touch-drag excluded" comments in Ultimate (`packages/ng/src/scroll-panel/scroll-panel.ts:35`, `packages/react/src/scroll-panel/scroll-panel.tsx:31`, `packages/vue/src/scroll-panel/ScrollPanel.vue:60`) describe a capability Prime does not have, so it is not a gap.
+4. Focus-ring token path. `@primeuix/styles` 2.0.3 reads `scrollpanel.barfocus.ring.width` and `.offset` (`PUS/scrollpanel/index.mjs`), not the `bar.focus.ring.*` tokens listed in REC:77. This is an upstream defect that Ultimate NG and Vue inherit.
+5. Touch. No touch handling exists in any pinned ScrollPanel source. The "touch-drag excluded" comments in Ultimate (`packages/ng/src/scroll-panel/scroll-panel.ts:35`, `packages/react/src/scroll-panel/scroll-panel.tsx:31`, `packages/vue/src/scroll-panel/ScrollPanel.vue:60`) describe a capability Prime does not have, so it is not a gap.
+
+<!-- prettier-ignore-end -->
 
 ## 6. Unresolved
 
