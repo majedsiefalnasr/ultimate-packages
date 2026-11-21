@@ -89,10 +89,19 @@ Proposed action: decide whether the phase list should be committed (for example 
 
 ## Findings that need a decision
 
-1. `PACKAGE_ARCHITECTURE.md` is stale. Rewrite, fold into the Blueprint, or remove.
-2. `COMPONENT_INVENTORY.md` can be removed once the references (root, ng, react and vue READMEs, and code comments in `component-metadata` and `ng/input-text`) point to `docs/inventory/`.
-3. `AI_ARCHITECTURE.md` can be removed if Blueprint sections 22 to 26 carry the same rules.
-4. Four ADRs say "pending Prime study". The study is complete, so they need a ruling.
-5. `ULTIMATE_COMPLETION_PHASES.md` has no durable copy.
+Resolved in the narrow cleanup (2026-11-21):
 
-None of these block the gap-closing phase. They are cleanup inputs and stay untouched until that phase is done.
+1. `PACKAGE_ARCHITECTURE.md` rewritten as stable rules with no counts, phase labels or status.
+2. `AI_ARCHITECTURE.md` removed, together with its line in Blueprint section 39. Its rules are in Blueprint sections 2 and 6.
+3. The root `README.md` link to the component inventory now points to `docs/inventory/README.md`.
+4. `COMPATIBILITY.md` line 3 and `docs/prime-reference/README.md` line 3 wording corrected.
+5. `ULTIMATE_COMPLETION_PHASES.md` recorded as `realignment-phases.md` (PR #162).
+6. `GLOSSARY.md` now defines Realignment phase, Roadmap Phase and Gap.
+
+Still open:
+
+1. The ng, react and vue package READMEs still link to `COMPONENT_INVENTORY.md`. Repointing them failed the provenance gate (`scripts/provenance/validate-provenance.mjs`), which requires a `PROVENANCE.md` update for any change under `packages/{ng,react,vue}`, README included. Repoint them in the final cleanup ticket, together with the next item, in one change that also updates `PROVENANCE.md`.
+2. `COMPONENT_INVENTORY.md` is kept, with its historical banner. Code comments cite its rows by content: `packages/component-metadata/src/records/table.ts`, `packages/component-metadata/src/records/scroller.ts` and `packages/ng/src/input-text/input-text.ts`. `docs/inventory/` does not contain those rows, so repointing the comments would make false citations. Remove the file in the final cleanup ticket, after those comments are rewritten.
+3. Four ADRs (030, 031, 039, 040) say "pending Prime study". They are already marked no longer binding. Rule on them first in the gap-closing spec, because each is a product decision.
+
+Nothing above blocks the gap-closing phase.

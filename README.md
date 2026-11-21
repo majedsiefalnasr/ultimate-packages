@@ -11,7 +11,7 @@ Pre-release. Every package is at version `0.1.0`, and nothing has been published
 Current work is tracked in GitHub Issues. Architecture and coverage live in the repository itself:
 
 - [`docs/architecture/DECISIONS.md`](docs/architecture/DECISIONS.md) — architectural decisions
-- [`docs/architecture/COMPONENT_INVENTORY.md`](docs/architecture/COMPONENT_INVENTORY.md) — component coverage
+- [`docs/inventory/README.md`](docs/inventory/README.md) — component inventory
 
 The `ci` workflow runs every gate and reports each step on its own. Some gates currently fail on known, pre-existing repository debt, so a red job does not by itself mean a regression; check the individual step results.
 

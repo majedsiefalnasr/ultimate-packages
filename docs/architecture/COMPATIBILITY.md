@@ -1,6 +1,6 @@
 # Compatibility / Baseline Manifest
 
-Pinned Phase 0 baselines. Re-verify immediately before Phase 1 kickoff per the spec's Risks section (Prime relicensing volatility observed during Phase 0 investigation itself).
+Pinned compatibility baselines. Re-verify them before relying on them for a consequential decision (Prime relicensing volatility was observed during the original baseline investigation).
 
 | Framework          | Status                       | Version  | Commit / Identifier                                       | License              |
 | ------------------ | ---------------------------- | -------- | --------------------------------------------------------- | -------------------- |

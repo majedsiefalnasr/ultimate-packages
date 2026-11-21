@@ -1,6 +1,6 @@
 # Prime reference study
 
-**Status:** complete (Phase 2). Coverage table below accounts for every showcase menu item.
+**Status:** complete (Realignment phase 2). Coverage table below accounts for every showcase menu item.
 
 A description of the Prime baseline (ADR-048) for Angular, React and Vue. It is an upstream reference: it records what Prime ships, not what Ultimate implements, and sits outside Ultimate's source-of-truth hierarchy (`AGENTS.md` §2). Use it to compare Ultimate against Prime; use `@ultimate/component-metadata` and component source for Ultimate's own facts.
 
