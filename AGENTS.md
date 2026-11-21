@@ -63,7 +63,10 @@ Verification evidence lives in different places depending on its durability: CI 
 - Preserve existing uncommitted changes — never `reset --hard`, `clean -f`, `checkout --`, or otherwise discard working-tree state you didn't create, without confirming it's safe first.
 - Destructive git operations (force-push, hard reset, branch deletion, history rewrite) require explicit authorization each time — a prior authorization for a different operation doesn't carry forward.
 - Pushing to a remote requires explicit authorization unless the task's context already grants it.
-- New work branches from `develop` and opens its PR against `develop`. `release/*` (from `develop`) and `hotfix/*` (from `main`) are reserved: each merges into `main` and back into `develop`. After any merge into `main`, including the Version Packages PR, `main` is merged back into `develop`. Other prefixes stay an implementation-level choice.
+- Every work branch is cut from its parent branch and opens its PR against that parent (ADR-073). Standalone work has `develop` as its parent. A spec with several tickets gets one integration branch `feat/<spec-slug>` from `develop`, and each ticket branch `type/<ticket-id>-slug` is cut from it. A ticket that must be split further becomes the integration branch of its sub-tickets; do not nest deeper than that.
+- A child branch merges its parent before its PR is opened. An integration branch merges `develop` whenever `develop` has moved, and before its final PR. Shared branches are never rebased.
+- An integration branch merges into `develop` only as one PR, after all its tickets are merged and the checks are green. Unfinished integration work never reaches `develop`.
+- `release/*` (from `develop`) and `hotfix/*` (from `main`) are reserved: each merges into `main` and back into `develop`. After any merge into `main`, including the Version Packages PR, `main` is merged back into `develop`, and open integration branches then merge `develop`. Other prefixes stay an implementation-level choice.
 - Create work branches and worktrees with `--no-track`, and push with an explicit `src:dst` refspec. With `push.default=upstream`, a branch tracking `origin/develop` or `origin/main` pushes straight to it.
 - Run `pnpm install` under Node 24.15.0 in each checkout or worktree before committing. Git hooks live in `.husky/_` (`core.hooksPath`), which husky creates per checkout. Without it git runs no hooks and gives no warning.
 
@@ -75,7 +78,7 @@ Verification evidence lives in different places depending on its durability: CI 
 - Never use `git add -A`/`git add .` as a default — stage only the files the current authorized task actually touched.
 - Never include unrelated changes (the user's own in-progress edits, another agent's work) in a commit.
 - Never push a commit unless the task's context explicitly authorizes it.
-- Feature PRs merge into `develop` with a merge commit; squash and rebase merges are not used (ADR-068).
+- Every PR merges into its parent branch with a merge commit; squash and rebase merges are not used (ADR-068, ADR-073).
 
 ### 5.3 Pre-work repository safety
 
