@@ -68,6 +68,8 @@ Status: Accepted (Phase 1). The four pinned `@primeuix/*` npm tarballs ship only
 
 Status: Accepted (Phase 1 spec). `@primeuix/styles@2.0.3` ships a `base` module (global/framework-level CSS: box-sizing reset, disabled-state opacity, icon sizing, overlay-mask positioning, collapsible-panel animation) alongside ~90 per-component style modules (button, dialog, datatable, etc.). Phase 1 incorporates only `base` — the ~90 per-component modules are component styles, not shared infrastructure, and Phase 1's explicit non-goal is "do not migrate framework components." Each per-component module migrates alongside its owning component during Phase 2 (Angular), Phase 3 (React), or Phase 4 (Vue). A scope-guard test (`packages/uix-styles/test/scope-guard.test.ts`) enforces this boundary in CI.
 
+**Amended by ADR-082 (2026-11-21):** the Phase 1 limit to `base` no longer binds. A family's structural style lives in `uix-styles` by default, and staying framework-local needs a recorded reason. The rest of this ADR is unchanged.
+
 ## ADR-018 — Option B: Ultimate-owned Angular base-class architecture
 
 Status: Accepted (Phase 2 spec, confirmed by implementation). `ng-core`'s `UBaseComponent`/`UBaseEditableHolder` hierarchy is independently authored, informed by but not copied from PrimeNG's `BaseComponent`/`BaseEditableHolder` — notably, PrimeNG's full passthrough (`pt`/`ptOptions`/`ptm`/`ptms`/`ptmo`) system, its `$parentInstance` DI-token lookup, and its full global-config surface are excluded from Phase 2's `UBaseComponent`/`UltimateConfig`, which cover only DI wiring (document/platformId/el/renderer/config), lifecycle, the `dt`/`unstyled` input pair, a `cx()` class-name-slot resolver, and `@ultimate/uix-styled`-backed style registration. This scoping held up across all 5 built components: each component's own provenance entry (`docs/architecture/provenance/ng.json`) documents deliberately excluding passthrough/DI-token-lookup call sites it would otherwise need to port (e.g. Button's badge/Fluid ancestor-detection wiring, Dialog's breakpoint passthrough). Revisit passthrough support only if a later-phase component creates real duplicate-pattern pressure (spec: DEFER, Needs Architecture Decision).
@@ -1148,3 +1150,32 @@ It does not build the global/default `pt` source, `usePassThrough`, `pt.hooks`, 
 - `ptOptions` is accepted, typed and tested against the merge formula (with a stand-in global value), but a component cannot observe it until the global source ticket lands. Phase 4 should keep the `ptOptions` rows P, not C, until then.
 - The root `data-pc-name` is the component's `componentName`, flat-cased (`card`, `inputtext`). It equals Prime's value wherever Ultimate's name is Prime's name flat-cased.
 - READMEs of `ng-core`, `react-core` and `vue-core` document the API and these limits.
+
+## ADR-082 — Structural styles live in `@ultimate/uix-styles` by default; staying framework-local needs a recorded reason (foundation F9; amends ADR-017)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F9, ticket [#178](https://github.com/majedsiefalnasr/ultimate-packages/issues/178)). The user chose Option A on 2026-11-21.
+
+**Context.**
+
+- Prime ships its structural style of every component as one module in `@primeuix/styles`, and PrimeNG, PrimeReact and PrimeVue all consume that one module.
+- Ultimate's `@ultimate/uix-styles` holds 12 of Prime's 93 structural style modules (badge, button, checkbox, dialog, inputnumber, inputtext, menu, paginator, table, tooltip, virtualscroller, base). Shared imports are 11 in Angular, 3 in React and 9 in Vue. Most styles are framework-local copies (83 files in Angular, 83 in React, 86 in Vue), so the same CSS is maintained up to three times and can drift (Phase 4 shared-foundation audit, item F9, ruled P in all three frameworks).
+- ADR-017 limited `uix-styles` to the `base` module for Phase 1 and said each per-component module would migrate with its owning component. It set no rule for when a family's style moves, and a scope-guard test enforces the Phase 1 list.
+
+**Decision.**
+
+- **Default.** A family's structural style is one module in `@ultimate/uix-styles`, named after the family, with `u-*` selectors, and all three frameworks consume it. A new or reworked family does not add a style copy inside a framework package.
+- **Exception.** A family keeps a framework-local style only when the three frameworks cannot share one stylesheet, for example because Ultimate's DOM for that family differs by framework on purpose. The family ticket states the reason, and the family's provenance record repeats it. A missing reason is a review finding.
+- **Moves.** The moves happen inside the Track B family tickets, each when it first touches the family. This ADR moves nothing.
+- **Mechanics.** A new module adds a `./<name>` subpath export, a test in `uix-styles`, a provenance record under `docs/architecture/provenance/uix-styles.json`, and an update to the scope-guard list. The tree-shaking check lists the subpath.
+- **ADR-017.** Its Phase 1 limit to `base` no longer binds. Its statement that a per-component module migrates alongside its owning component stands, and this ADR gives the default for it.
+
+**Alternatives not chosen.**
+
+- Option B, a rule of two (share a style only when a second framework needs it): rejected because it leaves the first framework's copy as the one that drifts, and every Track B family would need a judgment call.
+- Option C, keep the current practice: rejected because it keeps up to three copies of each style and gives no rule for new families.
+
+**Consequences.**
+
+- Each Track B family ticket has one more deliverable: the shared module and its three consumers, or a recorded exception.
+- Existing framework-local copies are not rewritten in bulk. They move when their family ticket runs.
+- `PACKAGE_ARCHITECTURE.md` states the rule so that family tickets apply it without reading this ADR.
