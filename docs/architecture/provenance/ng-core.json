@@ -3,7 +3,7 @@
     "originalPath": "packages/primeng/src/basecomponent/basecomponent.ts",
     "ultimateDestination": "packages/ng-core/src/basecomponent/base-component.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Ultimate-owned, scoped-down reimplementation of PrimeNG's BaseComponent (Option B). Covers DI wiring (document/platformId/el/renderer/config), the dt/unstyled input pair, a cx() class-name-slot resolver, and @ultimate/uix-styled-backed style registration on init. Deliberately excludes PrimeNG's full passthrough (pt/ptOptions/ptm/ptms/ptmo) system, $parentInstance DI-token lookup, and full global-config surface — all explicitly deferred per the approved Phase 2 spec (Needs Architecture Decision). A1 (#171): ngOnInit registers its structural CSS through registerComponentCss from @ultimate/uix-styled instead of a local has()/add() guard, so it follows theme:change. PrimeNG 21.1.9 basecomponent.ts:395-401 (_themeChangeListener) is the reference; only the behavior is shared."
+    "modificationDescription": "Ultimate-owned, scoped-down reimplementation of PrimeNG's BaseComponent (Option B). Covers DI wiring (document/platformId/el/renderer/config), the dt/unstyled input pair, a cx() class-name-slot resolver, and @ultimate/uix-styled-backed style registration on init. Deliberately excludes PrimeNG's full passthrough (pt/ptOptions/ptm/ptms/ptmo) system, $parentInstance DI-token lookup, and full global-config surface — all explicitly deferred per the approved Phase 2 spec (Needs Architecture Decision). A1 (#171): ngOnInit registers its structural CSS through registerComponentCss from @ultimate/uix-styled instead of a local has()/add() guard, so it follows theme:change. PrimeNG 21.1.9 basecomponent.ts:395-401 (_themeChangeListener) is the reference; only the behavior is shared. A0 (#170, ADR-077/078/079): adds the pt/ptOptions input pair, $parentInstance, $pt, $params and ptm/ptms/ptmo, which call getPassThroughValue in passthrough.ts. The earlier statement that the passthrough system and the $parentInstance lookup are excluded no longer holds for the instance-level mechanism. Still excluded: the global-config surface, the global and default pt sources, pt.hooks, the hostName input and the $attrSelector dataset. Members ptms/ptmo and the ptm/$params shape are retained from basecomponent.ts lines ~496-508 (source class COPY for those members); the rest of the file keeps its earlier classification."
   },
   {
     "originalPath": "n/a",
@@ -16,6 +16,24 @@
     "ultimateDestination": "packages/ng-core/src/basecomponent/style-sheet.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored module-level StyleSheet singleton wrapper. @ultimate/uix-styled's StyleSheet is a plain class, not an Angular-injectable providedIn:'root' service, so ng-core owns a single shared instance here for all UBaseComponent subclasses to register against. A1 (#171): overrides updateStyleElement to write the new css into the adopted or created <style> element. A one-line standard DOM write; no upstream expression retained."
+  },
+  {
+    "originalPath": "packages/primeng/src/basecomponent/basecomponent.ts",
+    "ultimateDestination": "packages/ng-core/src/basecomponent/passthrough.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064, ambiguity resolves to COPY). Side-by-side with PrimeNG 21.1.9 basecomponent.ts _getPTValue (lines ~418-448), _getPTClassValue and the datasets block: the searchOut test, the self/datasets/global construction, the data-pc-name/-section/-extend rules, the `mergeSections || (!mergeSections && self)` condition and the `{ ...global, ...self, ...datasets }` / mergeProps branch keep upstream's statements and control flow, renamed and rewritten as free functions over a context object. Subset: the _usePT/_useDefaultPT/_useGlobalPT lookups against config.pt() are replaced by context.global, so the global and default pt sources, _usept and pt.hooks are not present. Oracle oddities ported as they are are listed in ADR-079. Added in A0 (#170)."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/basecomponent/passthrough.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream (PrimeNG ships no spec for basecomponent.ts). Covers getPassThroughValue (nested and flat-case keys, function values, class strings and arrays, datasets, searchOut, mergeSections and mergeProps against a stand-in global value) and the ptm/ptms/ptmo and $parentInstance behavior of UBaseComponent. Added in A0 (#170)."
+  },
+  {
+    "originalPath": "packages/primeng/src/basecomponent/basecomponent.ts",
+    "ultimateDestination": "packages/ng-core/src/basecomponent/parent-instance.token.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Source class REFERENCE (ADR-064). Compared with PrimeNG 21.1.9 basecomponent.ts PARENT_INSTANCE: only the interface facts are shared (an InjectionToken that a component provides with useExisting and a descendant injects with { optional: true, skipSelf: true }). The token name, the typing and the doc comment are Ultimate's own. Added in A0 (#170, ADR-078)."
   },
   {
     "originalPath": "n/a",
