@@ -6,7 +6,7 @@
 - Evidence: source reads only. No product edits, tests, browser, visual or assistive-technology checks.
 - Classes: C complete / P partial / M missing / I intentional / N n/a / U unresolved. `pt` and `ptOptions` are separate rows (D-PT). The `unstyled` and per-instance `dt` rows follow D-SHARED #5. Default differences are flags, outside the counts.
 - User rulings needed: none. No reference defect changes a classification.
-- Supersedes the preliminary Table sample in `PILOT-RECOVERY.md`. Correction to that sample: React **cell**-edit callbacks are inert (row 17); React **row**-edit callbacks do fire (row 15).
+- Supersedes the preliminary Table sample in the pilot recovery notes. Correction to that sample: React **cell**-edit callbacks are inert (row 17); React **row**-edit callbacks do fire (row 15).
 
 ## Distribution (C/P/M/I/N/U, 43 rows per framework)
 

@@ -306,9 +306,9 @@ At the end of Phase 4, one curated closeout document is saved inside the product
 
 ## Reference-defect notes
 
-Standalone reference-defect notes from the family and pilot reports, kept verbatim with their evidence file and line (88 notes).
+Standalone reference-defect notes from the family and pilot reports, kept verbatim under the batch or family they belong to (88 notes). Review logs, candidate drafts and recovery notes are not kept in the repository, so their notes are labelled by batch or family instead of by file.
 
-### `PILOT-RECOVERY.md`
+### Pilot recovery notes
 
 - L22: Root event 474; final current-method matrix `pilot/tabs.md` (14 rows/framework, including the 2026-11-21 Aura-token row). Counts C/P/M/I/N/U: NG 5/5/3/0/1/0; React 2/6/5/0/1/0; Vue 5/2/6/0/1/0 (13-row figures before that row were NG 4/5/3/0/1/0; React 2/5/5/0/1/0; Vue 4/2/6/0/1/0). Angular/Vue map to five-part Tabs; React maps to TabView/TabPanel, with TabMenu separate. User ruled Vue Home/End C following pinned source; the docs reversal is recorded as a reference defect. React and Angular remain P due PageUp/PageDown gaps. React inkbar is missing; lazy mounting is M in all three. Earlier Vue checks at `3864a1d` bypassed PostCSS and establish neither styling nor unchanged files at the pilot baseline.
 
@@ -336,7 +336,7 @@ Standalone reference-defect notes from the family and pilot reports, kept verbat
 
 - L88: No unresolved rows; no class-affecting reference defect. Rows 13–15 make accessibility claims from source only; a screen-reader check in a real browser is needed before any accessibility statement. Tests: `packages/react/src/multi-state-checkbox/multi-state-checkbox.spec.tsx` (7 cases) exists; not run.
 
-### `batch1/review-log.md`
+### Batch 1 review-log notes
 
 - L41: 2. MeterGroup row 12 Vue — n/a + reference defect; public slot not wired at the PrimeVue root.
 - L42: 3. MeterGroup row 20 React and Vue — complete + reference defect; Ultimate's guard (100) is a safer extra.
@@ -409,7 +409,7 @@ Standalone reference-defect notes from the family and pilot reports, kept verbat
 
 - L113: **Reference defects (no verdict depends on them)**
 
-### `batch4/review-log.md`
+### Batch 4 review-log notes
 
 - L10: **OrganizationChart** (23 rows/framework): NG `0/0/22/0/1/0`; React `8/5/7/0/3/0`; Vue `8/6/8/0/1/0`. React single-root array mapping is complete; multi-root rendering is an extension. React `expanded:false` row is partial per user ruling: PrimeReact suppresses children at `OrganizationChartNode.js:70-73,117-120`; Ultimate initializes collapsed and permits toggle-open at `packages/react/src/organization-chart/organization-chart.tsx:37,75-103`. Record a PrimeReact reference defect. User ruled to use pinned PrimeVue source for Vue `selectable:false`: PrimeVue emits selection despite the flag, while Ultimate Vue blocks it (`packages/vue/src/organization-chart/OrganizationChart.vue:25-33`; pinned PrimeVue `OrganizationChartNode.vue:110-117,150-154`; docs `docs/prime-reference/components/organizationchart.md:74`). The click-exclusion capability is N/A in PrimeVue and Ultimate's stricter blocking is an Ultimate-specific extra; record the docs/source conflict. ADR-054 makes Angular implementation eligible, so absent implementation is missing, not intentional. React selectable=false is complete (Ultimate and PrimeReact both block it).
 - L11: **PanelMenu**: Angular accessibility was split into two capabilities: header/button-to-region relation is partial independently of the reference defect; for nested role, user ruled to follow pinned PrimeNG source (`tree`) over docs (`group`), making Ultimate's matching `tree` behavior complete and recording the docs/source conflict. Updated counts: NG `1/7/6/0/1/0` over 15 rows; React `1/5/6/0/2/0`; Vue `0/5/8/0/1/0`.
@@ -436,40 +436,40 @@ Standalone reference-defect notes from the family and pilot reports, kept verbat
 
 - L27: Notes: React hand CSS not in ADR-067 exceptions → architecture violation recorded, not decided. No reference defects confirmed. Specs 4/framework jsdom at c531e881…, not rerun. Row 10 exact check: computed --u-progressspinner-color-one in browser.
 
-### `batch5/review-log.md`
+### Batch 5 review-log notes
 
 - L4: User ruling 2026-11-18: Mention React row23 U→N; pinned source lacks docs-promised ARIA; record reference defect and Ultimate additions. Updated report and DECISIONS.md. Final React 4/9/12/1/2/0.
 - L5: Agent-9 DeferredContent/InputGroup draft received; returned for missing inventory/source checks before saving final reports. InputGroup NG fluid reference defect still needs individual user ruling after source review.
 
-### `batch6/candidates/inputnumber.md`
+### inputnumber candidate draft notes
 
 - L122: The Vue `getFormatter` row was resolved by user ruling as C + reference defect: both pinned runtime and product expose computed formatter behavior while PrimeVue types/docs call it a method. The React forms-integration row is N/A after source audit confirmed PrimeReact has no dedicated field registration/context/adapter. No U rows remain in this candidate matrix; product defects remain part of their own capability verdicts.
 - L128: 1. PrimeNG Home/End: documentation promises the provided bound, including zero; pinned inputnumber.ts:962-971 tests truthiness and skips zero. Classification is M in Angular regardless of which behavior is the oracle, because Ultimate has neither Home nor End; the source/docs conflict is recorded as a reference defect and needs no ruling. Do not apply a ruling from another family.
 - L129: 2. PrimeVue getFormatter (user ruling): classify complete because both runtime implementations expose computed formatter functionality. Record the contradiction in InputNumber.d.ts:505 and docs/prime-reference/components/inputnumber.md:67 as a reference defect. Source oracle wins.
 
-### `batch6/candidates/inputotp.md`
+### inputotp candidate draft notes
 
 - L80: The user rulings resolve React focus/blur and root attribute forwarding as N/A + reference defects. Angular integer-only Tab behavior is P + reference defect: pinned source blocks Tab despite the documentation, while Ultimate allows leaving the field. React paste/whole-code entry is P from the compared source behavior; no documentation defect is claimed. No classification rulings remain open in this matrix. Product defects and source-only verification limits remain separate.
 
-### `batch6/candidates/password.md`
+### password candidate draft notes
 
 - L110: The React forms-integration row is N/A after source audit confirmed PrimeReact has no dedicated field registration/context/adapter. The user ruled NG and React live-announcement rows N + reference defect: pinned sources lack live regions despite the documentation promise. No U rows remain; assess the documented product defects in their own capability rows.
 - L116: 1. PrimeNG strength announcement: showcase promises aria-live but pinned source password.ts:435-505 does not supply one; docs/prime-reference/components/password.md:100-102 records the conflict. User ruling: pinned source is the comparison; row is N + reference defect (resolved).
 - L117: 2. PrimeReact strength announcement: same documented promise independently conflicts with Password.js:366-433, which has no live region. Separate user ruling: same source-based comparison; row is N + reference defect (resolved).
 
-### `batch6/candidates/selectbutton.md`
+### selectbutton candidate draft notes
 
 - L48: **Reference ruling applied.** Vue row 15 is N + reference defect: the pinned runtime does not emit the declared focus/blur events. Root native focus/blur listeners remain separate.
 
-### `batch6/candidates/toast.md`
+### toast candidate draft notes
 
 - L58: PrimeReact's `ToastMessageOptions` type declares `group?: string` (`toast/toast.d.ts:107-110`), but pinned `Toast.js` routes by no group and `ToastBase.js:122-137` has no group prop; `show()` only appends to that instance (`Toast.js:34-38`). The routing row is U because honoring the declared contract versus executable source changes PrimeReact from M (declared capability not implemented) to N (no runtime capability), and can change the product verdict. Options: (A) score runtime only, classify PrimeReact routing N and record its unused type field as a reference defect; (B) treat the declared type as intended contract, leave Prime's own implementation defect noted and classify Ultimate React M for lacking group routing. Recommendation: A, because pinned runtime is the behavior oracle in DECISIONS.md §11. Keep U until the user rules. No other class-changing docs/source conflict found. PrimeVue's missing container `life` prop is a default/API difference, represented by a default flag in row 5; examples passing `life:3000` do not establish a container default.
 
-### `batch6/candidates/togglebutton.md`
+### togglebutton candidate draft notes
 
 - L68: Row 16 React is **C, reference defect** by user ruling: pinned PrimeReact runtime and product both expose a checked native checkbox, despite published text describing a button/aria-pressed. Naming and keyboard behavior remain separate rows. Rows 17–20 document the independently observable naming and keyboard behavior. `PRD:14-45`; `PR:47-52,112-132`; `UR:77-106`.
 
-### `batch6/candidates/uncovered-families-initial.md`
+### Uncovered families, initial candidate draft
 
 - L74: Candidate reference conflict ready for individual ruling: PrimeVue docs/types say `autoFocus=true`, runtime defaults false (`FocusTrap.d.ts` vs `FocusTrap.js:72`); autoFocus affects initial focus fallback and therefore classification if row is defined by default behavior. Recommend source wins and record default flag/reference defect per method 17, unless the user explicitly prioritizes public declaration. PrimeReact has dangling missing focustrap.d.ts: source reports it, but that is package evidence limitation; runtime component still exists. Do not infer no feature from no showcase/catalog entry. Provisional distribution, 11 rows (C/P/M/I/N/U): NG `1/6/0/0/4/0`; React `3/1/1/0/4/2`; Vue `4/3/2/0/2/0`. Arithmetic only; `pt` / `ptOptions` conflict and unsupported PrimeNG component styles need source-level resolution.
 - L97: Known conflict ready for ruling: all framework accessibility docs promise `aria-describedby`, pinned Prime sources do not implement it (`docs/prime-reference/components/tooltip.md:101`; PN `tooltip/tooltip.ts`, PR `tooltip/Tooltip.js`, PV `tooltip/Tooltip.js`). Recommend classify against source as no Prime capability and record reference defect; prior user rulings elsewhere establish individual defects, not blanket authorization, so ask separately for Tooltip. It changes verdict if accessible-description linkage row is scored from docs. Provisional distribution, 13 rows (C/P/M/I/N/U): NG `3/5/4/0/0/1`; React `2/6/3/0/1/1`; Vue `5/3/4/0/0/1`.
@@ -499,7 +499,7 @@ Standalone reference-defect notes from the family and pilot reports, kept verbat
 
 - L40: No unresolved rows remain. The React `onClick` source/type mismatch is recorded as an individually ruled reference defect. The React `radio-button` style-key mismatch and missing `dt()` use are counted in row 20 (D-SHARED #1). No D-SHARED #3 producer/consumer instance is claimed for RadioButton. Comments describing exclusions are not treated as accepted ADRs. No rendered DOM, focus order, or computed-style claims are made.
 
-### `batch6/review-log.md`
+### Batch 6 review-log notes
 
 - L7: User ruled React role/state C + reference defect: pinned implementation `components/lib/togglebutton/ToggleButton.js:100-150` and product `packages/react/src/toggle-button/toggle-button.tsx:86-106` both expose a native checked checkbox, while docs `components/doc/togglebutton/accessibilitydoc.js:16-20` describe a button/aria-pressed. Accessible naming is separate: PrimeReact forwards `aria-label` and `aria-labelledby` to the input (`:128-129`), product input omits both (`:93-106`). Keyboard is also separate: PrimeReact's handler toggles on `keyCode === 32` (`ToggleButton.js:47-52`); product handles Space with cancellation and also toggles on Enter (`toggle-button.tsx:74-84`).
 - L36: Vue SelectButton component emissions. `packages/primevue/src/selectbutton/SelectButton.d.ts:254-261` declares `focus` and `blur`. The pinned `SelectButton.vue:2-22,32-37,61-84` listens to child `change` and emits only `change`. Product `packages/vue/src/select-button/SelectButton.vue:2-12,33-37,71-96` also emits only `change`. User ruled row 15 N + reference defect: the pinned runtime does not emit the declared focus/blur events. Product matches the runtime. Native DOM listeners at the root are a separate behavior.
