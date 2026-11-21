@@ -17,6 +17,7 @@ export { default as ThemeService } from "./service/index";
 
 export { default as StyleSheet, type StyleSheetProps, type StyleMeta } from "./stylesheet/index";
 export { registerComponentCss, registerThemeVariables } from "./stylesheet/theme-variables";
+export { createScopedTheme, type ScopedTheme } from "./stylesheet/scoped-theme";
 export {
   HIDDEN_ACCESSIBLE_KEY,
   hiddenAccessibleCss,

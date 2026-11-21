@@ -31,6 +31,7 @@ describe("package exports", () => {
     expect(mod.boxModelCss).toBeTypeOf("function");
     expect(mod.scopeRootsOf).toBeTypeOf("function");
     expect(mod.registerBoxModel).toBeTypeOf("function");
+    expect(mod.createScopedTheme).toBeTypeOf("function");
     expect(mod.Theme).toBeTypeOf("object");
     expect(mod.ThemeService).toBeTypeOf("object");
     expect(mod.ThemeUtils).toBeTypeOf("object");
