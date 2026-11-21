@@ -6,9 +6,20 @@ Angular-specific foundation for the Ultimate Platform: base component hierarchy,
 
 ## Architecture
 
-`ng-core`'s `UBaseComponent`/`UBaseEditableHolder` hierarchy is **Option B**: informed by PrimeNG's own `BaseComponent`/`BaseEditableHolder` pattern, but independently authored and deliberately scoped down. It covers DI wiring, lifecycle hooks, and `@ultimate/uix-styled`-backed style registration only.
+`ng-core`'s `UBaseComponent`/`UBaseEditableHolder` hierarchy is **Option B**: informed by PrimeNG's own `BaseComponent`/`BaseEditableHolder` pattern, but independently authored and deliberately scoped down. It covers DI wiring, lifecycle hooks, `@ultimate/uix-styled`-backed style registration, and the instance-level passthrough mechanism (ADR-077).
 
-PrimeNG's full passthrough (`pt`/`ptOptions`/`ptm`/`ptms`/`ptmo`) system, its full global-config surface, and its `$parentInstance` DI-token lookup are explicitly out of scope for this phase (deferred, needs architecture decision) — see `docs/architecture/PROVENANCE.md` and `docs/architecture/provenance/ng-core.json` for the full provenance record.
+### Passthrough
+
+`UBaseComponent<PT>` has two inputs, `pt` and `ptOptions`, and three methods that turn them into attributes for one element of the component's template:
+
+- `ptm(key, params?)` returns the attributes of section `key`, plus the `data-pc-name` and `data-pc-section` attributes. Spread them on the element with `[uBind]="ptm('root')"` (the `UBind` host directive).
+- `ptms(keys, params?)` merges `ptm` for several sections, in order.
+- `ptmo(obj, key, params?)` does the same against an explicit passthrough object instead of the `pt` input.
+- `pt` is an object of sections, or a function of `{ instance, parent }` that returns one. A section value is an attribute object, or a string that becomes the `class`, or a function of the same params. Keys match without regard to case, dashes or underscores, and `a.b` reaches a nested section.
+- `ptOptions` holds `mergeSections` and `mergeProps`. They decide how a global section value and the instance value merge (`{ ...global, ...self }`, or `mergeProps` when set). A global source is not built yet (ADR-079), so `ptOptions` has no visible effect today.
+- `$parentInstance` is the nearest ancestor that provides `U_PARENT_INSTANCE`. A component that renders other `UBaseComponent`s adds `{ provide: U_PARENT_INSTANCE, useExisting: Self }`. `pt` functions of the child read it as `parent.instance` (ADR-078). Unlike PrimeNG there is no `hostName` input.
+
+Not built (ADR-079): the global and default `pt` from config, `usePassThrough`, `pt.hooks`, and the `$attrSelector` attribute (scoped `dt`). The full global-config surface stays out of scope (ADR-056). See `docs/architecture/PROVENANCE.md` and `docs/architecture/provenance/ng-core.json` for the provenance record.
 
 ## Modules
 
