@@ -10,7 +10,7 @@ SSR-guarded style sheet instance and a function that registers theme variables, 
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). Root exports vueCoreStyleSheet and registerComponentStyle(componentName, styleModule, additionalPresetKeys?). Style elements are created in document.head with a data-u-style attribute and return undefined without a document. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions.
+See [authored signatures and interpretation](README.md). Root exports vueCoreStyleSheet and registerComponentStyle(componentName, styleModule, additionalPresetKeys?). Style elements are created in document.head with a data-u-style attribute and return undefined without a document. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions. vue-style-sheet.ts also declares registerBaseStyle, a source-only helper that registers the base rules for an unstyled instance.
 
 ## Public exports
 
@@ -53,7 +53,7 @@ package.ultimate.uix-utils.dom (pending cross-batch)
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-    "revision": "38d2616779a7a2f65c765724d7760d4532fbbdd2",
+    "revision": "fb15ca0ee9bc50d3a84b4b19367af0dd192359ac",
     "outcome": "passed",
     "output": "Scoped reconciliation completed with no problems: 34 source files accounted for, 47 root export identities each attributed to one public record, cross-scope references recorded as pending.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",

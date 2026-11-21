@@ -10,7 +10,7 @@ Hook that registers a component style module and returns a cx resolver turning s
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). Root exports useComponentBase and the types ClassValue, StyleModule and ComponentBaseOptions. cx(key, params) resolves a function or string entry of styleModule.classes through classNames and returns undefined for unknown keys.
+See [authored signatures and interpretation](README.md). Root exports useComponentBase and the types ClassValue, StyleModule and ComponentBaseOptions. cx(key, params) resolves a function or string entry of styleModule.classes through classNames and returns undefined for unknown keys. ComponentBaseOptions gains unstyled; useComponentBase returns { cx, isUnstyled } and cx returns undefined while unstyled (ADR-085). React has no per-instance dt.
 
 ## Public exports
 
@@ -25,7 +25,7 @@ packages/react-core/src/base/index.ts
 packages/react-core/src/base/component-base.ts
 
 ```text
-packages/react-core/src/base/component-base.ts: export function useComponentBase({ componentName, styleModule }: ComponentBaseOptions): {
+packages/react-core/src/base/component-base.ts: export function useComponentBase({ componentName, styleModule, unstyled }: ComponentBaseOptions): {
 packages/react-core/src/base/index.ts: export { useComponentBase } from "./component-base";
 ```
 
@@ -54,7 +54,7 @@ package.ultimate.uix-utils.classnames (pending cross-batch)
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
-    "revision": "38d2616779a7a2f65c765724d7760d4532fbbdd2",
+    "revision": "fb15ca0ee9bc50d3a84b4b19367af0dd192359ac",
     "outcome": "passed",
     "output": "Scoped reconciliation completed with no problems: 37 source files accounted for, 39 root export identities each attributed to one public record, cross-scope references recorded as pending.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
