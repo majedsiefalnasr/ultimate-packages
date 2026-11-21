@@ -52,3 +52,17 @@ _Avoid_: InputSwitch
 **Tabs**:
 The tabbed container built from tab list, tab and tab panel parts.
 _Avoid_: TabView
+
+## Project phases
+
+**Realignment phase**:
+One of the five temporary correction steps (Gitflow, Prime study, Ultimate inventory, gap analysis, completion planning) that reposition the project against the Blueprint. Not part of the platform roadmap.
+_Avoid_: Completion phase, bare "Phase N"
+
+**Roadmap Phase**:
+A numbered phase of the long-term platform plan in Blueprint section 35.
+_Avoid_: bare "Phase N"
+
+**Gap**:
+A difference between the Prime baseline and Ultimate for one component in one framework, classified as complete, partial, missing, intentional architectural difference, or not applicable; "unresolved" when evidence is insufficient.
+_Avoid_: parity issue, defect
