@@ -51,7 +51,7 @@ package.ultimate.uix-utils.zindex (pending cross-batch)
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
-    "revision": "bc2ea64ece059085cc26dbc0e72e983b12f16cd1",
+    "revision": "38d2616779a7a2f65c765724d7760d4532fbbdd2",
     "outcome": "passed",
     "output": "Scoped reconciliation completed with no problems: 37 source files accounted for, 39 root export identities each attributed to one public record, cross-scope references recorded as pending.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",

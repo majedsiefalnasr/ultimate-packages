@@ -5739,6 +5739,10 @@
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
+          "path": "packages/uix-styled/test/theme-change.test.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
           "path": "packages/uix-styled/test/theme-utils.test.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
