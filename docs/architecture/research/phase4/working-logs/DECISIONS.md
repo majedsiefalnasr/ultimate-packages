@@ -169,7 +169,8 @@ Each family matrix includes four separate rows: `pt`, `ptOptions`, `unstyled`, a
 ## ConfirmDialog focus and Timeline root (2026-11-21)
 
 - ConfirmDialog Angular row 8, initial focus target (user approved, recommended option): N + reference defect. Pinned PrimeNG declares `defaultFocus` and queries `.p-confirm-dialog-accept` and `.p-confirm-dialog-reject`, but its template and style map apply `p-confirmdialog-accept-button` and `p-confirmdialog-reject-button`, so the advertised focus target is not rendered by default. Pinned source wins over the documented promise.
-- Timeline Angular row 8, root class and style (agent judgment, not a user ruling): C, following the user-approved Card ruling by precedent. Pending the user's objection.
+- Timeline Angular row 8, root class and style (agent decision on the user's request to choose the best option, 2026-11-21): U. The Card ruling required a runtime probe for class and style coexistence. Timeline has none, so the earlier precedent-based C is withdrawn. Run the same Angular host probe to classify it.
+- MeterGroup Angular row 5, vertical geometry (agent decision on the same request, 2026-11-21): stays U. A rendered check needs a browser. The pre-push hook fails on a home-directory PostCSS config that needs a package not installed here, so the check is blocked (rule 16). Source reads and jsdom cannot measure layout.
 
 ## Closeout decision (user approved 2026-11-21)
 
