@@ -934,7 +934,7 @@ Status: Accepted (user decision, 2026-11-21). The rule applies once the CI and p
 
 - ADR-068's "Work branches from `develop` and merges into it" now applies at the spec level only.
 - Conflicts concentrate in the integration branch, mainly in `PROVENANCE.md` and `docs/architecture/provenance/*.json`, which every ticket touching `packages/{ng,react,vue,uix*}` must update. Merging the parent often keeps each conflict small.
-- `ci.yml` and `browser.yml` trigger on pushes and PRs for `main` and `develop` only, so a ticket PR into an integration branch runs no CI today. Extending the triggers (for example to `feat/**`) needs a check of how the change classifier treats a base other than `develop` (ADR-069, ADR-070), and is a separate change.
+- `ci.yml` and `browser.yml` run on pull requests into any base branch, so a ticket PR into an integration branch gets the same checks as one into `develop`. Pushes still trigger them only on `main` and `develop`, so a push to an integration branch starts no run of its own. The change classifier scopes any base other than `main` like `develop`, and a test pins this (ADR-069, ADR-070).
 - `develop` is the only protected work branch today. Requiring `ci` on integration branches is a GitHub setting and is a separate change.
 - Deleting an integration or ticket branch after its merge still needs explicit authorization (`AGENTS.md` section 5.1).
 - The final integration PR is large. Its full CI run is the gate that ADR-068 gave every PR.
