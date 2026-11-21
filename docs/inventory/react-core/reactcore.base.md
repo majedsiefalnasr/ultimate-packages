@@ -10,7 +10,7 @@ Hook that registers a component style module and returns a cx resolver turning s
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). Root exports useComponentBase and the types ClassValue, StyleModule and ComponentBaseOptions. cx(key, params) resolves a function or string entry of styleModule.classes through classNames and returns undefined for unknown keys. createPassThrough(componentName, { props, state, parent, hostName }) returns ptm and ptmo, and getPassThroughValue resolves one section from props.pt, in passthrough.ts (ADR-077). React has no automatic host lookup: the caller passes parent (ADR-078). The global and default pt sources, usePassThrough and pt.hooks are not implemented (ADR-079), so ptOptions has no visible effect yet.
+See [authored signatures and interpretation](README.md). Root exports useComponentBase and the types ClassValue, StyleModule and ComponentBaseOptions. cx(key, params) resolves a function or string entry of styleModule.classes through classNames and returns undefined for unknown keys. createPassThrough(componentName, { props, state, parent, hostName }) returns ptm and ptmo, and getPassThroughValue resolves one section from props.pt, in passthrough.ts (ADR-077). React has no automatic host lookup: the caller passes parent (ADR-079). The global and default pt sources, usePassThrough and pt.hooks are not implemented (ADR-080), so ptOptions has no visible effect yet.
 
 ## Public exports
 

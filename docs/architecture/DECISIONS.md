@@ -333,6 +333,8 @@ Status: Accepted (user decision, 2026-10-04, GAP-064 Architecture Discussion).
 - No exported signature changes. Angular's `componentName` is `protected`, and Vue's is an internal `createBaseComponent` argument.
 - New Angular or Vue components whose structural CSS consumes an Aura preset module register under that module's upstream key.
 
+**Amended by ADR-078 (2026-11-21):** the rejection of name normalization inside `registerThemeVariables` no longer holds. The lookup strips hyphens from the registration name, so React's kebab-case names find their flat Aura keys. Angular and Vue are unchanged, and the renames this ADR decided stand. Original text stays as history.
+
 ## ADR-052 — GAP-064 cross-tranche parity rules for the remaining G3 tranches (selector reachability, DOM admissibility, state selectors, runtime roles, open-state screenshots, tranche CI evidence)
 
 Status: Accepted (user decisions, 2026-10-06, GAP-064 cross-tranche decision gate and C2-0 Spec Review). This ADR is the normative record of those rulings. The rule text below is transcribed from the approved rulings without change of substance; X-12 is given in its corrected form.
@@ -819,6 +821,8 @@ Status: Accepted (user approval of the Workstream 1 Specification, decision D1, 
 
 - The Workstream 1 waves implement this. Changed visual baselines need the user's acceptance for each wave.
 
+**Amended by ADR-078 (2026-11-21):** the rejection of "Normalizing names inside `registerThemeVariables`" no longer holds. Decision (b)'s "registers under the preset key" is met for the lookup by normalization, and the registration name of a React component stays kebab-case. Additional preset keys stay a family-ticket concern. Original text stays as history.
+
 ## ADR-068 — Gitflow branching model and a required fast `ci` check
 
 Status: Accepted (user decisions GF-1 to GF-11 and CI-1 to CI-5, 2026-10-19).
@@ -1047,7 +1051,36 @@ Status: Accepted (user ruling R4, 2026-11-21, gap-closing spec [#167](https://gi
 - The `ng-core`, `react-core` and `vue-core` READMEs still say passthrough is excluded. A0 updates them, together with the `PROVENANCE.md` update that a change under `packages/` requires.
 - The `passthrough` row of `COMPONENT_INVENTORY.md` still reads "not needed". The gap-closing spec retires that file in its final cleanup.
 
-## ADR-078 — `pt` functions receive `parent.instance` through host-instance lookup (A0 design decision, amends ADR-077)
+## ADR-078 — `registerThemeVariables` reads the preset under the hyphen-free registration name (amends ADR-051 and ADR-067)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F7, ticket [#174](https://github.com/majedsiefalnasr/ultimate-packages/issues/174)). The spec names this approach; the ADR records that it reverses a rejected option.
+
+**Context.**
+
+- Aura preset keys are flat (`inputtext`, `datepicker`, `confirmdialog`). `Theme.getComponent(name)` reads `preset.components[name]` with no normalization.
+- React registers kebab-case names (`input-text`, `date-picker`). 44 React names are not Aura keys. 31 of them have a flat Aura key that the lookup never reaches, so their variable blocks are never defined (Phase 4 shared-foundation audit, section 3b; classified P as C4).
+- ADR-051 and ADR-067 each rejected "normalizing names inside `registerThemeVariables`". ADR-051's reason was that React registers through the same function and was outside GAP-064. ADR-067 repeated the rejection while deciding that React consumes Aura tokens.
+- Angular and Vue were renamed to the upstream keys by ADR-051. Their remaining hyphenated names (`avatar-group`, `button-group`, `input-icon`, `input-group-addon`, `input-mask`, `scroll-top`, `dynamic-dialog`) have no Aura key, flat or hyphenated, so normalization cannot change them. `packages/themes/test/registration-keys.test.ts` proves this against the product source.
+
+**Decision.**
+
+- `registerThemeVariables` and its `theme:change` rewrite look the preset up under the registration name with its hyphens removed (`input-text` reads `inputtext`). The change is one private helper in `packages/uix-styled/src/stylesheet/theme-variables.ts`.
+- The block stays registered under the name the caller gave (`input-text-variables`). Only the lookup changes. Angular and Vue sheet keys and output are therefore unchanged.
+- A name that is already flat resolves exactly as before.
+- A test enumerates the registration names of all three frameworks against the Aura keys. A React name with a flat Aura key that defines no variables fails the test.
+
+**Rejected.**
+
+- Renaming the 31 React components' `componentName` to the flat key, as ADR-051 did for Angular and Vue. It changes 31 components, their style keys and their tests, and leaves the next kebab-case name to fail silently again. Normalizing once fixes the whole class.
+- Matching a hyphenated preset key first and falling back to the flat key. No Aura or Prime preset uses a hyphenated component key, so the fallback only adds a second lookup path.
+
+**Consequences.**
+
+- Third-party presets must use flat component keys, as Aura and Prime do. A preset that keyed a component with a hyphen (for example `"test-component"`) is no longer found. The `ng-core` A1 spec used such a key and now uses `testcomponent`.
+- React components now inject their Aura variable blocks. Most React style modules still do not read them through `dt()` (F8). The React Aura-token rows stay P until the family tickets add `dt()` consumption; this ADR closes only the key mismatch.
+- ADR-051 and ADR-067 each carry a note that points here. Their original text stays as history.
+
+## ADR-079 — `pt` functions receive `parent.instance` through host-instance lookup (A0 design decision, amends ADR-077)
 
 Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), ticket [#170](https://github.com/majedsiefalnasr/ultimate-packages/issues/170) A0). Needs the user's approval. ADR-077 left this open on purpose.
 
@@ -1075,9 +1108,9 @@ Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ult
 
 - A Vue component whose `ptm` runs under a parent receives the parent's `$props`, `$data` and `$attrs` in the `parent` params, as PrimeVue does.
 - A Vue component that provides its own `$parentInstance` through a different mechanism would override the base mixin's provider. None exists today.
-- The `hostName` lookup also decides which instance supplies `ptOptions` when a sub-component sets none. That path has no effect until a global `pt` source exists (ADR-079).
+- The `hostName` lookup also decides which instance supplies `ptOptions` when a sub-component sets none. That path has no effect until a global `pt` source exists (ADR-080).
 
-## ADR-079 — A0 builds the instance-level `pt` and `ptOptions` only; global `pt`, `usePassThrough`, `pt.hooks` and `$attrSelector` are not built (A0 scope decision, amends ADR-077)
+## ADR-080 — A0 builds the instance-level `pt` and `ptOptions` only; global `pt`, `usePassThrough`, `pt.hooks` and `$attrSelector` are not built (A0 scope decision, amends ADR-077)
 
 Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), ticket [#170](https://github.com/majedsiefalnasr/ultimate-packages/issues/170) A0). Needs the user's approval, in particular the recommendation on the global source.
 
@@ -1099,7 +1132,7 @@ Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ult
 
 - the `pt` and `ptOptions` inputs (props), `ptm`, `ptmo`, plus `ptms` (Angular, as PrimeNG) and `ptmi` and `pt:section:attribute` attributes (Vue, as PrimeVue);
 - nested keys (`a.b`), flat-case key matching, function values and function `pt`, string/array to class, the `data-pc-name`, `data-pc-section` and `data-pc-extend` datasets, `searchOut` for keys whose first segment is a param, and the `mergeSections` and `mergeProps` branches of the merge formula;
-- the host-instance lookup of ADR-078.
+- the host-instance lookup of ADR-079.
 
 It does not build the global/default `pt` source, `usePassThrough`, `pt.hooks`, the `$attrSelector` dataset or the `ptmi` `id` fallback (PrimeVue assigns a generated id there). These stay open rows for the global-source ticket or for a ruling that removes them.
 

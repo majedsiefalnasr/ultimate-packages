@@ -39,7 +39,7 @@ import {
  *
  * Deliberately excludes the full global-config surface (and with it the
  * global and default `pt` sources), `pt` lifecycle hooks and the `hostName`
- * lookup, per ADR-056, ADR-077, ADR-078 and ADR-079.
+ * lookup, per ADR-056, ADR-077, ADR-079 and ADR-080.
  */
 @Directive({ standalone: true })
 export abstract class UBaseComponent<PT = Record<string, unknown>> {
