@@ -39,4 +39,53 @@ describe("UCard", () => {
     const wrapper = mount(UCard);
     expect(wrapper.classes()).toContain("u-card");
   });
+
+  describe("pt", () => {
+    const pt = {
+      root: { id: "card-root", class: "extra-root" },
+      header: { "data-test": "header" },
+      body: "extra-body",
+      caption: { "data-test": "caption" },
+      title: { "data-test": "title" },
+      subtitle: { "data-test": "subtitle" },
+      content: { "data-test": "content" },
+      footer: { "data-test": "footer" },
+    };
+    const slots = {
+      header: "H",
+      title: "T",
+      subtitle: "S",
+      content: "C",
+      footer: "F",
+    };
+
+    it("applies root pt attributes, keeps the root class and the non-pt attributes", () => {
+      const wrapper = mount(UCard, {
+        props: { pt } as never,
+        attrs: { "data-extra": "kept", class: "own" },
+      });
+      expect(wrapper.attributes("id")).toBe("card-root");
+      expect(wrapper.classes()).toEqual(expect.arrayContaining(["u-card", "extra-root", "own"]));
+      expect(wrapper.attributes("data-extra")).toBe("kept");
+      expect(wrapper.attributes("data-pc-name")).toBe("card");
+      expect(wrapper.attributes("data-pc-section")).toBe("root");
+    });
+
+    it("applies pt attributes and section datasets to each part", () => {
+      const wrapper = mount(UCard, { props: { pt } as never, slots });
+      for (const part of ["header", "caption", "title", "subtitle", "content", "footer"]) {
+        const element = wrapper.find(`.u-card-${part}`);
+        expect(element.attributes("data-test")).toBe(part);
+        expect(element.attributes("data-pc-section")).toBe(part);
+      }
+      const body = wrapper.find(".u-card-body");
+      expect(body.classes()).toContain("extra-body");
+      expect(body.attributes("data-pc-section")).toBe("body");
+    });
+
+    it("accepts pt:section:attribute attributes", () => {
+      const wrapper = mount(UCard, { attrs: { "pt:root:title": "from-attr" } });
+      expect(wrapper.attributes("title")).toBe("from-attr");
+    });
+  });
 });
