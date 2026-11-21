@@ -1,6 +1,6 @@
 # Chips — Phase 4 gap analysis (batch 2)
 
-Pinned Ultimate revision 91a8472547e34c6e92456f2b98270a1555e3a2db. Evidence kind: source-read (inventory where noted). Limits: source only, no visual/browser check, no test run. Cross-cutting findings (React hard-coded CSS, Vue dropped attrs, no unstyled/scoped dt, class-hook mismatch) live in DECISIONS.md D-SHARED and are not repeated; pt follows D-PT.
+Pinned Ultimate revision 91a8472547e34c6e92456f2b98270a1555e3a2db. Evidence kind: source-read (inventory where noted). Limits: source only, no visual/browser check, no test run. Cross-cutting findings (React hard-coded CSS, Vue dropped attrs, no unstyled/scoped dt, class-hook mismatch) live in the phase 4 closeout record D-SHARED and are not repeated; pt follows D-PT.
 
 Prime prefixes: React `.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e.../components/lib/chips/`; Vue `.vendor-cache/extracted/primevue-4.5.5/primevue-66dde67.../packages/primevue/src/inputchips/` (and `chips/Chips.vue`); NG removed (migration `apps/showcase/doc/migration/v20/removalsdoc.ts:53-58`). Record: `docs/prime-reference/components/chips.md`.
 
@@ -57,7 +57,7 @@ Prime prefixes: React `.vendor-cache/extracted/primereact-10.9.9/primereact-d0f5
 | React     | 12       | 7       | 10      | 0           | 3   | 0          |
 | Vue       | 12       | 6       | 7       | 0           | 7   | 0          |
 
-**D-SHARED #3 note (not counted; per the InputNumber/Password ruling, `../DECISIONS.md:110`).** React InputChips emits family-local root state `u-input-chips-filled`/`-focused` (`packages/react/src/input-chips/input-chips-style.ts:66-76`, set at `input-chips.tsx:235`); React FloatLabel consumes `.u-inputwrapper-filled`/`.u-inputwrapper-focus` (`packages/react/src/float-label/float-label-style.ts:30-31,41`), so a floated label would not react to chips value/focus. PrimeReact root adds `p-inputwrapper`, `-filled`, `-focus` (`PRA/chips/ChipsBase.js:89-96`). Vue root has `u-focus`/`u-disabled`/`u-invalid` but no wrapper or filled marker (`packages/vue/src/input-chips/input-chips-style.ts:104-111`) vs PrimeVue `InputChipsStyle.js:6-13`; no Vue label consumer of such a hook was found, so no Vue instance is claimed. Disabled/invalid/focus state itself is already scored in rows 8, 10, 16 and 28. Source-only; rendered label behaviour not checked.
+**D-SHARED #3 note (not counted; per the InputNumber/Password ruling, `the phase 4 closeout record`).** React InputChips emits family-local root state `u-input-chips-filled`/`-focused` (`packages/react/src/input-chips/input-chips-style.ts:66-76`, set at `input-chips.tsx:235`); React FloatLabel consumes `.u-inputwrapper-filled`/`.u-inputwrapper-focus` (`packages/react/src/float-label/float-label-style.ts:30-31,41`), so a floated label would not react to chips value/focus. PrimeReact root adds `p-inputwrapper`, `-filled`, `-focus` (`PRA/chips/ChipsBase.js:89-96`). Vue root has `u-focus`/`u-disabled`/`u-invalid` but no wrapper or filled marker (`packages/vue/src/input-chips/input-chips-style.ts:104-111`) vs PrimeVue `InputChipsStyle.js:6-13`; no Vue label consumer of such a hook was found, so no Vue instance is claimed. Disabled/invalid/focus state itself is already scored in rows 8, 10, 16 and 28. Source-only; rendered label behaviour not checked.
 
 ## 4. Phase 5 scope items (not classification disputes)
 

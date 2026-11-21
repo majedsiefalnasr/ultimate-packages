@@ -2,7 +2,7 @@
 
 Ultimate revision `91a8472547e34c6e92456f2b98270a1555e3a2db` on `develop`. Oracles: PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5. Nothing was run: no tests, build, browser or assistive-technology checks. Pinned source wins over docs.
 
-Line numbers are source line numbers. Path keys are expanded at the end. `ADR` = `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/phase4-gap-analysis/DECISIONS.md`. `FOUND` = `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/phase4-gap-analysis/foundations/shared-foundation-audit.md`.
+Line numbers are source line numbers. Path keys are expanded at the end. `ADR` = `the phase 4 closeout record`. `FOUND` = `docs/architecture/research/phase4/foundations/shared-foundation-audit.md`.
 
 ## Mapping
 
@@ -68,7 +68,7 @@ Angular consumer class coexistence (row 08): user chose A. The 2026-11-21 Angula
 
 ## Path keys
 
-Product paths relative to `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate`. Prime paths under `.vendor-cache/extracted/`.
+Product paths relative to the repository root. Prime paths under `.vendor-cache/extracted/`.
 
 | Key   | Path                                                                                                                  |
 | ----- | --------------------------------------------------------------------------------------------------------------------- |

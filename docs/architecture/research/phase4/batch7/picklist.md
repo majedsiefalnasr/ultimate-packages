@@ -1,6 +1,6 @@
 # PickList — Phase 4 gap analysis
 
-Ultimate baseline `91a8472547e34c6e92456f2b98270a1555e3a2db`; PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5 (ADR-048). Method: `../AGENT-BRIEF.md`, `../DECISIONS.md` (D-PT and D-SHARED). Source-read only; no product edits, tests, builds, browser or visual/AT checks. Prime source prefixes are relative to the pinned archives under `.vendor-cache/extracted/`: PrimeNG `primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src`; PrimeReact `primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib`; PrimeVue `primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src`.
+Ultimate baseline `91a8472547e34c6e92456f2b98270a1555e3a2db`; PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5 (ADR-048). Method: `the phase 4 method`, `the phase 4 closeout record` (D-PT and D-SHARED). Source-read only; no product edits, tests, builds, browser or visual/AT checks. Prime source prefixes are relative to the pinned archives under `.vendor-cache/extracted/`: PrimeNG `primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src`; PrimeReact `primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib`; PrimeVue `primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src`.
 
 ## Mapping
 

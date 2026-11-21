@@ -1,6 +1,6 @@
 # Divider — Phase 4 gap analysis (batch 2)
 
-Pinned Ultimate revision 91a8472547e34c6e92456f2b98270a1555e3a2db. Evidence kind: source-read for every cell. Limits: source only, no visual/browser check, no test run. Cross-cutting findings (React hard-coded CSS, Vue `inheritAttrs:false`, no unstyled/scoped dt) are in DECISIONS.md D-SHARED and not repeated here; pt follows D-PT (missing wherever Prime offers it).
+Pinned Ultimate revision 91a8472547e34c6e92456f2b98270a1555e3a2db. Evidence kind: source-read for every cell. Limits: source only, no visual/browser check, no test run. Cross-cutting findings (React hard-coded CSS, Vue `inheritAttrs:false`, no unstyled/scoped dt) are in the phase 4 closeout record D-SHARED and not repeated here; pt follows D-PT (missing wherever Prime offers it).
 
 Prime refs: PrimeNG `packages/primeng/src/divider/divider.ts`, `style/dividerstyle.ts`; PrimeReact `components/lib/divider/Divider.js`, `DividerBase.js`; PrimeVue `packages/primevue/src/divider/Divider.vue`, `BaseDivider.vue`, `style/DividerStyle.js` (full archive prefixes under `.vendor-cache/extracted/`). Record: `docs/prime-reference/components/divider.md`.
 

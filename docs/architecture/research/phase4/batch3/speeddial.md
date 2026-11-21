@@ -1,6 +1,6 @@
 # SpeedDial — Phase 4 (source-read)
 
-Ultimate revision `91a8472547e34c6e92456f2b98270a1555e3a2db`. No tests/browser checks. PNG/PRA/PVA refer to pinned Prime sources as in `timeline.md`; decisions D-SHARED and D-PT are in `DECISIONS.md`.
+Ultimate revision `91a8472547e34c6e92456f2b98270a1555e3a2db`. No tests/browser checks. PNG/PRA/PVA refer to pinned Prime sources as in `timeline.md`; decisions D-SHARED and D-PT are in `the phase 4 closeout record`.
 
 ## Mapping
 

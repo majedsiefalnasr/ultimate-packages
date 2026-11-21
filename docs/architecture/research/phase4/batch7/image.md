@@ -1,6 +1,6 @@
 # Image — Phase 4 source comparison
 
-Product revision `91a8472547e34c6e92456f2b98270a1555e3a2db`; PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5. Source-read only; no tests, browser or visual checks. C/P/M/I/N/U per `DECISIONS.md`; default differences are flags.
+Product revision `91a8472547e34c6e92456f2b98270a1555e3a2db`; PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5. Source-read only; no tests, browser or visual checks. C/P/M/I/N/U per `the phase 4 closeout record`; default differences are flags.
 
 ## Mapping and evidence keys
 

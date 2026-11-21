@@ -1,6 +1,6 @@
 # DataScroller gap analysis
 
-Ultimate baseline: `91a8472547e34c6e92456f2b98270a1555e3a2db`. Oracle: PrimeReact 10.9.9. PrimeNG 21.1.9 and PrimeVue 4.5.5 do not ship this family. Governing method: `../DECISIONS.md`, including D-PT and D-SHARED #1/#5. The earlier `phase4/METHOD.md`/ADR-056 wording is historical only; the later user ruling classifies absent PT as **missing** wherever pinned Prime supports it. Evidence is read-only; no tests, installs, builds or repository writes.
+Ultimate baseline: `91a8472547e34c6e92456f2b98270a1555e3a2db`. Oracle: PrimeReact 10.9.9. PrimeNG 21.1.9 and PrimeVue 4.5.5 do not ship this family. Governing method: `the phase 4 closeout record`, including D-PT and D-SHARED #1/#5. The earlier `phase4/METHOD.md`/ADR-056 wording is historical only; the later user ruling classifies absent PT as **missing** wherever pinned Prime supports it. Evidence is read-only; no tests, installs, builds or repository writes.
 
 ## 1. Mapping and evidence conventions
 

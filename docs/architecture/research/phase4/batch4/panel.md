@@ -27,7 +27,7 @@ The ledger incorporates the lead’s source review and the four mandatory stylin
 
 - Ultimate revision: 91a8472547e34c6e92456f2b98270a1555e3a2db (HEAD checked read-only).
 - Oracles: PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5.
-- Method: phase4-gap-analysis/DECISIONS.md (D-PT, D-SHARED #2/#5, counting convention).
+- Method: phase4-gap-analysis/the phase 4 closeout record (D-PT, D-SHARED #2/#5, counting convention).
 - All classifications are SOURCE-READ ONLY. No tests, browser, keyboard, accessibility or visual checks were run. "Complete" means the bounded capability is present in source. It does not mean executed parity.
 - No product changes, tickets, fixes or prioritisation.
 

@@ -2,7 +2,7 @@
 
 Source-only comparison at Ultimate `91a8472547e34c6e92456f2b98270a1555e3a2db`; PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5. No product edits, tests, browser or assistive-technology checks.
 
-Aliases: `X` = `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/`; `PN` = `X.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src/`; `PR` = `X.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib/`; `PV` = `X.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src/`.
+Aliases: `X` = ``; `PN`=`X.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src/`; `PR`=`X.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib/`; `PV`=`X.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src/`.
 
 Verdicts: C complete, P partial, M missing, I intentional (requires ADR/user ruling), N/A absent or inapplicable in the relevant Prime oracle, U unresolved. Evidence is source-read only; rendered DOM, focus order, and computed styles were not verified.
 

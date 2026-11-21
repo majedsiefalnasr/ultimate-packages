@@ -2,7 +2,7 @@
 
 Ultimate revision `91a8472547e34c6e92456f2b98270a1555e3a2db`. Source-read only; no tests, browser, visual or assistive-technology checks.
 
-Prime source roots: `PNG` = `.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src`; `PRA` = `.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib`; `PVA` = `.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src`; `PVC` = the sibling `packages/core/src`. Method: `phase4-gap-analysis/AGENT-BRIEF.md` and `DECISIONS.md`. Product comments are not ADRs; no intentional rows are inferred from them.
+Prime source roots: `PNG` = `.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src`; `PRA` = `.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib`; `PVA` = `.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src`; `PVC` = the sibling `packages/core/src`. Method: `phase4-gap-analysis/the phase 4 method` and `the phase 4 closeout record`. Product comments are not ADRs; no intentional rows are inferred from them.
 
 ## 1. Mapping
 

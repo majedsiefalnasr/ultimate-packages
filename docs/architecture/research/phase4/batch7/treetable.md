@@ -2,7 +2,7 @@
 
 Ultimate baseline `91a8472547e34c6e92456f2b98270a1555e3a2db`; PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5 (ADR-048). Source-read only: no product edits, tests, builds, browser, visual or AT checks.
 
-Method: `../AGENT-BRIEF.md` and `../DECISIONS.md`, including D-PT, D-SHARED #1/#2/#5, ADR-043/054. Prime source prefixes:
+Method: `the phase 4 method` and `the phase 4 closeout record`, including D-PT, D-SHARED #1/#2/#5, ADR-043/054. Prime source prefixes:
 
 - PrimeNG `.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src`
 - PrimeReact `.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib`

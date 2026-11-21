@@ -1,6 +1,6 @@
 # Phase 4 gap analysis — Breadcrumb
 
-Pinned Ultimate: `91a8472547e34c6e92456f2b98270a1555e3a2db`. Prime baselines: PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5. Source-read only; no tests, browser checks, or visual checks. Inventory test evidence refers to older revisions and was not rerun. Path prefixes NGA/PRA/PVA are in `dock.md`; REC = `docs/prime-reference/components/breadcrumb.md`. Cross-cutting findings follow D-SHARED and D-PT in `DECISIONS.md`.
+Pinned Ultimate: `91a8472547e34c6e92456f2b98270a1555e3a2db`. Prime baselines: PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5. Source-read only; no tests, browser checks, or visual checks. Inventory test evidence refers to older revisions and was not rerun. Path prefixes NGA/PRA/PVA are in `dock.md`; REC = `docs/prime-reference/components/breadcrumb.md`. Cross-cutting findings follow D-SHARED and D-PT in `the phase 4 closeout record`.
 
 ## Mapping
 

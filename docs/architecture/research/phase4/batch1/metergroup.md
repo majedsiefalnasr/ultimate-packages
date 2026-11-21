@@ -1,6 +1,6 @@
 # MeterGroup gap analysis
 
-Ultimate baseline: `91a8472547e34c6e92456f2b98270a1555e3a2db`. Oracle: PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5. Governing method: `../DECISIONS.md`, including D-PT and D-SHARED #1/#5. The older `phase4/METHOD.md`/ADR-056 wording is historical only; the later user ruling classifies absent `pt` as **missing** wherever pinned Prime supports it. No repository changes, tests, installs or builds were performed.
+Ultimate baseline: `91a8472547e34c6e92456f2b98270a1555e3a2db`. Oracle: PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5. Governing method: `the phase 4 closeout record`, including D-PT and D-SHARED #1/#5. The older `phase4/METHOD.md`/ADR-056 wording is historical only; the later user ruling classifies absent `pt` as **missing** wherever pinned Prime supports it. No repository changes, tests, installs or builds were performed.
 
 ## 1. Mapping and evidence conventions
 

@@ -6,9 +6,9 @@ Revision `91a8472547e34c6e92456f2b98270a1555e3a2db`; normative pins ADR-048. Eng
 
 ## Mapped source paths
 
-- NG: Prime `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src/password/password.ts`; Ultimate `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/packages/ng/src/password/password.ts`.
-- React: Prime `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib/password/Password.js`; Ultimate `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/packages/react/src/password/password.tsx`.
-- Vue: Prime `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src/password/Password.vue`; Ultimate `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/packages/vue/src/password/Password.vue`.
+- NG: Prime `.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src/password/password.ts`; Ultimate `packages/ng/src/password/password.ts`.
+- React: Prime `.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib/password/Password.js`; Ultimate `packages/react/src/password/password.tsx`.
+- Vue: Prime `.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src/password/Password.vue`; Ultimate `packages/vue/src/password/Password.vue`.
 
 All row anchors below are line numbers in those exact mapped files unless explicitly identified. References to core or other paths are repo-relative. Lines describe source, not verified runtime.
 

@@ -1,6 +1,6 @@
 # DatePicker — Phase 4 source-only matrix
 
-Product `91a8472547e34c6e92456f2b98270a1555e3a2db` (read-only). Oracles: PrimeNG 21.1.9, PrimeReact 10.9.9 (`Calendar`), PrimeVue 4.5.5. Source-read only; no tests, browser or visual checks. Paths are relative to the product repo root `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate`.
+Product `91a8472547e34c6e92456f2b98270a1555e3a2db` (read-only). Oracles: PrimeNG 21.1.9, PrimeReact 10.9.9 (`Calendar`), PrimeVue 4.5.5. Source-read only; no tests, browser or visual checks. Paths are relative to the product repo root the repository root.
 
 Classes: C complete, P partial, M missing, I intentional (none: no in-force ADR or ruling), N Prime lacks it, U unresolved. Defaults are flags.
 

@@ -38,7 +38,7 @@ For each React n/a cell, the evidence is `docs/prime-reference/components/imagec
 
 - D-PT: implement per-part pass-through or retain the gap; implementation permits granular slider customization at an API and maintenance cost. The ruling fixes the classification as missing.
 - Restore RTL-aware clipping and direction handling or retain current behavior; check initial and changed direction during interaction. PrimeNG watches the document element, so this is not evidence it watches every ancestor.
-- Vue slider naming: resolved by user ruling 2026-11-18 (complete + reference-defect, see DECISIONS.md). Root tab stop default (tabindex 0 bound in Ultimate, unbound in Prime) remains recorded as default-differs; Prime's unused tabindex is a reference defect, not a requirement to copy.
+- Vue slider naming: resolved by user ruling 2026-11-18 (complete + reference-defect, see the phase 4 closeout record). Root tab stop default (tabindex 0 bound in Ultimate, unbound in Prime) remains recorded as default-differs; Prime's unused tabindex is a reference defect, not a requirement to copy.
 - Decide shared root attributes and component styling controls under D-SHARED #2 and #5.
 
 ## Reference defects

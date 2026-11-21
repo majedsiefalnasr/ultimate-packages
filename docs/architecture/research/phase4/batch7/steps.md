@@ -73,39 +73,39 @@ No I classifications used.
 
 ## 7. Path key
 
-| Key    | Path                                                                                                                      |
-| ------ | ------------------------------------------------------------------------------------------------------------------------- |
-| PNROOT | `.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/`                                |
-| PRROOT | `.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/`                          |
-| PVROOT | `.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/`                               |
-| PN     | `PNROOT/packages/primeng/src/steps/steps.ts`                                                                              |
-| PNC    | `PNROOT/packages/primeng/src/basecomponent/basecomponent.ts`                                                              |
-| PR     | `PRROOT/components/lib/steps/Steps.js`                                                                                    |
-| PRB    | `PRROOT/components/lib/steps/StepsBase.js`                                                                                |
-| PRC    | `PRROOT/components/lib/componentbase/ComponentBase.js`                                                                    |
-| PRD    | `PRROOT/components/lib/steps/steps.d.ts`                                                                                  |
-| PV     | `PVROOT/packages/primevue/src/steps/Steps.vue`                                                                            |
-| PVB    | `PVROOT/packages/primevue/src/steps/BaseSteps.vue`                                                                        |
-| PVC    | `PVROOT/packages/core/src/basecomponent/BaseComponent.vue`                                                                |
-| UN     | `packages/ng/src/steps/steps.ts`                                                                                          |
-| UNI    | `packages/ng/src/steps/index.ts`                                                                                          |
-| UNS    | `packages/ng/src/steps/steps-style.ts`                                                                                    |
-| UNT    | `packages/ng-core/src/basecomponent/base-component.ts`                                                                    |
-| UR     | `packages/react/src/steps/steps.tsx`                                                                                      |
-| URI    | `packages/react/src/steps/index.ts`                                                                                       |
-| URS    | `packages/react/src/steps/steps-style.ts`                                                                                 |
-| UV     | `packages/vue/src/steps/Steps.vue`                                                                                        |
-| UVI    | `packages/vue/src/steps/index.ts`                                                                                         |
-| UVB    | `packages/vue/src/steps/BaseSteps.ts`                                                                                     |
-| UVS    | `packages/vue/src/steps/steps-style.ts`                                                                                   |
-| UVC    | `packages/vue-core/src/base/base-component.ts`                                                                            |
-| UI     | `packages/ng/src/index.ts:57`, `packages/react/src/index.ts:57`, `packages/vue/src/index.ts:62`                           |
-| UP     | `packages/ng/package.json:163`, `packages/react/package.json:217`, `packages/vue/package.json:212`                        |
-| UA     | `packages/themes/src/presets/aura/index.ts`                                                                               |
-| UT     | `packages/themes/src/presets/aura/steps.ts`                                                                               |
-| FA     | `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/phase4-gap-analysis/foundations/shared-foundation-audit.md` |
-| D      | `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/phase4-gap-analysis/DECISIONS.md`                           |
-| R      | `docs/prime-reference/components/steps.md`                                                                                |
+| Key    | Path                                                                                               |
+| ------ | -------------------------------------------------------------------------------------------------- |
+| PNROOT | `.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/`         |
+| PRROOT | `.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/`   |
+| PVROOT | `.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/`        |
+| PN     | `PNROOT/packages/primeng/src/steps/steps.ts`                                                       |
+| PNC    | `PNROOT/packages/primeng/src/basecomponent/basecomponent.ts`                                       |
+| PR     | `PRROOT/components/lib/steps/Steps.js`                                                             |
+| PRB    | `PRROOT/components/lib/steps/StepsBase.js`                                                         |
+| PRC    | `PRROOT/components/lib/componentbase/ComponentBase.js`                                             |
+| PRD    | `PRROOT/components/lib/steps/steps.d.ts`                                                           |
+| PV     | `PVROOT/packages/primevue/src/steps/Steps.vue`                                                     |
+| PVB    | `PVROOT/packages/primevue/src/steps/BaseSteps.vue`                                                 |
+| PVC    | `PVROOT/packages/core/src/basecomponent/BaseComponent.vue`                                         |
+| UN     | `packages/ng/src/steps/steps.ts`                                                                   |
+| UNI    | `packages/ng/src/steps/index.ts`                                                                   |
+| UNS    | `packages/ng/src/steps/steps-style.ts`                                                             |
+| UNT    | `packages/ng-core/src/basecomponent/base-component.ts`                                             |
+| UR     | `packages/react/src/steps/steps.tsx`                                                               |
+| URI    | `packages/react/src/steps/index.ts`                                                                |
+| URS    | `packages/react/src/steps/steps-style.ts`                                                          |
+| UV     | `packages/vue/src/steps/Steps.vue`                                                                 |
+| UVI    | `packages/vue/src/steps/index.ts`                                                                  |
+| UVB    | `packages/vue/src/steps/BaseSteps.ts`                                                              |
+| UVS    | `packages/vue/src/steps/steps-style.ts`                                                            |
+| UVC    | `packages/vue-core/src/base/base-component.ts`                                                     |
+| UI     | `packages/ng/src/index.ts:57`, `packages/react/src/index.ts:57`, `packages/vue/src/index.ts:62`    |
+| UP     | `packages/ng/package.json:163`, `packages/react/package.json:217`, `packages/vue/package.json:212` |
+| UA     | `packages/themes/src/presets/aura/index.ts`                                                        |
+| UT     | `packages/themes/src/presets/aura/steps.ts`                                                        |
+| FA     | `docs/architecture/research/phase4/foundations/shared-foundation-audit.md`                         |
+| D      | `the phase 4 closeout record`                                                                      |
+| R      | `docs/prime-reference/components/steps.md`                                                         |
 
 ## 8. Verification limits
 

@@ -2,7 +2,7 @@
 
 Ultimate `91a8472547e34c6e92456f2b98270a1555e3a2db` vs PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5. No product edits, tests, browser or AT checks.
 
-Aliases: `X` = `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/`; `PN` = `X.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src/`; `PR` = `X.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib/`; `PV` = `X.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src/`; `PVC` = PrimeVue `packages/core/src/`; `PNbc` = PrimeNG `basecomponent/basecomponent.ts`; `AUD` = `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/phase4-gap-analysis/foundations/shared-foundation-audit.md`.
+Aliases: `X` = ``; `PN`=`X.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src/`; `PR`=`X.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib/`; `PV`=`X.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src/`; `PVC`= PrimeVue`packages/core/src/`; `PNbc`= PrimeNG`basecomponent/basecomponent.ts`; `AUD`=`docs/architecture/research/phase4/foundations/shared-foundation-audit.md`.
 
 Verdicts: C complete, P partial, M missing, I intentional (none: no ADR/user ruling covers Listbox), N not applicable in that Prime oracle, U unresolved.
 

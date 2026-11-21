@@ -6,9 +6,9 @@ Revision `91a8472547e34c6e92456f2b98270a1555e3a2db`; normative pins ADR-048. Eng
 
 ## Mapped source paths
 
-- NG: Prime `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src/slider/slider.ts`; Ultimate `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/packages/ng/src/slider/slider.ts`.
-- React: Prime `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib/slider/Slider.js`; Ultimate `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/packages/react/src/slider/slider.tsx`.
-- Vue: Prime `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src/slider/Slider.vue`; Ultimate `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate/packages/vue/src/slider/Slider.vue`.
+- NG: Prime `.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src/slider/slider.ts`; Ultimate `packages/ng/src/slider/slider.ts`.
+- React: Prime `.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib/slider/Slider.js`; Ultimate `packages/react/src/slider/slider.tsx`.
+- Vue: Prime `.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src/slider/Slider.vue`; Ultimate `packages/vue/src/slider/Slider.vue`.
 
 All row anchors below are line numbers in those exact mapped files unless explicitly identified. References to core or other paths are repo-relative. Lines describe source, not verified runtime.
 
@@ -86,6 +86,6 @@ All row anchors below are line numbers in those exact mapped files unless explic
 
 ## Questions requiring individual user rulings
 
-The previously unresolved keyboard, React `aria-valuenow`, and PrimeNG animation rows have individual user rulings recorded in DECISIONS.md and above. No U rows remain. Product defects and verification limits remain noted independently.
+The previously unresolved keyboard, React `aria-valuenow`, and PrimeNG animation rows have individual user rulings recorded in the phase 4 closeout record and above. No U rows remain. Product defects and verification limits remain noted independently.
 
 Scope limitation: this is a source-only candidate matrix; lack of a full export/type inventory or runtime validation limits exhaustiveness. Do not treat undocumented omissions or N rows as fully confirmed without checking the complete Prime interface and base chain.

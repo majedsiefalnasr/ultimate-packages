@@ -7,7 +7,7 @@ Product: Ultimate, branch develop, pinned revision 91a8472547e34c6e92456f2b98270
 ## Scope and limits
 
 - Evidence is source reads only. No product tests, browser, visual, assistive-technology or runtime checks were run, except one Angular host probe for class and style coexistence (2026-11-21).
-- Family reports are kept in `docs/architecture/research/phase4/` (102 files: `batch1`–`batch7`, `pilot`, `foundations`). Candidate drafts, review logs and recovery notes are process records and are not kept.
+- Family reports are kept in `docs/architecture/research/phase4/` (102 files: `batch1`–`batch7`, `pilot`, `foundations`). Candidate drafts, review logs, the working decision log and recovery notes are process records and are not kept.
 - Report references such as batch7/confirmdialog.md or pilot/table.md are relative to `docs/architecture/research/phase4/`.
 - Rulings superseded later are marked in place so the audit trail stays intact.
 
@@ -103,7 +103,7 @@ Distribution of the 15 items: Angular 6/8/1/0, React 4/9/2/0, Vue 6/7/2/0 (C/P/M
 
 ### 6. Cross-cutting findings recorded once
 
-From `DECISIONS.md` (D-PT, D-SHARED, rulings):
+From the working decision log, not kept in this repository (D-PT, D-SHARED, rulings):
 
 - React token architecture (ADR-067): every non-exception React family carries an explicit Aura-token row, classed P with the style-file and key evidence (user ruling option B, 2026-11-21).
 - Angular and Vue declare Ultimate-only `dt()` paths that do not resolve for nine families; their Aura-token rows are P (user ruling 2026-11-19).
@@ -121,9 +121,9 @@ From `DECISIONS.md` (D-PT, D-SHARED, rulings):
 
 ### 8. Rulings and reference defects
 
-- `DECISIONS.md` has about 75 bullet entries after its Open rulings heading; about 42 of them mention a reference defect (docs promise versus pinned source). This is an approximate text search, not a per-ruling audit. Exact per-ruling listing is not done.
+- The working decision log had about 75 bullet entries after its Open rulings heading; about 42 of them mention a reference defect (docs promise versus pinned source). This is an approximate text search, not a per-ruling audit. Exact per-ruling listing is not done.
 - The pinned source is the oracle where docs and source differ. A ruling is individual, never a blanket authorization.
-- This record carries the rulings and reference defects in curated form, taken from `DECISIONS.md` and the family reports.
+- This record carries the rulings and reference defects in curated form, taken from the working decision log and the family reports.
 
 ### 9. Known issues and limits
 
@@ -352,7 +352,7 @@ Standalone reference-defect notes from the family and pilot reports, kept verbat
 
 ### `batch2/imagecompare.md`
 
-- L41: Vue slider naming: resolved by user ruling 2026-11-18 (complete + reference-defect, see DECISIONS.md). Root tab stop default (tabindex 0 bound in Ultimate, unbound in Prime) remains recorded as default-differs; Prime's unused tabindex is a reference defect, not a requirement to copy.
+- L41: Vue slider naming: resolved by user ruling 2026-11-18 (complete + reference-defect, see the working decision log). Root tab stop default (tabindex 0 bound in Ultimate, unbound in Prime) remains recorded as default-differs; Prime's unused tabindex is a reference defect, not a requirement to copy.
 
 ### `batch2/knob.md`
 
@@ -438,7 +438,7 @@ Standalone reference-defect notes from the family and pilot reports, kept verbat
 
 ### Batch 5 review-log notes
 
-- L4: User ruling 2026-11-18: Mention React row23 U→N; pinned source lacks docs-promised ARIA; record reference defect and Ultimate additions. Updated report and DECISIONS.md. Final React 4/9/12/1/2/0.
+- L4: User ruling 2026-11-18: Mention React row23 U→N; pinned source lacks docs-promised ARIA; record reference defect and Ultimate additions. Updated report and the working decision log. Final React 4/9/12/1/2/0.
 - L5: Agent-9 DeferredContent/InputGroup draft received; returned for missing inventory/source checks before saving final reports. InputGroup NG fluid reference defect still needs individual user ruling after source review.
 
 ### inputnumber candidate draft notes
@@ -463,7 +463,7 @@ Standalone reference-defect notes from the family and pilot reports, kept verbat
 
 ### toast candidate draft notes
 
-- L58: PrimeReact's `ToastMessageOptions` type declares `group?: string` (`toast/toast.d.ts:107-110`), but pinned `Toast.js` routes by no group and `ToastBase.js:122-137` has no group prop; `show()` only appends to that instance (`Toast.js:34-38`). The routing row is U because honoring the declared contract versus executable source changes PrimeReact from M (declared capability not implemented) to N (no runtime capability), and can change the product verdict. Options: (A) score runtime only, classify PrimeReact routing N and record its unused type field as a reference defect; (B) treat the declared type as intended contract, leave Prime's own implementation defect noted and classify Ultimate React M for lacking group routing. Recommendation: A, because pinned runtime is the behavior oracle in DECISIONS.md §11. Keep U until the user rules. No other class-changing docs/source conflict found. PrimeVue's missing container `life` prop is a default/API difference, represented by a default flag in row 5; examples passing `life:3000` do not establish a container default.
+- L58: PrimeReact's `ToastMessageOptions` type declares `group?: string` (`toast/toast.d.ts:107-110`), but pinned `Toast.js` routes by no group and `ToastBase.js:122-137` has no group prop; `show()` only appends to that instance (`Toast.js:34-38`). The routing row is U because honoring the declared contract versus executable source changes PrimeReact from M (declared capability not implemented) to N (no runtime capability), and can change the product verdict. Options: (A) score runtime only, classify PrimeReact routing N and record its unused type field as a reference defect; (B) treat the declared type as intended contract, leave Prime's own implementation defect noted and classify Ultimate React M for lacking group routing. Recommendation: A, because pinned runtime is the behavior oracle in the working decision log, section 11. Keep U until the user rules. No other class-changing docs/source conflict found. PrimeVue's missing container `life` prop is a default/API difference, represented by a default flag in row 5; examples passing `life:3000` do not establish a container default.
 
 ### togglebutton candidate draft notes
 
@@ -473,7 +473,7 @@ Standalone reference-defect notes from the family and pilot reports, kept verbat
 
 - L74: Candidate reference conflict ready for individual ruling: PrimeVue docs/types say `autoFocus=true`, runtime defaults false (`FocusTrap.d.ts` vs `FocusTrap.js:72`); autoFocus affects initial focus fallback and therefore classification if row is defined by default behavior. Recommend source wins and record default flag/reference defect per method 17, unless the user explicitly prioritizes public declaration. PrimeReact has dangling missing focustrap.d.ts: source reports it, but that is package evidence limitation; runtime component still exists. Do not infer no feature from no showcase/catalog entry. Provisional distribution, 11 rows (C/P/M/I/N/U): NG `1/6/0/0/4/0`; React `3/1/1/0/4/2`; Vue `4/3/2/0/2/0`. Arithmetic only; `pt` / `ptOptions` conflict and unsupported PrimeNG component styles need source-level resolution.
 - L97: Known conflict ready for ruling: all framework accessibility docs promise `aria-describedby`, pinned Prime sources do not implement it (`docs/prime-reference/components/tooltip.md:101`; PN `tooltip/tooltip.ts`, PR `tooltip/Tooltip.js`, PV `tooltip/Tooltip.js`). Recommend classify against source as no Prime capability and record reference defect; prior user rulings elsewhere establish individual defects, not blanket authorization, so ask separately for Tooltip. It changes verdict if accessible-description linkage row is scored from docs. Provisional distribution, 13 rows (C/P/M/I/N/U): NG `3/5/4/0/0/1`; React `2/6/3/0/1/1`; Vue `5/3/4/0/0/1`.
-- L132: Pending individual user rulings (no prior ruling found for these families): Accordion ARIA linkage/keyboard differences if docs conflict; ConfirmDialog React role and PrimeNG defaultFocus query mismatch; FocusTrap PrimeVue `autoFocus` declared default true vs runtime false; Tooltip documented `aria-describedby` vs absence in pinned runtime; Toast PrimeReact style-doc class names / close icon PT key vs runtime. Recommendation for each: classify by pinned source as oracle and record reference defect, subject to individual user decision under DECISIONS.md §11. PrimeVue FocusTrap default is also a method-17 default flag; use runtime default unless user selects declaration as contract. These conflicts can change a capability verdict, so leave their affected cells U until ruled.
+- L132: Pending individual user rulings (no prior ruling found for these families): Accordion ARIA linkage/keyboard differences if docs conflict; ConfirmDialog React role and PrimeNG defaultFocus query mismatch; FocusTrap PrimeVue `autoFocus` declared default true vs runtime false; Tooltip documented `aria-describedby` vs absence in pinned runtime; Toast PrimeReact style-doc class names / close icon PT key vs runtime. Recommendation for each: classify by pinned source as oracle and record reference defect, subject to individual user decision under the working decision log, section 11. PrimeVue FocusTrap default is also a method-17 default flag; use runtime default unless user selects declaration as contract. These conflicts can change a capability verdict, so leave their affected cells U until ruled.
 
 ### `batch6/checkbox.md`
 
@@ -557,7 +557,7 @@ Standalone reference-defect notes from the family and pilot reports, kept verbat
 
 ### `batch7/toast.md`
 
-- L58: PrimeReact's `ToastMessageOptions` type declares `group?: string` (`toast/toast.d.ts:107-110`), but pinned `Toast.js` routes by no group and `ToastBase.js:122-137` has no group prop; `show()` only appends to that instance (`Toast.js:34-38`). The routing row is U because honoring the declared contract versus executable source changes PrimeReact from M (declared capability not implemented) to N (no runtime capability), and can change the product verdict. Options: (A) score runtime only, classify PrimeReact routing N and record its unused type field as a reference defect; (B) treat the declared type as intended contract, leave Prime's own implementation defect noted and classify Ultimate React M for lacking group routing. Recommendation: A, because pinned runtime is the behavior oracle in DECISIONS.md §11. Keep U until the user rules. No other class-changing docs/source conflict found. PrimeVue's missing container `life` prop is a default/API difference, represented by a default flag in row 5; examples passing `life:3000` do not establish a container default.
+- L58: PrimeReact's `ToastMessageOptions` type declares `group?: string` (`toast/toast.d.ts:107-110`), but pinned `Toast.js` routes by no group and `ToastBase.js:122-137` has no group prop; `show()` only appends to that instance (`Toast.js:34-38`). The routing row is U because honoring the declared contract versus executable source changes PrimeReact from M (declared capability not implemented) to N (no runtime capability), and can change the product verdict. Options: (A) score runtime only, classify PrimeReact routing N and record its unused type field as a reference defect; (B) treat the declared type as intended contract, leave Prime's own implementation defect noted and classify Ultimate React M for lacking group routing. Recommendation: A, because pinned runtime is the behavior oracle in the working decision log, section 11. Keep U until the user rules. No other class-changing docs/source conflict found. PrimeVue's missing container `life` prop is a default/API difference, represented by a default flag in row 5; examples passing `life:3000` do not establish a container default.
 
 ### `batch7/virtualscroller.md`
 

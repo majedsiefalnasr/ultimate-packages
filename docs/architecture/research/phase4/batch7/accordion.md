@@ -1,6 +1,6 @@
 # Accordion — Phase 4 source comparison
 
-Product revision `91a8472547e34c6e92456f2b98270a1555e3a2db`; PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5. Evidence is source-read only; no tests, browser, visual or accessibility checks. C/P/M/I/N/U follow `../DECISIONS.md`; default differences are flags. Mapping is by disclosure behavior despite different composition models.
+Product revision `91a8472547e34c6e92456f2b98270a1555e3a2db`; PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5. Evidence is source-read only; no tests, browser, visual or accessibility checks. C/P/M/I/N/U follow `the phase 4 closeout record`; default differences are flags. Mapping is by disclosure behavior despite different composition models.
 
 ## Mapping and sources
 

@@ -2,7 +2,7 @@
 
 Ultimate revision `91a8472547e34c6e92456f2b98270a1555e3a2db`. Source-read only: no tests, browser, visual or AT checks.
 
-Prefixes: `PNG` = `.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src`; `PRA` = `.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib`; `PVA` = `.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src`; `PVC` = sibling `packages/core/src`. Product paths are repo-relative. Classes: complete / partial / missing / intentional / n/a / unresolved. Method: `phase4-gap-analysis/DECISIONS.md`, `AGENT-BRIEF.md`. Comments in product files that say a feature is "excluded" are not ADRs, so no row is intentional.
+Prefixes: `PNG` = `.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src`; `PRA` = `.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib`; `PVA` = `.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src`; `PVC` = sibling `packages/core/src`. Product paths are repo-relative. Classes: complete / partial / missing / intentional / n/a / unresolved. Method: `phase4-gap-analysis/the phase 4 closeout record`, `the phase 4 method`. Comments in product files that say a feature is "excluded" are not ADRs, so no row is intentional.
 
 ## 1. Mapping
 

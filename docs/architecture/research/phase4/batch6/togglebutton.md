@@ -4,7 +4,7 @@
 
 Ultimate revision `91a8472547e34c6e92456f2b98270a1555e3a2db` on `develop`. Oracles are PrimeNG 21.1.9, PrimeReact 10.9.9, and PrimeVue 4.5.5. All judgments are source-based. No tests, browser, visual, or assistive-technology checks were run. The mapping is a boolean control with state-dependent presentation in each framework. The three products are `UToggleButton` (`UN:40-63`, `UR:11-25,45-59`, `UV:1-20,44-48`). The Prime controls have equivalent scope (`PN:43-76,101-115`, `PR:22-45,100-151`, `PV:2-25,51-55`).
 
-Method and prior notes were read from `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/phase4-gap-analysis/DECISIONS.md:7-31,64,72-73` and `/private/var/folders/vt/w58l5fv17nz9s5ybrbgpkgh80000gn/T/phase4-agent15.mjU6Hj/source-findings-incomplete.md:16,24,29-32`. C = complete, P = partial, M = missing, I = intentional architectural difference, N = not applicable, U = unresolved. Default differences are flags. See the key below for exact paths. Numbers after a key are original source line numbers.
+Method and prior notes were read from `the phase 4 closeout record` and `a temporary agent file, not kept`. C = complete, P = partial, M = missing, I = intentional architectural difference, N = not applicable, U = unresolved. Default differences are flags. See the key below for exact paths. Numbers after a key are original source line numbers.
 
 ## Distribution (C / P / M / I / N / U)
 

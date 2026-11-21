@@ -28,7 +28,7 @@ The ledger incorporates the lead’s source review and the four mandatory stylin
 
 - Ultimate revision: 91a8472547e34c6e92456f2b98270a1555e3a2db.
 - Oracles: PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5.
-- Method: phase4-gap-analysis/DECISIONS.md.
+- Method: phase4-gap-analysis/the phase 4 closeout record.
 - All classifications are SOURCE-READ ONLY. No tests, browser or visual checks were run. No product changes, tickets, fixes or prioritisation.
 
 ## Mapping (by function)
@@ -167,7 +167,7 @@ Background subagent agent-8 finished and will do no further work unless you send
 **Scope and evidence:** I only read source. I did not write any files, change the repo, run tests, or check anything in a browser or with a screen reader. A "complete" row means complete for the capability described, at source-read level only. These reports contain no fixes and no priorities.
 
 **Baseline:**
-- **Ultimate:** `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate` at `91a8472547e34c6e92456f2b98270a1555e3a2db`.
+- **Ultimate:** the repository root at `91a8472547e34c6e92456f2b98270a1555e3a2db`.
 - **Reference implementations:** Angular is compared with PrimeNG 21.1.9, React with PrimeReact 10.9.9, and Vue with PrimeVue 4.5.5.
 - **Archive roots:** under `.vendor-cache/extracted/`:
   - `primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src`

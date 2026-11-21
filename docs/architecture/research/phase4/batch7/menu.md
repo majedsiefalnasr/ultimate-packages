@@ -1,6 +1,6 @@
 # Menu — Phase 4 source-only comparison
 
-Ultimate revision `91a8472547e34c6e92456f2b98270a1555e3a2db`; PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5. Source only: no tests, browser, build or visual checks. Mapping is by menu behavior. No I: no in-force ADR or ruling makes current differences intentional. Every matrix cell includes product and pinned Prime `path:line` evidence. Paths are relative to `/Users/majedsiefalnasr/Documents/Work/Ultimate-Solutions-EGY/ultimate`.
+Ultimate revision `91a8472547e34c6e92456f2b98270a1555e3a2db`; PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5. Source only: no tests, browser, build or visual checks. Mapping is by menu behavior. No I: no in-force ADR or ruling makes current differences intentional. Every matrix cell includes product and pinned Prime `path:line` evidence. Paths are relative to the repository root.
 
 ## Mapping
 
