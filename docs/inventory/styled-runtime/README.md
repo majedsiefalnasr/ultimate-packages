@@ -28,7 +28,7 @@ Source: `packages/uix-styled/src/actions/*.ts`. All are default exports re-expor
 
 ## Stylesheet and shared registrations
 
-`StyleSheet<E>` is a keyed style registry whose `createStyleElement` returns `undefined` by default; framework cores override it. `update()` is an empty placeholder in source. `registerThemeVariables`, `registerHiddenAccessible`, `registerIconSpin` and `registerBoxModel` are idempotent through `StyleSheet.has()`. `registerThemeVariables` also registers the preset top-level `css`, when present, under `u-global-style` after the common variables, run through `Theme.transformCSS` (ticket #172, F4). Source comments reference prior project gap identifiers and upstream versions; they are retained as source context only and no parity or equivalence judgment is made.
+`StyleSheet<E>` is a keyed style registry whose `createStyleElement` returns `undefined` by default; framework cores override it. `update()` is an empty placeholder in source. `registerThemeVariables`, `registerHiddenAccessible`, `registerIconSpin` and `registerBoxModel` are idempotent through `StyleSheet.has()`. `registerThemeVariables` also registers the preset top-level `css`, when present, under `u-global-style` after the common variables, run through `Theme.transformCSS` (ticket #172, F4). It reads a component's preset block under the registration name with its hyphens removed, so `input-text` reads `inputtext`; the block stays registered under the name it was given (ticket #174, F7). Source comments reference prior project gap identifiers and upstream versions; they are retained as source context only and no parity or equivalence judgment is made.
 
 ## Utilities and types
 
