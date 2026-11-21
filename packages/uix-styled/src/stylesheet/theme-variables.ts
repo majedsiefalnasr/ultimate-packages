@@ -17,6 +17,14 @@ const COMMON_KEY = "u-common-variables";
  */
 const GLOBAL_STYLE_KEY = "u-global-style";
 
+/**
+ * Registration key for the `@layer` order statement. Registered first, ahead
+ * of every other style, as PrimeNG and PrimeVue load their `layer-order` style
+ * with `first: true`: the order of layers is fixed by where each name first
+ * appears, so the statement has to come before the layered variable blocks.
+ */
+const LAYER_ORDER_KEY = "u-layer-order";
+
 /** Registration key for one component's own variable block. */
 function componentKey(componentName: string): string {
   return `${componentName}-variables`;
@@ -48,6 +56,18 @@ function componentVariablesCss(componentName: string): string {
   return css ?? "";
 }
 
+/**
+ * Brings the layer-order statement in line with the current options. It is
+ * computed after the variable blocks, because `cssLayer.order` can be a
+ * function of the layer names those blocks record. With `cssLayer` off the
+ * statement is empty and nothing is registered.
+ */
+function syncLayerOrder(sheet: StyleSheet<any>): void {
+  const layerOrder = Theme.getLayerOrderCSS();
+  if (layerOrder === (sheet.get(LAYER_ORDER_KEY)?.css ?? "")) return;
+  sheet.update(LAYER_ORDER_KEY, layerOrder, { first: true });
+}
+
 interface FollowedSheet {
   variableNames: Set<string>;
   structuralCss: Map<string, string>;
@@ -73,6 +93,7 @@ function refreshSheet(sheet: StyleSheet<any>, followed: FollowedSheet): void {
     for (const componentName of followed.variableNames) {
       sheet.update(componentKey(componentName), componentVariablesCss(componentName));
     }
+    syncLayerOrder(sheet);
   }
 
   for (const [componentName, rawCss] of followed.structuralCss) {
@@ -128,8 +149,11 @@ function followThemeChanges(sheet: StyleSheet<any>): FollowedSheet {
  *
  * Both tiers are idempotent via `StyleSheet.has()`, so repeated mounts of the
  * same or different components never inject duplicate `<style>` elements.
+ * With `cssLayer` on, the `@layer` order statement is then registered first
+ * in `sheet` and at the start of the document head (`u-layer-order`).
  * After a theme change (`Theme.setTheme`, `setPreset`, `setOptions`) both
- * tiers are rewritten in place for every component registered on `sheet`.
+ * tiers and the statement are rewritten in place for every component
+ * registered on `sheet`.
  * SSR-safety is inherited from the `sheet` passed in: the React and Vue
  * cores guard `createStyleElement` on `typeof document`, and Angular passes
  * the registry of its injected document (inert when there is no document).
@@ -153,6 +177,8 @@ export function registerThemeVariables(sheet: StyleSheet<any>, componentName: st
   if (!sheet.has(key)) {
     sheet.add(key, componentVariablesCss(componentName));
   }
+
+  syncLayerOrder(sheet);
 }
 
 /**

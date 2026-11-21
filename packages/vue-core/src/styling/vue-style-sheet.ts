@@ -19,7 +19,13 @@ import type { StyleModule } from "../base/base-component";
 class VueStyleSheet extends StyleSheet<HTMLStyleElement> {
   override createStyleElement(meta: StyleMeta): HTMLStyleElement | undefined {
     if (typeof document === "undefined") return undefined;
-    return createStyleElement(meta.css ?? "", { "data-u-style": meta.name }, document.head);
+    const element = createStyleElement(
+      meta.css ?? "",
+      { "data-u-style": meta.name },
+      document.head
+    );
+    if (meta.first) document.head.prepend(element);
+    return element;
   }
   override updateStyleElement(element: HTMLStyleElement, meta: StyleMeta<HTMLStyleElement>): void {
     element.textContent = meta.css ?? "";
