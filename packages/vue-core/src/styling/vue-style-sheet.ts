@@ -1,6 +1,6 @@
 import {
   StyleSheet,
-  css,
+  registerComponentCss,
   registerBoxModel,
   registerHiddenAccessible,
   registerIconSpin,
@@ -20,6 +20,9 @@ class VueStyleSheet extends StyleSheet<HTMLStyleElement> {
   override createStyleElement(meta: StyleMeta): HTMLStyleElement | undefined {
     if (typeof document === "undefined") return undefined;
     return createStyleElement(meta.css ?? "", { "data-u-style": meta.name }, document.head);
+  }
+  override updateStyleElement(element: HTMLStyleElement, meta: StyleMeta<HTMLStyleElement>): void {
+    element.textContent = meta.css ?? "";
   }
 }
 
@@ -63,8 +66,5 @@ export function registerComponentStyle(
   // the component key already exists. A no-op for an empty name or no roots.
   registerBoxModel(vueCoreStyleSheet, componentName, scopeRootsOf(styleModule.classes));
 
-  if (vueCoreStyleSheet.has(componentName)) return;
-  // Keep the style module's CSS bytes intact; the registered value is used as-is.
-  const renderCss = css;
-  vueCoreStyleSheet.add(componentName, renderCss`${styleModule.css}`);
+  registerComponentCss(vueCoreStyleSheet, componentName, styleModule.css);
 }

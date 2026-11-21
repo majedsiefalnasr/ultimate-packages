@@ -48,7 +48,7 @@
       "path": "scripts/inventory/angular-core.json",
       "scope": "angular-core-148",
       "ticket": 148,
-      "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+      "revision": "38d2616779a7a2f65c765724d7760d4532fbbdd2",
       "records": 16,
       "aliases": 17,
       "pending": 7
@@ -210,7 +210,7 @@
       "path": "scripts/inventory/react-core.json",
       "scope": "react-core-149",
       "ticket": 149,
-      "revision": "bc2ea64ece059085cc26dbc0e72e983b12f16cd1",
+      "revision": "38d2616779a7a2f65c765724d7760d4532fbbdd2",
       "records": 12,
       "aliases": 13,
       "pending": 9
@@ -318,7 +318,7 @@
       "path": "scripts/inventory/styled-runtime.json",
       "scope": "styled-runtime-145",
       "ticket": 145,
-      "revision": "f0b7e867d6edf346284af3400e28e6ec6fbe4500",
+      "revision": "38d2616779a7a2f65c765724d7760d4532fbbdd2",
       "records": 7,
       "aliases": 8,
       "pending": 8
@@ -381,7 +381,7 @@
       "path": "scripts/inventory/vue-core.json",
       "scope": "vue-core-150",
       "ticket": 150,
-      "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+      "revision": "38d2616779a7a2f65c765724d7760d4532fbbdd2",
       "records": 12,
       "aliases": 13,
       "pending": 9

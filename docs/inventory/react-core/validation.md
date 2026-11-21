@@ -1,6 +1,6 @@
 # Scoped validation
 
-Scope: react-core-149; source revision: bc2ea64ece059085cc26dbc0e72e983b12f16cd1
+Scope: react-core-149; source revision: 38d2616779a7a2f65c765724d7760d4532fbbdd2
 
 Global completeness: not asserted.
 

@@ -46,8 +46,23 @@ class StyleSheet<E = HTMLStyleElement> {
       });
     }
   }
-  update() {
-    // @todo
+  update(key: string, css = "") {
+    const current = this._styles.get(key);
+
+    if (!current) {
+      this.add(key, css);
+      return;
+    }
+
+    const meta = {
+      ...current,
+      css,
+      markup: isNotEmpty(css) ? createStyleMarkup(css, this._attrs) : "",
+    } satisfies StyleMeta<E>;
+
+    this._styles.set(key, meta);
+
+    if (meta.element) this.updateStyleElement(meta.element, meta);
   }
   getStyles() {
     return this._styles;
@@ -70,6 +85,14 @@ class StyleSheet<E = HTMLStyleElement> {
   createStyleElement(meta: StyleMeta = {}): E | undefined {
     return undefined;
   }
+  /**
+   * Used to write new css into an element previously returned by
+   * `createStyleElement`.
+   *
+   * @param {E} element
+   * @param {StyleMeta} meta
+   */
+  updateStyleElement(element: E, meta: StyleMeta<E> = {}): void {}
 }
 
 export default StyleSheet;

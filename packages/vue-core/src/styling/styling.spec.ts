@@ -1,4 +1,5 @@
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect, afterEach, beforeEach } from "vitest";
+import { Theme } from "@ultimate/uix-styled";
 import { vueCoreStyleSheet, registerComponentStyle } from "./vue-style-sheet";
 
 describe("VueStyleSheet adapter", () => {
@@ -84,5 +85,75 @@ describe("registerComponentStyle — box model (GAP-098)", () => {
     registerComponentStyle("", { css: "", classes: {} });
     registerComponentStyle("bm-rootless", { css: ".x {}", classes: { header: "u-x" } });
     expect(keys().filter((k) => k?.startsWith("u-box-model:"))).toEqual([]);
+  });
+});
+
+describe("registerComponentStyle — theme changes (A1)", () => {
+  const options = { prefix: "u", darkModeSelector: "system", cssLayer: false };
+  const presetOf = (color: string, radius: string) => ({
+    primitive: { blue: { 500: color } },
+    semantic: { primary: { color: "{blue.500}" } },
+    components: { button: { borderRadius: radius } },
+  });
+  const styleModule = { css: ".u-button {}", classes: {} };
+
+  beforeEach(() => {
+    vueCoreStyleSheet.clear();
+    document.head.querySelectorAll("style[data-u-style]").forEach((el) => el.remove());
+    Theme.setTheme({ preset: presetOf("#3b82f6", "6px"), options });
+  });
+
+  const injectedCss = () =>
+    Array.from(document.head.querySelectorAll("style[data-u-style]"))
+      .map((el) => el.textContent ?? "")
+      .join("\n");
+
+  it("updates the variables of a registered component after Theme.setTheme, without a second <style>", () => {
+    registerComponentStyle("button", styleModule);
+    const count = document.head.querySelectorAll("style[data-u-style]").length;
+
+    Theme.setTheme({ preset: presetOf("#ef4444", "12px"), options });
+
+    expect(injectedCss()).toContain("--u-blue-500:#ef4444");
+    expect(injectedCss()).toContain("--u-button-border-radius:12px");
+    expect(injectedCss()).not.toContain("#3b82f6");
+    expect(document.head.querySelectorAll("style[data-u-style]").length).toBe(count);
+  });
+
+  it("updates the variables of a registered component after Theme.setPreset", () => {
+    registerComponentStyle("button", styleModule);
+
+    Theme.setPreset(presetOf("#22c55e", "2px"));
+
+    expect(injectedCss()).toContain("--u-blue-500:#22c55e");
+    expect(injectedCss()).toContain("--u-button-border-radius:2px");
+    expect(injectedCss()).not.toContain("#3b82f6");
+  });
+
+  it("updates the variable names of a registered component after Theme.setOptions", () => {
+    registerComponentStyle("button", {
+      css: ".u-button { border-radius: dt('button.border.radius'); }",
+      classes: {},
+    });
+
+    Theme.setOptions({ ...options, prefix: "x" });
+
+    expect(injectedCss()).toContain("--x-button-border-radius:6px");
+    expect(injectedCss()).not.toContain("--u-button-border-radius");
+    expect(injectedCss()).toContain("var(--x-button-border-radius");
+  });
+
+  it("updates the variables registered through additionalPresetKeys", () => {
+    Theme.setTheme({
+      preset: { components: { tooltip: { gap: "3px" } } },
+      options,
+    });
+    registerComponentStyle("button", styleModule, ["tooltip"]);
+    expect(injectedCss()).toContain("--u-tooltip-gap:3px");
+
+    Theme.setPreset({ components: { tooltip: { gap: "9px" } } });
+
+    expect(injectedCss()).toContain("--u-tooltip-gap:9px");
+    expect(injectedCss()).not.toContain("--u-tooltip-gap:3px");
   });
 });

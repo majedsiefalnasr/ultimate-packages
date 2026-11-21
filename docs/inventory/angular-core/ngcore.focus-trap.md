@@ -50,7 +50,7 @@ package.ultimate.uix-utils.dom (pending cross-batch)
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
-    "revision": "5a49a62b07259a6033e13fb52a4bb39869a389ed",
+    "revision": "38d2616779a7a2f65c765724d7760d4532fbbdd2",
     "outcome": "passed",
     "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 26 root export identities each attributed to one public record, cross-scope references recorded as pending.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",

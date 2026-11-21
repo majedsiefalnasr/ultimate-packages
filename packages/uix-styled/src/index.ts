@@ -16,7 +16,7 @@ export * from "./helpers/index";
 export { default as ThemeService } from "./service/index";
 
 export { default as StyleSheet, type StyleSheetProps, type StyleMeta } from "./stylesheet/index";
-export { registerThemeVariables } from "./stylesheet/theme-variables";
+export { registerComponentCss, registerThemeVariables } from "./stylesheet/theme-variables";
 export {
   HIDDEN_ACCESSIBLE_KEY,
   hiddenAccessibleCss,

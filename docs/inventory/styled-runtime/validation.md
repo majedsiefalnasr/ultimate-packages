@@ -1,6 +1,6 @@
 # Scoped validation
 
-Scope: styled-runtime-145; source revision: f0b7e867d6edf346284af3400e28e6ec6fbe4500
+Scope: styled-runtime-145; source revision: 38d2616779a7a2f65c765724d7760d4532fbbdd2
 
 Global completeness: not asserted.
 
