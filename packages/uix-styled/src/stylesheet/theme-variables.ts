@@ -8,6 +8,13 @@ import type StyleSheet from "./index";
  */
 const COMMON_KEY = "u-common-variables";
 
+/**
+ * Registration key for the preset's top-level `css` (Aura's `css`). Mirrors
+ * the `global-style` entry PrimeNG and PrimeVue load next to the common
+ * variables.
+ */
+const GLOBAL_STYLE_KEY = "u-global-style";
+
 /** Registration key for one component's own variable block. */
 function componentKey(componentName: string): string {
   return `${componentName}-variables`;
@@ -28,9 +35,9 @@ function componentKey(componentName: string): string {
  * Two tiers, matching PrimeVue's `BaseComponent._loadThemeStyles()`
  * (`packages/core/src/basecomponent/BaseComponent.vue`):
  *
- * - **common** — primitive + semantic + global variables. Global to the app,
- *   registered once under a single shared key by whichever component mounts
- *   first.
+ * - **common** — primitive + semantic + global variables, then the preset's
+ *   top-level `css` as global style. Global to the app, registered once by
+ *   whichever component mounts first.
  * - **component** — that one component's own variables, registered once per
  *   component name.
  *
@@ -48,8 +55,9 @@ export function registerThemeVariables(sheet: StyleSheet<any>, componentName: st
   if (!Theme.getTheme()) return; // no theme applied — nothing to define
 
   if (!sheet.has(COMMON_KEY)) {
-    const { primitive, semantic, global } = Theme.getCommon("", {}) ?? {};
+    const { primitive, semantic, global, style } = Theme.getCommon("", {}) ?? {};
     sheet.add(COMMON_KEY, `${primitive?.css ?? ""}${semantic?.css ?? ""}${global?.css ?? ""}`);
+    if (style) sheet.add(GLOBAL_STYLE_KEY, Theme.transformCSS("global-style", style));
   }
 
   const key = componentKey(componentName);
