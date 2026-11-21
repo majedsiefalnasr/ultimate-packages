@@ -1,6 +1,6 @@
 # @ultimate/ng
 
-Ultimate Platform Angular components. See `docs/inventory/README.md` for the current component inventory.
+Ultimate Platform Angular components. See `docs/architecture/COMPONENT_INVENTORY.md` for the current component inventory.
 
 **Status:** unstable (pre-1.0). No semver guarantee yet.
 
