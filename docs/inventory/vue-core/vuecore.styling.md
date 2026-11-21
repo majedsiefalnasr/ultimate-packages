@@ -10,7 +10,7 @@ SSR-guarded style sheet instance and a function that registers theme variables, 
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). Root exports vueCoreStyleSheet and registerComponentStyle(componentName, styleModule, additionalPresetKeys?). Style elements are created in document.head with a data-u-style attribute and return undefined without a document. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions.
+See [authored signatures and interpretation](README.md). Root exports vueCoreStyleSheet and registerComponentStyle(componentName, styleModule, additionalPresetKeys?). Style elements are created in document.head with a data-u-style attribute and return undefined without a document. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions. With cssLayer on, the layer-order statement is placed first in document.head (ticket #173, F6).
 
 ## Public exports
 

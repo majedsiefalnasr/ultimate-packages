@@ -15,7 +15,7 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng-core/src/basecomponent/style-sheet.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored module-level StyleSheet singleton wrapper. @ultimate/uix-styled's StyleSheet is a plain class, not an Angular-injectable providedIn:'root' service, so ng-core owns a single shared instance here for all UBaseComponent subclasses to register against. A1 (#171): overrides updateStyleElement to write the new css into the adopted or created <style> element. A one-line standard DOM write; no upstream expression retained."
+    "modificationDescription": "Ultimate-authored module-level StyleSheet singleton wrapper. @ultimate/uix-styled's StyleSheet is a plain class, not an Angular-injectable providedIn:'root' service, so ng-core owns a single shared instance here for all UBaseComponent subclasses to register against. A1 (#171): overrides updateStyleElement to write the new css into the adopted or created <style> element. A one-line standard DOM write; no upstream expression retained. F6 (#173): createStyleElement prepends a `first` entry to the injected document's head instead of appending it, as PrimeNG 21.1.9 usestyle.ts:29 inserts it before the head's first child. Only that standard DOM behavior is shared."
   },
   {
     "originalPath": "packages/primeng/src/basecomponent/basecomponent.ts",
@@ -310,5 +310,11 @@
     "ultimateDestination": "packages/ng-core/src/toast-service/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored re-export barrel for ng-core's toast-service entry (GAP-094 backfill batch 1). PrimeNG 21.1.9 has no toast-service/ directory; its MessageService lives in api/. Added in be9f35e4."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng-core/src/basecomponent/layer-order.spec.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies that an initialised component registers the layer-order statement first in the document head when cssLayer is on, registers none when it is off, and follows a cssLayer switched on after init (F6, #173)."
   }
 ]

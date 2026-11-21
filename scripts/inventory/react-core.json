@@ -659,7 +659,7 @@
       "name": "Style sheet and component style hook",
       "framework": "react",
       "purpose": "SSR-guarded style sheet instance and a hook that registers theme variables, hidden-accessible, box-model and component CSS on mount.",
-      "surface": "See [authored signatures and interpretation](README.md). Root exports reactCoreStyleSheet and useComponentStyle. The sheet creates style elements in document.head and returns undefined when document is unavailable. useComponentStyle registers once on mount and adds component css only if the sheet has no entry for the name. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports reactCoreStyleSheet and useComponentStyle. The sheet creates style elements in document.head and returns undefined when document is unavailable. useComponentStyle registers once on mount and adds component css only if the sheet has no entry for the name. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions. With cssLayer on, the layer-order statement is placed first in document.head (ticket #173, F6).",
       "files": [
         "packages/react-core/src/styling/index.ts",
         "packages/react-core/src/styling/react-style-sheet.ts",
@@ -809,6 +809,10 @@
     },
     {
       "path": "packages/react-core/src/styling/global-style.spec.tsx",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/react-core/src/styling/layer-order.spec.tsx",
       "reason": "Supporting behavioral tests; presence alone is not passing execution."
     },
     {

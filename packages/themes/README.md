@@ -89,6 +89,8 @@ applyUltimateTheme({
 });
 ```
 
+With `cssLayer` on, the component registration also registers the `@layer` order statement (`@layer ultimate, primeng`) in its own `<style>` element at the start of the document head, ahead of every Ultimate style, so the declared order holds. With `cssLayer` off (the default) no layer or order statement is emitted.
+
 ## Scope
 
 **In scope (Phase 5):**

@@ -10,7 +10,7 @@ SSR-guarded style sheet instance and a hook that registers theme variables, hidd
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). Root exports reactCoreStyleSheet and useComponentStyle. The sheet creates style elements in document.head and returns undefined when document is unavailable. useComponentStyle registers once on mount and adds component css only if the sheet has no entry for the name. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions.
+See [authored signatures and interpretation](README.md). Root exports reactCoreStyleSheet and useComponentStyle. The sheet creates style elements in document.head and returns undefined when document is unavailable. useComponentStyle registers once on mount and adds component css only if the sheet has no entry for the name. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions. With cssLayer on, the layer-order statement is placed first in document.head (ticket #173, F6).
 
 ## Public exports
 

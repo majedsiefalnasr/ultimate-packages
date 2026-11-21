@@ -40,7 +40,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 - scripts/inventory/react-text-entry.json: ticket #111; scope react-text-entry; revision c49aa4e6906a9d72a1893b3fc006fce55489d0b7
 - scripts/inventory/root-files.json: ticket #157; scope root-files-157; revision 70b74575698fb77a72a18022b91181c66df41484
 - scripts/inventory/shared-component-styles.json: ticket #146; scope shared-component-styles-146; revision 54f81ae85b0cfe3583541471bd4114fe8d8d7bac
-- scripts/inventory/styled-runtime.json: ticket #145; scope styled-runtime-145; revision 38d2616779a7a2f65c765724d7760d4532fbbdd2
+- scripts/inventory/styled-runtime.json: ticket #145; scope styled-runtime-145; revision b93f4d6708ab4a00da820df86124a4e8a30687b0
 - scripts/inventory/theme-contract.json: ticket #151; scope theme-contract-151; revision bced8db5905c1e1f38463c585063e110a93624ca
 - scripts/inventory/uix-utils-dom.json: ticket #143; scope uix-utils-dom-143; revision 41e8047c4ed60eed2789c89c1bb67b27469cd039
 - scripts/inventory/uix-utils-values.json: ticket #144; scope uix-utils-values-144; revision 7a06beb32487f04ccd84a765f7722ac606825c74
