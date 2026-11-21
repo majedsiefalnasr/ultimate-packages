@@ -1,0 +1,53 @@
+# Phase 4 — TabMenu
+
+Ultimate `91a8472547e34c6e92456f2b98270a1555e3a2db`; PrimeNG 21.1.9 (no TabMenu), PrimeReact 10.9.9, PrimeVue 4.5.5. Source-only. PR=`.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib/`, PV=`.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src/`. TabMenu is separate from Tabs.
+
+## Mapping
+
+- Angular: N/A, not shipped in PrimeNG (removed in v20). No product component.
+- React: `UTabMenu` `packages/react/src/tabs/tab-menu.tsx` (exported `packages/react/src/tabs/index.ts:5`) vs PrimeReact `TabMenu`.
+- Vue: PrimeVue `TabMenu` exists; Ultimate Vue has none, so every Prime capability is M.
+
+## Matrix
+
+|   # | Capability                                                                     | NG  | React | Vue | Evidence                                                                                                                                                                                                                                                                                                                                     |
+| --: | ------------------------------------------------------------------------------ | :-: | :---: | :-: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|   1 | Render a model array as a tab strip (no panels)                                |  N  |   C   |  M  | PrimeNG ships no TabMenu (`docs/prime-reference/components/tabmenu.md` §2). PR `tabmenu/TabMenu.js`:305-352 -> `packages/react/src/tabs/tab-menu.tsx`:51-80. PV `tabmenu/TabMenu.vue`:1-29. No Vue TabMenu in `packages/vue/src` (glob of tab dirs: only `table`, `tabs`).                                                                   |
+|   2 | Active index, controlled and uncontrolled                                      |  N  |   C   |  M  | PR `tabmenu/TabMenu.js`:16,21,60-68 -> `packages/react/src/tabs/tab-menu.tsx`:32-33,41-45. PV `tabmenu/TabMenu.vue`:42-46,47-55 (`update:activeIndex`).                                                                                                                                                                                      |
+|   3 | Item click: command, disabled guard, url handling                              |  N  |   P   |  M  | PR `tabmenu/TabMenu.js`:46-74 (also `stopPropagation` when no url) -> `packages/react/src/tabs/tab-menu.tsx`:35-49 (no `stopPropagation`). PV `tabmenu/TabMenu.vue`:77-95.                                                                                                                                                                   |
+|   4 | Change callback payload                                                        |  N  |   C   |  M  | PR `tabmenu/TabMenu.js`:60-65 `{originalEvent,value,index}` -> `packages/react/src/tabs/tab-menu.tsx`:12-16,42. PV `tabmenu/TabMenu.vue`:96-99 (`tab-change`).                                                                                                                                                                               |
+|   5 | Keyboard: Arrow/Home/End/Enter/Space                                           |  N  |   M   |  M  | PR `tabmenu/TabMenu.js`:117-153; PV `tabmenu/TabMenu.vue`:103-141 -> `packages/react/src/tabs/tab-menu.tsx`:57-69 has no key handler (native anchor click only).                                                                                                                                                                             |
+|   6 | Roving tabindex (active tab only focusable)                                    |  N  |   P   |  M  | PR `tabmenu/TabMenu.js`:251 `tabIndex` active ? 0 : -1 -> `packages/react/src/tabs/tab-menu.tsx`:67 every enabled item is 0. PV `tabmenu/TabMenu.vue`:17 (`tabindex -1` + mounted sets active).                                                                                                                                              |
+|   7 | Roles and selected-state semantics                                             |  N  |   P   |  M  | PR `tabmenu/TabMenu.js`:249,290,326 (`menubar`/`menuitem`/`presentation`, `data-p-highlight`) -> `packages/react/src/tabs/tab-menu.tsx`:53,60-61 (`tablist`/`tab`+`aria-selected`). Roles differ; selected state exposed differently. PV `tabmenu/TabMenu.vue`:3,5,17.                                                                       |
+|   8 | Accessible name (`ariaLabel`, `ariaLabelledBy`)                                |  N  |   M   |  M  | PR `tabmenu/TabMenu.js`:323-324; PV `tabmenu/TabMenu.vue`:3 (`BaseTabMenu.vue:17-24`) -> `packages/react/src/tabs/tab-menu.tsx`:6-18 none.                                                                                                                                                                                                   |
+|   9 | Animated ink bar                                                               |  N  |   M   |  M  | PR `tabmenu/TabMenu.js`:80-100,312-319; PV `tabmenu/TabMenu.vue`:26,57-66 -> class `tabMenuInkbar` is defined (`packages/react/src/tabs/tabs-style.ts:55`) but never rendered in `packages/react/src/tabs/tab-menu.tsx`:51-80.                                                                                                               |
+|  10 | Item template / slots                                                          |  N  |   M   |  M  | PR `tabmenu/TabMenu.js`:267-281; PV `tabmenu/TabMenu.vue`:16-23 -> `packages/react/src/tabs/tab-menu.tsx` none.                                                                                                                                                                                                                              |
+|  11 | Item fields (`visible`, `target`, `style`, `className`, `id`, `icon`, `label`) |  N  |   P   |  M  | PR `tabmenu/TabMenu.js`:220-225,283-296 -> `packages/react/src/tabs/tab-menu.tsx`:64-74 uses `url`, `icon`, `label`, `disabled` only.                                                                                                                                                                                                        |
+|  12 | Root attribute forwarding (`id`, `style`, rest)                                |  N  |   P   |  M  | PR `tabmenu/TabMenu.js`:331-340 -> `packages/react/src/tabs/tab-menu.tsx`:52 accepts `className` only. Vue: no component.                                                                                                                                                                                                                    |
+|  13 | Imperative root access                                                         |  N  |   C   |  M  | PR `tabmenu/TabMenu.js`:108-111 -> `packages/react/src/tabs/tab-menu.tsx`:27 `forwardRef` to root div.                                                                                                                                                                                                                                       |
+|  14 | Ripple on item links                                                           |  N  |   M   |  M  | PR `tabmenu/TabMenu.js`:263; PV `tabmenu/TabMenu.vue`:17 -> `packages/react/src/tabs/tab-menu.tsx`:64-74 none.                                                                                                                                                                                                                               |
+|  15 | Aura tokens and registration                                                   |  N  |   M   |  M  | Upstream Aura has tabmenu tokens; Ultimate does not port them (`packages/themes/src/presets/aura/index.ts:91` comment). React registers key `tabs` (`packages/react/src/tabs/tab-menu.tsx:31`) with hand CSS, no `dt()` (`tabs-style.ts` has none). ADR-067 (`docs/architecture/DECISIONS.md:787-803`) exception list does not name tabmenu. |
+|  16 | `pt`                                                                           |  N  |   M   |  M  | D-PT. PR `tabmenu/TabMenu.js`:34-42,328,339; PV `tabmenu/TabMenu.vue`:2-3,69-76 -> no PT in `packages/react/src/tabs/tab-menu.tsx`:6-18.                                                                                                                                                                                                     |
+|  17 | `ptOptions`                                                                    |  N  |   M   |  M  | D-PT. PR `componentbase/ComponentBase.js:422`; PV core `basecomponent/BaseComponent.vue:18`; product `packages/react-core/src/base/component-base.ts:12-35` has no PT merge.                                                                                                                                                                 |
+|  18 | Unstyled mode                                                                  |  N  |   M   |  M  | PR `tabmenu/TabMenu.js`:30,44 (`isUnstyled`); PV core `BaseComponent.vue:22,315-316` -> React/Vue core have none.                                                                                                                                                                                                                            |
+|  19 | Per-instance `dt`                                                              |  N  |   N   |  M  | PrimeReact has no `dt` (`ComponentBase.js:420-423`); PV core `BaseComponent.vue:26,48`; no Vue product.                                                                                                                                                                                                                                      |
+
+## Distribution (19 rows; C/P/M/I/N/U)
+
+- Angular 0/0/0/0/19/0; React 4/5/9/0/1/0; Vue 0/0/19/0/0/0
+
+## Default flags
+
+None identified.
+
+## Reference defects
+
+None found (docs/prime-reference tabmenu.md matches sources on the points compared).
+
+## Ruling needed
+
+None. Note for lead: the Vue absence is classed M (not I) because no ADR or ruling excludes Vue TabMenu; tokens row is M because tabmenu tokens are not ported to Aura.
+
+## Verification limits
+
+Source only; rendering, ink bar geometry and focus not run. Vue `TabMenu.vue` was read to line ~150.

@@ -1,0 +1,61 @@
+# Editor — Phase 4 gap analysis
+
+Ultimate `91a8472547e34c6e92456f2b98270a1555e3a2db`; PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5 (ADR-048). Method: `the phase 4 closeout record` (D-PT, D-SHARED #1/#2/#5) and `the phase 4 method`. Source-read only; no tests, builds, browser, visual or assistive-technology checks.
+
+Prefixes: NGA = `.vendor-cache/extracted/primeng-21.1.9/primeng-c493b1c6d9f7cdffbe1c4dc195493dd73d733593/packages/primeng/src`; PRA = `.vendor-cache/extracted/primereact-10.9.9/primereact-d0f574e39122668292fc7a740f081bae1b93b1e9/components/lib`; PVA = `.vendor-cache/extracted/primevue-4.5.5/primevue-66dde6788220fc9e6822342919d1ceb0e3460ece/packages/primevue/src`.
+
+Product presence (checked this session): no `editor` directory in `packages/ng/src`, `packages/react/src` or `packages/vue/src`; no `editor` key in `packages/themes/src/presets/aura/index.ts`. Quill is referenced only by table and inplace specs/sources. ADR-055 approves `quill` as an optional peer for Editor (`docs/architecture/DECISIONS.md:451-466`) but states Editor still needs its own Spec and Plan. Therefore the whole family is absent in all three Ultimate frameworks.
+
+## Mapping
+
+| Framework | Prime                                                                   | Ultimate | Basis                                   |
+| --------- | ----------------------------------------------------------------------- | -------- | --------------------------------------- |
+| Angular   | `p-editor` NGA/editor/editor.ts:25 (extends BaseEditableHolder :84)     | none     | family absent from `packages/ng/src`    |
+| React     | `Editor` PRA/editor/Editor.js; props PRA/editor/editor.d.ts:116-181     | none     | family absent from `packages/react/src` |
+| Vue       | `Editor` PVA/editor/Editor.vue (180 lines); `BaseEditor.vue:8-13` props | none     | family absent from `packages/vue/src`   |
+
+## Capability matrix
+
+| #   | Capability                                                      | Angular                                                                                                                                                                     | React                                                                                                               | Vue                                                                                                                           |
+| --- | --------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Rich-text editing surface (Quill-backed)                        | missing — no product file; Prime NGA/editor/editor.ts:281-308 creates Quill                                                                                                 | missing — no product file; Prime PRA/editor/Editor.js                                                               | missing — no product file; Prime PVA/editor/Editor.vue                                                                        |
+| 2   | Value binding (model/value, CVA or equivalent)                  | missing — product has no editor; Prime NGA/editor/editor.ts:84 extends BaseEditableHolder                                                                                   | missing — product has no editor; PRA/editor/editor.d.ts:116 `value`                                                 | missing — product has no editor; PVA/editor/BaseEditor.vue:8-13                                                               |
+| 3   | `placeholder`                                                   | missing — product absent; NGA/editor/editor.ts:110                                                                                                                          | missing — product absent; PRA/editor/editor.d.ts:120                                                                | missing — product absent; PVA/BaseEditor.vue:9                                                                                |
+| 4   | `readOnly` / `readonly`                                         | missing — product absent; NGA/editor/editor.ts:140-150                                                                                                                      | missing — product absent; PRA/editor/editor.d.ts:125                                                                | missing — product absent; PVA/BaseEditor.vue:10                                                                               |
+| 5   | `modules` and `formats` configuration                           | missing — product absent; NGA/editor/editor.ts:115,120                                                                                                                      | missing — product absent; PRA/editor/editor.d.ts:129,133                                                            | missing — product absent; PVA/BaseEditor.vue:11,13                                                                            |
+| 6   | Default toolbar (formats, list, link, image, code block, clean) | missing — product absent; NGA/editor/editor.ts:34-74                                                                                                                        | missing — product absent; PRA/editor/Editor.js                                                                      | missing — product absent; PVA/editor/Editor.vue                                                                               |
+| 7   | Custom header/toolbar template and `showHeader`                 | missing — product absent; NGA/editor/editor.ts:188,204                                                                                                                      | missing — product absent; PRA/editor/editor.d.ts:142,146                                                            | missing — product absent; PVA/editor/Editor.vue                                                                               |
+| 8   | Init event (`onInit`)                                           | missing — product absent; NGA/editor/editor.ts:156                                                                                                                          | missing — product absent; PRA/editor/editor.d.ts                                                                    | missing — product absent; PVA/editor/Editor.vue                                                                               |
+| 9   | Text-change event (`onTextChange`)                              | missing — product absent; NGA/editor/editor.ts:162,325                                                                                                                      | missing — product absent; PRA/editor/Editor.js                                                                      | missing — product absent; PVA/editor/Editor.vue                                                                               |
+| 10  | Selection-change and focus/blur events                          | missing — product absent; NGA/editor/editor.ts:168,180,186                                                                                                                  | missing — product absent; PRA/editor/Editor.js                                                                      | missing — product absent; PVA/editor/Editor.vue                                                                               |
+| 11  | Access to underlying Quill instance (`getQuill`)                | missing — product absent; NGA/editor/editor.ts:277                                                                                                                          | missing — product absent; PRA/editor/Editor.js                                                                      | missing — product absent; PVA/editor/Editor.vue                                                                               |
+| 12  | Aura design tokens for editor                                   | missing — no editor style module and no `editor` Aura key; NGA/editor/style/editorstyle.ts                                                                                  | missing — no editor style module; PRA/editor/EditorBase.js:22-37                                                    | missing — no editor style module; PVA/editor/style                                                                            |
+| 13  | `pt` pass-through                                               | missing (D-PT) — `packages/ng-core/src/basecomponent/base-component.ts:21` excludes pt; Prime NGA/basecomponent/basecomponent.ts:66; NGA/editor/editor.ts:34-74 binds `ptm` | missing (D-PT) — `packages/react-core/src/base/component-base.ts:12-35` has no pt; Prime PRA/editor/editor.d.ts:171 | missing (D-PT) — `packages/vue-core/src/base/base-component.ts:30-43` has no pt; Prime PVC/basecomponent/BaseComponent.vue:14 |
+| 14  | `ptOptions` merge policy                                        | missing (D-PT) — `packages/ng-core/src/basecomponent/base-component.ts:21` excludes ptOptions; Prime NGA/basecomponent/basecomponent.ts:72                                  | missing (D-PT) — `packages/react-core/src/base/component-base.ts:12-35`; Prime PRA/editor/editor.d.ts:176           | missing (D-PT) — `packages/vue-core/src/base/base-component.ts:30-43`; Prime PVC/basecomponent/BaseComponent.vue:18           |
+| 15  | `unstyled` mode                                                 | partial (D-SHARED #5) — `packages/ng-core/src/basecomponent/base-component.ts:36` declares input, never read at :50-76; Prime NGA/basecomponent/basecomponent.ts:60         | missing (D-SHARED #5) — `packages/react-core/src/base/component-base.ts:12-35`; Prime PRA/editor/editor.d.ts:181    | missing (D-SHARED #5) — `packages/vue-core/src/base/base-component.ts:30-43`; Prime PVC/basecomponent/BaseComponent.vue:22    |
+| 16  | Per-instance `dt`                                               | partial (D-SHARED #5) — `packages/ng-core/src/basecomponent/base-component.ts:35` declares input, never read :50-76; Prime NGA/basecomponent/basecomponent.ts:54            | n/a — PrimeReact 10.9.9 has no `dt` API (PRA/componentbase/ComponentBase.js:420-424)                                | missing (D-SHARED #5) — `packages/vue-core/src/base/base-component.ts:30-43`; Prime PVC/basecomponent/BaseComponent.vue:26    |
+
+## Distribution (16 rows per framework, counted mechanically)
+
+| Framework | Complete | Partial | Missing | Intentional | N/A | Unresolved |
+| --------- | -------: | ------: | ------: | ----------: | --: | ---------: |
+| Angular   |        0 |       2 |      14 |           0 |   0 |          0 |
+| React     |        0 |       0 |      15 |           0 |   1 |          0 |
+| Vue       |        0 |       0 |      16 |           0 |   0 |          0 |
+
+## Default flags
+
+- None: no product default can be compared because the family is absent.
+
+## Reference defects and source notes
+
+- Prime Editor emits its own default toolbar in Angular (NGA/editor/editor.ts:34-74); there is no product counterpart to compare.
+- ADR-055 records Quill as an approved optional peer, but it is not an implementation and does not make the family intentional (method item 6).
+
+## Ruling needed
+
+Whether Editor is intentionally deferred. Options: (a) keep all rows missing until Spec and Plan exist (recommended: ADR-055 places Editor in scope); (b) record an accepted ADR that defers Editor, which would convert these rows to intentional. Consequence of (b): the rows are no longer parity gaps, but the Prime migration path is lost for this family.
+
+## Verification limits
+
+Source-read only. Angular and Vue Prime event lines are cited at family-file level, not per line, where not verified this session. No rendered Quill behavior was checked.
