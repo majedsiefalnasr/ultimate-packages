@@ -90,6 +90,7 @@ describe("npm packaging contract (spec §7.1a)", () => {
           {
             name: "scratch-consumer",
             version: "1.0.0",
+            packageManager: "pnpm@9.6.0",
             private: true,
             dependencies: {
               "@ultimate/ai": `file:${aiTarball}`,
