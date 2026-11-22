@@ -1259,3 +1259,44 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 - The React Checkbox style module is hand-written and does not use `@ultimate/uix-styles/checkbox`, so it had no `.u-checkbox-icon` size and the new `.u-icon` rule would have grown its check mark to 16px. It now sets `.u-checkbox-icon` to `dt('checkbox.icon.size')` (`0.875rem`), which keeps the existing 14px baseline.
 - The intended visual changes above are recorded by updated Playwright baselines in this PR. The baselines were regenerated in the CI Playwright image, and only the listed stories changed.
 - Tests cover the module's selectors, the absence of `box-sizing`, the helper, and registration in each core (present when styled, absent when unstyled).
+
+## ADR-086 — InputText: `size`, value-derived `p-filled`, shared styles, and React `keyfilter`/`tooltip` stay composition (L0a, ticket #188)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#188](https://github.com/majedsiefalnasr/ultimate-packages/issues/188)). The user ruled on rows 5, 6, 9 and 12 to 14 before implementation. This ADR records those rulings and the rows that stay open.
+
+**Context.**
+
+- The Phase 4 InputText audit found 22 rows. The gaps were: no `size` in any framework (row 5), a `p-filled` class driven by the variant in Vue and never set in React (row 9), hard-coded React CSS with the wrong Aura key `input-text` (rows 16, 22), a Vue style copy with its own `.u-input-text` class and no placeholder, size or filled-hover rules (row 16), no `pt` anywhere (row 18), and a Vue base that shadowed `cx` and `mounted` so `unstyled`, per-instance `dt` and `pt` did nothing (rows 19 to 21).
+- ADR-082 puts structural style in `@ultimate/uix-styles` by default. The `inputtext` module already existed and was consumed only by Angular.
+
+**Decision.**
+
+1. **Size (row 5).** All three frameworks take `size: "small" | "large"`, the same convention as Button. It emits `u-inputtext-sm` or `u-inputtext-lg`, which the shared module styles from the Aura `inputtext.sm.*` and `inputtext.lg.*` tokens. Angular names the input `uSize`, so it does not collide with the native `size` attribute. The size is also a token in `data-p` (Angular, Vue), as in PrimeNG and PrimeVue.
+2. **Filled (row 9).** `p-filled` is value-derived: it is set when the value is not empty, like PrimeNG and PrimeVue. React tracks an uncontrolled `defaultValue` with state, so typing updates it. The variant-derived `filled` token stays in `data-p`, as in the oracles. `p-variant-filled` is the only class that follows the variant.
+3. **Shared styles (rows 16, 22).** React and Vue import `style` from `@ultimate/uix-styles/inputtext`, like Angular. Both register under the Aura key `inputtext`. The Vue root class is now `u-inputtext`, the shared module's name.
+4. **Vue base (rows 19 to 21).** `createBaseInput(options)` forwards `componentName` and `styleModule` to the editable holder. `BaseInputText` no longer shadows `cx` and `mounted`, so `unstyled`, per-instance `dt` and `pt` come from `createBaseComponent`. Other Vue families that use the shadow workaround are not touched; their tickets move them over.
+5. **Pass-through (row 18).** Angular binds `ptms(["host", "root"])` through the `UBind` host directive. React and Vue apply `ptm("root")`. `unstyled` drops the Ultimate classes. React `dt` stays N because PrimeReact has no per-instance `dt`.
+6. **Angular-only invalid style (row 8).** The `.ng-invalid.ng-dirty` rules stay in the Angular style module, with their reason documented there. Angular forms set those classes. React and Vue have no counterpart, so the shared module cannot carry them (ADR-082 framework-local exception).
+7. **React `keyfilter`, `tooltip` and `validatePattern` (rows 12 to 14) are I.** They stay separate composition (`useKeyFilter`, `UTooltip`), as in Angular and Vue, instead of props of `UInputText`. This is an intentional difference from PrimeReact. Defects inside the key filter and the tooltip belong to the KeyFilter and Tooltip family tickets.
+8. **Vue Fluid (row 6) stays P.** The explicit `fluid` prop works. Ancestor fluid detection needs a Fluid provider, and Vue has none. The Fluid family ticket is in L0b.
+
+**Divergences from Prime.**
+
+1. React `size` is the visual size, as in PrimeVue. PrimeReact passes the native `size` attribute to the DOM. A native `size` on the React input is now reachable only through `pt.root`.
+2. React `p-filled` is derived from the value. PrimeReact never sets it.
+3. React `keyfilter`, `tooltip` and `validatePattern` are not props (item 7).
+4. Row 4 (variant fallback from global config) stays P in all three frameworks. The config surface has no `inputVariant` or `inputStyle`, and `packages/ng-core/src/base-input/base-input.ts` gates it on config's open decision.
+5. Row 3 (`@primevue/forms`) stays M in Vue. It belongs to the separate Vue Forms spec (R3).
+6. `ptOptions` is accepted everywhere but has no visible effect until the global `pt` source exists (ADR-080), so row 19 is P.
+
+**Classification after this ticket** (C / P / M / I / N-A / N / U, from a source re-read; the Phase 4 report is not edited).
+
+- Angular 15 / 2 / 0 / 0 / 5 / 0 / 0. Open: rows 4 and 19.
+- React 10 / 3 / 0 / 3 / 5 / 1 / 0. Open: rows 4, 11 and 19. Row 11 is P because native `size` moved to `pt.root`. I: rows 12 to 14. N: row 21.
+- Vue 14 / 3 / 1 / 0 / 4 / 0 / 0. Open: rows 4, 6 and 19. M: row 3.
+
+**Consequences.**
+
+- With the real `UInputText` in Vue, the FloatLabel, IconField, IftaLabel, InputGroup and InputMask style modules still select `.u-input-text` and miss the root class, until tickets #191 to #194 and #190 move them to `.u-inputtext`. This was already true in Angular and React. Their stories hand-write `class="u-input-text"` on raw inputs, so their baselines do not change.
+- The Vue InputText baseline changes visually, because the shared module adds placeholder color, focus outline offset and filled hover and focus backgrounds. Any changed baseline comes with before and after images in the PR.
+- Tests cover size, value-derived filled, `data-p`, `pt`, `unstyled` and per-instance `dt` in the frameworks that support each. The Angular invalid style is asserted on the style module's CSS, not in a browser.

@@ -982,5 +982,29 @@
     "ultimateDestination": "packages/vue/src/card/Card.vue",
     "modificationStatus": "adapted",
     "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 Card.vue: the template is upstream's, section for section (`:class=\"cx(x)\" v-bind=\"ptm(x)\"`, `ptmi('root')` on the root, the v-if guards on header, caption, title, subtitle and footer), with whitespace normalized and slot tags self-closed. The script keeps `extends`, `inheritAttrs: false` and the component name `UCard` instead of `Card`. A0 (#170) changes no template line: the pilot works because createBaseComponent now mixes in the passthrough mixin. Existing file, entry added in A0 (#170) because the file's ptm and ptmi calls now resolve to the shared mechanism."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputtext/InputText.vue",
+    "ultimateDestination": "packages/vue/src/input-text/InputText.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 InputText.vue: the single native `input[type=text]`, its `:class=\"cx('root')\"`, `:value`, `:name`, `:disabled`, `:aria-invalid`, `:data-p` and `@input` bindings, `writeValue` in `onInput`, `inheritAttrs: false`, `ptmi('root', { context: { filled, disabled } })` and the `dataP` computed (`cn` over invalid, fluid, variant-derived filled and the size token) are upstream's, with `d_value`, `$invalid`, `$fluid`, `$variant` and `$filled` replaced by `dValue`, `invalid`, `resolvedFluid`, `resolvedVariant` and `filled`. The `formField` merge is absent (`@primevue/forms`, row 3, separate Vue Forms spec). `placeholder`, `focus` and `blur` are Ultimate's additions, and `p-filled` follows the value (`filled`). Changed for #188."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputtext/BaseInputText.vue",
+    "ultimateDestination": "packages/vue/src/input-text/BaseInputText.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064). Shares the `extends` of the input base and the attachment of the component's style with PrimeVue 4.5.5 BaseInputText.vue; the file is a typed factory (`createBaseInputText`) and passes `componentName` and `styleModule` through `createBaseInput(options)`, so it no longer shadows `cx` and `mounted`. The `$pcInputText` and `$parentInstance` provides are absent. The `disabled`, `invalid`, `name` and `placeholder` props are declared here instead of in the base. Changed for #188."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputtext/style/InputTextStyle.js",
+    "ultimateDestination": "packages/vue/src/input-text/input-text-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeVue 4.5.5 InputTextStyle.js `classes.root`: `p-inputtext p-component` becomes `u-inputtext u-component`, and `p-filled`, `p-invalid`, `p-variant-filled` and the fluid and size modifiers follow the upstream keys, with `p-inputtext-fluid`, `p-inputtext-sm` and `p-inputtext-lg` renamed to `u-inputtext-*` and the `p-inputfield-sm` and `p-inputfield-lg` classes dropped. The CSS is the shared `@ultimate/uix-styles/inputtext` module (ADR-082), replacing the hand-ported copy. Changed for #188."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputtext/InputText.vue",
+    "ultimateDestination": "packages/vue/src/input-text/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UInputText and createBaseInputText; it shares only the exported component with PrimeVue's inputtext module."
   }
 ]
