@@ -3993,6 +3993,10 @@
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
+          "path": "packages/ng-core/src/basecomponent/unstyled-and-dt.spec.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
           "path": "packages/ng-core/src/bind/bind.spec.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
@@ -5270,6 +5274,10 @@
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
+          "path": "packages/react-core/src/base/unstyled.spec.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
           "path": "packages/react-core/src/confirmation/confirmation-event-bus.spec.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
@@ -5772,6 +5780,14 @@
         },
         {
           "path": "packages/uix-styled/test/registration-name-normalization.test.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
+          "path": "packages/uix-styled/test/scoped-theme-no-theme.test.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
+          "path": "packages/uix-styled/test/scoped-theme.test.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
@@ -9164,6 +9180,10 @@
         },
         {
           "path": "packages/vue-core/src/base/passthrough.spec.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
+          "path": "packages/vue-core/src/base/unstyled-and-dt.spec.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
@@ -13077,6 +13097,7 @@
         "packages/uix-styled/src/stylesheet/hidden-accessible.ts",
         "packages/uix-styled/src/stylesheet/icon-spin.ts",
         "packages/uix-styled/src/stylesheet/index.ts",
+        "packages/uix-styled/src/stylesheet/scoped-theme.ts",
         "packages/uix-styled/src/stylesheet/theme-variables.ts"
       ],
       "coverage": {

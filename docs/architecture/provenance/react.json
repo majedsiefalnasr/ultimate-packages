@@ -375,7 +375,7 @@
     "originalPath": "components/lib/tag/Tag.js",
     "ultimateDestination": "packages/react/src/tag/tag.tsx",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "REFERENCE (ADR-064; GAP-094 backfill batch 2). Compared with PrimeReact 10.9.9 Tag.js: every statement is rewritten (no mergeProps, IconUtils or imperative handle). Shared are only the public props (severity, value, icon, rounded) and the equivalent span-root/icon/value output; the icon gets a wrapping span and children replace value in one label span instead of upstream's separate value and children spans. Added in be9f35e4 (Phase C Batch 1, Tag row); ecdbf793 only reformatted it."
+    "modificationDescription": "REFERENCE (ADR-064; GAP-094 backfill batch 2). Compared with PrimeReact 10.9.9 Tag.js: every statement is rewritten (no mergeProps, IconUtils or imperative handle). Shared are only the public props (severity, value, icon, rounded) and the equivalent span-root/icon/value output; the icon gets a wrapping span and children replace value in one label span instead of upstream's separate value and children spans. Added in be9f35e4 (Phase C Batch 1, Tag row); ecdbf793 only reformatted it. F15 (ticket #175): pilot for per-instance unstyled. UTag takes an `unstyled` prop and passes it to useComponentBase; PrimeReact 10.9.9 tag/Tag.js has no change of its own for this, the behavior comes from ComponentBase `isUnstyled`."
   },
   {
     "originalPath": "components/lib/tag/TagBase.js",

@@ -1082,6 +1082,50 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 - React components now inject their Aura variable blocks. Most React style modules still do not read them through `dt()` (F8). The React Aura-token rows stay P until the family tickets add `dt()` consumption; this ADR closes only the key mismatch.
 - ADR-051 and ADR-067 each carry a note that points here. Their original text stays as history.
 
+## ADR-085 — Per-instance `unstyled` and `dt` are built once in the three cores (foundation F15; contract and divergences from Prime)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F15, ticket [#175](https://github.com/majedsiefalnasr/ultimate-packages/issues/175)). This is the first ADR of ticket A5. Numbering starts at 085 to avoid a collision with ADRs added by ticket A0 (#170) from 079 up.
+
+**Context.**
+
+- Phase 4 decision D-SHARED #5 ruled that per-instance `dt` and `unstyled` are separate capability rows per family. The shared-foundation audit (item F15) recorded Angular as P (the inputs were declared but never read), React as M, Vue as M, and React per-instance `dt` as N because PrimeReact 10.9.9 has no `dt` API.
+- The pinned oracles behave as follows (read from the vendor archives, ADR-064). PrimeNG 21.1.9 and PrimeVue 4.5.5 resolve the instance `unstyled` value first and the global config second. `cx()` returns `undefined` when unstyled. Core and theme styles are skipped when unstyled, while base styles still load. A per-instance `dt` becomes a scoped preset (`Theme.getCustomPreset(name, dt, '[pcN]')`) loaded under the key `<attr>-<name>`. It is rewritten on `theme:change` and removed when `dt` is cleared or the component is destroyed. PrimeNG skips scoped styles on the server. PrimeReact resolves `unstyled` as `context || PrimeReact.unstyled || props.unstyled`, loads base and global styles always, and loads common and component styles only when styled.
+
+**Decision.**
+
+- `@ultimate/uix-styled` exports `createScopedTheme(sheet, componentName, attrSelector)`. It returns `{ key, update(dt), dispose() }`, writes the scoped variable block under `<attr>-<name>`, follows `theme:change`, and removes the `<style>` element together with the registry entry.
+- **Angular (`ng-core`).** `UBaseComponent` reads the existing `unstyled` and `dt` inputs. `$unstyled` is the input when set, else `UltimateConfig.unstyled`. `cx()` returns `undefined` when unstyled. An unstyled instance registers only the base rules (hidden-accessible, icon spin). Styles are registered once the instance turns styled. `dt` is applied from an effect, outside the server platform, and is disposed with the component.
+- **Vue (`vue-core`).** `BaseComponent` declares the `unstyled` and `dt` props (default `undefined`), a computed `isUnstyled`, and a `cx` that returns `undefined` when unstyled. `dt` follows PrimeVue's lifecycle (mounted, watcher, updated, unmounted). Every Vue family inherits both props through the base component.
+- **React (`react-core`).** `useComponentBase` takes `unstyled` and returns `{ cx, isUnstyled }`. `useComponentStyle(name, module, unstyled)` registers only the hidden-accessible rule for an unstyled instance. React has no `dt`: PrimeReact has no per-instance `dt` API, so the row is N and nothing is built (D-SHARED #5).
+- Each framework has one pilot component (Tag) that proves the contract. Families adopt it in their own tickets.
+
+**Divergences from Prime.**
+
+1. The `pcN` attribute is set only while `dt` is set. Prime sets it on every root.
+2. Vue has no global `unstyled` fallback, because Ultimate Vue has no config plugin.
+3. React `unstyled` is per-instance only. There is no global or context source yet.
+4. Angular has no `directiveUnstyled` signal.
+5. Scoped `dt` is not written on the server in Angular, and in Vue it is written from `mounted` only.
+6. The `pcN` selector comes from the `uuid("pc")` counter of `@ultimate/uix-utils`, not from `useId`, which restarts in each Vue app.
+7. React re-registers styles when `unstyled` turns false. PrimeReact runs its loader on mount only.
+8. `$attrSelector` is exposed on Angular only. Vue keeps the selector private. Ticket A0 (#170), which builds `ptm` dataset code, must add it if it needs the selector.
+
+**Contract for families.**
+
+- `cx()` returns `undefined` when unstyled. Templates must never concatenate its result with a string. The Angular Tag pilot shows the fix: `cx('icon') + ' ' + icon()` rendered the word `undefined`, so the class list is now built in a computed that filters it.
+- A React family component passes `unstyled` into `useComponentBase` and `useComponentStyle`. Vue and Angular components inherit it from the base class.
+
+**Classification.**
+
+- No row is I (intentionally not built). The only N row, React `dt`, keeps the classification the Phase 4 audit gave it.
+- Re-classification after a source re-read is in the A5 ticket report, not in the Phase 4 reports.
+
+**Consequences.**
+
+- The `ng-core`, `react-core`, `vue-core` and `uix-styled` READMEs document the API.
+- Other families need no per-component code to honor `unstyled` or `dt` in Angular and Vue. React families wire the `unstyled` prop one component at a time.
+- Any later global `unstyled` source for React or Vue needs its own ruling.
+
 ## ADR-079 — `pt` functions receive `parent.instance` through host-instance lookup (A0 design decision, amends ADR-077)
 
 Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), ticket [#170](https://github.com/majedsiefalnasr/ultimate-packages/issues/170) A0). Needs the user's approval. ADR-077 left this open on purpose.

@@ -37,7 +37,7 @@ function componentKey(componentName: string): string {
  * only place the lookup changes: the block stays registered under the name
  * it was given, and a name that is already flat resolves exactly as before.
  */
-function presetKey(componentName: string): string {
+export function presetKey(componentName: string): string {
   return componentName.replaceAll("-", "");
 }
 

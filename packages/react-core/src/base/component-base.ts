@@ -12,6 +12,8 @@ export interface StyleModule {
 export interface ComponentBaseOptions {
   componentName: string;
   styleModule: StyleModule;
+  /** Renders the instance without Ultimate's classes and styles (F15). */
+  unstyled?: boolean;
 }
 
 function resolveClassValue(
@@ -23,13 +25,15 @@ function resolveClassValue(
   return Array.isArray(value) ? classNames(...value) : classNames(value);
 }
 
-export function useComponentBase({ componentName, styleModule }: ComponentBaseOptions): {
+export function useComponentBase({ componentName, styleModule, unstyled }: ComponentBaseOptions): {
   cx: (key: string, params?: Record<string, unknown>) => string | undefined;
+  isUnstyled: boolean;
 } {
-  useComponentStyle(componentName, styleModule);
+  const isUnstyled = unstyled === true;
+  useComponentStyle(componentName, styleModule, isUnstyled);
 
   const cx = (key: string, params?: Record<string, unknown>) =>
-    resolveClassValue(styleModule.classes[key], params);
+    isUnstyled ? undefined : resolveClassValue(styleModule.classes[key], params);
 
-  return { cx };
+  return { cx, isUnstyled };
 }

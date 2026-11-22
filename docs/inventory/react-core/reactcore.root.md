@@ -59,9 +59,9 @@ reactcore.zindex
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
-    "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
+    "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
     "outcome": "passed",
-    "output": "Scoped reconciliation completed with no problems: 38 source files accounted for, 46 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+    "output": "Scoped reconciliation completed with no problems: 56 source files accounted for, 46 root export identities each attributed to one public record, cross-scope references recorded as pending.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
     "run": "docs/inventory/react-core/pilot-run.json",
     "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."

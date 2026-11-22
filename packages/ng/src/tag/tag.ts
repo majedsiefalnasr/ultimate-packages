@@ -3,6 +3,7 @@ import {
   Component,
   ViewEncapsulation,
   booleanAttribute,
+  computed,
   input,
 } from "@angular/core";
 import { UBaseComponent } from "@ultimate/ng-core";
@@ -28,7 +29,7 @@ import { tagStyleModule } from "./tag-style";
   selector: "u-tag",
   template: `
     @if (icon()) {
-      <span [class]="cx('icon') + ' ' + icon()"></span>
+      <span [class]="iconClass()"></span>
     }
     <span [class]="cx('label')"
       ><ng-content>{{ value() }}</ng-content></span
@@ -52,4 +53,12 @@ export class UTag extends UBaseComponent {
   icon = input<string>();
   /** Whether the corners of the tag are rounded. */
   rounded = input(false, { transform: booleanAttribute });
+
+  /**
+   * The icon's classes. `cx()` returns `undefined` for an unstyled instance,
+   * so it is joined here instead of concatenated into a string in the template.
+   */
+  protected readonly iconClass = computed(() =>
+    [this.cx("icon"), this.icon()].filter(Boolean).join(" ")
+  );
 }

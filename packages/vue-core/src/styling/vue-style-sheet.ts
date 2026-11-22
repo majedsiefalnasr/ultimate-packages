@@ -37,6 +37,15 @@ class VueStyleSheet extends StyleSheet<HTMLStyleElement> {
 // registry.)
 export const vueCoreStyleSheet = new VueStyleSheet();
 
+// The rules every instance needs whether or not it is styled: the shared
+// hidden-accessible and icon-spin rules. PrimeVue's `_load()` loads its base
+// style the same way, before the `isUnstyled` check in `_loadThemeStyles()`.
+export function registerBaseStyle(): void {
+  registerHiddenAccessible(vueCoreStyleSheet);
+  // GAP-124: the opt-in `.u-icon-spin` rule (class-scoped; see uix-styled icon-spin.ts).
+  registerIconSpin(vueCoreStyleSheet);
+}
+
 // Registers styleModule with vueCoreStyleSheet exactly once per componentName
 // (has()/add() guard) — called from createBaseComponent's mounted()
 // lifecycle point. StyleSheet.add(key, css) takes the CSS string directly
@@ -54,9 +63,7 @@ export function registerComponentStyle(
   styleModule: StyleModule,
   additionalPresetKeys: readonly string[] = []
 ): void {
-  registerHiddenAccessible(vueCoreStyleSheet);
-  // GAP-124: the opt-in `.u-icon-spin` rule (class-scoped; see uix-styled icon-spin.ts).
-  registerIconSpin(vueCoreStyleSheet);
+  registerBaseStyle();
 
   // Theme variable DEFINITIONS first — the structural CSS below refers to
   // them via dt()-resolved var(--u-*) references, which resolve to nothing

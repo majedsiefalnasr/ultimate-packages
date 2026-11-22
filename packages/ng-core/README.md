@@ -32,6 +32,17 @@ Not built (ADR-080): the global and default `pt` from config, `usePassThrough`, 
 - `icons` — `UBaseIcon` (shared `label`/`spin` inputs) plus four standalone icon components: `USpinnerIcon` (`u-spinner-icon`), `UTimesIcon` (`u-times-icon`), `UWindowMaximizeIcon` (`u-window-maximize-icon`), `UWindowMinimizeIcon` (`u-window-minimize-icon`). Each is an element-selector component (not an attribute directive like PrimeNG's `[data-p-icon]`) rendering its own inline `<svg role="img" [attr.aria-label]="label()">`, so every icon is accessible without the consumer wiring ARIA attributes themselves — a deliberate departure from PrimeNG's own icon shape, which leaves accessibility to the consumer.
 - `api` — shared type definitions consumed by `@ultimate/ng` components: `UMenuItem` (an 8-field subset of PrimeNG's `MenuItem` — `label`, `icon`, `routerLink`, `command`, `items`, `separator`, `disabled`, `tooltip` — used by `UMenu`; `tooltip` is Ultimate-specific, opt-in per item, not present on PrimeNG's own `MenuItem`) and `UTooltipOptions` (a 3-field subset of PrimeNG's `TooltipOptions` — `value`, `position`, `disabled` — used by `UTooltip`).
 
+## Per-instance `unstyled` and `dt`
+
+`UBaseComponent` honors the `unstyled` and `dt` inputs on every component that extends it (ADR-085):
+
+- `unstyled` — the effective value, `$unstyled()`, is the input when set and `UltimateConfig.unstyled` otherwise. `[unstyled]="false"` therefore overrides a global `true`. While it is true, `cx()` returns `undefined` and the instance registers only the shared base rules (hidden-accessible, icon spin), not its theme variables, box model or component CSS. If it turns false later, the instance registers its styles then.
+- `dt` — a token override scoped to the instance (for example `[dt]="{ colorScheme: { light: { root: { background: '{red.500}' } } } }"`). It is written as a scoped variable block keyed to the instance's attribute selector, rewritten when `dt` changes or the theme changes, and removed when `dt` is cleared or the component is destroyed. It is not written during server rendering.
+- `cx()` returns `undefined` when unstyled. A template that builds a class list must filter that result instead of concatenating it with a string, or the word `undefined` ends up in the markup (see `@ultimate/ng`'s `UTag`).
+- `$attrSelector` is the instance's `pcN` attribute name. It is set on the host only while `dt` is set.
+
+There is no `directiveUnstyled` signal.
+
 ## Usage
 
 ```typescript

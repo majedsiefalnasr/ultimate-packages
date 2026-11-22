@@ -10,7 +10,7 @@ Options-API factories producing base components: class resolution with style reg
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). Root exports createBaseComponent, createBaseEditableHolder, createBaseInput and the types ClassValue, StyleModule and BaseComponentOptions. createBaseComponent adds a cx method and registers the style module on mount; createBaseEditableHolder adds modelValue and defaultValue props, update:modelValue and value-change emits, dValue, controlled and filled; createBaseInput adds size, fluid and variant props and injects pcFluid. createBaseComponent mixes in createPassThroughMixin (passthrough.ts, ADR-077): the pt and ptOptions props, ptm, ptmi, ptmo, the pt:section:attribute attributes and the $parentInstance provide and inject, with an optional hostName in BaseComponentOptions (ADR-079). The global and default pt sources, usePassThrough, pt.hooks, the $attrSelector dataset and the ptmi id fallback are not implemented (ADR-080), so ptOptions has no visible effect yet.
+See [authored signatures and interpretation](README.md). Root exports createBaseComponent, createBaseEditableHolder, createBaseInput and the types ClassValue, StyleModule and BaseComponentOptions. createBaseComponent adds a cx method and registers the style module on mount; createBaseEditableHolder adds modelValue and defaultValue props, update:modelValue and value-change emits, dValue, controlled and filled; createBaseInput adds size, fluid and variant props and injects pcFluid. createBaseComponent also declares the unstyled and dt props, a computed isUnstyled and a cx that returns undefined while unstyled; dt is written as a scoped variable block on mount, rewritten on change and removed on unmount (ADR-085). createBaseComponent mixes in createPassThroughMixin (passthrough.ts, ADR-077): the pt and ptOptions props, ptm, ptmi, ptmo, the pt:section:attribute attributes and the $parentInstance provide and inject, with an optional hostName in BaseComponentOptions (ADR-079). The global and default pt sources, usePassThrough, pt.hooks, the $attrSelector dataset and the ptmi id fallback are not implemented (ADR-080), so ptOptions has no visible effect yet.
 
 ## Public exports
 
@@ -67,9 +67,9 @@ package.ultimate.uix-utils.classnames (pending cross-batch)
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-    "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
+    "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
     "outcome": "passed",
-    "output": "Scoped reconciliation completed with no problems: 35 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+    "output": "Scoped reconciliation completed with no problems: 59 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
     "run": "docs/inventory/vue-core/pilot-run.json",
     "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."

@@ -38,6 +38,15 @@ Not built (ADR-080): the global and default `pt` from the provider, `usePassThro
 - `styling` — `ReactStyleSheet` (in `react-style-sheet.ts`), a React-only subclass of `@ultimate/uix-styled`'s `StyleSheet<HTMLStyleElement>` overriding `createStyleElement` to delegate to `@ultimate/uix-utils/dom`'s `createStyleElement(css, attrs, document.head)`, SSR-guarded (`typeof document === "undefined"` returns `undefined`). A single module-level instance, `reactCoreStyleSheet`, serves every React component (Angular keeps one registry per document; its `ngCoreStyleSheet` is the browser document's registry). `useComponentStyle(componentName, styleModule)` is the mount-effect hook that registers a component's CSS with this singleton exactly once per name (`has()`/`add()` guard). This closes a real gap found during this phase's research: Angular's own `ngCoreStyleSheet` equivalent has an independently-tracked styling gap (not fixed by Phase 3 — recorded as a Phase 2 follow-up instead), while React gets a working DOM-injection adapter from day one (see ADR-029).
 - `icons` — five standalone icon components, each rendering its own inline `<svg role="img">`: `USpinnerIcon` (used by `UButton`'s loading state), `UTimesIcon` (used by `UDialog`'s close button), `UCheckIcon` (used by `UCheckbox`'s checked state), `UWindowMaximizeIcon`, and `UWindowMinimizeIcon` (ported for provenance completeness — verified upstream PrimeReact `Dialog.js` imports both, but no Phase 3 component renders a maximize/minimize toggle; not currently consumed by any `react` component). All share a base `IconProps` shape (`className`, `spin`, etc.) matching the individual icon's own prop surface.
 
+## Per-instance `unstyled`
+
+`useComponentBase({ …, unstyled })` returns `{ cx, isUnstyled }`, and `useComponentStyle(name, module, unstyled)` takes the same flag (ADR-085). A component adopts it by taking an `unstyled` prop and passing it to both hooks (see `UTag` in `@ultimate/react`).
+
+- While `unstyled` is true, `cx()` returns `undefined` and the instance registers only the hidden-accessible rule. If it turns false, the component styles are registered then.
+- A template that builds a class list must filter the `cx()` result instead of concatenating it with a string.
+- `unstyled` is per instance only. There is no global or context source yet, so a family component must pass the prop itself.
+- There is no per-instance `dt`. PrimeReact 10.9.9 has no such API, so the capability is not applicable to React (Phase 4 decision D-SHARED #5).
+
 ## Usage
 
 ```tsx

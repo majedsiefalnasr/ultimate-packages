@@ -1,7 +1,7 @@
 {
   "version": 1,
   "scope": "vue-core-150",
-  "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
+  "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
   "ownership": {
     "ticket": 150,
     "path": "scripts/inventory/package-coverage.json"
@@ -122,9 +122,9 @@
         {
           "state": "verified",
           "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-          "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
+          "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
           "outcome": "passed",
-          "output": "Scoped reconciliation completed with no problems: 35 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "output": "Scoped reconciliation completed with no problems: 59 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
           "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
           "run": "docs/inventory/vue-core/pilot-run.json",
           "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
@@ -136,7 +136,7 @@
       "name": "Component, editable and input bases",
       "framework": "vue",
       "purpose": "Options-API factories producing base components: class resolution with style registration, an editable value holder and an input base.",
-      "surface": "See [authored signatures and interpretation](README.md). Root exports createBaseComponent, createBaseEditableHolder, createBaseInput and the types ClassValue, StyleModule and BaseComponentOptions. createBaseComponent adds a cx method and registers the style module on mount; createBaseEditableHolder adds modelValue and defaultValue props, update:modelValue and value-change emits, dValue, controlled and filled; createBaseInput adds size, fluid and variant props and injects pcFluid. createBaseComponent mixes in createPassThroughMixin (passthrough.ts, ADR-077): the pt and ptOptions props, ptm, ptmi, ptmo, the pt:section:attribute attributes and the $parentInstance provide and inject, with an optional hostName in BaseComponentOptions (ADR-079). The global and default pt sources, usePassThrough, pt.hooks, the $attrSelector dataset and the ptmi id fallback are not implemented (ADR-080), so ptOptions has no visible effect yet.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports createBaseComponent, createBaseEditableHolder, createBaseInput and the types ClassValue, StyleModule and BaseComponentOptions. createBaseComponent adds a cx method and registers the style module on mount; createBaseEditableHolder adds modelValue and defaultValue props, update:modelValue and value-change emits, dValue, controlled and filled; createBaseInput adds size, fluid and variant props and injects pcFluid. createBaseComponent also declares the unstyled and dt props, a computed isUnstyled and a cx that returns undefined while unstyled; dt is written as a scoped variable block on mount, rewritten on change and removed on unmount (ADR-085). createBaseComponent mixes in createPassThroughMixin (passthrough.ts, ADR-077): the pt and ptOptions props, ptm, ptmi, ptmo, the pt:section:attribute attributes and the $parentInstance provide and inject, with an optional hostName in BaseComponentOptions (ADR-079). The global and default pt sources, usePassThrough, pt.hooks, the $attrSelector dataset and the ptmi id fallback are not implemented (ADR-080), so ptOptions has no visible effect yet.",
       "files": [
         "packages/vue-core/src/base/index.ts",
         "packages/vue-core/src/base/base-component.ts",
@@ -195,9 +195,9 @@
         {
           "state": "verified",
           "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-          "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
+          "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
           "outcome": "passed",
-          "output": "Scoped reconciliation completed with no problems: 35 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "output": "Scoped reconciliation completed with no problems: 59 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
           "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
           "run": "docs/inventory/vue-core/pilot-run.json",
           "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
@@ -244,9 +244,9 @@
         {
           "state": "verified",
           "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-          "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
+          "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
           "outcome": "passed",
-          "output": "Scoped reconciliation completed with no problems: 35 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "output": "Scoped reconciliation completed with no problems: 59 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
           "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
           "run": "docs/inventory/vue-core/pilot-run.json",
           "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
@@ -305,9 +305,9 @@
         {
           "state": "verified",
           "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-          "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
+          "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
           "outcome": "passed",
-          "output": "Scoped reconciliation completed with no problems: 35 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "output": "Scoped reconciliation completed with no problems: 59 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
           "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
           "run": "docs/inventory/vue-core/pilot-run.json",
           "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
@@ -357,9 +357,9 @@
         {
           "state": "verified",
           "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-          "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
+          "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
           "outcome": "passed",
-          "output": "Scoped reconciliation completed with no problems: 35 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "output": "Scoped reconciliation completed with no problems: 59 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
           "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
           "run": "docs/inventory/vue-core/pilot-run.json",
           "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
@@ -435,9 +435,9 @@
         {
           "state": "verified",
           "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-          "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
+          "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
           "outcome": "passed",
-          "output": "Scoped reconciliation completed with no problems: 35 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "output": "Scoped reconciliation completed with no problems: 59 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
           "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
           "run": "docs/inventory/vue-core/pilot-run.json",
           "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
@@ -480,9 +480,9 @@
         {
           "state": "verified",
           "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-          "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
+          "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
           "outcome": "passed",
-          "output": "Scoped reconciliation completed with no problems: 35 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "output": "Scoped reconciliation completed with no problems: 59 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
           "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
           "run": "docs/inventory/vue-core/pilot-run.json",
           "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
@@ -525,9 +525,9 @@
         {
           "state": "verified",
           "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-          "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
+          "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
           "outcome": "passed",
-          "output": "Scoped reconciliation completed with no problems: 35 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "output": "Scoped reconciliation completed with no problems: 59 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
           "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
           "run": "docs/inventory/vue-core/pilot-run.json",
           "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
@@ -570,9 +570,9 @@
         {
           "state": "verified",
           "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-          "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
+          "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
           "outcome": "passed",
-          "output": "Scoped reconciliation completed with no problems: 35 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "output": "Scoped reconciliation completed with no problems: 59 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
           "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
           "run": "docs/inventory/vue-core/pilot-run.json",
           "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
@@ -642,9 +642,9 @@
         {
           "state": "verified",
           "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-          "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
+          "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
           "outcome": "passed",
-          "output": "Scoped reconciliation completed with no problems: 35 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "output": "Scoped reconciliation completed with no problems: 59 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
           "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
           "run": "docs/inventory/vue-core/pilot-run.json",
           "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
@@ -656,7 +656,7 @@
       "name": "Style sheet and component style registration",
       "framework": "vue",
       "purpose": "SSR-guarded style sheet instance and a function that registers theme variables, hidden-accessible, icon spin, box-model and component CSS.",
-      "surface": "See [authored signatures and interpretation](README.md). Root exports vueCoreStyleSheet and registerComponentStyle(componentName, styleModule, additionalPresetKeys?). Style elements are created in document.head with a data-u-style attribute and return undefined without a document. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions. With cssLayer on, the layer-order statement is placed first in document.head (ticket #173, F6).",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports vueCoreStyleSheet and registerComponentStyle(componentName, styleModule, additionalPresetKeys?). Style elements are created in document.head with a data-u-style attribute and return undefined without a document. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions. vue-style-sheet.ts also declares registerBaseStyle, a source-only helper that registers the base rules for an unstyled instance. With cssLayer on, the layer-order statement is placed first in document.head (ticket #173, F6).",
       "files": [
         "packages/vue-core/src/styling/index.ts",
         "packages/vue-core/src/styling/vue-style-sheet.ts"
@@ -698,9 +698,9 @@
         {
           "state": "verified",
           "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-          "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
+          "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
           "outcome": "passed",
-          "output": "Scoped reconciliation completed with no problems: 35 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "output": "Scoped reconciliation completed with no problems: 59 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
           "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
           "run": "docs/inventory/vue-core/pilot-run.json",
           "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
@@ -747,9 +747,9 @@
         {
           "state": "verified",
           "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-          "revision": "559f51eb761fb20b6994abde24167c00d86df58e",
+          "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
           "outcome": "passed",
-          "output": "Scoped reconciliation completed with no problems: 35 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+          "output": "Scoped reconciliation completed with no problems: 59 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
           "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
           "run": "docs/inventory/vue-core/pilot-run.json",
           "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
@@ -771,7 +771,7 @@
       "reason": "Supporting behavioral tests; presence alone is not passing execution."
     },
     {
-      "path": "packages/vue-core/src/base/passthrough.spec.ts",
+      "path": "packages/vue-core/src/base/unstyled-and-dt.spec.ts",
       "reason": "Supporting behavioral tests; presence alone is not passing execution."
     },
     {
@@ -827,10 +827,6 @@
       "reason": "Supporting behavioral tests; presence alone is not passing execution."
     },
     {
-      "path": "packages/vue-core/src/styling/layer-order.spec.ts",
-      "reason": "Supporting behavioral tests; presence alone is not passing execution."
-    },
-    {
       "path": "packages/vue-core/src/styling/hidden-accessible.spec.ts",
       "reason": "Supporting behavioral tests; presence alone is not passing execution."
     },
@@ -848,6 +844,14 @@
     },
     {
       "path": "packages/vue-core/src/zindex/zindex.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/base/passthrough.spec.ts",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/vue-core/src/styling/layer-order.spec.ts",
       "reason": "Supporting behavioral tests; presence alone is not passing execution."
     }
   ],
