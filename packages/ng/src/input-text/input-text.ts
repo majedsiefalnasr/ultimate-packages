@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NgControl } from "@angular/forms";
-import { UModelHolder } from "@ultimate/ng-core";
+import { UBind, UModelHolder } from "@ultimate/ng-core";
 import { cn } from "@ultimate/uix-utils/classnames";
 import { UFluid } from "@ultimate/ng/fluid";
 import { inputTextStyleModule } from "./input-text-style";
@@ -61,10 +61,14 @@ import { inputTextStyleModule } from "./input-text-style";
  * without a matching input — nothing was copied from `UButton` here; this is
  * a new pattern for the platform.
  *
- * Deliberately excludes PrimeNG's passthrough (`pt`/`ptInputText`) system,
- * `hostName`/parent-instance DI-token lookup, `pSize`/`inputSize`, and the
- * `NgModule` re-export wrapper — none of these appear in this task's
- * Interfaces section, and new `NgModule` authorship is forbidden platform-wide.
+ * Passthrough (`pt`, `ptOptions`), `unstyled` and `dt` come from
+ * `UBaseComponent` (ADR-077); the root section is bound through the `UBind`
+ * host directive. `uSize` ("small" | "large") replaces PrimeNG's `pSize`; it
+ * is named `uSize` so it does not collide with the native `size` attribute.
+ *
+ * Deliberately excludes `hostName`/parent-instance DI-token lookup, the
+ * `inputSize` attribute, and the `NgModule` re-export wrapper — new
+ * `NgModule` authorship is forbidden platform-wide.
  *
  * `$variant`'s upstream `config.inputStyle()`/`config.inputVariant()`
  * fallback is omitted: `UltimateConfig`'s current Option-B surface has
@@ -81,6 +85,7 @@ import { inputTextStyleModule } from "./input-text-style";
     "[class]": "cx('root', classesParams())",
     "[attr.data-p]": "dataP",
   },
+  hostDirectives: [UBind],
 })
 export class UInputText extends UModelHolder {
   protected override readonly componentName = "inputtext";
@@ -93,9 +98,12 @@ export class UInputText extends UModelHolder {
     skipSelf: true,
   });
   private readonly destroyRef = inject(DestroyRef);
+  private readonly bindDirective = inject(UBind, { self: true });
 
   /** Specifies the input variant of the component. */
   variant = input<"filled" | "outlined" | undefined>();
+  /** Defines the size of the component. */
+  uSize = input<"small" | "large" | undefined>();
   /** Spans 100% width of the container when enabled. */
   fluid = input<boolean | undefined>(undefined, { transform: booleanAttribute });
   /** When present, specifies the component should have invalid state style. */
@@ -114,22 +122,28 @@ export class UInputText extends UModelHolder {
       invalid: this.invalid(),
       fluid: this.hasFluid,
       variantFilled: this.$variant() === "filled",
+      size: this.uSize(),
     };
   }
 
   /**
    * A separate, smaller token string than `[class]` — matching real
    * PrimeNG's `InputText.dataP` getter (`this.cn({ invalid, fluid,
-   * filled: $variant()==='filled' })`), not the `cx('root', ...)` root
-   * class name. `UInputText` has no `pSize`-equivalent, so unlike upstream
-   * there is no size token to include here.
+   * filled: $variant()==='filled', [pSize]: pSize })`), not the
+   * `cx('root', ...)` root class name. `filled` here is variant-derived, as
+   * in PrimeNG; the `p-filled` class is value-derived.
    */
   protected get dataP(): string | undefined {
     return cn({
       invalid: this.invalid(),
       fluid: this.hasFluid,
       filled: this.$variant() === "filled",
+      [this.uSize() ?? ""]: !!this.uSize(),
     });
+  }
+
+  ngAfterViewChecked(): void {
+    this.bindDirective.setAttrs(this.ptms(["host", "root"]));
   }
 
   ngAfterViewInit(): void {

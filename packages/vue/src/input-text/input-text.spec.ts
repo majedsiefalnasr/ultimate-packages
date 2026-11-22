@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
+import { Theme } from "@ultimate/uix-styled";
 import { UInputText } from "./index";
 
 describe("UInputText — controlled (v-model)", () => {
@@ -54,6 +55,58 @@ describe("UInputText — accessibility and pass-through", () => {
 
   it("fluid prop applies the fluid class", () => {
     const wrapper = mount(UInputText, { props: { modelValue: "", fluid: true } });
-    expect(wrapper.find("input").classes()).toContain("u-input-text-fluid");
+    expect(wrapper.find("input").classes()).toContain("u-inputtext-fluid");
+  });
+});
+
+describe("UInputText — size, filled, data-p, pass-through, unstyled", () => {
+  it("size small/large emit the shared sm/lg classes and the data-p size token", () => {
+    const small = mount(UInputText, { props: { modelValue: "", size: "small" } });
+    expect(small.find("input").classes()).toContain("u-inputtext-sm");
+    expect(small.find("input").attributes("data-p")).toContain("small");
+    const large = mount(UInputText, { props: { modelValue: "", size: "large" } });
+    expect(large.find("input").classes()).toContain("u-inputtext-lg");
+  });
+
+  it("p-filled follows the value, not the variant", async () => {
+    const wrapper = mount(UInputText, { props: { modelValue: "" } });
+    expect(wrapper.find("input").classes()).not.toContain("p-filled");
+    await wrapper.setProps({ modelValue: "abc" });
+    expect(wrapper.find("input").classes()).toContain("p-filled");
+    const filledVariant = mount(UInputText, { props: { modelValue: "", variant: "filled" } });
+    expect(filledVariant.find("input").classes()).not.toContain("p-filled");
+    expect(filledVariant.find("input").classes()).toContain("p-variant-filled");
+    expect(filledVariant.find("input").attributes("data-p")).toContain("filled");
+  });
+
+  it("pt.root attributes reach the input", () => {
+    const wrapper = mount(UInputText, {
+      props: { modelValue: "", pt: { root: { "data-test": "x", class: "custom" } } },
+    });
+    expect(wrapper.find("input").attributes("data-test")).toBe("x");
+    expect(wrapper.find("input").classes()).toContain("custom");
+  });
+
+  it("unstyled drops the Ultimate classes", () => {
+    const wrapper = mount(UInputText, { props: { modelValue: "", unstyled: true } });
+    expect(wrapper.find("input").classes()).not.toContain("u-inputtext");
+  });
+
+  it("scopes dt variables to the instance", () => {
+    Theme.setTheme({
+      preset: { components: { inputtext: { borderRadius: "4px" } } },
+      options: { prefix: "u", darkModeSelector: "system", cssLayer: false },
+    });
+    const wrapper = mount(UInputText, {
+      props: { modelValue: "", dt: { borderRadius: "2rem" } },
+    });
+    const [attr] = wrapper
+      .find("input")
+      .element.getAttributeNames()
+      .filter((name) => name.startsWith("pc"));
+    const scoped = document.head.querySelector(`style[data-u-style="${attr}-inputtext"]`);
+    expect(scoped?.textContent).toContain(`[${attr}]{--u-inputtext-border-radius:2rem;}`);
+    wrapper.unmount();
+    expect(document.head.querySelector(`style[data-u-style="${attr}-inputtext"]`)).toBeNull();
   });
 });

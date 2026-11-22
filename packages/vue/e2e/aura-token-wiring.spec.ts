@@ -22,7 +22,7 @@ const STORIES: ReadonlyArray<{ name: string; story: string; root: string }> = [
   { name: "InputGroup", story: "vue-inputgroup--leading-addon", root: ".u-input-group" },
   { name: "InputNumber", story: "vue-inputnumber--default", root: ".u-input-number" },
   { name: "InputOtp", story: "vue-inputotp--default", root: ".u-input-otp" },
-  { name: "InputText", story: "vue-inputtext--default", root: ".u-input-text" },
+  { name: "InputText", story: "vue-inputtext--default", root: ".u-inputtext" },
   { name: "MultiSelect", story: "vue-multiselect--default", root: ".u-multi-select" },
   { name: "RadioButton", story: "vue-radiobutton--default", root: ".u-radio-button" },
   { name: "SelectButton", story: "vue-selectbutton--default", root: ".u-select-button" },

@@ -39,4 +39,48 @@ describe("UInputText", () => {
     render(<UInputText value="" onChange={() => {}} inputRef={inputRef} />);
     expect(inputRef.current).toBeInstanceOf(HTMLInputElement);
   });
+
+  it("size small/large emit the shared sm/lg classes", () => {
+    const { rerender } = render(<UInputText value="" onChange={() => {}} size="small" />);
+    expect(screen.getByRole("textbox")).toHaveClass("u-inputtext-sm");
+    rerender(<UInputText value="" onChange={() => {}} size="large" />);
+    expect(screen.getByRole("textbox")).toHaveClass("u-inputtext-lg");
+  });
+
+  it("p-filled follows the controlled value, not the variant", () => {
+    const { rerender } = render(<UInputText value="" onChange={() => {}} variant="filled" />);
+    expect(screen.getByRole("textbox")).not.toHaveClass("p-filled");
+    expect(screen.getByRole("textbox")).toHaveClass("p-variant-filled");
+    rerender(<UInputText value="abc" onChange={() => {}} variant="filled" />);
+    expect(screen.getByRole("textbox")).toHaveClass("p-filled");
+  });
+
+  it("tracks p-filled for an uncontrolled input from defaultValue and typing", () => {
+    render(<UInputText defaultValue="x" />);
+    const input = screen.getByRole("textbox");
+    expect(input).toHaveClass("p-filled");
+    fireEvent.change(input, { target: { value: "" } });
+    expect(input).not.toHaveClass("p-filled");
+    fireEvent.change(input, { target: { value: "y" } });
+    expect(input).toHaveClass("p-filled");
+  });
+
+  it("pt.root attributes and classes reach the input", () => {
+    render(
+      <UInputText
+        value=""
+        onChange={() => {}}
+        pt={{ root: { "data-test": "x", className: "custom" } }}
+      />
+    );
+    const input = screen.getByRole("textbox");
+    expect(input).toHaveAttribute("data-test", "x");
+    expect(input).toHaveClass("custom");
+    expect(input).toHaveClass("u-inputtext");
+  });
+
+  it("unstyled drops the Ultimate classes", () => {
+    render(<UInputText value="" onChange={() => {}} unstyled />);
+    expect(screen.getByRole("textbox")).not.toHaveClass("u-inputtext");
+  });
 });
