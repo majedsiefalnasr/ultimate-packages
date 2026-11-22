@@ -10,7 +10,7 @@ Options-API factories producing base components: class resolution with style reg
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). Root exports createBaseComponent, createBaseEditableHolder, createBaseInput and the types ClassValue, StyleModule and BaseComponentOptions. createBaseComponent adds a cx method and registers the style module on mount; createBaseEditableHolder adds modelValue and defaultValue props, update:modelValue and value-change emits, dValue, controlled and filled; createBaseInput adds size, fluid and variant props and injects pcFluid. createBaseComponent also declares the unstyled and dt props, a computed isUnstyled and a cx that returns undefined while unstyled; dt is written as a scoped variable block on mount, rewritten on change and removed on unmount (ADR-085). createBaseComponent mixes in createPassThroughMixin (passthrough.ts, ADR-077): the pt and ptOptions props, ptm, ptmi, ptmo, the pt:section:attribute attributes and the $parentInstance provide and inject, with an optional hostName in BaseComponentOptions (ADR-079). The global and default pt sources, usePassThrough, pt.hooks, the $attrSelector dataset and the ptmi id fallback are not implemented (ADR-080), so ptOptions has no visible effect yet.
+See [authored signatures and interpretation](README.md). Root exports createBaseComponent, createBaseEditableHolder, createBaseInput and the types ClassValue, StyleModule and BaseComponentOptions. createBaseComponent adds a cx method and registers the style module on mount; createBaseEditableHolder adds modelValue and defaultValue props, update:modelValue and value-change emits, dValue, controlled and filled; createBaseInput(base?) forwards an optional componentName and styleModule to createBaseEditableHolder, so a family gets cx, style registration, unstyled, dt and pt from the base chain (called with no argument it keeps the earlier no-style behavior), and adds size, fluid and variant props and injects pcFluid. createBaseComponent also declares the unstyled and dt props, a computed isUnstyled and a cx that returns undefined while unstyled; dt is written as a scoped variable block on mount, rewritten on change and removed on unmount (ADR-085). createBaseComponent mixes in createPassThroughMixin (passthrough.ts, ADR-077): the pt and ptOptions props, ptm, ptmi, ptmo, the pt:section:attribute attributes and the $parentInstance provide and inject, with an optional hostName in BaseComponentOptions (ADR-079). The global and default pt sources, usePassThrough, pt.hooks, the $attrSelector dataset and the ptmi id fallback are not implemented (ADR-080), so ptOptions has no visible effect yet.
 
 ## Public exports
 
@@ -38,7 +38,7 @@ packages/vue-core/src/base/passthrough.ts
 ```text
 packages/vue-core/src/base/base-component.ts: export function createBaseComponent(options: BaseComponentOptions) {
 packages/vue-core/src/base/base-editable-holder.ts: export function createBaseEditableHolder(
-packages/vue-core/src/base/base-input.ts: export function createBaseInput() {
+packages/vue-core/src/base/base-input.ts: export function createBaseInput(base?: Partial<BaseComponentOptions>) {
 packages/vue-core/src/base/passthrough.ts: export function createPassThroughMixin(
 ```
 
@@ -67,7 +67,7 @@ package.ultimate.uix-utils.classnames (pending cross-batch)
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-    "revision": "b9051a6668bf08b91654c23925a41cdcd9b84119",
+    "revision": "b771b663b3577147faded76c5720b9768f0c75bf",
     "outcome": "passed",
     "output": "Scoped reconciliation completed with no problems: 59 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",

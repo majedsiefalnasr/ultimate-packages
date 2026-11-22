@@ -6,11 +6,11 @@ Framework: vue; availability: public
 
 ## Authored interpretation
 
-Single native text input with v-model, invalid/variant/fluid state classes and focus/blur emits.
+Single native text input with v-model, value-derived filled state, invalid/variant/size/fluid classes, pass-through, unstyled, per-instance dt and focus/blur emits.
 
 ## Framework surface
 
-UInputText (Options API SFC InputText.vue, name "UInputText") and createBaseInputText (BaseInputText.ts) plus inputTextStyleModule and InputTextClassesParams (input-text-style.ts). Base factory chain: createBaseX extends createBaseInput (vue-core base-input: size, fluid, variant props, resolvedVariant, resolvedFluid) over createBaseEditableHolder (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue); because createBaseInput takes no arguments, the factory shadows cx() and mounted() locally over its own style module. The inherited size prop is never read by the template. Declared props: disabled, invalid, name, placeholder (plus inherited size, fluid, variant, modelValue, defaultValue). Emits focus and blur (native event); update:modelValue and value-change come from writeValue on every native input event. Template: one input type="text" bound to dValue with aria-invalid set from invalid; no slots. styleParams passes invalid, fluid (resolvedFluid) and filled (resolvedVariant === "filled"); the root resolver renders u-input-text with p-invalid, u-input-text-fluid and p-variant-filled, so state classes mix u- and p- prefixes. Style module registered as inputtext.
+UInputText (Options API SFC InputText.vue, name "UInputText", inheritAttrs false) and createBaseInputText (BaseInputText.ts) plus inputTextStyleModule and InputTextClassesParams (input-text-style.ts). Base factory chain: createBaseInputText extends createBaseInput({ componentName: 'inputtext', styleModule }) (vue-core base-input forwards the options to createBaseEditableHolder and createBaseComponent: size, fluid, variant props, resolvedVariant, resolvedFluid, modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue), so cx, style registration, unstyled, per-instance dt and pt come from the base chain and the factory shadows nothing. Declared props: disabled, invalid, name, placeholder (plus inherited size small|large, fluid, variant, modelValue, defaultValue, unstyled, dt, pt, ptOptions). Emits focus and blur (native event); update:modelValue and value-change come from writeValue on every native input event. Template: one input type="text" bound to dValue with aria-invalid, data-p and v-bind ptmi('root', { context: { filled, disabled } }); no slots. styleParams passes invalid, fluid (resolvedFluid), filled (the editable holder's value-derived filled), variantFilled (resolvedVariant === "filled") and size; the root resolver renders u-inputtext u-component with p-filled, p-invalid, p-variant-filled, u-inputtext-fluid, u-inputtext-sm and u-inputtext-lg. dataP is cn() over invalid, fluid, variant-derived filled and the size token. The CSS is the shared @ultimate/uix-styles/inputtext module (ADR-082), registered under the Aura key inputtext. Ancestor fluid detection needs a Fluid provider that Vue does not ship; the explicit fluid prop works. The forms integration (formField) is not implemented (separate Vue Forms spec). The decisions for this family are in ADR-086.
 
 ## Public exports
 
@@ -34,6 +34,9 @@ packages/vue/src/input-text/input-text-style.ts: "p-variant-filled"
 packages/vue/src/input-text/BaseInputText.ts: export function createBaseInputText
 packages/vue/src/index.ts: export * from "./input-text";
 packages/vue/package.json: "./input-text": {
+packages/vue/src/input-text/BaseInputText.ts: createBaseInput({ componentName: "inputtext", styleModule: inputTextStyleModule })
+packages/vue/src/input-text/input-text-style.ts: "p-filled": Boolean(filled),
+packages/vue/src/input-text/input-text-style.ts: import { style as inputTextStyle } from "@ultimate/uix-styles/inputtext";
 ```
 
 ## Relationships

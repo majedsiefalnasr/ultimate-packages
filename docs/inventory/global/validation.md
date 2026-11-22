@@ -48,7 +48,7 @@ Batch inputs:
 - scripts/inventory/vue-actions.json: ticket #109; scope vue-actions; revision 37aa7ce8525c6f1622127eb1735ec41beb4096c5
 - scripts/inventory/vue-choice-range.json: ticket #115; scope vue-choice-range; revision 638b5a660b62be5b39a9402db09bccc2a9e9d2e4
 - scripts/inventory/vue-collection-presentation.json: ticket #136; scope vue-collection-presentation; revision 3864a1d23b5ef0c5601ff740c104fdec4584d14d
-- scripts/inventory/vue-core.json: ticket #150; scope vue-core-150; revision b9051a6668bf08b91654c23925a41cdcd9b84119
+- scripts/inventory/vue-core.json: ticket #150; scope vue-core-150; revision b771b663b3577147faded76c5720b9768f0c75bf
 - scripts/inventory/vue-disclosure-steps.json: ticket #130; scope vue-disclosure-steps; revision 3864a1d23b5ef0c5601ff740c104fdec4584d14d
 - scripts/inventory/vue-feedback.json: ticket #142; scope vue-feedback; revision fdd42818185ed77ae0c025f732310672581c1cea
 - scripts/inventory/vue-media-containers.json: ticket #139; scope vue-media-containers; revision cc6e7ab39f0a963bbfddc0dd6a181dc3c6feffc6

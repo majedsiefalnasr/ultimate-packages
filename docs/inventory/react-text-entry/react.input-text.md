@@ -6,11 +6,11 @@ Framework: react; availability: public
 
 ## Authored interpretation
 
-Controlled native text input with invalid/variant/fluid state classes.
+Native text input with value-derived filled state, invalid/variant/size/fluid classes, pass-through and unstyled; controlled or uncontrolled.
 
 ## Framework surface
 
-UInputText and UInputTextProps expose a forwarded HTMLInputElement ref plus an inputRef prop; both are merged by an internal setRef (forwardRef callback or object, then inputRef). UInputTextProps extends Omit<InputHTMLAttributes<HTMLInputElement>, value|onChange|size> and adds value?:string, onChange?:ChangeEventHandler, invalid, variant:filled|outlined, fluid and inputRef. The component renders a single native input with type="text", disabled, aria-invalid when invalid, and className = cx(root with invalid/variantFilled/fluid/disabled) plus className; the rest spread comes last, so rest can override type and other attributes. InputTextClassesParams declares a filled param that the component never passes: the u-inputtext-filled class is never set by the component, and variant=outlined has no distinct class (only variant=filled adds u-inputtext-variant-filled). inputTextStyleModule defines classes u-inputtext/u-component, -disabled, -filled, -invalid, -variant-filled, -fluid and --u-inputtext-* CSS variables. componentName is input-text while the Aura registry key is inputtext, so registry existence is not proof of token resolution. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/input-text. useComponentBase from @ultimate/react-core owns cx class resolution and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.
+UInputText and UInputTextProps expose a forwarded HTMLInputElement ref plus an inputRef prop; both are merged by an internal setRef (forwardRef callback or object, then inputRef). UInputTextProps extends Omit<InputHTMLAttributes<HTMLInputElement>, value|onChange|size> and adds value?:string, onChange?:ChangeEventHandler, invalid, variant:filled|outlined, size:small|large (the visual size, so the native size attribute is reachable only through pt.root), fluid, inputRef, unstyled, pt and ptOptions. The component renders a single native input with type="text" (overridable by the rest props), aria-invalid when invalid, and merges its own props, the rest, the root class and ptm('root') through useMergeProps. p-filled follows the value: for a controlled value it is the value being non-empty, for an uncontrolled input it is state seeded from defaultValue and updated on change. Root classes: u-inputtext u-component, p-filled, p-invalid, p-variant-filled, u-inputtext-fluid, u-inputtext-sm and u-inputtext-lg; variant=outlined has no distinct class, and no disabled class is emitted (the shared CSS styles :disabled). useComponentBase receives componentName inputtext (the Aura registry key), the style module and unstyled, so unstyled drops the Ultimate classes. The style module's CSS is the shared @ultimate/uix-styles/inputtext module (ADR-082). keyfilter, tooltip and validatePattern are not props: useKeyFilter and UTooltip are separate composition (ADR-086, rows 12 to 14 are I). React has no per-instance dt, as PrimeReact. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/input-text. useComponentBase and createPassThrough from @ultimate/react-core own cx class resolution, style registration and ptm; those are external foundation records, not duplicated here. The manifest advertises dist entry/type paths; this does not prove a built or published package.
 
 ## Public exports
 
@@ -28,9 +28,11 @@ packages/react/src/input-text/input-text-style.ts
 ```text
 packages/react/src/input-text/input-text.tsx: export interface UInputTextProps
 packages/react/src/input-text/input-text-style.ts: export const inputTextStyleModule
-packages/react/src/input-text/input-text-style.ts: filled?: boolean
 packages/react/src/index.ts: export * from "./input-text";
 packages/react/package.json: "./input-text": {
+packages/react/src/input-text/input-text-style.ts: "p-filled": params.filled,
+packages/react/src/input-text/input-text-style.ts: import { style as inputTextStyle } from "@ultimate/uix-styles/inputtext";
+packages/react/src/input-text/input-text.tsx: componentName: "inputtext",
 ```
 
 ## Relationships
