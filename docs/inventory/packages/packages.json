@@ -5791,6 +5791,10 @@
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
+          "path": "packages/uix-styled/test/shared-base.test.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
           "path": "packages/uix-styled/test/stylesheet-service.test.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
@@ -13093,6 +13097,7 @@
       "package": "package.ultimate.uix-styled",
       "name": "stylesheet",
       "files": [
+        "packages/uix-styled/src/stylesheet/base.ts",
         "packages/uix-styled/src/stylesheet/box-model.ts",
         "packages/uix-styled/src/stylesheet/hidden-accessible.ts",
         "packages/uix-styled/src/stylesheet/icon-spin.ts",

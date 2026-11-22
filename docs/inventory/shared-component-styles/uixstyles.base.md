@@ -6,11 +6,11 @@ Framework: shared; availability: public
 
 ## Authored interpretation
 
-Global base CSS: box-sizing reset and shared animation, overlay-mask, disabled and icon rules.
+Global base CSS: disabled, icon and overlay-mask rules and shared animation keyframes, with u-* selectors.
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/base and as the named root export base. It sets border-box on *, ::before and ::after and defines shared transition and animation rules. Unlike the component modules it keeps upstream-style .p-* selectors (for example .p-component, .p-disabled, .p-icon, .p-overlay-mask and the *-enter-active and *-leave-active transitions); tokens include disabled.*, icon.* and mask.*.
+See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/base and as the named root export base. It defines shared animation, overlay-mask, disabled and icon rules with u-* selectors (.u-disabled, .u-component:disabled, .u-icon, .u-overlay-mask, .u-anchored-overlay-* and .u-collapsible-*) and u-animate-* keyframes, and has no page-wide box-sizing rule (ADR-063). The Angular, React and Vue cores register it once per sheet through registerSharedBase in @ultimate/uix-styled (ticket #176, F10, ADR-081); tokens include disabled.*, icon.* and mask.*.
 
 ## Public exports
 
@@ -22,7 +22,7 @@ packages/uix-styles/src/base/index.ts
 
 ```text
 packages/uix-styles/src/base/index.ts: export const style = /*css*/ `
-packages/uix-styles/src/base/index.ts: .p-collapsible-enter-active {
+packages/uix-styles/src/base/index.ts: .u-collapsible-enter-active {
 ```
 
 ## Relationships
@@ -50,7 +50,7 @@ package.ultimate.uix-styled.root (pending cross-batch)
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/shared-component-styles.json --out docs/inventory/shared-component-styles (run twice; authored README SHA-256 checked before and after)",
-    "revision": "54f81ae85b0cfe3583541471bd4114fe8d8d7bac",
+    "revision": "b9051a6668bf08b91654c23925a41cdcd9b84119",
     "outcome": "passed",
     "output": "Scoped reconciliation passed twice with identical generated views: 14 source files, 14 named symbols, 14 root/subpath export identities, 13 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",

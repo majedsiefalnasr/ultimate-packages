@@ -55,7 +55,7 @@ package.ultimate.ng.dialog (pending cross-batch)
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/angular-core.json --out docs/inventory/angular-core (run twice; authored README SHA-256 checked before and after)",
-    "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
+    "revision": "b9051a6668bf08b91654c23925a41cdcd9b84119",
     "outcome": "passed",
     "output": "Scoped reconciliation completed with no problems: 60 source files accounted for, 33 root export identities each attributed to one public record, cross-scope references recorded as pending.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",

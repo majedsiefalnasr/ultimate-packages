@@ -6,11 +6,11 @@ Framework: react; availability: public
 
 ## Authored interpretation
 
-SSR-guarded style sheet instance and a hook that registers theme variables, hidden-accessible, box-model and component CSS on mount.
+SSR-guarded style sheet instance and a hook that registers theme variables, hidden-accessible, box-model, shared base and component CSS on mount.
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). Root exports reactCoreStyleSheet and useComponentStyle. The sheet creates style elements in document.head and returns undefined when document is unavailable. useComponentStyle registers once on mount and adds component css only if the sheet has no entry for the name. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions. useComponentStyle(name, module, unstyled = false) registers only the hidden-accessible rule while unstyled and registers the rest when unstyled turns false. With cssLayer on, the layer-order statement is placed first in document.head (ticket #173, F6).
+See [authored signatures and interpretation](README.md). Root exports reactCoreStyleSheet and useComponentStyle. The sheet creates style elements in document.head and returns undefined when document is unavailable. useComponentStyle registers once on mount and adds component css only if the sheet has no entry for the name. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions. useComponentStyle(name, module, unstyled = false) registers only the hidden-accessible rule while unstyled and registers the rest when unstyled turns false. With cssLayer on, the layer-order statement is placed first in document.head (ticket #173, F6). A styled instance also registers the shared @ultimate/uix-styles base module once per sheet through registerSharedBase, under the key u-base (ticket #176, F10, ADR-081); an unstyled instance does not.
 
 ## Public exports
 
@@ -55,7 +55,7 @@ package.ultimate.uix-utils.dom (pending cross-batch)
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/react-core.json --out docs/inventory/react-core (run twice; authored README SHA-256 checked before and after)",
-    "revision": "e3b55c7a5ab74af66f3cf5e7ef14898a5a5a3ac7",
+    "revision": "b9051a6668bf08b91654c23925a41cdcd9b84119",
     "outcome": "passed",
     "output": "Scoped reconciliation completed with no problems: 56 source files accounted for, 46 root export identities each attributed to one public record, cross-scope references recorded as pending.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
