@@ -162,6 +162,18 @@
     "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies the icon-spin rule text, its single class selector, its reduced-motion stop and once-per-sheet registration (GAP-124)."
   },
   {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/uix-styled/src/stylesheet/base.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored (A6, ADR-081). SHARED_BASE_KEY and registerSharedBase(), which register the `@ultimate/uix-styles/base` module once per StyleSheet through registerComponentCss, so its dt() references resolve and follow theme changes. The Angular, React and Vue cores each call it once, next to registerThemeVariables."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/uix-styled/test/shared-base.test.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies once-per-sheet registration under the reserved key, and that the registered CSS has u-* rules only and no box-sizing rule (A6)."
+  },
+  {
     "originalPath": "components/lib/componentbase/ComponentBase.js",
     "ultimateDestination": "packages/uix-styled/src/stylesheet/box-model.ts",
     "modificationStatus": "reference-derived",

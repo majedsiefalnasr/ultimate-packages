@@ -22,6 +22,7 @@ export {
   type StyleAddOptions,
 } from "./stylesheet/index";
 export { registerComponentCss, registerThemeVariables } from "./stylesheet/theme-variables";
+export { SHARED_BASE_KEY, registerSharedBase } from "./stylesheet/base";
 export { createScopedTheme, type ScopedTheme } from "./stylesheet/scoped-theme";
 export {
   HIDDEN_ACCESSIBLE_KEY,

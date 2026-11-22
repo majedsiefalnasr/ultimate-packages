@@ -73,6 +73,7 @@ describe("UBaseComponent — unstyled", () => {
     expect(styleKeys()).not.toContain("dtdemo-variables");
     expect(styleKeys()).not.toContain("u-common-variables");
     expect(styleKeys()).not.toContain("u-box-model:dtdemo");
+    expect(styleKeys()).not.toContain("u-base");
   });
 
   it("still registers the shared base rules when unstyled", () => {
@@ -85,6 +86,7 @@ describe("UBaseComponent — unstyled", () => {
     mount();
     expect(styleKeys()).toContain("dtdemo");
     expect(styleKeys()).toContain("dtdemo-variables");
+    expect(styleKeys()).toContain("u-base");
   });
 
   it("follows the global UltimateConfig.unstyled when the input is unset", () => {
