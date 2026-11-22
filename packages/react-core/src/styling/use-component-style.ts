@@ -1,17 +1,30 @@
+import { useEffect } from "react";
 import {
-  css,
+  registerComponentCss,
   registerBoxModel,
   registerHiddenAccessible,
+  registerSharedBase,
   registerThemeVariables,
   scopeRootsOf,
 } from "@ultimate/uix-styled";
-import { useMountEffect } from "../hooks";
 import { reactCoreStyleSheet } from "./react-style-sheet";
 import type { StyleModule } from "../base/component-base";
 
-export function useComponentStyle(componentName: string, styleModule: StyleModule): void {
-  useMountEffect(() => {
+/**
+ * Registers the component's styles on mount, and again when `unstyled`
+ * turns off. An unstyled instance registers only the shared hidden-accessible
+ * rule, like PrimeReact's `useHandleStyle`, which always loads its base and
+ * global styles and skips the common and component styles when unstyled.
+ */
+export function useComponentStyle(
+  componentName: string,
+  styleModule: StyleModule,
+  unstyled = false
+): void {
+  useEffect(() => {
     registerHiddenAccessible(reactCoreStyleSheet);
+
+    if (unstyled) return;
 
     // Theme variable DEFINITIONS first — the structural CSS below refers to
     // them via dt()-resolved var(--u-*) references, which resolve to nothing
@@ -19,14 +32,15 @@ export function useComponentStyle(componentName: string, styleModule: StyleModul
     // has() guards; see registerThemeVariables' doc comment.
     registerThemeVariables(reactCoreStyleSheet, componentName);
 
+    // A6 (ADR-081): the shared `u-*` base rules, once per sheet.
+    registerSharedBase(reactCoreStyleSheet);
+
     // GAP-098 (ADR-063): the component's scoped border-box rule, under its own
     // key, before the component CSS. A no-op for an empty name or no roots.
     registerBoxModel(reactCoreStyleSheet, componentName, scopeRootsOf(styleModule.classes));
 
-    if (!reactCoreStyleSheet.has(componentName)) {
-      // Keep the style module's CSS bytes intact; the registered value is used as-is.
-      const renderCss = css;
-      reactCoreStyleSheet.add(componentName, renderCss`${styleModule.css}`);
-    }
-  });
+    registerComponentCss(reactCoreStyleSheet, componentName, styleModule.css);
+    // The component name and style module are fixed for a component's life, as
+    // they were under a mount-only effect; only `unstyled` can change.
+  }, [unstyled]);
 }

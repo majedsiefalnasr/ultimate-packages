@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, PLATFORM_ID } from "@angular/core";
 import { DOCUMENT } from "@angular/common";
 import { TestBed } from "@angular/core/testing";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { UBaseComponent } from "./base-component";
 import { ngCoreStyleSheet } from "./style-sheet";
 import { Theme } from "@ultimate/uix-styled";
@@ -180,5 +180,90 @@ describe("UBaseComponent", () => {
     ).toBe(true);
     expect(docSpy).not.toHaveBeenCalled();
     docSpy.mockRestore();
+  });
+});
+
+@Component({
+  standalone: true,
+  selector: "u-test-component-tokens",
+  template: "<div></div>",
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class TestTokensComponent extends UBaseComponent {
+  protected override readonly componentName = "test-component";
+  protected override readonly styleModule = {
+    css: ".u-test-component-root { border-radius: dt('testcomponent.border.radius'); }",
+    classes: {},
+  };
+}
+
+describe("UBaseComponent theme changes (A1)", () => {
+  const options = { prefix: "u", darkModeSelector: "system", cssLayer: false };
+  const presetOf = (color: string, radius: string) => ({
+    primitive: { blue: { 500: color } },
+    semantic: { primary: { color: "{blue.500}" } },
+    components: { testcomponent: { borderRadius: radius } },
+  });
+
+  beforeEach(() => {
+    ngCoreStyleSheet.clear();
+    document.head.querySelectorAll("style[data-u-ng-style]").forEach((el) => el.remove());
+    Theme.setTheme({ preset: presetOf("#3b82f6", "6px"), options });
+  });
+
+  const injectedCss = () =>
+    Array.from(document.head.querySelectorAll("style[data-u-ng-style]"))
+      .map((el) => el.textContent ?? "")
+      .join("\n");
+
+  it("updates the variables of a mounted component after Theme.setTheme, without a second <style>", () => {
+    TestBed.createComponent(TestHostComponent).detectChanges();
+    expect(injectedCss()).toContain("--u-testcomponent-border-radius:6px");
+    const count = document.head.querySelectorAll("style[data-u-ng-style]").length;
+
+    Theme.setTheme({ preset: presetOf("#ef4444", "12px"), options });
+
+    expect(injectedCss()).toContain("--u-blue-500:#ef4444");
+    expect(injectedCss()).toContain("--u-testcomponent-border-radius:12px");
+    expect(injectedCss()).not.toContain("#3b82f6");
+    expect(document.head.querySelectorAll("style[data-u-ng-style]").length).toBe(count);
+  });
+
+  it("updates the variables of a mounted component after Theme.setPreset", () => {
+    TestBed.createComponent(TestHostComponent).detectChanges();
+
+    Theme.setPreset(presetOf("#22c55e", "2px"));
+
+    expect(injectedCss()).toContain("--u-blue-500:#22c55e");
+    expect(injectedCss()).toContain("--u-testcomponent-border-radius:2px");
+    expect(injectedCss()).not.toContain("#3b82f6");
+  });
+
+  it("updates the variable names of a mounted component after Theme.setOptions", () => {
+    TestBed.createComponent(TestTokensComponent).detectChanges();
+
+    Theme.setOptions({ ...options, prefix: "x" });
+
+    expect(injectedCss()).toContain("--x-testcomponent-border-radius:6px");
+    expect(injectedCss()).not.toContain("--u-testcomponent-border-radius");
+    expect(injectedCss()).toContain("var(--x-testcomponent-border-radius");
+  });
+
+  it("updates the variables written into an injected DOCUMENT", () => {
+    const doc = document.implementation.createHTMLDocument("server");
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: DOCUMENT, useValue: doc },
+        { provide: PLATFORM_ID, useValue: "server" },
+      ],
+    });
+    TestBed.createComponent(TestHostComponent).detectChanges();
+
+    Theme.setPreset(presetOf("#22c55e", "2px"));
+
+    const css = Array.from(doc.head.querySelectorAll("style[data-u-ng-style]"))
+      .map((el) => el.textContent ?? "")
+      .join("\n");
+    expect(css).toContain("--u-testcomponent-border-radius:2px");
   });
 });

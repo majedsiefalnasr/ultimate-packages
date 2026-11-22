@@ -1,9 +1,10 @@
 import {
   StyleSheet,
-  css,
+  registerComponentCss,
   registerBoxModel,
   registerHiddenAccessible,
   registerIconSpin,
+  registerSharedBase,
   registerThemeVariables,
   scopeRootsOf,
   type StyleMeta,
@@ -19,7 +20,16 @@ import type { StyleModule } from "../base/base-component";
 class VueStyleSheet extends StyleSheet<HTMLStyleElement> {
   override createStyleElement(meta: StyleMeta): HTMLStyleElement | undefined {
     if (typeof document === "undefined") return undefined;
-    return createStyleElement(meta.css ?? "", { "data-u-style": meta.name }, document.head);
+    const element = createStyleElement(
+      meta.css ?? "",
+      { "data-u-style": meta.name },
+      document.head
+    );
+    if (meta.first) document.head.prepend(element);
+    return element;
+  }
+  override updateStyleElement(element: HTMLStyleElement, meta: StyleMeta<HTMLStyleElement>): void {
+    element.textContent = meta.css ?? "";
   }
 }
 
@@ -27,6 +37,15 @@ class VueStyleSheet extends StyleSheet<HTMLStyleElement> {
 // one registry per document; ngCoreStyleSheet is the browser document's
 // registry.)
 export const vueCoreStyleSheet = new VueStyleSheet();
+
+// The rules every instance needs whether or not it is styled: the shared
+// hidden-accessible and icon-spin rules. PrimeVue's `_load()` loads its base
+// style the same way, before the `isUnstyled` check in `_loadThemeStyles()`.
+export function registerBaseStyle(): void {
+  registerHiddenAccessible(vueCoreStyleSheet);
+  // GAP-124: the opt-in `.u-icon-spin` rule (class-scoped; see uix-styled icon-spin.ts).
+  registerIconSpin(vueCoreStyleSheet);
+}
 
 // Registers styleModule with vueCoreStyleSheet exactly once per componentName
 // (has()/add() guard) — called from createBaseComponent's mounted()
@@ -45,9 +64,7 @@ export function registerComponentStyle(
   styleModule: StyleModule,
   additionalPresetKeys: readonly string[] = []
 ): void {
-  registerHiddenAccessible(vueCoreStyleSheet);
-  // GAP-124: the opt-in `.u-icon-spin` rule (class-scoped; see uix-styled icon-spin.ts).
-  registerIconSpin(vueCoreStyleSheet);
+  registerBaseStyle();
 
   // Theme variable DEFINITIONS first — the structural CSS below refers to
   // them via dt()-resolved var(--u-*) references, which resolve to nothing
@@ -58,13 +75,13 @@ export function registerComponentStyle(
     registerThemeVariables(vueCoreStyleSheet, presetKey);
   }
 
+  // A6 (ADR-081): the shared `u-*` base rules, once per sheet.
+  registerSharedBase(vueCoreStyleSheet);
+
   // GAP-098 (ADR-063): the component's scoped border-box rule, guarded by its
   // own key and placed before the early return below so it registers even when
   // the component key already exists. A no-op for an empty name or no roots.
   registerBoxModel(vueCoreStyleSheet, componentName, scopeRootsOf(styleModule.classes));
 
-  if (vueCoreStyleSheet.has(componentName)) return;
-  // Keep the style module's CSS bytes intact; the registered value is used as-is.
-  const renderCss = css;
-  vueCoreStyleSheet.add(componentName, renderCss`${styleModule.css}`);
+  registerComponentCss(vueCoreStyleSheet, componentName, styleModule.css);
 }

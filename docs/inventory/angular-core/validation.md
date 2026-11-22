@@ -1,6 +1,6 @@
 # Scoped validation
 
-Scope: angular-core-148; source revision: 5a49a62b07259a6033e13fb52a4bb39869a389ed
+Scope: angular-core-148; source revision: b9051a6668bf08b91654c23925a41cdcd9b84119
 
 Global completeness: not asserted.
 

@@ -6,28 +6,34 @@ Framework: shared; availability: public
 
 ## Authored interpretation
 
-A style registry class plus helpers that register theme-variable, hidden-accessible, icon-spin and box-model CSS into a StyleSheet.
+A style registry class plus helpers that register theme-variable, hidden-accessible, icon-spin, box-model and shared base CSS into a StyleSheet.
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). Default export StyleSheet<E = HTMLStyleElement> (re-exported by name) has get, has, delete, clear, add(key, css?), a placeholder update(), getStyles, getAllCSS, getAllMarkup, getAllElements and an overridable createStyleElement that returns undefined by default; StyleSheetProps and StyleMeta describe its inputs and entries. registerThemeVariables(sheet, componentName) registers common and per-component variable CSS from Theme. HIDDEN_ACCESSIBLE_KEY, hiddenAccessibleCss and registerHiddenAccessible(sheet), and ICON_SPIN_KEY, iconSpinCss and registerIconSpin(sheet) register idempotent utility CSS. BOX_MODEL_KEY_PREFIX, boxModelCss(roots), scopeRootsOf(classes) and registerBoxModel(sheet, componentName, roots) register scoped border-box rules.
+See [authored signatures and interpretation](README.md). Default export StyleSheet<E = HTMLStyleElement> (re-exported by name) has get, has, delete, clear, add(key, css?, options?) and update(key, css, options?), where update rewrites a registered entry in place and registers a missing one and options.first puts an entry before all others in registry order and asks createStyleElement to place its element first, getStyles, getAllCSS, getAllMarkup, getAllElements and an overridable createStyleElement that returns undefined by default and an overridable updateStyleElement(element, meta) that does nothing by default; StyleSheetProps, StyleMeta (which carries first) and StyleAddOptions describe its inputs and entries. registerThemeVariables(sheet, componentName) registers common and per-component variable CSS from Theme (the preset block is read under the registration name with its hyphens removed, so input-text reads inputtext; ticket #174, F7), and the preset's top-level css as the global style under u-global-style (ticket #172, F4), and registerComponentCss(sheet, componentName, rawCss) registers a component's structural CSS with dt() resolved. Both subscribe the sheet once to theme:change (held weakly) and rewrite their registered CSS in place after Theme.setTheme, setPreset or setOptions. With cssLayer on, registerThemeVariables also registers the @layer order statement from Theme.getLayerOrderCSS() under u-layer-order, first in the sheet, after the variable blocks, and keeps it current after those changes; with cssLayer off nothing is registered (ticket #173, F6). HIDDEN_ACCESSIBLE_KEY, hiddenAccessibleCss and registerHiddenAccessible(sheet), and ICON_SPIN_KEY, iconSpinCss and registerIconSpin(sheet) register idempotent utility CSS. BOX_MODEL_KEY_PREFIX, boxModelCss(roots), scopeRootsOf(classes) and registerBoxModel(sheet, componentName, roots) register scoped border-box rules. createScopedTheme(sheet, componentName, attrSelector) returns { key, update(dt), dispose() } for per-instance dt: update writes the overrides as a variable block scoped to [attrSelector] under the key <attrSelector>-<componentName>, follows theme:change, and update(undefined) or dispose() removes the block and its style element (ADR-085). registerSharedBase(sheet) registers the @ultimate/uix-styles/base module once under SHARED_BASE_KEY (u-base) through registerComponentCss, so its dt() references resolve and follow theme changes; each core calls it next to registerThemeVariables for styled instances only (ticket #176, F10, ADR-081).
 
 ## Public exports
 
 @ultimate/uix-styled#BOX_MODEL_KEY_PREFIX
 @ultimate/uix-styled#HIDDEN_ACCESSIBLE_KEY
 @ultimate/uix-styled#ICON_SPIN_KEY
+@ultimate/uix-styled#ScopedTheme
 @ultimate/uix-styled#StyleMeta
 @ultimate/uix-styled#StyleSheet
 @ultimate/uix-styled#StyleSheetProps
 @ultimate/uix-styled#boxModelCss
+@ultimate/uix-styled#createScopedTheme
 @ultimate/uix-styled#hiddenAccessibleCss
 @ultimate/uix-styled#iconSpinCss
 @ultimate/uix-styled#registerBoxModel
+@ultimate/uix-styled#registerComponentCss
 @ultimate/uix-styled#registerHiddenAccessible
 @ultimate/uix-styled#registerIconSpin
 @ultimate/uix-styled#registerThemeVariables
 @ultimate/uix-styled#scopeRootsOf
+@ultimate/uix-styled#StyleAddOptions
+@ultimate/uix-styled#SHARED_BASE_KEY
+@ultimate/uix-styled#registerSharedBase
 
 ## Owned source and evidence
 
@@ -36,12 +42,17 @@ packages/uix-styled/src/stylesheet/theme-variables.ts
 packages/uix-styled/src/stylesheet/hidden-accessible.ts
 packages/uix-styled/src/stylesheet/icon-spin.ts
 packages/uix-styled/src/stylesheet/box-model.ts
+packages/uix-styled/src/stylesheet/scoped-theme.ts
+packages/uix-styled/src/stylesheet/base.ts
 
 ```text
 packages/uix-styled/src/stylesheet/index.ts: class StyleSheet<E = HTMLStyleElement> {
 packages/uix-styled/src/stylesheet/box-model.ts: export function registerBoxModel(
 packages/uix-styled/src/stylesheet/theme-variables.ts: export function registerThemeVariables(sheet: StyleSheet<any>, componentName: string): void {
-packages/uix-styled/src/index.ts: export { registerThemeVariables } from "./stylesheet/theme-variables";
+packages/uix-styled/src/index.ts: export { registerComponentCss, registerThemeVariables } from "./stylesheet/theme-variables";
+packages/uix-styled/src/stylesheet/scoped-theme.ts: export function createScopedTheme(
+packages/uix-styled/src/stylesheet/base.ts: export function registerSharedBase(
+packages/uix-styled/src/index.ts: export { SHARED_BASE_KEY, registerSharedBase } from "./stylesheet/base";
 ```
 
 ## Relationships
@@ -70,9 +81,9 @@ package.ultimate.uix-utils.dom (pending cross-batch)
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/styled-runtime.json --out docs/inventory/styled-runtime (run twice; authored README SHA-256 checked before and after)",
-    "revision": "f0b7e867d6edf346284af3400e28e6ec6fbe4500",
+    "revision": "b9051a6668bf08b91654c23925a41cdcd9b84119",
     "outcome": "passed",
-    "output": "Scoped reconciliation passed twice with identical generated views: 26 source files, 55 named symbols, 55 root export identities, 8 records, no problems; the authored README SHA-256 was unchanged. Cross-scope relationships remain in the pending ledger because the pilot resolves references within one input. Global completeness, installed package resolution, and product behavior are not asserted.",
+    "output": "Scoped reconciliation completed with no problems: 28 source files accounted for, 61 root export identities each attributed to one public record, cross-scope references recorded as pending.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
     "run": "docs/inventory/styled-runtime/pilot-run.json",
     "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."

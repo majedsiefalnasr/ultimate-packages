@@ -1,21 +1,21 @@
 <template>
-  <div :class="cx('root')">
-    <div v-if="$slots.header" :class="cx('header')">
+  <div :class="cx('root')" v-bind="ptmi('root')">
+    <div v-if="$slots.header" :class="cx('header')" v-bind="ptm('header')">
       <slot name="header" />
     </div>
-    <div :class="cx('body')">
-      <div v-if="$slots.title || $slots.subtitle" :class="cx('caption')">
-        <div v-if="$slots.title" :class="cx('title')">
+    <div :class="cx('body')" v-bind="ptm('body')">
+      <div v-if="$slots.title || $slots.subtitle" :class="cx('caption')" v-bind="ptm('caption')">
+        <div v-if="$slots.title" :class="cx('title')" v-bind="ptm('title')">
           <slot name="title" />
         </div>
-        <div v-if="$slots.subtitle" :class="cx('subtitle')">
+        <div v-if="$slots.subtitle" :class="cx('subtitle')" v-bind="ptm('subtitle')">
           <slot name="subtitle" />
         </div>
       </div>
-      <div :class="cx('content')">
+      <div :class="cx('content')" v-bind="ptm('content')">
         <slot name="content" />
       </div>
-      <div v-if="$slots.footer" :class="cx('footer')">
+      <div v-if="$slots.footer" :class="cx('footer')" v-bind="ptm('footer')">
         <slot name="footer" />
       </div>
     </div>

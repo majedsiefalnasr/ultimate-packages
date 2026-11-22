@@ -6,9 +6,24 @@ React-specific foundation for the Ultimate Platform: base component architecture
 
 ## Architecture
 
-`react-core`'s `useComponentBase` hook is **Option B**: informed by PrimeReact's own `ComponentBase.js` pattern, but independently authored and deliberately scoped down. It covers class-name-slot resolution (`cx()`) and one-time-per-`componentName` style registration against a module-level `StyleSheet` instance only.
+`react-core`'s `useComponentBase` hook is **Option B**: informed by PrimeReact's own `ComponentBase.js` pattern, but independently authored and deliberately scoped down. It covers class-name-slot resolution (`cx()`) and one-time-per-`componentName` style registration against a module-level `StyleSheet` instance. The instance-level passthrough mechanism lives next to it in `createPassThrough` (ADR-077).
 
-PrimeReact's full passthrough (`pt`/`ptm`/`ptmo`) system (~150 lines of resolution logic in `ComponentBase.js`) is explicitly excluded — same posture as Angular's `ng-core` (ADR-018) and `react-core`'s own ADR-024. See `docs/architecture/PROVENANCE.md` and `docs/architecture/provenance/react-core.json` for the full provenance record.
+### Passthrough
+
+`createPassThrough(componentName, { props, state?, parent?, hostName? })` returns `{ ptm, ptmo }`. A component calls it in render and spreads the result on the element a section names, through `useMergeProps`:
+
+```tsx
+const { ptm } = createPassThrough("card", { props });
+<div {...mergeProps({ className: cx("root") }, ptm("root"))} />;
+```
+
+- `ptm(key, params?)` reads `props.pt` and returns the attributes of section `key`, plus `data-pc-name` and `data-pc-section`. `ptmo(obj, key, params?)` reads an explicit passthrough object.
+- `pt` is an object of sections. A section value is an attribute object, a string or array that becomes `className`, or a function of `{ props, state, parent, ... }`. Keys match without regard to case, dashes or underscores, and `a.b` reaches a nested section.
+- `props.ptOptions` holds `mergeSections` and `mergeProps`. They decide how a global section value and the instance value merge. A global source is not built yet (ADR-080), so `ptOptions` has no visible effect today.
+- React has no automatic host lookup, as in PrimeReact. A sub-component receives `parent` (the host's metadata) from its caller and passes it in the metadata. `pt` functions read it as `parent.instance` (ADR-079). `hostName` only sets `data-pc-name`.
+- Oracle behavior kept as it is (ADR-080): a `className` array drops the sibling attributes of its section.
+
+Not built (ADR-080): the global and default `pt` from the provider, `usePassThrough`, `pt.hooks`, and the `$attrSelector` attribute (scoped `dt`). See `docs/architecture/PROVENANCE.md` and `docs/architecture/provenance/react-core.json` for the provenance record.
 
 ## Modules
 
@@ -22,6 +37,15 @@ PrimeReact's full passthrough (`pt`/`ptm`/`ptmo`) system (~150 lines of resoluti
 - `motion` — `useMotion(elementRef, visible, options?)`, a React lifecycle wrapper around `@ultimate/uix-motion`'s imperative, Promise-based `createMotion(element, options)`: calls `.enter()`/`.leave()` on visibility change and `.cancel()` on unmount. **No `react-transition-group` dependency** — verified upstream PrimeReact `CSSTransition.js` wraps the real `react-transition-group` npm package; `react-core` reuses the already-framework-agnostic `@ultimate/uix-motion` package instead, so no new runtime dependency was introduced for motion in this package (see ADR-028).
 - `styling` — `ReactStyleSheet` (in `react-style-sheet.ts`), a React-only subclass of `@ultimate/uix-styled`'s `StyleSheet<HTMLStyleElement>` overriding `createStyleElement` to delegate to `@ultimate/uix-utils/dom`'s `createStyleElement(css, attrs, document.head)`, SSR-guarded (`typeof document === "undefined"` returns `undefined`). A single module-level instance, `reactCoreStyleSheet`, serves every React component (Angular keeps one registry per document; its `ngCoreStyleSheet` is the browser document's registry). `useComponentStyle(componentName, styleModule)` is the mount-effect hook that registers a component's CSS with this singleton exactly once per name (`has()`/`add()` guard). This closes a real gap found during this phase's research: Angular's own `ngCoreStyleSheet` equivalent has an independently-tracked styling gap (not fixed by Phase 3 — recorded as a Phase 2 follow-up instead), while React gets a working DOM-injection adapter from day one (see ADR-029).
 - `icons` — five standalone icon components, each rendering its own inline `<svg role="img">`: `USpinnerIcon` (used by `UButton`'s loading state), `UTimesIcon` (used by `UDialog`'s close button), `UCheckIcon` (used by `UCheckbox`'s checked state), `UWindowMaximizeIcon`, and `UWindowMinimizeIcon` (ported for provenance completeness — verified upstream PrimeReact `Dialog.js` imports both, but no Phase 3 component renders a maximize/minimize toggle; not currently consumed by any `react` component). All share a base `IconProps` shape (`className`, `spin`, etc.) matching the individual icon's own prop surface.
+
+## Per-instance `unstyled`
+
+`useComponentBase({ …, unstyled })` returns `{ cx, isUnstyled }`, and `useComponentStyle(name, module, unstyled)` takes the same flag (ADR-085). A component adopts it by taking an `unstyled` prop and passing it to both hooks (see `UTag` in `@ultimate/react`).
+
+- While `unstyled` is true, `cx()` returns `undefined` and the instance registers only the hidden-accessible rule. If it turns false, the component styles are registered then.
+- A template that builds a class list must filter the `cx()` result instead of concatenating it with a string.
+- `unstyled` is per instance only. There is no global or context source yet, so a family component must pass the prop itself.
+- There is no per-instance `dt`. PrimeReact 10.9.9 has no such API, so the capability is not applicable to React (Phase 4 decision D-SHARED #5).
 
 ## Usage
 
@@ -54,7 +78,7 @@ document during server rendering and adopts them on hydration (GAP-078).
 - **FocusTrap** — sentinel-span mechanism preserved, Ultimate-owned implementation reusing existing `getFirstFocusableElement`/`getLastFocusableElement` (see `focus-trap` above, ADR-025).
 - **Motion** — `@ultimate/uix-motion`'s `createMotion` used instead of `react-transition-group`'s `CSSTransition` — no new runtime dependency (see `motion` above, ADR-028).
 - **Styling** — `@ultimate/uix-styled`'s `StyleSheet` class plus a new React-only subclass adapter (`ReactStyleSheet`) delegating to `@ultimate/uix-utils/dom`'s `createStyleElement`, instead of PrimeReact's `useStyle` hook (see `styling` above, ADR-029).
-- **Passthrough** — PrimeReact's full `pt`/`ptm`/`ptmo` system is excluded entirely (Option B, same posture as Angular's ADR-018) — see `base` above, ADR-024.
+- **Passthrough** — the instance-level `pt`/`ptOptions` mechanism is built (`createPassThrough`, ADR-077/079/080); the global `pt` source, `usePassThrough` and `pt.hooks` are not built — see the Passthrough section above.
 - **Dialog scroll registry** — a private, module-scoped `Set`-based registry replaces PrimeReact's `document.primeDialogParams` global-mutation pattern (see `scroll-lock` above).
 
 ## Dependencies

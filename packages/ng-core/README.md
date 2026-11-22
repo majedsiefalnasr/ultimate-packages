@@ -6,9 +6,20 @@ Angular-specific foundation for the Ultimate Platform: base component hierarchy,
 
 ## Architecture
 
-`ng-core`'s `UBaseComponent`/`UBaseEditableHolder` hierarchy is **Option B**: informed by PrimeNG's own `BaseComponent`/`BaseEditableHolder` pattern, but independently authored and deliberately scoped down. It covers DI wiring, lifecycle hooks, and `@ultimate/uix-styled`-backed style registration only.
+`ng-core`'s `UBaseComponent`/`UBaseEditableHolder` hierarchy is **Option B**: informed by PrimeNG's own `BaseComponent`/`BaseEditableHolder` pattern, but independently authored and deliberately scoped down. It covers DI wiring, lifecycle hooks, `@ultimate/uix-styled`-backed style registration, and the instance-level passthrough mechanism (ADR-077).
 
-PrimeNG's full passthrough (`pt`/`ptOptions`/`ptm`/`ptms`/`ptmo`) system, its full global-config surface, and its `$parentInstance` DI-token lookup are explicitly out of scope for this phase (deferred, needs architecture decision) — see `docs/architecture/PROVENANCE.md` and `docs/architecture/provenance/ng-core.json` for the full provenance record.
+### Passthrough
+
+`UBaseComponent<PT>` has two inputs, `pt` and `ptOptions`, and three methods that turn them into attributes for one element of the component's template:
+
+- `ptm(key, params?)` returns the attributes of section `key`, plus the `data-pc-name` and `data-pc-section` attributes. Spread them on the element with `[uBind]="ptm('root')"` (the `UBind` host directive).
+- `ptms(keys, params?)` merges `ptm` for several sections, in order.
+- `ptmo(obj, key, params?)` does the same against an explicit passthrough object instead of the `pt` input.
+- `pt` is an object of sections, or a function of `{ instance, parent }` that returns one. A section value is an attribute object, or a string that becomes the `class`, or a function of the same params. Keys match without regard to case, dashes or underscores, and `a.b` reaches a nested section.
+- `ptOptions` holds `mergeSections` and `mergeProps`. They decide how a global section value and the instance value merge (`{ ...global, ...self }`, or `mergeProps` when set). A global source is not built yet (ADR-080), so `ptOptions` has no visible effect today.
+- `$parentInstance` is the nearest ancestor that provides `U_PARENT_INSTANCE`. A component that renders other `UBaseComponent`s adds `{ provide: U_PARENT_INSTANCE, useExisting: Self }`. `pt` functions of the child read it as `parent.instance` (ADR-079). Unlike PrimeNG there is no `hostName` input.
+
+Not built (ADR-080): the global and default `pt` from config, `usePassThrough`, `pt.hooks`, and the `$attrSelector` attribute (scoped `dt`). The full global-config surface stays out of scope (ADR-056). See `docs/architecture/PROVENANCE.md` and `docs/architecture/provenance/ng-core.json` for the provenance record.
 
 ## Modules
 
@@ -20,6 +31,17 @@ PrimeNG's full passthrough (`pt`/`ptOptions`/`ptm`/`ptms`/`ptmo`) system, its fu
 - `bind` — `UBind` (`[uBind]`), applies dynamic attributes/properties/event-listeners from a bound `Record<string, unknown>` to its host element via `Renderer2`. Foundation infrastructure only in Phase 2 — no shipped component wires it in directly. No sanitization of keys/values is performed (inherited unchanged from PrimeNG's own `Bind`, an accepted risk documented in `bind.spec.ts`, not a defect).
 - `icons` — `UBaseIcon` (shared `label`/`spin` inputs) plus four standalone icon components: `USpinnerIcon` (`u-spinner-icon`), `UTimesIcon` (`u-times-icon`), `UWindowMaximizeIcon` (`u-window-maximize-icon`), `UWindowMinimizeIcon` (`u-window-minimize-icon`). Each is an element-selector component (not an attribute directive like PrimeNG's `[data-p-icon]`) rendering its own inline `<svg role="img" [attr.aria-label]="label()">`, so every icon is accessible without the consumer wiring ARIA attributes themselves — a deliberate departure from PrimeNG's own icon shape, which leaves accessibility to the consumer.
 - `api` — shared type definitions consumed by `@ultimate/ng` components: `UMenuItem` (an 8-field subset of PrimeNG's `MenuItem` — `label`, `icon`, `routerLink`, `command`, `items`, `separator`, `disabled`, `tooltip` — used by `UMenu`; `tooltip` is Ultimate-specific, opt-in per item, not present on PrimeNG's own `MenuItem`) and `UTooltipOptions` (a 3-field subset of PrimeNG's `TooltipOptions` — `value`, `position`, `disabled` — used by `UTooltip`).
+
+## Per-instance `unstyled` and `dt`
+
+`UBaseComponent` honors the `unstyled` and `dt` inputs on every component that extends it (ADR-085):
+
+- `unstyled` — the effective value, `$unstyled()`, is the input when set and `UltimateConfig.unstyled` otherwise. `[unstyled]="false"` therefore overrides a global `true`. While it is true, `cx()` returns `undefined` and the instance registers only the shared base rules (hidden-accessible, icon spin), not its theme variables, box model or component CSS. If it turns false later, the instance registers its styles then.
+- `dt` — a token override scoped to the instance (for example `[dt]="{ colorScheme: { light: { root: { background: '{red.500}' } } } }"`). It is written as a scoped variable block keyed to the instance's attribute selector, rewritten when `dt` changes or the theme changes, and removed when `dt` is cleared or the component is destroyed. It is not written during server rendering.
+- `cx()` returns `undefined` when unstyled. A template that builds a class list must filter that result instead of concatenating it with a string, or the word `undefined` ends up in the markup (see `@ultimate/ng`'s `UTag`).
+- `$attrSelector` is the instance's `pcN` attribute name. It is set on the host only while `dt` is set.
+
+There is no `directiveUnstyled` signal.
 
 ## Usage
 

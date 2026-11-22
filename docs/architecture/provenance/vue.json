@@ -976,5 +976,11 @@
     "ultimateDestination": "packages/vue/src/toolbar/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064, GAP-094 Spec A1 barrel rule; GAP-094 backfill batch 3). The same-named PrimeVue 4.5.5 toolbar/ directory's entry is a package.json pointing at Toolbar.vue; this barrel shares only the exported component (UToolbar, plus createBaseToolbar). Added in be9f35e4."
+  },
+  {
+    "originalPath": "packages/primevue/src/card/Card.vue",
+    "ultimateDestination": "packages/vue/src/card/Card.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 Card.vue: the template is upstream's, section for section (`:class=\"cx(x)\" v-bind=\"ptm(x)\"`, `ptmi('root')` on the root, the v-if guards on header, caption, title, subtitle and footer), with whitespace normalized and slot tags self-closed. The script keeps `extends`, `inheritAttrs: false` and the component name `UCard` instead of `Card`. A0 (#170) changes no template line: the pilot works because createBaseComponent now mixes in the passthrough mixin. Existing file, entry added in A0 (#170) because the file's ptm and ptmi calls now resolve to the shared mechanism."
   }
 ]

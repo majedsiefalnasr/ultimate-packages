@@ -111,6 +111,63 @@ describe("useComponentStyle theme variable definitions", () => {
   });
 });
 
+describe("useComponentStyle theme changes (A1)", () => {
+  const options = { prefix: "u", darkModeSelector: "system", cssLayer: false };
+  const presetOf = (color: string, radius: string) => ({
+    primitive: { blue: { 500: color } },
+    semantic: { primary: { color: "{blue.500}" } },
+    components: { button: { borderRadius: radius } },
+  });
+
+  beforeEach(() => {
+    reactCoreStyleSheet.clear();
+    document.head.querySelectorAll("style").forEach((el) => el.remove());
+    Theme.setTheme({ preset: presetOf("#3b82f6", "6px"), options });
+  });
+
+  const injectedCss = () =>
+    Array.from(document.head.querySelectorAll("style"))
+      .map((el) => el.textContent ?? "")
+      .join("\n");
+
+  it("updates the variables of a mounted component after Theme.setTheme, without a second <style>", () => {
+    renderHook(() => useComponentStyle("button", { css: ".u-button {}", classes: {} }));
+    const count = document.head.querySelectorAll("style").length;
+
+    Theme.setTheme({ preset: presetOf("#ef4444", "12px"), options });
+
+    expect(injectedCss()).toContain("--u-blue-500:#ef4444");
+    expect(injectedCss()).toContain("--u-button-border-radius:12px");
+    expect(injectedCss()).not.toContain("#3b82f6");
+    expect(document.head.querySelectorAll("style").length).toBe(count);
+  });
+
+  it("updates the variables of a mounted component after Theme.setPreset", () => {
+    renderHook(() => useComponentStyle("button", { css: ".u-button {}", classes: {} }));
+
+    Theme.setPreset(presetOf("#22c55e", "2px"));
+
+    expect(injectedCss()).toContain("--u-blue-500:#22c55e");
+    expect(injectedCss()).toContain("--u-button-border-radius:2px");
+    expect(injectedCss()).not.toContain("#3b82f6");
+  });
+
+  it("updates the variable names of a mounted component after Theme.setOptions", () => {
+    renderHook(() =>
+      useComponentStyle("button", {
+        css: ".u-button { border-radius: dt('button.border.radius'); }",
+        classes: {},
+      })
+    );
+
+    Theme.setOptions({ ...options, prefix: "x" });
+
+    expect(injectedCss()).toContain("--x-button-border-radius:6px");
+    expect(injectedCss()).not.toContain("--u-button-border-radius");
+    expect(injectedCss()).toContain("var(--x-button-border-radius");
+  });
+});
+
 describe("useComponentStyle box model (GAP-098)", () => {
   beforeEach(() => {
     reactCoreStyleSheet.clear();

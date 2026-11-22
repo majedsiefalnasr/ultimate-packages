@@ -1,5 +1,11 @@
 import * as React from "react";
-import { useComponentBase } from "@ultimate/react-core";
+import {
+  createPassThrough,
+  useComponentBase,
+  useMergeProps,
+  type PassThrough,
+  type PassThroughOptions,
+} from "@ultimate/react-core";
 import { cardStyleModule } from "./card-style";
 
 export interface UCardProps {
@@ -9,6 +15,9 @@ export interface UCardProps {
   footer?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
+  /** Attributes for the card's elements by section: root, header, body, title, subTitle, content, footer. */
+  pt?: PassThrough;
+  ptOptions?: PassThroughOptions;
 }
 
 /**
@@ -19,20 +28,27 @@ export interface UCardProps {
  * own header/title/subTitle/content/footer structural shape and prop names
  * exactly.
  */
-export const UCard = React.forwardRef<HTMLDivElement, UCardProps>(function UCard(
-  { header, title, subTitle, footer, children, className },
-  ref
-) {
+export const UCard = React.forwardRef<HTMLDivElement, UCardProps>(function UCard(props, ref) {
+  const { header, title, subTitle, footer, children, className } = props;
   const { cx } = useComponentBase({ componentName: "card", styleModule: cardStyleModule });
+  const { ptm } = createPassThrough("card", { props });
+  const mergeProps = useMergeProps();
 
   return (
-    <div ref={ref} className={[cx("root"), className].filter(Boolean).join(" ")}>
-      {header && <div className={cx("header")}>{header}</div>}
-      <div className={cx("body")}>
-        {title && <div className={cx("title")}>{title}</div>}
-        {subTitle && <div className={cx("subtitle")}>{subTitle}</div>}
-        {children && <div className={cx("content")}>{children}</div>}
-        {footer && <div className={cx("footer")}>{footer}</div>}
+    <div
+      ref={ref}
+      {...mergeProps({ className: [cx("root"), className].filter(Boolean).join(" ") }, ptm("root"))}
+    >
+      {header && <div {...mergeProps({ className: cx("header") }, ptm("header"))}>{header}</div>}
+      <div {...mergeProps({ className: cx("body") }, ptm("body"))}>
+        {title && <div {...mergeProps({ className: cx("title") }, ptm("title"))}>{title}</div>}
+        {subTitle && (
+          <div {...mergeProps({ className: cx("subtitle") }, ptm("subTitle"))}>{subTitle}</div>
+        )}
+        {children && (
+          <div {...mergeProps({ className: cx("content") }, ptm("content"))}>{children}</div>
+        )}
+        {footer && <div {...mergeProps({ className: cx("footer") }, ptm("footer"))}>{footer}</div>}
       </div>
     </div>
   );

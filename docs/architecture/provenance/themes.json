@@ -219,7 +219,7 @@
     "originalPath": "src/presets/aura/index.ts",
     "ultimateDestination": "packages/themes/src/presets/aura/index.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "New file assembling the ported base, proof-set (button/checkbox/dialog/menu/tooltip) and Form-family (24), Overlay-family (6), Navigation-family (11), Panel/Layout/Display/Feedback-family (25), InlineMessage, Data-family (3) and OrganizationChart preset modules via @ultimate/uix-styled's definePreset; the assembly pattern mirrors @primeuix/themes' own preset index.ts shape but is not itself extracted from a single upstream file. Auto-classified as import-path-adapted by generate-manifest.mjs's default heuristic because it imports @ultimate/uix-styled, which is a false positive — corrected here."
+    "modificationDescription": "New file assembling the ported base, proof-set (button/checkbox/dialog/menu/tooltip) and Form-family (24), Overlay-family (6), Navigation-family (11), Panel/Layout/Display/Feedback-family (25), InlineMessage, Data-family (3) and OrganizationChart preset modules via @ultimate/uix-styled's definePreset; the assembly pattern mirrors @primeuix/themes' own preset index.ts shape but is not itself extracted from a single upstream file. Auto-classified as import-path-adapted by generate-manifest.mjs's default heuristic because it imports @ultimate/uix-styled, which is a false positive — corrected here. F4 (ticket #172) adds the top-level `css` entry, imported from ./css and recorded in its own entry."
   },
   {
     "originalPath": "src/presets/aura/inline-message.ts",
@@ -520,5 +520,11 @@
     "ultimateDestination": "packages/themes/src/presets/aura/paginator.ts",
     "modificationStatus": "reference-derived",
     "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/themes@2.0.3's Aura preset paginator module (.vendor-extracted/themes/src/presets/aura/paginator/index.ts); all top-level sections and values are transcribed as-is (GAP-064 Tranche 1). Upstream's paginator module has no colorScheme split, so it is typed with a flat local PaginatorComponentTokens interface."
+  },
+  {
+    "originalPath": "src/presets/aura/css/index.ts",
+    "ultimateDestination": "packages/themes/src/presets/aura/css.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Compared with @primeuix/themes@2.0.3 dist/aura/css/index.mjs (the string exported by Aura's top-level `css`): the selector list and the single `transition: none` declaration block keep upstream's structure. Changes: class names rewritten to Ultimate's (`p-` to `u-`, and Ultimate's kebab-case family names: cascadeselect to cascade-select, multiselect to multi-select, datatable to table); upstream selectors for Tree, TreeTable and PanelMenu item content (tree-node-content, three treetable selectors, panelmenu-item-content) are not ported because Ultimate has no matching class (F4, ticket #172); the doc comment is Ultimate-authored. The comparison is by the string content of the pinned dist file; no wording uncertainty remains."
   }
 ]

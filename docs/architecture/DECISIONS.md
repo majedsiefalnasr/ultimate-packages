@@ -68,9 +68,15 @@ Status: Accepted (Phase 1). The four pinned `@primeuix/*` npm tarballs ship only
 
 Status: Accepted (Phase 1 spec). `@primeuix/styles@2.0.3` ships a `base` module (global/framework-level CSS: box-sizing reset, disabled-state opacity, icon sizing, overlay-mask positioning, collapsible-panel animation) alongside ~90 per-component style modules (button, dialog, datatable, etc.). Phase 1 incorporates only `base` — the ~90 per-component modules are component styles, not shared infrastructure, and Phase 1's explicit non-goal is "do not migrate framework components." Each per-component module migrates alongside its owning component during Phase 2 (Angular), Phase 3 (React), or Phase 4 (Vue). A scope-guard test (`packages/uix-styles/test/scope-guard.test.ts`) enforces this boundary in CI.
 
+**Amended by ADR-082 (2026-11-21):** the Phase 1 limit to `base` no longer binds. A family's structural style lives in `uix-styles` by default, and staying framework-local needs a recorded reason. The rest of this ADR is unchanged.
+
+**Amended by ADR-081 (2026-11-22):** the `base` module now uses `u-*` selectors and is registered by the three cores. The rest of this ADR is unchanged.
+
 ## ADR-018 — Option B: Ultimate-owned Angular base-class architecture
 
 Status: Accepted (Phase 2 spec, confirmed by implementation). `ng-core`'s `UBaseComponent`/`UBaseEditableHolder` hierarchy is independently authored, informed by but not copied from PrimeNG's `BaseComponent`/`BaseEditableHolder` — notably, PrimeNG's full passthrough (`pt`/`ptOptions`/`ptm`/`ptms`/`ptmo`) system, its `$parentInstance` DI-token lookup, and its full global-config surface are excluded from Phase 2's `UBaseComponent`/`UltimateConfig`, which cover only DI wiring (document/platformId/el/renderer/config), lifecycle, the `dt`/`unstyled` input pair, a `cx()` class-name-slot resolver, and `@ultimate/uix-styled`-backed style registration. This scoping held up across all 5 built components: each component's own provenance entry (`docs/architecture/provenance/ng.json`) documents deliberately excluding passthrough/DI-token-lookup call sites it would otherwise need to port (e.g. Button's badge/Fluid ancestor-detection wiring, Dialog's breakpoint passthrough). Revisit passthrough support only if a later-phase component creates real duplicate-pattern pressure (spec: DEFER, Needs Architecture Decision).
+
+**Amended by ADR-077 (2026-11-21):** the exclusion of the passthrough system no longer holds. `pt` and `ptOptions` are built once in `ng-core`. The rest of this ADR is unchanged.
 
 ## ADR-019 — Standalone-only, no NgModule support
 
@@ -110,6 +116,8 @@ Follow-up work, not yet assigned to a specific later phase:
 
 Status: Accepted (Phase 3 spec, confirmed by implementation). `react-core`'s `useComponentBase` is independently authored, informed by but not copied from PrimeReact's `ComponentBase` — the full `pt`/`ptm`/`ptmo` passthrough system (~150 lines of nested-key resolution in verified source) is excluded entirely. Same YAGNI justification that held across all 5 Angular components (ADR-018) — no demonstrated Ultimate consumer need, revisit only on real duplicate-pattern pressure from a later component.
 
+**Amended by ADR-077 (2026-11-21):** the exclusion of the passthrough system no longer holds. `pt` and `ptOptions` are built once in `react-core`. The rest of this ADR is unchanged.
+
 ## ADR-025 — React FocusTrap uses sentinel-span mechanism, not keydown interception
 
 Status: Accepted (Phase 3 spec, confirmed by implementation). `react-core`'s `FocusTrap` reimplements verified PrimeReact behavior (a hidden sentinel-`<span>` pair bracketing children, `onFocus` handlers redirecting real DOM focus back into the trap) rather than Angular's `UFocusTrap` keydown-Tab-interception directive. Materially different, framework-native mechanism, not a bug — React's sentinel-span technique is already idiomatic (plain refs/JSX) and works regardless of dynamic content changes inside the trap.
@@ -132,15 +140,17 @@ Status: Accepted (Phase 3 spec, confirmed by implementation). The Real-Source Ve
 
 ## ADR-030 — `UDialog` does not implement draggable, resizable, or maximizable behavior in Phase 3
 
-Status: Superseded pending Prime study (2026-10-22). This ADR excluded a verified upstream feature under the old phase scope; the exclusion is under review and no longer binding. Original status: Accepted (Phase 3 spec, confirmed by implementation). Verified PrimeReact's real `Dialog.js` supports draggable/resizable/maximizable behavior — a materially larger feature surface than Angular's already-shipped `UDialog`, which has none of these. Phase 3's `UDialog` deliberately does not include them: no such props exist on `UDialogProps`, no drag/resize handlers are wired, no maximize-toggle UI is rendered. Not an oversight — a firm, explicitly-scoped boundary (spec §15), with a dedicated negative regression test (`packages/react/src/dialog/dialog.spec.tsx`) guarding against silent scope creep. Revisit only via a separately approved future scope decision.
+Status: Superseded by ADR-075 (2026-11-21, user ruling in gap-closing spec #167). It was first marked superseded on 2026-10-22, pending the Prime study; the exclusion is no longer binding. Original status: Accepted (Phase 3 spec, confirmed by implementation). Verified PrimeReact's real `Dialog.js` supports draggable/resizable/maximizable behavior — a materially larger feature surface than Angular's already-shipped `UDialog`, which has none of these. Phase 3's `UDialog` deliberately does not include them: no such props exist on `UDialogProps`, no drag/resize handlers are wired, no maximize-toggle UI is rendered. Not an oversight — a firm, explicitly-scoped boundary (spec §15), with a dedicated negative regression test (`packages/react/src/dialog/dialog.spec.tsx`) guarding against silent scope creep. Revisit only via a separately approved future scope decision.
 
 ## ADR-031 — `URipple` is not built in Phase 3
 
-Status: Superseded pending Prime study (2026-10-22). This ADR excluded a verified upstream feature under the old phase scope; the exclusion is under review and no longer binding. Original status: Accepted (Phase 3 spec, confirmed by implementation). Verified PrimeReact's `Button`/`Dialog`/`Menu` all import and render `Ripple` upstream. Phase 3's `UButton`/`UDialog`/`UMenu` render without a ripple effect — `URipple` is not a Phase 3 proof-set component, and no ad-hoc ripple implementation was folded into any individual component. Matches Angular's own Phase 2 precedent exactly: `URipple` was built as its own standalone primitive (`packages/ng/src/ripple`), not embedded per-component. A future `URipple` for React, if built, gets its own scope, provenance, and tests — not inherited from this phase.
+Status: Superseded by ADR-074 (2026-11-21, user ruling in gap-closing spec #167). It was first marked superseded on 2026-10-22, pending the Prime study; the exclusion is no longer binding. Original status: Accepted (Phase 3 spec, confirmed by implementation). Verified PrimeReact's `Button`/`Dialog`/`Menu` all import and render `Ripple` upstream. Phase 3's `UButton`/`UDialog`/`UMenu` render without a ripple effect — `URipple` is not a Phase 3 proof-set component, and no ad-hoc ripple implementation was folded into any individual component. Matches Angular's own Phase 2 precedent exactly: `URipple` was built as its own standalone primitive (`packages/ng/src/ripple`), not embedded per-component. A future `URipple` for React, if built, gets its own scope, provenance, and tests — not inherited from this phase.
 
 ## ADR-032 — Option B: Ultimate-owned Vue base architecture (Options-API `extends` mixin)
 
 Status: Accepted (Phase 4 spec, confirmed by implementation). `vue-core`'s `createBaseComponent`/`createBaseEditableHolder`/`createBaseInput` are independently authored, informed by but not copied from PrimeVue's real `BaseComponent.vue`/`BaseEditableHolder.vue`/`BaseInput.vue` — the full `pt`/`ptOptions`/`ptm`/`ptmi`/`ptmo` passthrough system (~140 lines of nested-key resolution, two separate implementations for the component-mixin and directive-factory mechanisms) and `inject: { $parentInstance }` host-instance lookup are excluded from Phase 4's base, matching the same YAGNI posture ADR-018/024 established for Angular/React. Authoring style is Options-API `extends` mixin chains, not Composition-API composables — a genuine architectural fork resolved during Phase 4's research/brainstorming gate (chosen because it mirrors verified PrimeVue's own `BaseComponent.vue` mechanism most literally).
+
+**Amended by ADR-077 (2026-11-21):** the exclusion of the passthrough system no longer holds. `pt` and `ptOptions` are built once in `vue-core`. The rest of this ADR is unchanged.
 
 ## ADR-033 — Separate `BaseDirective`-equivalent factory for directive-shaped primitives
 
@@ -168,11 +178,11 @@ Status: Accepted (Phase 4 spec, confirmed by implementation). Verified PrimeVue'
 
 ## ADR-039 — `UCheckbox` excludes `@primevue/forms` integration despite it being a real, verified, working upstream feature
 
-Status: Superseded pending Prime study (2026-10-22). This ADR excluded a verified upstream feature under the old phase scope; the exclusion is under review and no longer binding. Original status: Accepted (Phase 4 spec, confirmed by implementation, resolved fork — Gate 6 #2). Verified PrimeVue's real `BaseEditableHolder.vue` has a live, working integration with a separate PrimeVue package, `@primevue/forms` (`inject: { $pcForm, $pcFormField }`, `formField.onChange`, `$formNovalidate`/`$formValue`/`$formDefaultValue`/`$formControl`). Unlike Phase 3's equivalent Checkbox-forms decision (where PrimeReact genuinely has no broader form abstraction to exclude — nothing existed to cut), this is a deliberate boundary cut of a real, verified, functioning upstream feature. `@primevue/forms` remains unpinned, unevaluated, with no provenance record — incorporating it is deferred to its own future evidence-based evaluation (pinning its real source, running its own Real-Source Verification Gate), not silently absorbed into Phase 4 because `UCheckbox` happened to touch its edge.
+Status: Superseded by ADR-076 (2026-11-21, user ruling in gap-closing spec #167). It was first marked superseded on 2026-10-22, pending the Prime study; the exclusion is no longer binding. Original status: Accepted (Phase 4 spec, confirmed by implementation, resolved fork — Gate 6 #2). Verified PrimeVue's real `BaseEditableHolder.vue` has a live, working integration with a separate PrimeVue package, `@primevue/forms` (`inject: { $pcForm, $pcFormField }`, `formField.onChange`, `$formNovalidate`/`$formValue`/`$formDefaultValue`/`$formControl`). Unlike Phase 3's equivalent Checkbox-forms decision (where PrimeReact genuinely has no broader form abstraction to exclude — nothing existed to cut), this is a deliberate boundary cut of a real, verified, functioning upstream feature. `@primevue/forms` remains unpinned, unevaluated, with no provenance record — incorporating it is deferred to its own future evidence-based evaluation (pinning its real source, running its own Real-Source Verification Gate), not silently absorbed into Phase 4 because `UCheckbox` happened to touch its edge.
 
 ## ADR-040 — `UDialog` excludes draggable and maximizable behavior despite verified upstream support; resizable was never a PrimeVue Dialog feature at all
 
-Status: Superseded pending Prime study (2026-10-22). This ADR excluded a verified upstream feature under the old phase scope; the exclusion is under review and no longer binding. Original status: Accepted (Phase 4 spec, confirmed by implementation, resolved fork — this Phase's architecture-approval gate). Verified PrimeVue's real `Dialog.vue` implements both draggable (full mouse-drag positioning with `keepInViewport` bounds-checking) and maximizable (maximize/unmaximize state, icon swap, scroll-lock toggling) as first-class features — a materially larger feature surface than Angular's or React's already-shipped `UDialog`, neither of which has either. Resizable, unlike PrimeReact's Dialog (which has all three: draggable/resizable/maximizable, explicitly excluded per ADR-030), was never found as a feature anywhere in PrimeVue's real `Dialog.vue` source at all — nothing to exclude there, a genuinely different upstream feature surface than React's reference. Phase 4's `UDialog` excludes draggable and maximizable to keep scope identical across all three frameworks — no such props, handlers, or UI anywhere in the implementation.
+Status: Superseded by ADR-075 (2026-11-21, user ruling in gap-closing spec #167). It was first marked superseded on 2026-10-22, pending the Prime study; the exclusion is no longer binding. Original status: Accepted (Phase 4 spec, confirmed by implementation, resolved fork — this Phase's architecture-approval gate). Verified PrimeVue's real `Dialog.vue` implements both draggable (full mouse-drag positioning with `keepInViewport` bounds-checking) and maximizable (maximize/unmaximize state, icon swap, scroll-lock toggling) as first-class features — a materially larger feature surface than Angular's or React's already-shipped `UDialog`, neither of which has either. Resizable, unlike PrimeReact's Dialog (which has all three: draggable/resizable/maximizable, explicitly excluded per ADR-030), was never found as a feature anywhere in PrimeVue's real `Dialog.vue` source at all — nothing to exclude there, a genuinely different upstream feature surface than React's reference. Phase 4's `UDialog` excludes draggable and maximizable to keep scope identical across all three frameworks — no such props, handlers, or UI anywhere in the implementation.
 
 ## ADR-041 — `v-tooltip`'s content-injection contract preserves PrimeVue's verified two-mode shape (safe default, explicit opt-in raw-HTML escape hatch)
 
@@ -326,6 +336,8 @@ Status: Accepted (user decision, 2026-10-04, GAP-064 Architecture Discussion).
 - The key also appears as the value of the generated `<style>` elements' key attribute (`data-u-ng-style` in Angular, `data-u-style` in Vue, and `<key>-variables` for the variable block). For renamed components that value changes. It is not a documented consumer contract, and Angular SSR hydration reuse (GAP-078) is unaffected because server and client use the same key.
 - No exported signature changes. Angular's `componentName` is `protected`, and Vue's is an internal `createBaseComponent` argument.
 - New Angular or Vue components whose structural CSS consumes an Aura preset module register under that module's upstream key.
+
+**Amended by ADR-078 (2026-11-21):** the rejection of name normalization inside `registerThemeVariables` no longer holds. The lookup strips hyphens from the registration name, so React's kebab-case names find their flat Aura keys. Angular and Vue are unchanged, and the renames this ADR decided stand. Original text stays as history.
 
 ## ADR-052 — GAP-064 cross-tranche parity rules for the remaining G3 tranches (selector reachability, DOM admissibility, state selectors, runtime roles, open-state screenshots, tranche CI evidence)
 
@@ -481,6 +493,8 @@ Status: Accepted (user decision, 2026-10-11, K-9 Architecture Discussion).
 
 - In-scope component Specs follow the per-component precedents: English-default label inputs, `variant` through the base input tier, framework-local node types, and framework-native filtering and drag/drop.
 - `COMPONENT_INVENTORY.md` records the outcome for the cross-cutting rows.
+
+**Amended by ADR-077 (2026-11-21):** Option N no longer holds for `passthrough`. `pt` and `ptOptions` are built once in `ng-core`, `react-core` and `vue-core`, because every family carries the missing `pt` and `ptOptions` rows (Realignment Phase 4, D-PT), so the premise of "no duplicate-pattern pressure" is gone. GAP-021 and ADR-018, ADR-024 and ADR-032 are no longer unchanged for passthrough. The decisions on `config`, the shared `api` surface, icons and i18n stand. The `COMPONENT_INVENTORY.md` row for `passthrough` is stale until that file is retired by the gap-closing spec's final cleanup.
 
 ## ADR-057 — Performance benchmarks: Stage 1 protocol and P1–P8 measurement methods
 
@@ -811,6 +825,8 @@ Status: Accepted (user approval of the Workstream 1 Specification, decision D1, 
 
 - The Workstream 1 waves implement this. Changed visual baselines need the user's acceptance for each wave.
 
+**Amended by ADR-078 (2026-11-21):** the rejection of "Normalizing names inside `registerThemeVariables`" no longer holds. Decision (b)'s "registers under the preset key" is met for the lookup by normalization, and the registration name of a React component stays kebab-case. Additional preset keys stay a family-ticket concern. Original text stays as history.
+
 ## ADR-068 — Gitflow branching model and a required fast `ci` check
 
 Status: Accepted (user decisions GF-1 to GF-11 and CI-1 to CI-5, 2026-10-19).
@@ -938,3 +954,308 @@ Status: Accepted (user decision, 2026-11-21). The rule applies once the CI and p
 - `develop` is the only protected work branch today. Requiring `ci` on integration branches is a GitHub setting and is a separate change.
 - Deleting an integration or ticket branch after its merge still needs explicit authorization (`AGENTS.md` section 5.1).
 - The final integration PR is large. Its full CI run is the gate that ADR-068 gave every PR.
+
+## ADR-074 — Ripple is built in all three frameworks (supersedes ADR-031)
+
+Status: Accepted (user ruling R1, 2026-11-21, gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167)). Supersedes ADR-031. ADR-034 still applies.
+
+**Context.**
+
+- ADR-031 left React without a `URipple` in Phase 3. Its status was later changed to superseded, awaiting the Prime study, and no ADR replaced it. Realignment Phase 4 therefore found no in-force ADR that makes the gap intentional.
+- Angular and Vue have a Ripple that activates the ink effect but ships no structural CSS for it. Phase 4 classed this P (partial).
+- React has no Ripple. Phase 4 classed the Ripple family M (missing) and the React Button ripple row M. ADR-031 itself recorded that PrimeReact's `Button`, `Dialog` and `Menu` render `Ripple` upstream.
+- The gap-closing spec's parity default (Q1) is that Ultimate matches Prime unless an in-force ADR says Ultimate is intentionally different.
+
+**Decision.**
+
+- Build Ripple in all three frameworks.
+  - React: a new `URipple`, built as its own standalone primitive with its own scope, provenance and tests. This is the shape ADR-031 described for a future React Ripple and the shape Angular's Phase 2 `URipple` already has.
+  - Angular and Vue: add the missing structural ink CSS.
+- ADR-034 still governs the Vue form: `v-ripple` stays a custom directive, not a component.
+- React components whose Prime counterparts render Ripple (Button, Dialog, Menu and others) use it, wired in their own family tickets.
+
+**Consequences.**
+
+- ADR-031 now reads "Superseded by ADR-074". Its original text stays as history.
+- The work is done in the Track B tickets of the Ripple family and of the components that use it. Each ticket follows the gap-closing spec's definition of done: tests in every affected framework, provenance records (ADR-064) and a `PROVENANCE.md` update, and an inventory refresh.
+- `packages/vue/src/button/Button.vue` carries a comment that cites ADR-031 as deferring Ripple. The Button ticket updates that comment, because a change under `packages/` also needs the `PROVENANCE.md` update.
+
+## ADR-075 — `UDialog` is built with draggable, maximizable and resizable behavior where Prime has it (supersedes ADR-030 and ADR-040)
+
+Status: Accepted (user ruling R2, 2026-11-21, gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167)). Supersedes ADR-030 and ADR-040.
+
+**Context.**
+
+- ADR-030 (React) and ADR-040 (Vue) excluded draggable, resizable and maximizable behavior from `UDialog`. ADR-040 also records that Angular's `UDialog` had none of them. Their status was later changed to superseded, awaiting the Prime study, and no ADR replaced them.
+- PrimeNG's and PrimeReact's Dialog have draggable, maximizable and resizable behavior. PrimeVue's Dialog has draggable and maximizable behavior but no resizable behavior (ADR-040 verified this against the real `Dialog.vue`).
+- Two negative tests still assert the old exclusion: `packages/react/src/dialog/dialog.spec.tsx:84` and `packages/vue/src/dialog/dialog.spec.ts:75`.
+- The gap-closing spec's parity default (Q1) is that Ultimate matches Prime unless an in-force ADR says Ultimate is intentionally different.
+
+**Decision.**
+
+- Build all three behaviors wherever the pinned Prime oracle has them.
+  - Angular: draggable, maximizable and resizable.
+  - React: draggable, maximizable and resizable.
+  - Vue: draggable and maximizable. PrimeVue has no resizable Dialog, so that row is N (not applicable). Nothing is built and no ADR is needed for it.
+- Resize is a separate sub-ticket of the Dialog family ticket. Draggable and maximizable are built in the Dialog family ticket itself.
+- The negative tests in React and Vue are removed or inverted by the ticket that implements the behavior they guard. Inverted means the test asserts that the behavior exists.
+- ConfirmDialog and DynamicDialog inherit the outcome through `UDialog`. Their own family tickets verify the inherited behavior.
+
+**Consequences.**
+
+- ADR-030 and ADR-040 now read "Superseded by ADR-075". Their original text stays as history.
+- `packages/react/README.md` and `packages/vue/README.md` still state the old non-goal. The Dialog ticket updates them, together with the `PROVENANCE.md` update that a change under `packages/` requires.
+- Because resize is a sub-ticket, the Dialog ticket becomes the integration branch of its sub-tickets, as ADR-073 allows. Nothing nests deeper.
+
+## ADR-076 — Vue Forms is built by Ultimate as its own spec; `@primevue/forms` is never imported (supersedes ADR-039)
+
+Status: Accepted (user ruling R3, 2026-11-21, gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167)). Supersedes ADR-039. ADR-004 still applies.
+
+**Context.**
+
+- ADR-039 cut the `@primevue/forms` integration from `UCheckbox`. PrimeVue's `BaseEditableHolder.vue` has a live integration with that separate package (`$pcForm`, `$pcFormField`, `formField.onChange` and the `$form*` helpers). ADR-039 deferred the question to "its own future evidence-based evaluation". Its status was later changed to superseded, awaiting the Prime study, and no ADR replaced it.
+- ADR-004 forbids a required runtime dependency on PrimeVue, so Ultimate cannot import `@primevue/forms`.
+- Phase 4 needs a class for the Vue form-integration rows. Class I (intentional) needs an in-force ADR or a user ruling that says the cut is permanent. The ruling is the opposite: Ultimate builds it.
+
+**Decision.**
+
+- Ultimate builds its own Vue Forms: `Form`, `FormField`, `useForm` and resolvers.
+- This is a separate spec, scheduled after the foundations. It is not part of Stages 1 to 4 of the gap-closing spec.
+- Until that spec ships, the Vue form-integration rows stay M (missing), not I. No ADR declares the absence intentional.
+- `@primevue/forms` is never imported, as a dependency or otherwise (ADR-004). It can serve as an upstream reference. Before any of its source is incorporated, it needs a pinned revision and a provenance record (ADR-005, ADR-064), which is what ADR-039 asked for.
+
+**Consequences.**
+
+- ADR-039 now reads "Superseded by ADR-076". Its original text stays as history.
+- `UCheckbox` and the other Vue editable components keep their current contract until the Vue Forms spec adds the integration.
+- This ADR concerns Vue only. It makes no decision about forms in Angular or React.
+
+## ADR-077 — `pt` and `ptOptions` are built once in the three cores (amends ADR-056; ADR-018, ADR-024 and ADR-032 lose their passthrough exclusion)
+
+Status: Accepted (user ruling R4, 2026-11-21, gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167)). Amends ADR-056. Amends ADR-018, ADR-024 and ADR-032 only where they exclude passthrough.
+
+**Context.**
+
+- ADR-018 (Angular), ADR-024 (React) and ADR-032 (Vue) excluded Prime's passthrough system from the base architecture. Each said to revisit it only on real duplicate-pattern pressure from a later component.
+- ADR-056 confirmed that on 2026-10-11 (Option N). Its reasons were that every upstream use in the remaining components mapped to an established per-component pattern, and that shipped components contained no passthrough usage.
+- Phase 4 decision D-PT made `pt` and `ptOptions` separate capability rows. Each is M (missing) wherever the pinned Prime oracle offers it, and N (not applicable) where it does not.
+- The pressure evidence is that the rows are M in every family where Prime offers them, and every family carries these rows (`docs/architecture/research/phase4-gap-analysis.md`, section 2, reading notes). The pressure is therefore structural and shared by all families, not local to one component. The "no duplicate-pattern pressure" premise no longer holds.
+
+**Decision.**
+
+- Build `pt` and `ptOptions` once, in `ng-core`, `react-core` and `vue-core`. This is ticket A0 (#170) of the gap-closing spec. Components receive them through their base class or hook. They do not carry per-component passthrough code.
+- A family exposes `pt` or `ptOptions` where its pinned oracle does (D-PT). Where the oracle does not, the row is N and nothing is built. The family tickets wire the family-specific part names.
+- A0 decides the helper surface and the nested-key resolution design, and records them with provenance (ADR-064). If A0 needs a further architecture decision, such as host-instance lookup (`$parentInstance`), it records that decision as its own ADR. This ADR does not approve it in advance.
+- The rest of ADR-056 stands: no new `config` surface, no shared `api` surface, need-driven icons and no new i18n requirement.
+
+**Consequences.**
+
+- ADR-056 and ADR-018, ADR-024 and ADR-032 each carry a note that points here. Their original text stays as history.
+- A0 needs this ADR merged first.
+- The `ng-core`, `react-core` and `vue-core` READMEs still say passthrough is excluded. A0 updates them, together with the `PROVENANCE.md` update that a change under `packages/` requires.
+- The `passthrough` row of `COMPONENT_INVENTORY.md` still reads "not needed". The gap-closing spec retires that file in its final cleanup.
+
+## ADR-078 — `registerThemeVariables` reads the preset under the hyphen-free registration name (amends ADR-051 and ADR-067)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F7, ticket [#174](https://github.com/majedsiefalnasr/ultimate-packages/issues/174)). The spec names this approach; the ADR records that it reverses a rejected option.
+
+**Context.**
+
+- Aura preset keys are flat (`inputtext`, `datepicker`, `confirmdialog`). `Theme.getComponent(name)` reads `preset.components[name]` with no normalization.
+- React registers kebab-case names (`input-text`, `date-picker`). 44 React names are not Aura keys. 31 of them have a flat Aura key that the lookup never reaches, so their variable blocks are never defined (Phase 4 shared-foundation audit, section 3b; classified P as C4).
+- ADR-051 and ADR-067 each rejected "normalizing names inside `registerThemeVariables`". ADR-051's reason was that React registers through the same function and was outside GAP-064. ADR-067 repeated the rejection while deciding that React consumes Aura tokens.
+- Angular and Vue were renamed to the upstream keys by ADR-051. Their remaining hyphenated names (`avatar-group`, `button-group`, `input-icon`, `input-group-addon`, `input-mask`, `scroll-top`, `dynamic-dialog`) have no Aura key, flat or hyphenated, so normalization cannot change them. `packages/themes/test/registration-keys.test.ts` proves this against the product source.
+
+**Decision.**
+
+- `registerThemeVariables` and its `theme:change` rewrite look the preset up under the registration name with its hyphens removed (`input-text` reads `inputtext`). The change is one private helper in `packages/uix-styled/src/stylesheet/theme-variables.ts`.
+- The block stays registered under the name the caller gave (`input-text-variables`). Only the lookup changes. Angular and Vue sheet keys and output are therefore unchanged.
+- A name that is already flat resolves exactly as before.
+- A test enumerates the registration names of all three frameworks against the Aura keys. A React name with a flat Aura key that defines no variables fails the test.
+
+**Rejected.**
+
+- Renaming the 31 React components' `componentName` to the flat key, as ADR-051 did for Angular and Vue. It changes 31 components, their style keys and their tests, and leaves the next kebab-case name to fail silently again. Normalizing once fixes the whole class.
+- Matching a hyphenated preset key first and falling back to the flat key. No Aura or Prime preset uses a hyphenated component key, so the fallback only adds a second lookup path.
+
+**Consequences.**
+
+- Third-party presets must use flat component keys, as Aura and Prime do. A preset that keyed a component with a hyphen (for example `"test-component"`) is no longer found. The `ng-core` A1 spec used such a key and now uses `testcomponent`.
+- React components now inject their Aura variable blocks. Most React style modules still do not read them through `dt()` (F8). The React Aura-token rows stay P until the family tickets add `dt()` consumption; this ADR closes only the key mismatch.
+- ADR-051 and ADR-067 each carry a note that points here. Their original text stays as history.
+
+## ADR-085 — Per-instance `unstyled` and `dt` are built once in the three cores (foundation F15; contract and divergences from Prime)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F15, ticket [#175](https://github.com/majedsiefalnasr/ultimate-packages/issues/175)). This is the first ADR of ticket A5. Numbering starts at 085 to avoid a collision with ADRs added by ticket A0 (#170) from 079 up.
+
+**Context.**
+
+- Phase 4 decision D-SHARED #5 ruled that per-instance `dt` and `unstyled` are separate capability rows per family. The shared-foundation audit (item F15) recorded Angular as P (the inputs were declared but never read), React as M, Vue as M, and React per-instance `dt` as N because PrimeReact 10.9.9 has no `dt` API.
+- The pinned oracles behave as follows (read from the vendor archives, ADR-064). PrimeNG 21.1.9 and PrimeVue 4.5.5 resolve the instance `unstyled` value first and the global config second. `cx()` returns `undefined` when unstyled. Core and theme styles are skipped when unstyled, while base styles still load. A per-instance `dt` becomes a scoped preset (`Theme.getCustomPreset(name, dt, '[pcN]')`) loaded under the key `<attr>-<name>`. It is rewritten on `theme:change` and removed when `dt` is cleared or the component is destroyed. PrimeNG skips scoped styles on the server. PrimeReact resolves `unstyled` as `context || PrimeReact.unstyled || props.unstyled`, loads base and global styles always, and loads common and component styles only when styled.
+
+**Decision.**
+
+- `@ultimate/uix-styled` exports `createScopedTheme(sheet, componentName, attrSelector)`. It returns `{ key, update(dt), dispose() }`, writes the scoped variable block under `<attr>-<name>`, follows `theme:change`, and removes the `<style>` element together with the registry entry.
+- **Angular (`ng-core`).** `UBaseComponent` reads the existing `unstyled` and `dt` inputs. `$unstyled` is the input when set, else `UltimateConfig.unstyled`. `cx()` returns `undefined` when unstyled. An unstyled instance registers only the base rules (hidden-accessible, icon spin). Styles are registered once the instance turns styled. `dt` is applied from an effect, outside the server platform, and is disposed with the component.
+- **Vue (`vue-core`).** `BaseComponent` declares the `unstyled` and `dt` props (default `undefined`), a computed `isUnstyled`, and a `cx` that returns `undefined` when unstyled. `dt` follows PrimeVue's lifecycle (mounted, watcher, updated, unmounted). Every Vue family inherits both props through the base component.
+- **React (`react-core`).** `useComponentBase` takes `unstyled` and returns `{ cx, isUnstyled }`. `useComponentStyle(name, module, unstyled)` registers only the hidden-accessible rule for an unstyled instance. React has no `dt`: PrimeReact has no per-instance `dt` API, so the row is N and nothing is built (D-SHARED #5).
+- Each framework has one pilot component (Tag) that proves the contract. Families adopt it in their own tickets.
+
+**Divergences from Prime.**
+
+1. The `pcN` attribute is set only while `dt` is set. Prime sets it on every root.
+2. Vue has no global `unstyled` fallback, because Ultimate Vue has no config plugin.
+3. React `unstyled` is per-instance only. There is no global or context source yet.
+4. Angular has no `directiveUnstyled` signal.
+5. Scoped `dt` is not written on the server in Angular, and in Vue it is written from `mounted` only.
+6. The `pcN` selector comes from the `uuid("pc")` counter of `@ultimate/uix-utils`, not from `useId`, which restarts in each Vue app.
+7. React re-registers styles when `unstyled` turns false. PrimeReact runs its loader on mount only.
+8. `$attrSelector` is exposed on Angular only. Vue keeps the selector private. Ticket A0 (#170), which builds `ptm` dataset code, must add it if it needs the selector.
+
+**Contract for families.**
+
+- `cx()` returns `undefined` when unstyled. Templates must never concatenate its result with a string. The Angular Tag pilot shows the fix: `cx('icon') + ' ' + icon()` rendered the word `undefined`, so the class list is now built in a computed that filters it.
+- A React family component passes `unstyled` into `useComponentBase` and `useComponentStyle`. Vue and Angular components inherit it from the base class.
+
+**Classification.**
+
+- No row is I (intentionally not built). The only N row, React `dt`, keeps the classification the Phase 4 audit gave it.
+- Re-classification after a source re-read is in the A5 ticket report, not in the Phase 4 reports.
+
+**Consequences.**
+
+- The `ng-core`, `react-core`, `vue-core` and `uix-styled` READMEs document the API.
+- Other families need no per-component code to honor `unstyled` or `dt` in Angular and Vue. React families wire the `unstyled` prop one component at a time.
+- Any later global `unstyled` source for React or Vue needs its own ruling.
+
+## ADR-079 — `pt` functions receive `parent.instance` through host-instance lookup (A0 design decision, amends ADR-077)
+
+Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), ticket [#170](https://github.com/majedsiefalnasr/ultimate-packages/issues/170) A0). Needs the user's approval. ADR-077 left this open on purpose.
+
+**Context.**
+
+- A `pt` value can be a function. In all three pinned oracles it receives `{ instance, parent: { instance }, ... }`. `parent.instance` is the component that renders this one. A sub-component (a tree node inside a tree, a menu item inside a menu) uses it to style itself from its host's state.
+- The oracles find that parent in different ways:
+  - **PrimeNG 21.1.9** injects a `PARENT_INSTANCE` token (`inject(PARENT_INSTANCE, { optional: true, skipSelf: true })`). A component provides itself with `{ provide: PARENT_INSTANCE, useExisting: Self }`. An optional `hostName` input narrows the search, but `_getHostInstance` (`basecomponent.ts`) compares `this.$name` with `hostName` instead of the visited instance's name. For any component whose `hostName` differs from its own name the search therefore ends in `undefined`. This is a reference defect.
+  - **PrimeVue 4.5.5** injects `$parentInstance`. Each component provides itself. A `hostName` option walks `$parentInstance` up to the instance whose component name equals `hostName`. The fallback is `this.$parent`.
+  - **PrimeReact 10.9.9** has no lookup. Each component passes `parent` (the parent's metadata) and `hostName` in the params of its own `ptm(...)` call.
+- Without this, a `pt` function in a sub-component family cannot read its host, so those rows stay M in Track B.
+
+**Options.**
+
+- **A (recommended, implemented): lookup per framework as the oracle does it.** Angular gets the `U_PARENT_INSTANCE` token. Vue gets `$parentInstance` and the `hostName` option. React takes `parent` and `hostName` in the `ptm` params. Choosing it means the family tickets for sub-components only wire names. Ultimate Angular drops `hostName` and does not copy the PrimeNG defect.
+- **B: no lookup now.** `parent.instance` stays `undefined`. Each sub-component family would add its own lookup later, which is the duplication ADR-077 set out to avoid.
+
+**Decision (as implemented, pending approval).** Option A.
+
+- **Angular (`ng-core`).** `UBaseComponent.$parentInstance` is `inject(U_PARENT_INSTANCE, { optional: true, skipSelf: true })`. A component that renders other `UBaseComponent`s provides `{ provide: U_PARENT_INSTANCE, useExisting: Self }`. `$params.parent.instance` is that nearest provider. There is no `hostName`.
+- **Vue (`vue-core`).** The base mixin provides every instance as `$parentInstance` and injects the nearest one. `createBaseComponent({ hostName })` walks up to the instance whose `componentName` equals `hostName`. `parent.instance` is that host, else `$parentInstance`, else `$parent`.
+- **React (`react-core`).** `createPassThrough(name, { props, state, parent, hostName })` spreads the metadata into the `ptm` params. The caller supplies `parent`. React has no automatic lookup, same as PrimeReact. `PassThroughMetadata.hostName` only sets `data-pc-name`.
+
+**Consequences.**
+
+- A Vue component whose `ptm` runs under a parent receives the parent's `$props`, `$data` and `$attrs` in the `parent` params, as PrimeVue does.
+- A Vue component that provides its own `$parentInstance` through a different mechanism would override the base mixin's provider. None exists today.
+- The `hostName` lookup also decides which instance supplies `ptOptions` when a sub-component sets none. That path has no effect until a global `pt` source exists (ADR-080).
+
+## ADR-080 — A0 builds the instance-level `pt` and `ptOptions` only; global `pt`, `usePassThrough`, `pt.hooks` and `$attrSelector` are not built (A0 scope decision, amends ADR-077)
+
+Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), ticket [#170](https://github.com/majedsiefalnasr/ultimate-packages/issues/170) A0). Needs the user's approval, in particular the recommendation on the global source.
+
+**Context.**
+
+- ADR-077 builds `pt` and `ptOptions` once in the cores and keeps the rest of ADR-056: no new `config` surface.
+- In the three oracles `ptOptions` (`mergeSections`, `mergeProps`) decides how the **global/default `pt`** from the config (`PrimeNG.pt`, `app.use(PrimeVue, { pt })`, `PrimeReactProvider value.pt`) is merged with the instance `pt`. The merge formula is `{ ...global, ...self, ...datasets }`, or `mergeProps(global, self, datasets)` when `ptOptions.mergeProps` is set. With no global value, the instance `pt` and the `data-pc-*` datasets share no keys that those options change. So **`ptOptions` has no observable effect on a rendered component until a global source exists.**
+- The oracles carry three more `pt` features beyond the instance prop:
+  - the `_usept` wrapper that `usePassThrough(globalPt, customPt, options)` produces;
+  - `pt.hooks.onMounted` and the other lifecycle hooks;
+  - the per-instance `$attrSelector` attribute that `ptm('root')` emits next to the datasets. It belongs to scoped `dt` (ticket #175), which owns that selector.
+
+**Options for the global source.**
+
+- **A (recommended): do it as its own Track A ticket after A0.** The resolvers already take the global section value as an input (`context.global`), so a later ticket supplies it from the config without touching any family. That ticket needs the config-surface decision ADR-056 deferred: an Angular `UltimateConfig` field, a React provider and a Vue plugin option. Waiting costs nothing in Track B, because families only call `ptm`.
+- **B: build it inside A0.** It adds a config surface in all three frameworks at once and contradicts "no new `config` surface" in ADR-077 without a ruling.
+
+**Decision (as implemented, pending approval).** Option A for the global source. A0 builds, in all three cores:
+
+- the `pt` and `ptOptions` inputs (props), `ptm`, `ptmo`, plus `ptms` (Angular, as PrimeNG) and `ptmi` and `pt:section:attribute` attributes (Vue, as PrimeVue);
+- nested keys (`a.b`), flat-case key matching, function values and function `pt`, string/array to class, the `data-pc-name`, `data-pc-section` and `data-pc-extend` datasets, `searchOut` for keys whose first segment is a param, and the `mergeSections` and `mergeProps` branches of the merge formula;
+- the host-instance lookup of ADR-079.
+
+It does not build the global/default `pt` source, `usePassThrough`, `pt.hooks`, the `$attrSelector` dataset or the `ptmi` `id` fallback (PrimeVue assigns a generated id there). These stay open rows for the global-source ticket or for a ruling that removes them.
+
+**Oracle behavior ported as it is.** The pinned sources govern. Each of these is a reference defect or an oddity the user may want to rule on separately; none is changed here:
+
+- With `mergeSections: false` the merge formula `mergeSections || (!mergeSections && self)` still merges when the instance has the section. It only drops the global value when the instance has none. PrimeVue's `self` is always an object, so there `mergeSections: false` never drops it.
+- PrimeReact turns `{ className: [..], id }` into `{ className }` and loses `id`.
+- PrimeNG derives `data-pc-section` from the last segment of a dotted key, PrimeVue from the whole key, PrimeReact from the second segment when the first names a param.
+- The `searchOut` test is `/./g.test(key) && !!params[key.split('.')[0]]`, so it is true for any non-empty key whose first segment names a param.
+
+**Consequences.**
+
+- `ptOptions` is accepted, typed and tested against the merge formula (with a stand-in global value), but a component cannot observe it until the global source ticket lands. Phase 4 should keep the `ptOptions` rows P, not C, until then.
+- The root `data-pc-name` is the component's `componentName`, flat-cased (`card`, `inputtext`). It equals Prime's value wherever Ultimate's name is Prime's name flat-cased.
+- READMEs of `ng-core`, `react-core` and `vue-core` document the API and these limits.
+
+## ADR-082 — Structural styles live in `@ultimate/uix-styles` by default; staying framework-local needs a recorded reason (foundation F9; amends ADR-017)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F9, ticket [#178](https://github.com/majedsiefalnasr/ultimate-packages/issues/178)). The user chose Option A on 2026-11-21.
+
+**Context.**
+
+- Prime ships its structural style of every component as one module in `@primeuix/styles`, and PrimeNG, PrimeReact and PrimeVue all consume that one module.
+- Ultimate's `@ultimate/uix-styles` holds 12 of Prime's 93 structural style modules (badge, button, checkbox, dialog, inputnumber, inputtext, menu, paginator, table, tooltip, virtualscroller, base). Shared imports are 11 in Angular, 3 in React and 9 in Vue. Most styles are framework-local copies (83 files in Angular, 83 in React, 86 in Vue), so the same CSS is maintained up to three times and can drift (Phase 4 shared-foundation audit, item F9, ruled P in all three frameworks).
+- ADR-017 limited `uix-styles` to the `base` module for Phase 1 and said each per-component module would migrate with its owning component. It set no rule for when a family's style moves, and a scope-guard test enforces the Phase 1 list.
+
+**Decision.**
+
+- **Default.** A family's structural style is one module in `@ultimate/uix-styles`, named after the family, with `u-*` selectors, and all three frameworks consume it. A new or reworked family does not add a style copy inside a framework package.
+- **Exception.** A family keeps a framework-local style only when the three frameworks cannot share one stylesheet, for example because Ultimate's DOM for that family differs by framework on purpose. The family ticket states the reason, and the family's provenance record repeats it. A missing reason is a review finding.
+- **Moves.** The moves happen inside the Track B family tickets, each when it first touches the family. This ADR moves nothing.
+- **Mechanics.** A new module adds a `./<name>` subpath export, a test in `uix-styles`, a provenance record under `docs/architecture/provenance/uix-styles.json`, and an update to the scope-guard list. The tree-shaking check lists the subpath.
+- **ADR-017.** Its Phase 1 limit to `base` no longer binds. Its statement that a per-component module migrates alongside its owning component stands, and this ADR gives the default for it.
+
+**Alternatives not chosen.**
+
+- Option B, a rule of two (share a style only when a second framework needs it): rejected because it leaves the first framework's copy as the one that drifts, and every Track B family would need a judgment call.
+- Option C, keep the current practice: rejected because it keeps up to three copies of each style and gives no rule for new families.
+
+**Consequences.**
+
+- Each Track B family ticket has one more deliverable: the shared module and its three consumers, or a recorded exception.
+- Existing framework-local copies are not rewritten in bulk. They move when their family ticket runs.
+- `PACKAGE_ARCHITECTURE.md` states the rule so that family tickets apply it without reading this ADR.
+
+## ADR-081 — `@ultimate/uix-styles/base` uses `u-*` selectors and the three cores register it through one `uix-styled` helper (foundation F10; amends ADR-017)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F10, ticket [#176](https://github.com/majedsiefalnasr/ultimate-packages/issues/176)). The user chose Option C in the Stage 1 session.
+
+**Context.**
+
+- No package consumed `@ultimate/uix-styles/base`, and its CSS still used Prime's `p-*` selectors and `p-animate-*` keyframes (Phase 4 shared-foundation audit, item C6, ruled P in all three frameworks).
+- The cores registered their own hidden-accessible, icon-spin and box-model rules from `@ultimate/uix-styled`, so the module's disabled, icon, overlay-mask, anchored-overlay and collapsible rules reached no page.
+- ADR-063 scopes `border-box` per component and says Ultimate never applies the page-wide form. The first rule of the base module is the page-wide form.
+
+**Decision.**
+
+- **Rename.** Selectors become `.u-*` and keyframes `u-animate-*`. The `var(--px-mask-background, ...)` wrapper is dropped in favour of `dt('mask.background')`, the same recorded difference as PX-B3 in the component style ports.
+- **Remove two rules.** The page-wide `*, ::before, ::after { box-sizing: border-box }` rule is dropped, and ADR-063 stays as the only `border-box` mechanism. The `.pi` rule is dropped because Ultimate ships no PrimeIcons font.
+- **Wire it once.** `registerSharedBase(sheet)` in `packages/uix-styled/src/stylesheet/base.ts` registers the module under the key `u-base` through `registerComponentCss`, so its `dt()` references resolve and follow theme changes. `@ultimate/uix-styled` gains a dependency on `@ultimate/uix-styles`. Each core calls the helper once, next to `registerThemeVariables`: `ng-core` `basecomponent/base-component.ts`, `react-core` `styling/use-component-style.ts`, `vue-core` `styling/vue-style-sheet.ts`.
+- **Unstyled.** An unstyled instance does not load it, because it skips `registerThemeVariables` too (ADR-085). It keeps only the hidden-accessible and icon-spin rules.
+- **Not renamed here.** Components in `ng` and `vue` that emit the class `p-disabled` are not renamed in this ticket. Each moves with its family ticket (ADR-082). Until then `.u-disabled` styles only what emits `u-disabled`.
+
+**Alternatives not chosen.**
+
+- Remove the module: rejected because the disabled, overlay-mask and collapsible rules need one shared home, and ADR-082 makes `uix-styles` that home.
+- Rename the module but leave it unwired: rejected because a renamed module that no core registers repeats the problem this ticket exists to fix.
+
+**Consequences.**
+
+- Every styled instance now registers one `u-base` element per sheet. The size effect on `@ultimate/uix-styled` and `vue-core` is not measured here; the advisory bundle-size gate was already over its threshold for both on the integration branch before this ticket.
+- Two rules now apply that did not before. `.u-component:disabled` gives a disabled element that carries `u-component` the opacity `dt('disabled.opacity')`, as in Prime. `.u-disabled` does the same and sets `pointer-events: none`; the only emitter of `u-disabled` today is the Vue `input-chips` root, which already resets its inner input to `opacity: 1` and now dims as that reset expects.
+- `.u-icon` now sets `width` and `height` to `dt('icon.size')` (`1rem` in Aura). A `u-icon` element that carries a `width="14" height="14"` attribute, as the `react-core` and `vue-core` SVG icons do (spinner, check, times, window controls), grows from 14px to the token size, because a stylesheet rule overrides a presentation attribute. The baselines that changed for this reason are the Button Loading spinner in React and Vue, the Dialog close icon in React, and in Vue the Drawer close icon, the ConfirmDialog (two pixels taller, because its icon button grows) and the Chip remove icon. A component that needs another size sets it on a more specific class, as `.u-checkbox-icon` does.
+- `.u-overlay-mask` now has CSS: a fixed, full-viewport mask with `dt('mask.background')`. Before, `ng` and `vue` Dialog, Drawer and ConfirmDialog rendered no dimming mask at all. It now appears in those two frameworks. The `ng` Dialog has no centering rule and was already full width at the top of the page before this ticket; the mask makes that visible, and because the mask is a fixed box the dialog now starts at the viewport edge instead of the 16px body margin. React Dialog and Drawer keep their own `u-dialog-mask` and `u-drawer-mask` rules and do not emit `u-overlay-mask`, so React is unchanged and the three frameworks still differ here. The Dialog family tickets in Stage 2 own the centering and the React difference.
+- A disabled Button and the SplitButton in `ng`, and a disabled Button in React, now render dimmed, because `.u-component:disabled` now reaches the page. The Vue Button Disabled baseline did not change, so this ADR makes no claim about Vue Button. In Chromium the React change stays inside the 0.2 per-pixel threshold; it shows in Firefox.
+- The React Checkbox style module is hand-written and does not use `@ultimate/uix-styles/checkbox`, so it had no `.u-checkbox-icon` size and the new `.u-icon` rule would have grown its check mark to 16px. It now sets `.u-checkbox-icon` to `dt('checkbox.icon.size')` (`0.875rem`), which keeps the existing 14px baseline.
+- The intended visual changes above are recorded by updated Playwright baselines in this PR. The baselines were regenerated in the CI Playwright image, and only the listed stories changed.
+- Tests cover the module's selectors, the absence of `box-sizing`, the helper, and registration in each core (present when styled, absent when unstyled).

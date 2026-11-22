@@ -8,7 +8,7 @@ The package declares a single `"."` export (types, import and default point at `
 
 ## Interface summary
 
-- Bases (Options API): `createBaseComponent` (`cx` method, style registration on mount), `createBaseEditableHolder` (`modelValue`, `defaultValue`, `update:modelValue`, `value-change`, `controlled`, `filled`), `createBaseInput` (`size`, `fluid`, `variant`, injected `pcFluid`).
+- Bases (Options API): `createBaseComponent` (`cx` method, style registration on mount, `pt`/`ptOptions` props with `ptm`/`ptmi`/`ptmo` and a `$parentInstance` lookup), `createBaseEditableHolder` (`modelValue`, `defaultValue`, `update:modelValue`, `value-change`, `controlled`, `filled`), `createBaseInput` (`size`, `fluid`, `variant`, injected `pcFluid`).
 - Directives: `createDirective` and `focusTrapDirective` (hidden sentinels, `MutationObserver`, per-element `WeakMap` state).
 - Escape and ordering: `createGlobalEscapeKeyMixin`, `createDisplayOrderMixin`, `useDisplayOrder`.
 - Overlay and layering: `Portal` (`UPortal`, Teleport, defaults to `body`), `useScrollLock`, `useZIndex` with `Z_INDEX_KEYS`, `createMotionTransitionHooks`.

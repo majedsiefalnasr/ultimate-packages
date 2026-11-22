@@ -27,6 +27,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ultimate/uix-styles": "workspace:*",
     "@ultimate/uix-utils": "workspace:*"
   },
   "devDependencies": {

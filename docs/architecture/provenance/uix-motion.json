@@ -2,8 +2,8 @@
   {
     "originalPath": "src/config/index.ts",
     "ultimateDestination": "packages/uix-motion/src/config/index.ts",
-    "modificationStatus": "import-path-adapted",
-    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs"
+    "modificationStatus": "adapted",
+    "modificationDescription": "cross-package @primeuix/* import specifiers rewritten to @ultimate/uix-* via scripts/provenance/adapt-imports.mjs. F13 (ticket #177) renames the DEFAULT_MOTION_OPTIONS default `name` from upstream's \"p\" to \"u\" to match Ultimate's prefix; the file is otherwise unchanged, so it stays COPY (ADR-064) and the sub-label moves from import-path-adapted to adapted."
   },
   {
     "originalPath": "src/index.ts",

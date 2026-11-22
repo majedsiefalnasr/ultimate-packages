@@ -12,8 +12,16 @@ describe("base styles", () => {
   });
 
   it("contains the expected global selectors", () => {
-    expect(base).toContain(".p-disabled");
-    expect(base).toContain(".p-icon");
-    expect(base).toContain(".p-overlay-mask");
+    expect(base).toContain(".u-disabled");
+    expect(base).toContain(".u-icon");
+    expect(base).toContain(".u-overlay-mask");
+  });
+
+  it("uses u-* selectors and keyframes only (A6, ADR-081)", () => {
+    expect(base).not.toMatch(/\.p-|p-animate|\.pi\b|--px-/);
+  });
+
+  it("has no page-wide box-sizing rule (ADR-063)", () => {
+    expect(base).not.toMatch(/box-sizing/);
   });
 });

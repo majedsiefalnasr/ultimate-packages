@@ -88,6 +88,8 @@ Re-baselined rows (`ng-core`, `ng`, `react-core`, `react`, `themes`, `uix-utils`
 
 Re-baselined row (`component-metadata`), measured 2026-10-21 against commit `a5195a6b` (Node v24.15.0, pnpm 9.6.0) via `pnpm run build && pnpm run size:measure`: the package ships its component records as data, and their source grew from about 85 KB to about 110 KB after the Table, Scroller and Paginator public-API facts were recorded (`320dfc78`, `286eac66`, 2026-10-18; `table.ts` alone grew from about 25 KB to about 42 KB). `index.mjs` gzip went from 7.93 KB to 10.03 KB (+26.5%), past the 15% gate. All other rows are unchanged.
 
+Re-baselined rows (`uix-styled`, `vue-core`), measured 2026-11-22 against commit `d9fef27b` (Node v24.15.0, pnpm 9.6.0) via `pnpm run build && pnpm run size:measure`: the gap-closing Stage 1 foundations (spec #167) grew both barrels past the 15% gate. `uix-styled` gzip went from 8.45 KB to 10.28 KB (+21.7%) and `vue-core` from 8.66 KB to 10.48 KB (+21.0%). For `uix-styled`, measured per source commit, `develop` was already at 9.26 KB (+9.6%) before Stage 1, Stage 1 before ticket #176 reached 10.05 KB, and #176 (shared base module registered by the three cores, ADR-081) added 0.23 KB (+2.3%). The `vue-core` figure was measured only end to end, not per commit. All other rows are unchanged.
+
 ### Package size
 
 | Package                     | dist/ size | dist/ file count | index.mjs gzip size |
@@ -104,10 +106,10 @@ Re-baselined row (`component-metadata`), measured 2026-10-21 against commit `a51
 | packages/themes             | 482.9 KB   | 3                | 13.55 KB            |
 | packages/uix-data           | 7.0 KB     | 3                | 0.34 KB             |
 | packages/uix-motion         | 32.8 KB    | 3                | 2.06 KB             |
-| packages/uix-styled         | 117.2 KB   | 3                | 8.45 KB             |
+| packages/uix-styled         | 151.0 KB   | 3                | 10.28 KB            |
 | packages/uix-styles         | 195.7 KB   | 33               | 0.65 KB             |
 | packages/uix-utils          | 397.4 KB   | 30               | 14.16 KB            |
-| packages/vue-core           | 105.7 KB   | 3                | 8.66 KB             |
+| packages/vue-core           | 149.0 KB   | 3                | 10.48 KB            |
 | packages/vue                | 5282.9 KB  | 575              | 132.30 KB           |
 
 ### Coverage

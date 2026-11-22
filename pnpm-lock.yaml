@@ -662,6 +662,9 @@ importers:
 
   packages/uix-styled:
     dependencies:
+      '@ultimate/uix-styles':
+        specifier: workspace:*
+        version: link:../uix-styles
       '@ultimate/uix-utils':
         specifier: workspace:*
         version: link:../uix-utils

@@ -9,6 +9,8 @@ export interface UTagProps {
   rounded?: boolean;
   children?: React.ReactNode;
   className?: string;
+  /** Renders without Ultimate's classes and styles. */
+  unstyled?: boolean;
 }
 
 /**
@@ -22,10 +24,14 @@ export interface UTagProps {
  * "smaller surface than upstream" precedent as every sibling component.
  */
 export const UTag = React.forwardRef<HTMLSpanElement, UTagProps>(function UTag(
-  { severity, value, icon, rounded = false, children, className },
+  { severity, value, icon, rounded = false, children, className, unstyled },
   ref
 ) {
-  const { cx } = useComponentBase({ componentName: "tag", styleModule: tagStyleModule });
+  const { cx } = useComponentBase({
+    componentName: "tag",
+    styleModule: tagStyleModule,
+    unstyled,
+  });
 
   return (
     <span

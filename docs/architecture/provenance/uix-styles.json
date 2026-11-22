@@ -2,8 +2,8 @@
   {
     "originalPath": "src/base/index.ts",
     "ultimateDestination": "packages/uix-styles/src/base/index.ts",
-    "modificationStatus": "unmodified",
-    "modificationDescription": "none"
+    "modificationStatus": "adapted",
+    "modificationDescription": "@primeuix/styles 2.0.3 base, renamed to Ultimate's `u-` prefix (A6, ADR-081): `.p-collapsible-*`, `.p-disabled`, `.p-component:disabled`, `.p-icon`, `.p-overlay-mask*` and `.p-anchored-overlay-*` become `.u-*`, and the `p-animate-*` keyframes become `u-animate-*`. Omitted: the page-wide `*, ::before, ::after { box-sizing: border-box }` rule (ADR-063 scopes border-box per component instead) and the PrimeIcons `.pi` rule (Ultimate ships no PrimeIcons font). The `var(--px-mask-background, ...)` wrapper is dropped in favour of `dt('mask.background')`, the same recorded difference as PX-B3 in the component style ports."
   },
   {
     "originalPath": "src/index.ts",

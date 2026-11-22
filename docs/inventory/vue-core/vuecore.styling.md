@@ -6,11 +6,11 @@ Framework: vue; availability: public
 
 ## Authored interpretation
 
-SSR-guarded style sheet instance and a function that registers theme variables, hidden-accessible, icon spin, box-model and component CSS.
+SSR-guarded style sheet instance and a function that registers theme variables, hidden-accessible, icon spin, box-model, shared base and component CSS.
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). Root exports vueCoreStyleSheet and registerComponentStyle(componentName, styleModule, additionalPresetKeys?). Style elements are created in document.head with a data-u-style attribute and return undefined without a document.
+See [authored signatures and interpretation](README.md). Root exports vueCoreStyleSheet and registerComponentStyle(componentName, styleModule, additionalPresetKeys?). Style elements are created in document.head with a data-u-style attribute and return undefined without a document. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions. vue-style-sheet.ts also declares registerBaseStyle, a source-only helper that registers the base rules for an unstyled instance. With cssLayer on, the layer-order statement is placed first in document.head (ticket #173, F6). A styled instance also registers the shared @ultimate/uix-styles base module once per sheet through registerSharedBase, under the key u-base (ticket #176, F10, ADR-081); an unstyled instance does not.
 
 ## Public exports
 
@@ -53,9 +53,9 @@ package.ultimate.uix-utils.dom (pending cross-batch)
   {
     "state": "verified",
     "command": "node scripts/inventory/pilot.mjs --root . --input scripts/inventory/vue-core.json --out docs/inventory/vue-core (run twice; authored README SHA-256 checked before and after)",
-    "revision": "c6edfa7cf08c553b13a4f0ca486adc6fca4b6a89",
+    "revision": "b9051a6668bf08b91654c23925a41cdcd9b84119",
     "outcome": "passed",
-    "output": "Scoped reconciliation completed with no problems: 34 source files accounted for, 47 root export identities each attributed to one public record, cross-scope references recorded as pending.",
+    "output": "Scoped reconciliation completed with no problems: 59 source files accounted for, 53 root export identities each attributed to one public record, cross-scope references recorded as pending.",
     "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
     "run": "docs/inventory/vue-core/pilot-run.json",
     "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."

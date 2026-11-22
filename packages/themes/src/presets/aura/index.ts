@@ -1,5 +1,6 @@
 import { definePreset } from "@ultimate/uix-styled";
 import { primitive, semantic } from "./base";
+import { css } from "./css";
 import { accordion } from "./accordion";
 import { autocomplete } from "./autocomplete";
 import { avatar } from "./avatar";
@@ -104,6 +105,7 @@ import { tooltip } from "./tooltip";
 export const auraPreset = definePreset({
   primitive,
   semantic,
+  css,
   components: {
     accordion,
     autocomplete,

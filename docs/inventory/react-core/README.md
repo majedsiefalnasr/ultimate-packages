@@ -8,7 +8,7 @@ The package declares a single `"."` export built by tsup from `src/index.ts`, wh
 
 ## Interface summary
 
-- Base and styling: `useComponentBase` returns a `cx` resolver; `useComponentStyle` registers theme variables, hidden-accessible, box-model and component CSS once on mount into `reactCoreStyleSheet` (SSR-guarded).
+- Base and styling: `useComponentBase` returns a `cx` resolver and `createPassThrough` returns `ptm` and `ptmo` for the `pt` prop; `useComponentStyle` registers theme variables, hidden-accessible, box-model and component CSS once on mount into `reactCoreStyleSheet` (SSR-guarded).
 - Hooks: `useMergeProps`, `useMountEffect`, `useUnmountEffect`, `useUpdateEffect`, `usePrevious`, `useEventListener` (returns `[bind, unbind]`), `useResizeListener`.
 - Escape and ordering: `ESCAPE_PRIORITIES` (re-exported from `@ultimate/uix-utils/escape`), `useDisplayOrder`, `useGlobalEscapeKey`.
 - Overlay: `Portal` (defaults to `document.body`, renders nothing before client mount), `useOverlayListener`; `FocusTrap` component; `useScrollLock`; `useZIndex` with `Z_INDEX_BUCKETS`; `useMotion`.

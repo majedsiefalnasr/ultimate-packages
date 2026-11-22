@@ -17,6 +17,7 @@ AI and developer tooling consume platform knowledge. Runtime components must not
 ## Package roles
 
 - **Shared UIX packages** (`packages/uix*`): utilities, styling runtime, style resolution, motion, data and shared theme infrastructure. Must not contain framework-specific rendering logic. CI enforces this with `scripts/provenance/validate-boundaries.mjs`.
+- **Shared component styles** (`packages/uix-styles`): a family's structural style is one module here by default, consumed by all three frameworks (ADR-082). A style stays framework-local only with a recorded reason in the family ticket and the family's provenance record.
 - **Framework core packages** (`packages/{ng,react,vue}-core`): base component behavior, framework lifecycle integration and framework-native event and input mechanisms.
 - **Framework component packages** (`packages/{ng,react,vue}`): components, public framework APIs and component-specific tests.
 - **Theme package** (`packages/themes`): tokens, semantic values, variants, light and dark modes, and presets.
