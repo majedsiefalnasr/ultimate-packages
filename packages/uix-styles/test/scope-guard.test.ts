@@ -15,23 +15,22 @@ import { style as tooltipStyle } from "../src/tooltip";
 import { style as virtualscrollerStyle } from "../src/virtualscroller";
 
 const ALLOWED_SELECTOR_PREFIXES = [
-  ".p-disabled",
-  ".p-icon",
-  ".p-overlay-mask",
-  ".p-collapsible",
-  ".pi",
-  // Generic component marker class applied to every PrimeVue/PrimeNG
-  // component (used here only in the `.p-component:disabled` rule) —
+  ".u-disabled",
+  ".u-icon",
+  ".u-overlay-mask",
+  ".u-collapsible",
+  // Generic component marker class applied to every Ultimate component
+  // (used here only in the `.u-component:disabled` rule) —
   // framework-level, not a named widget module.
-  ".p-component",
+  ".u-component",
   // Generic overlay-positioning animation keyframes, shared overlay
-  // infrastructure alongside `.p-overlay-mask` — not a specific
+  // infrastructure alongside `.u-overlay-mask` — not a specific
   // component like `dialog` or `popover`.
-  ".p-anchored-overlay",
+  ".u-anchored-overlay",
 ];
 
-// Matches any ".p-xxxx" class selector token in the CSS string.
-const CLASS_SELECTOR_PATTERN = /\.p-[a-z][a-z0-9-]*/gi;
+// Matches any ".u-xxxx" class selector token in the CSS string.
+const CLASS_SELECTOR_PATTERN = /\.u-[a-z][a-z0-9-]*/gi;
 
 describe("base module scope guard", () => {
   it("contains only allow-listed .p-* selector prefixes (no per-component selectors leaked in)", () => {

@@ -21,6 +21,7 @@ import {
   registerBoxModel,
   registerHiddenAccessible,
   registerIconSpin,
+  registerSharedBase,
   registerThemeVariables,
   scopeRootsOf,
   type ScopedTheme,
@@ -184,7 +185,11 @@ export abstract class UBaseComponent<PT = Record<string, unknown>> {
     // them via dt()-resolved var(--u-*) references, which resolve to nothing
     // unless something also defines the properties. Idempotent per its own
     // has() guards; see registerThemeVariables' doc comment.
-    if (styled) registerThemeVariables(sheet, this.componentName);
+    if (styled) {
+      registerThemeVariables(sheet, this.componentName);
+      // A6 (ADR-081): the shared `u-*` base rules; skipped when unstyled.
+      registerSharedBase(sheet);
+    }
     registerHiddenAccessible(sheet);
     // GAP-124: the opt-in `.u-icon-spin` rule (class-scoped; see uix-styled icon-spin.ts).
     registerIconSpin(sheet);

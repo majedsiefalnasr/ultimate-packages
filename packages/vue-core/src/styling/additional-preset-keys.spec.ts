@@ -54,6 +54,7 @@ describe("registerComponentStyle — additionalPresetKeys (ADR-051)", () => {
       "u-icon-spin",
       "u-common-variables",
       "alpha-variables",
+      "u-base",
       "u-box-model:alpha",
       "alpha",
     ]);
@@ -66,6 +67,7 @@ describe("registerComponentStyle — additionalPresetKeys (ADR-051)", () => {
       "u-icon-spin",
       "u-common-variables",
       "alpha-variables",
+      "u-base",
       "u-box-model:alpha",
       "alpha",
     ]);
@@ -80,6 +82,7 @@ describe("registerComponentStyle — additionalPresetKeys (ADR-051)", () => {
       "alpha-variables",
       "gamma-variables",
       "beta-variables",
+      "u-base",
       "u-box-model:alpha",
       "alpha",
     ]);
@@ -99,6 +102,7 @@ describe("registerComponentStyle — additionalPresetKeys (ADR-051)", () => {
       "u-common-variables",
       "alpha-variables",
       "beta-variables",
+      "u-base",
       "u-box-model:alpha",
       "alpha",
     ]);

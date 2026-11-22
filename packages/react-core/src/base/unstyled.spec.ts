@@ -50,6 +50,7 @@ describe("useComponentBase — unstyled", () => {
     expect(reactCoreStyleSheet.has("unstyled-demo")).toBe(false);
     expect(reactCoreStyleSheet.has("unstyled-demo-variables")).toBe(false);
     expect(reactCoreStyleSheet.has("u-box-model:unstyled-demo")).toBe(false);
+    expect(reactCoreStyleSheet.has("u-base")).toBe(false);
   });
 
   it("still registers the shared hidden-accessible rule when unstyled", () => {
@@ -60,6 +61,7 @@ describe("useComponentBase — unstyled", () => {
   it("registers the component css when styled", () => {
     setup();
     expect(reactCoreStyleSheet.has("unstyled-demo")).toBe(true);
+    expect(reactCoreStyleSheet.has("u-base")).toBe(true);
   });
 
   it("registers the component css and restores the classes when unstyled turns off", () => {

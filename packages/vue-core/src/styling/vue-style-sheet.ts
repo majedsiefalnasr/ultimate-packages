@@ -4,6 +4,7 @@ import {
   registerBoxModel,
   registerHiddenAccessible,
   registerIconSpin,
+  registerSharedBase,
   registerThemeVariables,
   scopeRootsOf,
   type StyleMeta,
@@ -73,6 +74,9 @@ export function registerComponentStyle(
   for (const presetKey of additionalPresetKeys) {
     registerThemeVariables(vueCoreStyleSheet, presetKey);
   }
+
+  // A6 (ADR-081): the shared `u-*` base rules, once per sheet.
+  registerSharedBase(vueCoreStyleSheet);
 
   // GAP-098 (ADR-063): the component's scoped border-box rule, guarded by its
   // own key and placed before the early return below so it registers even when

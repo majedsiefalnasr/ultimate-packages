@@ -70,6 +70,8 @@ Status: Accepted (Phase 1 spec). `@primeuix/styles@2.0.3` ships a `base` module 
 
 **Amended by ADR-082 (2026-11-21):** the Phase 1 limit to `base` no longer binds. A family's structural style lives in `uix-styles` by default, and staying framework-local needs a recorded reason. The rest of this ADR is unchanged.
 
+**Amended by ADR-081 (2026-11-22):** the `base` module now uses `u-*` selectors and is registered by the three cores. The rest of this ADR is unchanged.
+
 ## ADR-018 — Option B: Ultimate-owned Angular base-class architecture
 
 Status: Accepted (Phase 2 spec, confirmed by implementation). `ng-core`'s `UBaseComponent`/`UBaseEditableHolder` hierarchy is independently authored, informed by but not copied from PrimeNG's `BaseComponent`/`BaseEditableHolder` — notably, PrimeNG's full passthrough (`pt`/`ptOptions`/`ptm`/`ptms`/`ptmo`) system, its `$parentInstance` DI-token lookup, and its full global-config surface are excluded from Phase 2's `UBaseComponent`/`UltimateConfig`, which cover only DI wiring (document/platformId/el/renderer/config), lifecycle, the `dt`/`unstyled` input pair, a `cx()` class-name-slot resolver, and `@ultimate/uix-styled`-backed style registration. This scoping held up across all 5 built components: each component's own provenance entry (`docs/architecture/provenance/ng.json`) documents deliberately excluding passthrough/DI-token-lookup call sites it would otherwise need to port (e.g. Button's badge/Fluid ancestor-detection wiring, Dialog's breakpoint passthrough). Revisit passthrough support only if a later-phase component creates real duplicate-pattern pressure (spec: DEFER, Needs Architecture Decision).
@@ -1223,3 +1225,37 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 - Each Track B family ticket has one more deliverable: the shared module and its three consumers, or a recorded exception.
 - Existing framework-local copies are not rewritten in bulk. They move when their family ticket runs.
 - `PACKAGE_ARCHITECTURE.md` states the rule so that family tickets apply it without reading this ADR.
+
+## ADR-081 — `@ultimate/uix-styles/base` uses `u-*` selectors and the three cores register it through one `uix-styled` helper (foundation F10; amends ADR-017)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F10, ticket [#176](https://github.com/majedsiefalnasr/ultimate-packages/issues/176)). The user chose Option C in the Stage 1 session.
+
+**Context.**
+
+- No package consumed `@ultimate/uix-styles/base`, and its CSS still used Prime's `p-*` selectors and `p-animate-*` keyframes (Phase 4 shared-foundation audit, item C6, ruled P in all three frameworks).
+- The cores registered their own hidden-accessible, icon-spin and box-model rules from `@ultimate/uix-styled`, so the module's disabled, icon, overlay-mask, anchored-overlay and collapsible rules reached no page.
+- ADR-063 scopes `border-box` per component and says Ultimate never applies the page-wide form. The first rule of the base module is the page-wide form.
+
+**Decision.**
+
+- **Rename.** Selectors become `.u-*` and keyframes `u-animate-*`. The `var(--px-mask-background, ...)` wrapper is dropped in favour of `dt('mask.background')`, the same recorded difference as PX-B3 in the component style ports.
+- **Remove two rules.** The page-wide `*, ::before, ::after { box-sizing: border-box }` rule is dropped, and ADR-063 stays as the only `border-box` mechanism. The `.pi` rule is dropped because Ultimate ships no PrimeIcons font.
+- **Wire it once.** `registerSharedBase(sheet)` in `packages/uix-styled/src/stylesheet/base.ts` registers the module under the key `u-base` through `registerComponentCss`, so its `dt()` references resolve and follow theme changes. `@ultimate/uix-styled` gains a dependency on `@ultimate/uix-styles`. Each core calls the helper once, next to `registerThemeVariables`: `ng-core` `basecomponent/base-component.ts`, `react-core` `styling/use-component-style.ts`, `vue-core` `styling/vue-style-sheet.ts`.
+- **Unstyled.** An unstyled instance does not load it, because it skips `registerThemeVariables` too (ADR-085). It keeps only the hidden-accessible and icon-spin rules.
+- **Not renamed here.** Components in `ng` and `vue` that emit the class `p-disabled` are not renamed in this ticket. Each moves with its family ticket (ADR-082). Until then `.u-disabled` styles only what emits `u-disabled`.
+
+**Alternatives not chosen.**
+
+- Remove the module: rejected because the disabled, overlay-mask and collapsible rules need one shared home, and ADR-082 makes `uix-styles` that home.
+- Rename the module but leave it unwired: rejected because a renamed module that no core registers repeats the problem this ticket exists to fix.
+
+**Consequences.**
+
+- Every styled instance now registers one `u-base` element per sheet. The size effect on `@ultimate/uix-styled` and `vue-core` is not measured here; the advisory bundle-size gate was already over its threshold for both on the integration branch before this ticket.
+- Two rules now apply that did not before. `.u-component:disabled` gives a disabled element that carries `u-component` the opacity `dt('disabled.opacity')`, as in Prime. `.u-disabled` does the same and sets `pointer-events: none`; the only emitter of `u-disabled` today is the Vue `input-chips` root, which already resets its inner input to `opacity: 1` and now dims as that reset expects.
+- `.u-icon` now sets `width` and `height` to `dt('icon.size')` (`1rem` in Aura). A `u-icon` element that carries a `width="14" height="14"` attribute, as the `react-core` and `vue-core` SVG icons do (spinner, check, times, window controls), grows from 14px to the token size, because a stylesheet rule overrides a presentation attribute. The baselines that changed for this reason are the Button Loading spinner in React and Vue, the Dialog close icon in React, and in Vue the Drawer close icon, the ConfirmDialog (two pixels taller, because its icon button grows) and the Chip remove icon. A component that needs another size sets it on a more specific class, as `.u-checkbox-icon` does.
+- `.u-overlay-mask` now has CSS: a fixed, full-viewport mask with `dt('mask.background')`. Before, `ng` and `vue` Dialog, Drawer and ConfirmDialog rendered no dimming mask at all. It now appears in those two frameworks. The `ng` Dialog has no centering rule and was already full width at the top of the page before this ticket; the mask makes that visible, and because the mask is a fixed box the dialog now starts at the viewport edge instead of the 16px body margin. React Dialog and Drawer keep their own `u-dialog-mask` and `u-drawer-mask` rules and do not emit `u-overlay-mask`, so React is unchanged and the three frameworks still differ here. The Dialog family tickets in Stage 2 own the centering and the React difference.
+- A disabled Button and the SplitButton in `ng`, and a disabled Button in React, now render dimmed, because `.u-component:disabled` now reaches the page. The Vue Button Disabled baseline did not change, so this ADR makes no claim about Vue Button. In Chromium the React change stays inside the 0.2 per-pixel threshold; it shows in Firefox.
+- The React Checkbox style module is hand-written and does not use `@ultimate/uix-styles/checkbox`, so it had no `.u-checkbox-icon` size and the new `.u-icon` rule would have grown its check mark to 16px. It now sets `.u-checkbox-icon` to `dt('checkbox.icon.size')` (`0.875rem`), which keeps the existing 14px baseline.
+- The intended visual changes above are recorded by updated Playwright baselines in this PR. The baselines were regenerated in the CI Playwright image, and only the listed stories changed.
+- Tests cover the module's selectors, the absence of `box-sizing`, the helper, and registration in each core (present when styled, absent when unstyled).

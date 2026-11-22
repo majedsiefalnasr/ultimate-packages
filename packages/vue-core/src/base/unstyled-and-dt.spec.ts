@@ -70,6 +70,7 @@ describe("createBaseComponent — unstyled", () => {
     expect(styleKeys()).not.toContain("dtdemo");
     expect(styleKeys()).not.toContain("dtdemo-variables");
     expect(styleKeys()).not.toContain("u-common-variables");
+    expect(styleKeys()).not.toContain("u-base");
   });
 
   it("still registers the shared base rules when unstyled", () => {
@@ -81,6 +82,7 @@ describe("createBaseComponent — unstyled", () => {
     mount(demo());
     expect(styleKeys()).toContain("dtdemo");
     expect(styleKeys()).toContain("dtdemo-variables");
+    expect(styleKeys()).toContain("u-base");
   });
 
   it("registers the styles and restores the classes when unstyled turns off", async () => {

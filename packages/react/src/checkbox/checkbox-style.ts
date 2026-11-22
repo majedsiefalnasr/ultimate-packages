@@ -3,6 +3,7 @@ import type { StyleModule } from "@ultimate/react-core";
 const css = /*css*/ `
 .u-checkbox { position: relative; display: inline-flex; user-select: none; vertical-align: bottom; }
 .u-checkbox-box { display: flex; align-items: center; justify-content: center; }
+.u-checkbox-icon { width: dt('checkbox.icon.size'); height: dt('checkbox.icon.size'); }
 .u-checkbox-input { cursor: pointer; position: absolute; opacity: 0; inset: 0; margin: 0; }
 `;
 
