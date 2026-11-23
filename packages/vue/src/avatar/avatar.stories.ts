@@ -4,6 +4,7 @@ import { UAvatar } from "./index";
 const meta: Meta<typeof UAvatar> = {
   title: "Vue/Avatar",
   component: UAvatar,
+  argTypes: { icon: { table: { category: "props" } } },
 };
 
 export default meta;
