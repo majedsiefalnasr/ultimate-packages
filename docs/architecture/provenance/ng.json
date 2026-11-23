@@ -3,13 +3,13 @@
     "originalPath": "packages/primeng/src/ripple/ripple.ts",
     "ultimateDestination": "packages/ng/src/ripple/ripple.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Ripple→URipple, selector [pRipple]→[uRipple], .p-ink/.p-ink-active class names renamed to .u-ink/.u-ink-active, @primeuix/utils DOM helper imports rewritten to @ultimate/uix-utils/dom equivalents. Deliberately excludes upstream's BaseComponent/RippleStyle DI-styling registration and UltimateConfig ripple-toggle gating (not required by this task's brief or test; the ripple effect is applied unconditionally) — see UBaseComponent's doc comment for the same Option B architectural exclusion pattern."
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Ripple\u2192URipple, selector [pRipple]\u2192[uRipple], .p-ink/.p-ink-active class names renamed to .u-ink/.u-ink-active, @primeuix/utils DOM helper imports rewritten to @ultimate/uix-utils/dom equivalents. Deliberately excludes upstream's BaseComponent/RippleStyle DI-styling registration and UltimateConfig ripple-toggle gating (not required by this task's brief or test; the ripple effect is applied unconditionally) \u2014 see UBaseComponent's doc comment for the same Option B architectural exclusion pattern."
   },
   {
     "originalPath": "packages/ng/src/ripple/ripple.spec.ts",
     "ultimateDestination": "packages/ng/src/ripple/ripple.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test, not derived from upstream's ripple.spec.ts. Verifies a .u-ink span is created on mousedown (real upstream Ripple listens for the 'mousedown' DOM event via Renderer2, not 'pointerdown' as this task's brief illustratively described — confirmed against the extracted source before finalizing)."
+    "modificationDescription": "Ultimate-authored test, not derived from upstream's ripple.spec.ts. Verifies a .u-ink span is created on mousedown (real upstream Ripple listens for the 'mousedown' DOM event via Renderer2, not 'pointerdown' as this task's brief illustratively described \u2014 confirmed against the extracted source before finalizing)."
   },
   {
     "originalPath": "n/a",
@@ -21,7 +21,7 @@
     "originalPath": "packages/primeng/src/autofocus/autofocus.ts",
     "ultimateDestination": "packages/ng/src/autofocus/auto-focus.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. AutoFocus→UAutoFocus, selector/Input [pAutoFocus]→[uAutoFocus], DomHandler.getFocusableElements(...) rewritten to @ultimate/uix-utils/dom's getFocusableElements(...). Unused DOCUMENT injection (dead in upstream too) dropped."
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. AutoFocus\u2192UAutoFocus, selector/Input [pAutoFocus]\u2192[uAutoFocus], DomHandler.getFocusableElements(...) rewritten to @ultimate/uix-utils/dom's getFocusableElements(...). Unused DOCUMENT injection (dead in upstream too) dropped."
   },
   {
     "originalPath": "packages/ng/src/autofocus/auto-focus.spec.ts",
@@ -39,7 +39,7 @@
     "originalPath": "packages/primeng/src/fluid/fluid.ts",
     "ultimateDestination": "packages/ng/src/fluid/fluid.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Fluid→UFluid, selector p-fluid→u-fluid, host class .p-fluid→.u-fluid. Real upstream Fluid is a component with an <ng-content> template and a `p-fluid` element selector, NOT an attribute directive with a [pFluid] selector as this task's brief illustratively described — no [pFluid] selector exists anywhere in upstream source; adapted to match the real mechanism per the brief's own instruction to verify against extracted source. Deliberately excludes upstream's Bind/passthrough hostDirectives wiring and FLUID_INSTANCE/PARENT_INSTANCE injection-token parent lookup — see UBaseComponent's doc comment for the same Option B architectural exclusion pattern."
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Fluid\u2192UFluid, selector p-fluid\u2192u-fluid, host class .p-fluid\u2192.u-fluid. Real upstream Fluid is a component with an <ng-content> template and a `p-fluid` element selector, NOT an attribute directive with a [pFluid] selector as this task's brief illustratively described \u2014 no [pFluid] selector exists anywhere in upstream source; adapted to match the real mechanism per the brief's own instruction to verify against extracted source. Deliberately excludes upstream's Bind/passthrough hostDirectives wiring and FLUID_INSTANCE/PARENT_INSTANCE injection-token parent lookup \u2014 see UBaseComponent's doc comment for the same Option B architectural exclusion pattern."
   },
   {
     "originalPath": "packages/ng/src/fluid/fluid.spec.ts",
@@ -57,19 +57,19 @@
     "originalPath": "packages/primeng/src/badge/badge.ts",
     "ultimateDestination": "packages/ng/src/badge/badge.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Badge→UBadge, selector p-badge→u-badge, extends UBaseComponent (Task 4). Source class COPY (ADR-064). Side-by-side with PrimeNG badge/badge.ts for #202 (ADR-088): the `Bind` host directive with the `ptms(['host', 'root'])` binding in ngAfterViewChecked and the PARENT_INSTANCE provider (renamed UBind and U_PARENT_INSTANCE) are upstream's. The attribute form `BadgeDirective` (`[pBadge]`) is not in this file; it lives in `overlay-badge/badge-directive.ts` (ADR-088). Not carried: the deprecated `size` setter and its console.log, the directive-only `ptBadgeDirective`, `styleClass`, `data-p`, and the NgModule wrapper."
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Badge\u2192UBadge, selector p-badge\u2192u-badge, extends UBaseComponent (Task 4). Source class COPY (ADR-064). Side-by-side with PrimeNG badge/badge.ts for #202 (ADR-088): the `Bind` host directive with the `ptms(['host', 'root'])` binding in ngAfterViewChecked and the PARENT_INSTANCE provider (renamed UBind and U_PARENT_INSTANCE) are upstream's. The attribute form `BadgeDirective` (`[pBadge]`) is not in this file; it lives in `overlay-badge/badge-directive.ts` (ADR-088). Not carried: the deprecated `size` setter and its console.log, the directive-only `ptBadgeDirective`, `styleClass`, `data-p`, and the NgModule wrapper."
   },
   {
     "originalPath": "packages/primeng/src/badge/style/badgestyle.ts",
     "ultimateDestination": "packages/ng/src/badge/badge-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Ported from the extracted BadgeStyle's own `style`/`classes` shape, but reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (Task 4's base-component.spec.ts — no @Injectable DI service, unlike upstream's own @Injectable BadgeStyle extends BaseStyle, and this task's brief's illustrative description). `style` is imported from @ultimate/uix-styles/badge (style-only, no classes export — Task 3's corrected finding that @primeuix/styles never exports a classes object). `classes.root` ported locally with .p-badge*→.u-badge* renaming, and reshaped to take a plain params object directly (value/size/badgeSize/severity) rather than upstream's `{ instance }`-wrapped signature, matching UBaseComponent.cx(key, params)'s actual call contract."
+    "modificationDescription": "Ported from the extracted BadgeStyle's own `style`/`classes` shape, but reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (Task 4's base-component.spec.ts \u2014 no @Injectable DI service, unlike upstream's own @Injectable BadgeStyle extends BaseStyle, and this task's brief's illustrative description). `style` is imported from @ultimate/uix-styles/badge (style-only, no classes export \u2014 Task 3's corrected finding that @primeuix/styles never exports a classes object). `classes.root` ported locally with .p-badge*\u2192.u-badge* renaming, and reshaped to take a plain params object directly (value/size/badgeSize/severity) rather than upstream's `{ instance }`-wrapped signature, matching UBaseComponent.cx(key, params)'s actual call contract."
   },
   {
     "originalPath": "packages/ng/src/badge/badge.spec.ts",
     "ultimateDestination": "packages/ng/src/badge/badge.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Test taken verbatim from this task's brief (Step 9) — not derived from upstream's own badge.spec.ts. Extended for #202 with pass-through, unstyled, per-instance dt and UBadgeDirective cases; those are Ultimate-authored."
+    "modificationDescription": "Test taken verbatim from this task's brief (Step 9) \u2014 not derived from upstream's own badge.spec.ts. Extended for #202 with pass-through, unstyled, per-instance dt and UBadgeDirective cases; those are Ultimate-authored."
   },
   {
     "originalPath": "n/a",
@@ -87,19 +87,19 @@
     "originalPath": "packages/primeng/src/button/button.ts",
     "ultimateDestination": "packages/ng/src/button/button.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Adapts only upstream's `Button` component class (lines 576-917 of the extracted file) — not the same file's `ButtonDirective`/`ButtonLabel`/`ButtonIcon` directives, which are out of scope for this task's file list. Button→UButton, selector p-button→u-button, extends UBaseComponent (Task 4), renders a native <button> (matching upstream's own template, not a <div> with ARIA role). Deliberately excludes upstream's passthrough (pt/ptm/Bind) system, buttonProps bulk-props input, badge/badgeSeverity/badgeClass inputs, type/style/styleClass/tabindex/variant/link/plain inputs, autofocus input, ariaLabel input, and content-template (contentTemplate/iconTemplate/loadingIconTemplate) support — none of these appear in this task's Interfaces section, which defines a smaller, spec-mandated signal-input surface. DISCREPANCY: Step 5 instructs importing URipple/UAutoFocus/UFluid/UBadge/USpinnerIcon into the component's `imports` array; only URipple/USpinnerIcon are imported here. UAutoFocus, UFluid, and UBadge are excluded because none can be applied in the template without inputs this task's own Interfaces section omits (no autofocus or badge input is listed for UButton) — an Angular standalone component with an unused `imports` entry fails compilation with NG8113 (confirmed by actually adding all 5 and rebuilding), and applying UAutoFocus's bare `uAutoFocus` selector to silence that warning is not inert (its aliased @Input reads the bare attribute as a truthy string, unconditionally triggering focus() on init — a real behavior change, confirmed against UAutoFocus's own spec). Upstream's real Button never renders a <p-fluid> element itself either — it DI-injects Fluid purely to detect an ancestor <p-fluid> wrapper, a host-DI-lookup mechanism UBaseComponent's scoped-down Option B architecture has no equivalent for; UButton's own `fluid` input already drives `.u-button-fluid` directly via ButtonStyle's classes.root. Upstream's <p-badge> is likewise rendered only conditionally on a `badge` input this task's Interfaces section doesn't define."
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Adapts only upstream's `Button` component class (lines 576-917 of the extracted file) \u2014 not the same file's `ButtonDirective`/`ButtonLabel`/`ButtonIcon` directives, which are out of scope for this task's file list. Button\u2192UButton, selector p-button\u2192u-button, extends UBaseComponent (Task 4), renders a native <button> (matching upstream's own template, not a <div> with ARIA role). Deliberately excludes upstream's passthrough (pt/ptm/Bind) system, buttonProps bulk-props input, badge/badgeSeverity/badgeClass inputs, type/style/styleClass/tabindex/variant/link/plain inputs, autofocus input, ariaLabel input, and content-template (contentTemplate/iconTemplate/loadingIconTemplate) support \u2014 none of these appear in this task's Interfaces section, which defines a smaller, spec-mandated signal-input surface. DISCREPANCY: Step 5 instructs importing URipple/UAutoFocus/UFluid/UBadge/USpinnerIcon into the component's `imports` array; only URipple/USpinnerIcon are imported here. UAutoFocus, UFluid, and UBadge are excluded because none can be applied in the template without inputs this task's own Interfaces section omits (no autofocus or badge input is listed for UButton) \u2014 an Angular standalone component with an unused `imports` entry fails compilation with NG8113 (confirmed by actually adding all 5 and rebuilding), and applying UAutoFocus's bare `uAutoFocus` selector to silence that warning is not inert (its aliased @Input reads the bare attribute as a truthy string, unconditionally triggering focus() on init \u2014 a real behavior change, confirmed against UAutoFocus's own spec). Upstream's real Button never renders a <p-fluid> element itself either \u2014 it DI-injects Fluid purely to detect an ancestor <p-fluid> wrapper, a host-DI-lookup mechanism UBaseComponent's scoped-down Option B architecture has no equivalent for; UButton's own `fluid` input already drives `.u-button-fluid` directly via ButtonStyle's classes.root. Upstream's <p-badge> is likewise rendered only conditionally on a `badge` input this task's Interfaces section doesn't define."
   },
   {
     "originalPath": "packages/primeng/src/button/style/buttonstyle.ts",
     "ultimateDestination": "packages/ng/src/button/button-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Ported from the extracted ButtonStyle's own `style`/`classes` shape, but reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (Task 4's base-component.spec.ts — no @Injectable DI service, unlike upstream's own @Injectable ButtonStyle extends BaseStyle, and unlike this task's brief's illustrative ButtonStyle sample, which also used an @Injectable service). `style` is imported from @ultimate/uix-styles/button (style-only, no classes export — Task 3's corrected finding that @primeuix/styles never exports a classes object). `classes.root`/`classes.icon` ported locally with .p-button*→.u-button* renaming and buttonProps? passthrough-fallbacks dropped (no pt system per UBaseComponent), reshaped to take a plain params object directly rather than upstream's (and the brief's illustrative sample's) `{ instance }`-wrapped signature — confirmed against UBaseComponent.cx(key, params)'s actual call contract (packages/ng-core/src/basecomponent/base-component.ts), which invokes `styleModule.classes[key](params)` with flat params, matching the same pattern already established by UBadge's badge-style.ts. classes.spinnerIcon (upstream computes it from instance.cx('icon') entries) and classes.root's p-button-vertical/p-button-link/p-button-plain/p-button-icon-only badge-aware variant are dropped: no vertical/link/plain input exists on UButton per this task's Interfaces section, and this task's spec-mandated tests only require the u-button-loading root class plus a rendered <u-spinner-icon>, delegates loaded-style tracking to @ultimate/uix-styled via UBaseComponent's ngOnInit per the spec's Styling Strategy, unlike PrimeNG's own BaseStyle."
+    "modificationDescription": "Ported from the extracted ButtonStyle's own `style`/`classes` shape, but reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (Task 4's base-component.spec.ts \u2014 no @Injectable DI service, unlike upstream's own @Injectable ButtonStyle extends BaseStyle, and unlike this task's brief's illustrative ButtonStyle sample, which also used an @Injectable service). `style` is imported from @ultimate/uix-styles/button (style-only, no classes export \u2014 Task 3's corrected finding that @primeuix/styles never exports a classes object). `classes.root`/`classes.icon` ported locally with .p-button*\u2192.u-button* renaming and buttonProps? passthrough-fallbacks dropped (no pt system per UBaseComponent), reshaped to take a plain params object directly rather than upstream's (and the brief's illustrative sample's) `{ instance }`-wrapped signature \u2014 confirmed against UBaseComponent.cx(key, params)'s actual call contract (packages/ng-core/src/basecomponent/base-component.ts), which invokes `styleModule.classes[key](params)` with flat params, matching the same pattern already established by UBadge's badge-style.ts. classes.spinnerIcon (upstream computes it from instance.cx('icon') entries) and classes.root's p-button-vertical/p-button-link/p-button-plain/p-button-icon-only badge-aware variant are dropped: no vertical/link/plain input exists on UButton per this task's Interfaces section, and this task's spec-mandated tests only require the u-button-loading root class plus a rendered <u-spinner-icon>, delegates loaded-style tracking to @ultimate/uix-styled via UBaseComponent's ngOnInit per the spec's Styling Strategy, unlike PrimeNG's own BaseStyle."
   },
   {
     "originalPath": "packages/ng/src/button/button.spec.ts",
     "ultimateDestination": "packages/ng/src/button/button.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Test taken verbatim from this task's brief (Step 2) — not derived from upstream's own button.spec.ts."
+    "modificationDescription": "Test taken verbatim from this task's brief (Step 2) \u2014 not derived from upstream's own button.spec.ts."
   },
   {
     "originalPath": "n/a",
@@ -111,19 +111,19 @@
     "originalPath": "packages/primeng/src/tooltip/tooltip.ts",
     "ultimateDestination": "packages/ng/src/tooltip/tooltip.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Tooltip→UTooltip, selector [pTooltip]→[uTooltip], extends UBaseComponent (Task 4). Deliberately excludes upstream's much larger prop surface (tooltipEvent/positionStyle/tooltipStyleClass/tooltipZIndex/escape/showDelay/hideDelay/life/positionTop/positionLeft/autoHide/fitContent/hideOnEscape/showOnEllipsis/tooltipOptions/appendTo), its TemplateRef content type, its touch/click/document-escape/scroll/resize listener wiring, its ConnectedOverlayScrollHandler, its p-dialog ancestor special-case, and its ellipsis-detection gate — none of these appear in this task's Interfaces section, which defines a smaller, spec-mandated signal-input surface (uTooltip/uTooltipPosition/uTooltipDisabled). DISCREPANCY: upstream's align() tries up to 4 positions in a priority-fallback order via isOutOfBounds()/getHostOffset()/preAlign(); this task's brief only asks to position the tooltip per the single uTooltipPosition input (matching UTooltipOptions' plain `position` field, which has no fallback-order concept), so a single fixed-position alignment was implemented instead of porting the 4-way fallback search, with a horizontal-only viewport clamp using getViewport() (per this task's Interfaces section) rather than upstream's full out-of-bounds re-alignment. Z-index: upstream calls ZIndexUtils.set('tooltip', el, this.config.zIndex.tooltip) (a global-config-driven base); this project's UltimateConfig (Task 4's scoped-down config) has no zIndex sub-config, so a literal base of 1100 is used via @ultimate/uix-utils's ZIndex singleton (ZIndex.set(key, element, baseZIndex) — matching packages/ng-core/src/overlay/overlay.ts's established call pattern), placed above UOverlay's 1000 base."
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Tooltip\u2192UTooltip, selector [pTooltip]\u2192[uTooltip], extends UBaseComponent (Task 4). Deliberately excludes upstream's much larger prop surface (tooltipEvent/positionStyle/tooltipStyleClass/tooltipZIndex/escape/showDelay/hideDelay/life/positionTop/positionLeft/autoHide/fitContent/hideOnEscape/showOnEllipsis/tooltipOptions/appendTo), its TemplateRef content type, its touch/click/document-escape/scroll/resize listener wiring, its ConnectedOverlayScrollHandler, its p-dialog ancestor special-case, and its ellipsis-detection gate \u2014 none of these appear in this task's Interfaces section, which defines a smaller, spec-mandated signal-input surface (uTooltip/uTooltipPosition/uTooltipDisabled). DISCREPANCY: upstream's align() tries up to 4 positions in a priority-fallback order via isOutOfBounds()/getHostOffset()/preAlign(); this task's brief only asks to position the tooltip per the single uTooltipPosition input (matching UTooltipOptions' plain `position` field, which has no fallback-order concept), so a single fixed-position alignment was implemented instead of porting the 4-way fallback search, with a horizontal-only viewport clamp using getViewport() (per this task's Interfaces section) rather than upstream's full out-of-bounds re-alignment. Z-index: upstream calls ZIndexUtils.set('tooltip', el, this.config.zIndex.tooltip) (a global-config-driven base); this project's UltimateConfig (Task 4's scoped-down config) has no zIndex sub-config, so a literal base of 1100 is used via @ultimate/uix-utils's ZIndex singleton (ZIndex.set(key, element, baseZIndex) \u2014 matching packages/ng-core/src/overlay/overlay.ts's established call pattern), placed above UOverlay's 1000 base."
   },
   {
     "originalPath": "packages/primeng/src/tooltip/style/tooltipstyle.ts",
     "ultimateDestination": "packages/ng/src/tooltip/tooltip-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Ported from the extracted TooltipStyle's own `style`/`classes` shape, but reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (Task 4's base-component.spec.ts — no @Injectable DI service, unlike upstream's own @Injectable TooltipStyle extends BaseStyle). `style` is imported from @ultimate/uix-styles/tooltip (style-only, no classes export — Task 3's corrected finding that @primeuix/styles never exports a classes object). `classes` (root/arrow/text, all plain strings, no resolver functions in upstream either) ported locally with .p-tooltip*→.u-tooltip* renaming."
+    "modificationDescription": "Ported from the extracted TooltipStyle's own `style`/`classes` shape, but reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (Task 4's base-component.spec.ts \u2014 no @Injectable DI service, unlike upstream's own @Injectable TooltipStyle extends BaseStyle). `style` is imported from @ultimate/uix-styles/tooltip (style-only, no classes export \u2014 Task 3's corrected finding that @primeuix/styles never exports a classes object). `classes` (root/arrow/text, all plain strings, no resolver functions in upstream either) ported locally with .p-tooltip*\u2192.u-tooltip* renaming."
   },
   {
     "originalPath": "packages/ng/src/tooltip/tooltip.spec.ts",
     "ultimateDestination": "packages/ng/src/tooltip/tooltip.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Test taken from this task's brief (Step 2), with one addition: `import { describe, expect, it } from \"vitest\";` (the brief's snippet omitted it, unlike every other spec file in this package — vitest globals are not enabled in this project's tsconfig, so the snippet as given fails to compile; confirmed by running it verbatim first per TDD Step 3)."
+    "modificationDescription": "Test taken from this task's brief (Step 2), with one addition: `import { describe, expect, it } from \"vitest\";` (the brief's snippet omitted it, unlike every other spec file in this package \u2014 vitest globals are not enabled in this project's tsconfig, so the snippet as given fails to compile; confirmed by running it verbatim first per TDD Step 3)."
   },
   {
     "originalPath": "n/a",
@@ -141,19 +141,19 @@
     "originalPath": "packages/primeng/src/checkbox/checkbox.ts",
     "ultimateDestination": "packages/ng/src/checkbox/checkbox.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Checkbox→UCheckbox, selector p-checkbox→u-checkbox, extends UBaseEditableHolder (Task 5). Deliberately excludes upstream's much larger prop surface: value/trueValue/falseValue (multi-value/group-checkbox mode — this task's Interfaces section defines only binary; UCheckbox only implements upstream's boolean/binary mode, writeValue always coerces to a plain boolean rather than upstream's array-membership contains() check for multi-value mode), ariaLabelledBy/ariaLabel/tabindex/inputId/inputStyle/styleClass/inputClass/readonly/autofocus/variant/size/checkboxIcon/formControl inputs, indeterminate state, the icon <ng-template>/ContentChild template-override system, and the onChange/onFocus/onBlur output()s — none of these appear in this task's Interfaces section, which defines a smaller, spec-mandated signal-input surface (binary, label, inherited disabled) with 'no UCheckbox-specific outputs beyond the CVA contract.' Renders no check/minus icon: upstream's CheckIcon/MinusIcon has no equivalent yet in @ultimate/ng-core's icon set (spinner/times/window-maximize/window-minimize only so far per Task 9's finding) and no icon-related input is listed in this task's Interfaces section; checked state is instead conveyed via .u-checkbox-checked on the root and the native input's own checked state. providers: [NG_VALUE_ACCESSOR] is declared directly on UCheckbox (not inherited) — confirmed during Task 5 that UBaseEditableHolder provides no NG_VALUE_ACCESSOR of its own, matching upstream's own CHECKBOX_VALUE_ACCESSOR constant redeclared on Checkbox rather than inherited from BaseEditableHolder. Template binds the native input's [disabled] to $disabled() (the combined computed signal), never to the base disabled() input alone — empirically verified: binding to disabled() alone fails a test asserting setDisabledState (CVA path, with the disabled input never bound) disables the rendered input, while binding to $disabled() passes it. Migrated to writeControlValue bridge (GAP-038): own checked signal stays authoritative, writeControlValue populates checked AND (via setModelValue) modelValue in parallel; toggle() also calls writeModelValue, keeping modelValue/$filled in sync on user-driven writes (click/Space)."
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Checkbox\u2192UCheckbox, selector p-checkbox\u2192u-checkbox, extends UBaseEditableHolder (Task 5). Deliberately excludes upstream's much larger prop surface: value/trueValue/falseValue (multi-value/group-checkbox mode \u2014 this task's Interfaces section defines only binary; UCheckbox only implements upstream's boolean/binary mode, writeValue always coerces to a plain boolean rather than upstream's array-membership contains() check for multi-value mode), ariaLabelledBy/ariaLabel/tabindex/inputId/inputStyle/styleClass/inputClass/readonly/autofocus/variant/size/checkboxIcon/formControl inputs, indeterminate state, the icon <ng-template>/ContentChild template-override system, and the onChange/onFocus/onBlur output()s \u2014 none of these appear in this task's Interfaces section, which defines a smaller, spec-mandated signal-input surface (binary, label, inherited disabled) with 'no UCheckbox-specific outputs beyond the CVA contract.' Renders no check/minus icon: upstream's CheckIcon/MinusIcon has no equivalent yet in @ultimate/ng-core's icon set (spinner/times/window-maximize/window-minimize only so far per Task 9's finding) and no icon-related input is listed in this task's Interfaces section; checked state is instead conveyed via .u-checkbox-checked on the root and the native input's own checked state. providers: [NG_VALUE_ACCESSOR] is declared directly on UCheckbox (not inherited) \u2014 confirmed during Task 5 that UBaseEditableHolder provides no NG_VALUE_ACCESSOR of its own, matching upstream's own CHECKBOX_VALUE_ACCESSOR constant redeclared on Checkbox rather than inherited from BaseEditableHolder. Template binds the native input's [disabled] to $disabled() (the combined computed signal), never to the base disabled() input alone \u2014 empirically verified: binding to disabled() alone fails a test asserting setDisabledState (CVA path, with the disabled input never bound) disables the rendered input, while binding to $disabled() passes it. Migrated to writeControlValue bridge (GAP-038): own checked signal stays authoritative, writeControlValue populates checked AND (via setModelValue) modelValue in parallel; toggle() also calls writeModelValue, keeping modelValue/$filled in sync on user-driven writes (click/Space)."
   },
   {
     "originalPath": "packages/primeng/src/checkbox/style/checkboxstyle.ts",
     "ultimateDestination": "packages/ng/src/checkbox/checkbox-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Ported from the extracted CheckboxStyle's own `style`/`classes` shape, but reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (Task 4's base-component.spec.ts — no @Injectable DI service, unlike upstream's own @Injectable CheckboxStyle extends BaseStyle). `style` is imported from @ultimate/uix-styles/checkbox (style-only, no classes export — Task 3's corrected finding that @primeuix/styles never exports a classes object). `classes` (root/box/input/icon) ported locally with .p-checkbox*→.u-checkbox* renaming, reshaped to take a plain params object directly rather than upstream's `{ instance }`-wrapped signature — confirmed against UBaseComponent.cx(key, params)'s actual call contract, matching the same pattern already established by ButtonStyle/BadgeStyle/TooltipStyle. classes.root's `p-highlight`/`p-disabled` modifier classes are deliberately kept unrenamed (not u-highlight/u-disabled): confirmed against @ultimate/uix-styles/checkbox's own CSS export, whose selectors (`.p-disabled`, `.p-invalid`, `.p-variant-filled`) reference these PrimeNG-wide structural/shared modifier classes literally, unrenamed — the style module must emit matching literal class names for those CSS selectors to apply. `invalid`/`$variant`/`size` params dropped from classes.root's resolver: no invalid, variant, or size input exists on UCheckbox per this task's Interfaces section."
+    "modificationDescription": "Ported from the extracted CheckboxStyle's own `style`/`classes` shape, but reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (Task 4's base-component.spec.ts \u2014 no @Injectable DI service, unlike upstream's own @Injectable CheckboxStyle extends BaseStyle). `style` is imported from @ultimate/uix-styles/checkbox (style-only, no classes export \u2014 Task 3's corrected finding that @primeuix/styles never exports a classes object). `classes` (root/box/input/icon) ported locally with .p-checkbox*\u2192.u-checkbox* renaming, reshaped to take a plain params object directly rather than upstream's `{ instance }`-wrapped signature \u2014 confirmed against UBaseComponent.cx(key, params)'s actual call contract, matching the same pattern already established by ButtonStyle/BadgeStyle/TooltipStyle. classes.root's `p-highlight`/`p-disabled` modifier classes are deliberately kept unrenamed (not u-highlight/u-disabled): confirmed against @ultimate/uix-styles/checkbox's own CSS export, whose selectors (`.p-disabled`, `.p-invalid`, `.p-variant-filled`) reference these PrimeNG-wide structural/shared modifier classes literally, unrenamed \u2014 the style module must emit matching literal class names for those CSS selectors to apply. `invalid`/`$variant`/`size` params dropped from classes.root's resolver: no invalid, variant, or size input exists on UCheckbox per this task's Interfaces section."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/checkbox/checkbox.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Test taken verbatim from this task's brief (Step 2), with one addition: `import { describe, expect, it } from \"vitest\";` (the brief's snippet omitted it, unlike every other spec file in this package — vitest globals are not enabled in this project's tsconfig, so the snippet as given fails to compile; confirmed by running it verbatim first per TDD Step 3, matching the same discrepancy already documented for tooltip.spec.ts)."
+    "modificationDescription": "Test taken verbatim from this task's brief (Step 2), with one addition: `import { describe, expect, it } from \"vitest\";` (the brief's snippet omitted it, unlike every other spec file in this package \u2014 vitest globals are not enabled in this project's tsconfig, so the snippet as given fails to compile; confirmed by running it verbatim first per TDD Step 3, matching the same discrepancy already documented for tooltip.spec.ts)."
   },
   {
     "originalPath": "n/a",
@@ -189,19 +189,19 @@
     "originalPath": "packages/primeng/src/dialog/dialog.ts",
     "ultimateDestination": "packages/ng/src/dialog/dialog.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Dialog→UDialog, selector p-dialog→u-dialog, extends UBaseComponent (Task 4). Deliberately excludes upstream's much larger prop/behavior surface — draggable/resizable drag-and-resize listener wiring, breakpoints/dynamic <style> injection, dismissableMask, position (top/bottom/left/right/corner variants), maskStyle/maskStyleClass/contentStyle/contentStyleClass/styleClass, blockScroll/body-scroll blocking, keepInViewport, content/footer/icon TemplateRef projection slots, rtl, maximizable, and the p-dialog[id] breakpoint <style> element — none of these appear in this task's Interfaces section, which defines a smaller, spec-mandated signal-input surface: visible, header, closable, closeOnEscape, modal. DISCREPANCY (brief vs. working code): the brief's Step 5 instructs importing UTimesIcon/UWindowMaximizeIcon/UWindowMinimizeIcon into `imports`; only UTimesIcon is imported — UWindowMaximizeIcon/UWindowMinimizeIcon are deliberately excluded because no `maximizable` input exists in this task's Interfaces section to gate a maximize button on, so neither icon can appear in the template, and an Angular standalone component with an unused template reference in `imports` fails compilation with NG8113 (confirmed directly — build failed on this exact error before removing the two unused imports), matching UButton's own documented Task 12 precedent. Overlay/focus-trap wiring: per the Phase 2 Overlay Architecture responsibility split, UOverlay (Task 6) only moves the host element to document.body and assigns/clears a z-index, and UFocusTrap (Task 6) only traps Tab/Shift+Tab within the host's focusable descendants — UDialog, as the only overlay component built in this phase, wires UOverlay + UFocusTrap + @ultimate/uix-motion's createMotion together directly in its own class/template, per the spec's explicit YAGNI call (no shared \"overlay orchestration service\" abstraction, since there is exactly one consumer this phase). @ultimate/uix-motion's real, verified export is `createMotion(element, options): MotionInstance` (packages/uix-motion/src/config/index.ts) — not the MotionModule/pMotion structural directive PrimeNG's own Angular-specific @primeuix/motion package exposes (used in the extracted dialog.ts template as [pMotion]=\"visible\" [pMotionName]=\"'p-dialog'\" etc.); @ultimate/uix-motion has no such Angular directive, so enter/leave is driven imperatively via an effect() watching visible() calling createMotion(rootEl, {name: 'u-dialog', appear: true}).enter()/.leave(). Escape handling: upstream's bindDocumentEscapeListener (.vendor-extracted/ng/dialog/dialog.ts lines ~1051-1066) additionally guards on the closing dialog's z-index matching the current top-of-stack z-index via ZIndexUtils.getCurrent() (a nested-dialogs-close-only-the-topmost-one safety check); this task's UOverlay hardcodes its z-index registry key to \"overlay\" for every instance (a Minor note carried from Task 6's review) and @ultimate/uix-utils's ZIndex singleton exposes no getCurrent() equivalent, so there is no working multi-dialog stacking order to compare against — a plain document-level keydown.escape host listener (unconditional on z-index, guarded only by closeOnEscape() and visible()) is used instead, matching this task's brief/spec (Step 5, Step 2's test); this is not a regression to fix speculatively since UOverlay's single-bucket registry means nested UDialogs aren't a real usable scenario yet. Focus-return-on-close: PrimeNG's own extracted source (confirmed by reading dialog.ts in full) has no logic capturing/restoring document.activeElement around the visibility transition — its focus() method only moves focus into the dialog on show via focusOnShow/_focus(); nothing moves it back out on hide. This task's own spec test (\"returns focus to the triggering element when closed\") operationalizes that gap: document.activeElement is captured in the same effect() when visible() transitions to true, and restored via .focus() when it transitions to false — implemented explicitly here to close the accessibility gap the Phase 2 spec flagged as unverified in PrimeNG's own source."
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Dialog\u2192UDialog, selector p-dialog\u2192u-dialog, extends UBaseComponent (Task 4). Deliberately excludes upstream's much larger prop/behavior surface \u2014 draggable/resizable drag-and-resize listener wiring, breakpoints/dynamic <style> injection, dismissableMask, position (top/bottom/left/right/corner variants), maskStyle/maskStyleClass/contentStyle/contentStyleClass/styleClass, blockScroll/body-scroll blocking, keepInViewport, content/footer/icon TemplateRef projection slots, rtl, maximizable, and the p-dialog[id] breakpoint <style> element \u2014 none of these appear in this task's Interfaces section, which defines a smaller, spec-mandated signal-input surface: visible, header, closable, closeOnEscape, modal. DISCREPANCY (brief vs. working code): the brief's Step 5 instructs importing UTimesIcon/UWindowMaximizeIcon/UWindowMinimizeIcon into `imports`; only UTimesIcon is imported \u2014 UWindowMaximizeIcon/UWindowMinimizeIcon are deliberately excluded because no `maximizable` input exists in this task's Interfaces section to gate a maximize button on, so neither icon can appear in the template, and an Angular standalone component with an unused template reference in `imports` fails compilation with NG8113 (confirmed directly \u2014 build failed on this exact error before removing the two unused imports), matching UButton's own documented Task 12 precedent. Overlay/focus-trap wiring: per the Phase 2 Overlay Architecture responsibility split, UOverlay (Task 6) only moves the host element to document.body and assigns/clears a z-index, and UFocusTrap (Task 6) only traps Tab/Shift+Tab within the host's focusable descendants \u2014 UDialog, as the only overlay component built in this phase, wires UOverlay + UFocusTrap + @ultimate/uix-motion's createMotion together directly in its own class/template, per the spec's explicit YAGNI call (no shared \"overlay orchestration service\" abstraction, since there is exactly one consumer this phase). @ultimate/uix-motion's real, verified export is `createMotion(element, options): MotionInstance` (packages/uix-motion/src/config/index.ts) \u2014 not the MotionModule/pMotion structural directive PrimeNG's own Angular-specific @primeuix/motion package exposes (used in the extracted dialog.ts template as [pMotion]=\"visible\" [pMotionName]=\"'p-dialog'\" etc.); @ultimate/uix-motion has no such Angular directive, so enter/leave is driven imperatively via an effect() watching visible() calling createMotion(rootEl, {name: 'u-dialog', appear: true}).enter()/.leave(). Escape handling: upstream's bindDocumentEscapeListener (.vendor-extracted/ng/dialog/dialog.ts lines ~1051-1066) additionally guards on the closing dialog's z-index matching the current top-of-stack z-index via ZIndexUtils.getCurrent() (a nested-dialogs-close-only-the-topmost-one safety check); this task's UOverlay hardcodes its z-index registry key to \"overlay\" for every instance (a Minor note carried from Task 6's review) and @ultimate/uix-utils's ZIndex singleton exposes no getCurrent() equivalent, so there is no working multi-dialog stacking order to compare against \u2014 a plain document-level keydown.escape host listener (unconditional on z-index, guarded only by closeOnEscape() and visible()) is used instead, matching this task's brief/spec (Step 5, Step 2's test); this is not a regression to fix speculatively since UOverlay's single-bucket registry means nested UDialogs aren't a real usable scenario yet. Focus-return-on-close: PrimeNG's own extracted source (confirmed by reading dialog.ts in full) has no logic capturing/restoring document.activeElement around the visibility transition \u2014 its focus() method only moves focus into the dialog on show via focusOnShow/_focus(); nothing moves it back out on hide. This task's own spec test (\"returns focus to the triggering element when closed\") operationalizes that gap: document.activeElement is captured in the same effect() when visible() transitions to true, and restored via .focus() when it transitions to false \u2014 implemented explicitly here to close the accessibility gap the Phase 2 spec flagged as unverified in PrimeNG's own source."
   },
   {
     "originalPath": "packages/primeng/src/dialog/style/dialogstyle.ts",
     "ultimateDestination": "packages/ng/src/dialog/dialog-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Ported from PrimeNG's own extracted DialogStyle (.vendor-extracted/ng/dialog/style/dialogstyle.ts), shaped to match UBaseComponent's `styleModule: {css, classes}` contract (Task 4) — a plain object field, not an @Injectable service (PrimeNG's own Dialog DI-injects its style service via `_componentStyle = inject(DialogStyle)`, but this project's scoped-down Option B architecture does not). Per Task 3's corrected finding that @primeuix/styles never exports a `classes` object, @ultimate/uix-styles/dialog exports only `style` (verified: packages/uix-styles/src/dialog/index.ts) — the `classes` class-name-slot resolver is ported here instead, locally, from the extracted reference file's own `const classes = {...}`, with `.p-dialog*` selectors renamed to `.u-dialog*`, matching the pattern ButtonStyle/TooltipStyle/CheckboxStyle/BadgeStyle already establish. The extracted classes.mask/classes.root resolvers take `({ instance })` and read PrimeNG's instance.position/instance.modal/instance.maximizable/instance.maximized fields directly off the component instance — dropped here since UBaseComponent.cx(key, params) invokes styleModule.classes[key](params) with a flat params object the caller passes (packages/ng-core/src/basecomponent/base-component.ts), not an `{ instance }` wrapper, matching the same adaptation already made by ButtonStyle/TooltipStyle; UDialog has no position/maximizable/maximized inputs per this task's Interfaces section, so those position/maximized-aware branches are dropped from classes.mask/classes.root. inlineStyles (upstream's mask/root inline `position: fixed` etc.) is not ported: this task's Interfaces section defines no inline-style input surface for UDialog, and UOverlay (Task 6) already owns positioning/z-index for the moved-to-body host element."
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Ported from PrimeNG's own extracted DialogStyle (.vendor-extracted/ng/dialog/style/dialogstyle.ts), shaped to match UBaseComponent's `styleModule: {css, classes}` contract (Task 4) \u2014 a plain object field, not an @Injectable service (PrimeNG's own Dialog DI-injects its style service via `_componentStyle = inject(DialogStyle)`, but this project's scoped-down Option B architecture does not). Per Task 3's corrected finding that @primeuix/styles never exports a `classes` object, @ultimate/uix-styles/dialog exports only `style` (verified: packages/uix-styles/src/dialog/index.ts) \u2014 the `classes` class-name-slot resolver is ported here instead, locally, from the extracted reference file's own `const classes = {...}`, with `.p-dialog*` selectors renamed to `.u-dialog*`, matching the pattern ButtonStyle/TooltipStyle/CheckboxStyle/BadgeStyle already establish. The extracted classes.mask/classes.root resolvers take `({ instance })` and read PrimeNG's instance.position/instance.modal/instance.maximizable/instance.maximized fields directly off the component instance \u2014 dropped here since UBaseComponent.cx(key, params) invokes styleModule.classes[key](params) with a flat params object the caller passes (packages/ng-core/src/basecomponent/base-component.ts), not an `{ instance }` wrapper, matching the same adaptation already made by ButtonStyle/TooltipStyle; UDialog has no position/maximizable/maximized inputs per this task's Interfaces section, so those position/maximized-aware branches are dropped from classes.mask/classes.root. inlineStyles (upstream's mask/root inline `position: fixed` etc.) is not ported: this task's Interfaces section defines no inline-style input surface for UDialog, and UOverlay (Task 6) already owns positioning/z-index for the moved-to-body host element."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/dialog/dialog.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Test taken from this task's brief (Step 2), with two additions: (1) `import { describe, expect, it } from \"vitest\";` (the brief's snippet omitted it, unlike every other spec file in this package — vitest globals are not enabled in this project's tsconfig, so the snippet as given fails to compile; same discrepancy already documented for tooltip.spec.ts/checkbox.spec.ts); (2) the \"returns focus to the triggering element when closed\" test's second `fixture.detectChanges()` call (after the second plain-property mutation, `visible = false`, on the zoneless host) was changed to `fixture.changeDetectorRef.markForCheck(); fixture.detectChanges(false); await fixture.whenStable();` — as written verbatim, the brief's plain `detectChanges()` call hit NG0100 (ExpressionChangedAfterItHasBeenCheckedError) on this project's zoneless Angular 21 TestBed, confirmed to be a test-mechanics issue (not a UDialog defect) and already precedented twice in this exact codebase for the identical two-plain-mutations-in-one-test pattern: packages/ng-core/src/overlay/overlay.spec.ts and packages/ng-core/src/bind/bind.spec.ts both hit it and both fixed it in the test with this exact markForCheck/detectChanges(false)/whenStable sequence."
+    "modificationDescription": "Test taken from this task's brief (Step 2), with two additions: (1) `import { describe, expect, it } from \"vitest\";` (the brief's snippet omitted it, unlike every other spec file in this package \u2014 vitest globals are not enabled in this project's tsconfig, so the snippet as given fails to compile; same discrepancy already documented for tooltip.spec.ts/checkbox.spec.ts); (2) the \"returns focus to the triggering element when closed\" test's second `fixture.detectChanges()` call (after the second plain-property mutation, `visible = false`, on the zoneless host) was changed to `fixture.changeDetectorRef.markForCheck(); fixture.detectChanges(false); await fixture.whenStable();` \u2014 as written verbatim, the brief's plain `detectChanges()` call hit NG0100 (ExpressionChangedAfterItHasBeenCheckedError) on this project's zoneless Angular 21 TestBed, confirmed to be a test-mechanics issue (not a UDialog defect) and already precedented twice in this exact codebase for the identical two-plain-mutations-in-one-test pattern: packages/ng-core/src/overlay/overlay.spec.ts and packages/ng-core/src/bind/bind.spec.ts both hit it and both fixed it in the test with this exact markForCheck/detectChanges(false)/whenStable sequence."
   },
   {
     "originalPath": "n/a",
@@ -219,7 +219,7 @@
     "originalPath": "packages/primeng/src/menu/menu.ts",
     "ultimateDestination": "packages/ng/src/menu/menu.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Menu→UMenu, renders a flat <ul role=\"menu\"> of UMenuItem entries as <li role=\"none\"><a role=\"menuitem\"> or <li role=\"separator\">. Deliberately excludes upstream's much larger surface (popup overlay positioning/show()/hide()/toggle(), appendTo/z-index stacking, motion, submenu nesting, TemplateRef content-projection slots, styleClass/style inputs, ariaLabel/ariaLabelledBy, document click/resize/scroll listeners, the separate MenuItemContent child-component split, and the Home/End/Enter/Space/Escape/Tab key handlers upstream's onListKeyDown() implements) — none of these appear in this task's Interfaces section (model, popup only). Roving tabindex: real PrimeNG uses a virtual-focus/aria-activedescendant pattern (focusedOptionIndex signal, no native DOM focus movement between items), confirmed by reading menu.ts lines 698-761; this task's own brief and spec test (asserting document.activeElement moves) give an explicit, different resolution — a literal roving-tabindex pattern (move tabindex 0/-1 between anchors, call .focus()) — followed here per the brief's explicit override of the default 'adapt to real source' rule. Tooltip/Router wiring: real PrimeNG applies pTooltip/routerLink via a separate MenuItemContent child component; adapted here as direct [uTooltip]/[routerLink] bindings on this component's own <a>, same load-bearing behavior (truncated-label tooltips confirmed genuinely used by real Menu — this is the Menu→Tooltip dependency the Phase 2 spec's own research surfaced), same @angular/router peer dependency. UBadge deliberately excluded from imports: UMenuItem (Task 10) has no badge field, so no template element can bind one — matches UButton's (Task 12) and UDialog's (Task 15) documented NG8113 precedent for unused imports."
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Menu\u2192UMenu, renders a flat <ul role=\"menu\"> of UMenuItem entries as <li role=\"none\"><a role=\"menuitem\"> or <li role=\"separator\">. Deliberately excludes upstream's much larger surface (popup overlay positioning/show()/hide()/toggle(), appendTo/z-index stacking, motion, submenu nesting, TemplateRef content-projection slots, styleClass/style inputs, ariaLabel/ariaLabelledBy, document click/resize/scroll listeners, the separate MenuItemContent child-component split, and the Home/End/Enter/Space/Escape/Tab key handlers upstream's onListKeyDown() implements) \u2014 none of these appear in this task's Interfaces section (model, popup only). Roving tabindex: real PrimeNG uses a virtual-focus/aria-activedescendant pattern (focusedOptionIndex signal, no native DOM focus movement between items), confirmed by reading menu.ts lines 698-761; this task's own brief and spec test (asserting document.activeElement moves) give an explicit, different resolution \u2014 a literal roving-tabindex pattern (move tabindex 0/-1 between anchors, call .focus()) \u2014 followed here per the brief's explicit override of the default 'adapt to real source' rule. Tooltip/Router wiring: real PrimeNG applies pTooltip/routerLink via a separate MenuItemContent child component; adapted here as direct [uTooltip]/[routerLink] bindings on this component's own <a>, same load-bearing behavior (truncated-label tooltips confirmed genuinely used by real Menu \u2014 this is the Menu\u2192Tooltip dependency the Phase 2 spec's own research surfaced), same @angular/router peer dependency. UBadge deliberately excluded from imports: UMenuItem (Task 10) has no badge field, so no template element can bind one \u2014 matches UButton's (Task 12) and UDialog's (Task 15) documented NG8113 precedent for unused imports."
   },
   {
     "originalPath": "n/a",
@@ -231,7 +231,7 @@
     "originalPath": "packages/primeng/src/menu/style/menustyle.ts",
     "ultimateDestination": "packages/ng/src/menu/menu-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Ported from the extracted MenuStyle's own style/classes shape, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (no @Injectable DI service, unlike upstream's own @Injectable MenuStyle). style is imported from @ultimate/uix-styles/menu (style-only, no classes export — Task 3's corrected finding that @primeuix/styles never exports a classes object). classes ported locally with .p-menu*→.u-menu* renaming, reshaped to take a plain params object directly rather than upstream's {instance, item, id}-wrapped signature, matching UBaseComponent.cx(key, params)'s actual call contract — same pattern as ButtonStyle/CheckboxStyle/TooltipStyle/DialogStyle/BadgeStyle."
+    "modificationDescription": "Ported from the extracted MenuStyle's own style/classes shape, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (no @Injectable DI service, unlike upstream's own @Injectable MenuStyle). style is imported from @ultimate/uix-styles/menu (style-only, no classes export \u2014 Task 3's corrected finding that @primeuix/styles never exports a classes object). classes ported locally with .p-menu*\u2192.u-menu* renaming, reshaped to take a plain params object directly rather than upstream's {instance, item, id}-wrapped signature, matching UBaseComponent.cx(key, params)'s actual call contract \u2014 same pattern as ButtonStyle/CheckboxStyle/TooltipStyle/DialogStyle/BadgeStyle."
   },
   {
     "originalPath": "n/a",
@@ -243,19 +243,19 @@
     "originalPath": "packages/primeng/src/scroller/scroller.ts",
     "ultimateDestination": "packages/ng/src/scroller/scroller.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Verified real PrimeNG 21.1.9 Scroller measurement/windowing architecture (scroller.ts:682-689,852-856,1142-1152): elementViewChild.nativeElement.offsetHeight/offsetWidth content measurement (zero ResizeObserver usage upstream, window resize/orientationchange listener instead) informed this task's own ResizeObserver-based substitute, a deliberate modern-architecture deviation documented in the plan's Global Constraints and self-review, not a silent divergence. calculateNumItemsInViewport/calculateLast consumed from @ultimate/uix-data (see that package's own provenance entry) rather than reimplemented locally. getLast(last, isCols=false) array-bounds clamp ported with isCols declared but unreachable in this vertical-only plan. Loader markup (.u-scroller-loader/.u-scroller-loading-icon), scrollTo/scrollToIndex public API, disabled passthrough mode, lazy-load firing via Promise.resolve().then() with {first,last} payload, and aria-busy binding all adapted from verified upstream behavior with full Ultimate namespace rename. Excludes horizontal/both orientation, getRenderedRange(), rich virtualized-grid ARIA (aria-rowcount/aria-setsize) beyond aria-busy, and step-batched lazy-load-page grouping — each a real, confirmed upstream feature deliberately scoped out of this plan (see plan's Explicitly Deferred section)."
+    "modificationDescription": "Verified real PrimeNG 21.1.9 Scroller measurement/windowing architecture (scroller.ts:682-689,852-856,1142-1152): elementViewChild.nativeElement.offsetHeight/offsetWidth content measurement (zero ResizeObserver usage upstream, window resize/orientationchange listener instead) informed this task's own ResizeObserver-based substitute, a deliberate modern-architecture deviation documented in the plan's Global Constraints and self-review, not a silent divergence. calculateNumItemsInViewport/calculateLast consumed from @ultimate/uix-data (see that package's own provenance entry) rather than reimplemented locally. getLast(last, isCols=false) array-bounds clamp ported with isCols declared but unreachable in this vertical-only plan. Loader markup (.u-scroller-loader/.u-scroller-loading-icon), scrollTo/scrollToIndex public API, disabled passthrough mode, lazy-load firing via Promise.resolve().then() with {first,last} payload, and aria-busy binding all adapted from verified upstream behavior with full Ultimate namespace rename. Excludes horizontal/both orientation, getRenderedRange(), rich virtualized-grid ARIA (aria-rowcount/aria-setsize) beyond aria-busy, and step-batched lazy-load-page grouping \u2014 each a real, confirmed upstream feature deliberately scoped out of this plan (see plan's Explicitly Deferred section)."
   },
   {
     "originalPath": "packages/primeng/src/scroller/scroller.ts",
     "ultimateDestination": "packages/ng/src/scroller/scroller-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Structural layout CSS (.u-scroller/.u-scroller-content/.u-scroller-item/.u-scroller-loader) adapted from real PrimeNG Scroller's own rendered structure, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (no @Injectable DI service, matching the same adaptation already established by ButtonStyle/CheckboxStyle/TooltipStyle/DialogStyle/MenuStyle/BadgeStyle). Composes Task 1's ported @ultimate/uix-styles/virtualscroller loader mask/icon tokens via ${virtualscrollerStyle} interpolation, following button-style.ts's established composition pattern. Real PrimeNG loader class names (.p-virtualscroller-loader/.p-virtualscroller-loading-icon) renamed .p-*→.u-*."
+    "modificationDescription": "Structural layout CSS (.u-scroller/.u-scroller-content/.u-scroller-item/.u-scroller-loader) adapted from real PrimeNG Scroller's own rendered structure, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (no @Injectable DI service, matching the same adaptation already established by ButtonStyle/CheckboxStyle/TooltipStyle/DialogStyle/MenuStyle/BadgeStyle). Composes Task 1's ported @ultimate/uix-styles/virtualscroller loader mask/icon tokens via ${virtualscrollerStyle} interpolation, following button-style.ts's established composition pattern. Real PrimeNG loader class names (.p-virtualscroller-loader/.p-virtualscroller-loading-icon) renamed .p-*\u2192.u-*."
   },
   {
     "originalPath": "packages/ng/src/scroller/scroller.spec.ts",
     "ultimateDestination": "packages/ng/src/scroller/scroller.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeNG test file. Mocks concrete offsetHeight/scrollTop values and asserts the exact numeric result calculateNumItemsInViewport/calculateLast/getLast produce from those known inputs (e.g. 200px viewport / 20px items → exactly 10 numItemsInViewport, exactly 20 rendered items; scrollTop=2000 → exactly first=100, onLazyLoad fires with exactly {first:100, last:125}), per the plan's revision requiring deterministic numeric assertions over bare hasAttribute/toBeGreaterThan(0) checks."
+    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeNG test file. Mocks concrete offsetHeight/scrollTop values and asserts the exact numeric result calculateNumItemsInViewport/calculateLast/getLast produce from those known inputs (e.g. 200px viewport / 20px items \u2192 exactly 10 numItemsInViewport, exactly 20 rendered items; scrollTop=2000 \u2192 exactly first=100, onLazyLoad fires with exactly {first:100, last:125}), per the plan's revision requiring deterministic numeric assertions over bare hasAttribute/toBeGreaterThan(0) checks."
   },
   {
     "originalPath": "n/a",
@@ -267,19 +267,19 @@
     "originalPath": "packages/primeng/src/paginator/paginator.ts",
     "ultimateDestination": "packages/ng/src/paginator/paginator.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Verified real PrimeNG 21.1.9 Paginator source (paginator.ts, commit c493b1c6d9f7cdffbe1c4dc195493dd73d733593), adapted with full Ultimate namespace rename across Tasks 2-6: internal `_first` signal reconciled from a one-way `first` input via `ngOnChanges` (no `firstChange` output, matching real upstream's internal-with-one-way-input state-ownership model, §8 of the Paginator spec); `pageCount` derived via `@ultimate/uix-data`'s `getPageCount` rather than reimplemented locally (see that package's own provenance entry); first/prev/next/last controls and page-link boundary algorithm (§9 of the spec) adapted from verified upstream behavior. Excludes rows-per-page dropdown, jump-to-page input, and template/slot customization beyond icon overrides — each a real, confirmed upstream feature deliberately scoped out of this plan's task set (Tasks 2-6)."
+    "modificationDescription": "Verified real PrimeNG 21.1.9 Paginator source (paginator.ts, commit c493b1c6d9f7cdffbe1c4dc195493dd73d733593), adapted with full Ultimate namespace rename across Tasks 2-6: internal `_first` signal reconciled from a one-way `first` input via `ngOnChanges` (no `firstChange` output, matching real upstream's internal-with-one-way-input state-ownership model, \u00a78 of the Paginator spec); `pageCount` derived via `@ultimate/uix-data`'s `getPageCount` rather than reimplemented locally (see that package's own provenance entry); first/prev/next/last controls and page-link boundary algorithm (\u00a79 of the spec) adapted from verified upstream behavior. Excludes rows-per-page dropdown, jump-to-page input, and template/slot customization beyond icon overrides \u2014 each a real, confirmed upstream feature deliberately scoped out of this plan's task set (Tasks 2-6)."
   },
   {
     "originalPath": "packages/primeng/src/paginator/paginator.ts",
     "ultimateDestination": "packages/ng/src/paginator/paginator-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Structural layout CSS (.u-paginator/.u-paginator-content/.u-paginator-first/.u-paginator-prev/.u-paginator-next/.u-paginator-last/.u-paginator-page slots) adapted from real PrimeNG Paginator's own rendered structure, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (no @Injectable DI service, matching the same adaptation already established by ButtonStyle/CheckboxStyle/ScrollerStyle). Composes Task 1's ported @ultimate/uix-styles/paginator tokens via ${paginatorStyle} interpolation, following scroller-style.ts's established composition pattern. Real PrimeNG root/part class names (.p-paginator*) renamed .p-*→.u-*."
+    "modificationDescription": "Structural layout CSS (.u-paginator/.u-paginator-content/.u-paginator-first/.u-paginator-prev/.u-paginator-next/.u-paginator-last/.u-paginator-page slots) adapted from real PrimeNG Paginator's own rendered structure, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (no @Injectable DI service, matching the same adaptation already established by ButtonStyle/CheckboxStyle/ScrollerStyle). Composes Task 1's ported @ultimate/uix-styles/paginator tokens via ${paginatorStyle} interpolation, following scroller-style.ts's established composition pattern. Real PrimeNG root/part class names (.p-paginator*) renamed .p-*\u2192.u-*."
   },
   {
     "originalPath": "packages/ng/src/paginator/paginator.spec.ts",
     "ultimateDestination": "packages/ng/src/paginator/paginator.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeNG test file. Confirms pageCount is computed via uix-data's getPageCount (not a re-inlined formula, including the zero-rows zero-guard case), asserts internal _first advances on click even before the parent re-binds [first] (state-ownership behavior per spec §8), and covers the page-link boundary algorithm (first page, last page, pageLinkSize larger than pageCount) with known-input/known-output assertions, per the plan's testing matrix (spec §18)."
+    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeNG test file. Confirms pageCount is computed via uix-data's getPageCount (not a re-inlined formula, including the zero-rows zero-guard case), asserts internal _first advances on click even before the parent re-binds [first] (state-ownership behavior per spec \u00a78), and covers the page-link boundary algorithm (first page, last page, pageLinkSize larger than pageCount) with known-input/known-output assertions, per the plan's testing matrix (spec \u00a718)."
   },
   {
     "originalPath": "n/a",
@@ -291,25 +291,25 @@
     "originalPath": "packages/primeng/src/scroller/scroller.ts",
     "ultimateDestination": "packages/ng/src/scroller/scroller.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "UScroller's optional content-level composition point is informed by real PrimeNG 21.1.9 Scroller's own content-projection mechanism (commit c493b1c6d9f7cdffbe1c4dc195493dd73d733593), specifically: the `@ContentChild('content', {descendants: false})` template query (scroller.ts:450), the `ngTemplateOutlet` dispatch that renders it in place of the built-in windowed item markup (scroller.ts:54-56), and `getOptions(renderedIndex)`'s real per-item metadata shape (scroller.ts:1213-1224, {index, count, first, last, even, odd}). Ultimate's implementation is informed by this cited upstream mechanism, not copied verbatim — the content-template context type, dispatch structure, and getItemOptions naming are Ultimate's own, matching UBaseComponent's existing conventions; only the architectural mechanism (a named content template query rendered via ngTemplateOutlet, carrying generic per-item metadata) is mirrored."
+    "modificationDescription": "UScroller's optional content-level composition point is informed by real PrimeNG 21.1.9 Scroller's own content-projection mechanism (commit c493b1c6d9f7cdffbe1c4dc195493dd73d733593), specifically: the `@ContentChild('content', {descendants: false})` template query (scroller.ts:450), the `ngTemplateOutlet` dispatch that renders it in place of the built-in windowed item markup (scroller.ts:54-56), and `getOptions(renderedIndex)`'s real per-item metadata shape (scroller.ts:1213-1224, {index, count, first, last, even, odd}). Ultimate's implementation is informed by this cited upstream mechanism, not copied verbatim \u2014 the content-template context type, dispatch structure, and getItemOptions naming are Ultimate's own, matching UBaseComponent's existing conventions; only the architectural mechanism (a named content template query rendered via ngTemplateOutlet, carrying generic per-item metadata) is mirrored."
   },
   {
     "originalPath": "packages/primeng/src/table/table.ts",
     "ultimateDestination": "packages/ng/src/table/table.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Verified real PrimeNG 21.1.9 Table source (table.ts, commit c493b1c6d9f7cdffbe1c4dc195493dd73d733593), adapted with full Ultimate namespace rename across Tasks 17-22: sort (single/multi mode, aria-sort, sort emit), filter (operator+constraints per column) and v-model-style selection signal-input/output surface adapted from verified upstream behavior; row equality for selection uses @ultimate/uix-utils/object's deepEquals rather than reimplementing an object-diff locally; pagination composes the real UPaginator instance (Tasks 2-6) rather than reimplementing paging; virtualization composes the real UScroller instance (Task 1/Tasks 2-6) via its content-template composition point rather than reimplementing windowing. Excludes column resize/reorder, frozen columns/rows, row expansion, export-to-CSV, and context-menu selection — each a real, confirmed upstream feature deliberately scoped out of this plan's task set (Tasks 17-22)."
+    "modificationDescription": "Verified real PrimeNG 21.1.9 Table source (table.ts, commit c493b1c6d9f7cdffbe1c4dc195493dd73d733593), adapted with full Ultimate namespace rename across Tasks 17-22: sort (single/multi mode, aria-sort, sort emit), filter (operator+constraints per column) and v-model-style selection signal-input/output surface adapted from verified upstream behavior; row equality for selection uses @ultimate/uix-utils/object's deepEquals rather than reimplementing an object-diff locally; pagination composes the real UPaginator instance (Tasks 2-6) rather than reimplementing paging; virtualization composes the real UScroller instance (Task 1/Tasks 2-6) via its content-template composition point rather than reimplementing windowing. Excludes column resize/reorder, frozen columns/rows, row expansion, export-to-CSV, and context-menu selection \u2014 each a real, confirmed upstream feature deliberately scoped out of this plan's task set (Tasks 17-22)."
   },
   {
     "originalPath": "packages/primeng/src/table/table.ts",
     "ultimateDestination": "packages/ng/src/table/table-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Structural layout CSS (.u-table/.u-table-table/.u-table-thead/.u-table-tbody/.u-table-row/.u-table-row-group-header slots) adapted from real PrimeNG Table's own rendered structure, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (no @Injectable DI service, matching the same adaptation already established by ButtonStyle/CheckboxStyle/ScrollerStyle/PaginatorStyle). Composes Task 1's ported @ultimate/uix-styles/table tokens via ${tableStyle} interpolation, following paginator-style.ts's established composition pattern. Real PrimeNG root/part class names (.p-datatable*) renamed .p-*→.u-*."
+    "modificationDescription": "Structural layout CSS (.u-table/.u-table-table/.u-table-thead/.u-table-tbody/.u-table-row/.u-table-row-group-header slots) adapted from real PrimeNG Table's own rendered structure, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (no @Injectable DI service, matching the same adaptation already established by ButtonStyle/CheckboxStyle/ScrollerStyle/PaginatorStyle). Composes Task 1's ported @ultimate/uix-styles/table tokens via ${tableStyle} interpolation, following paginator-style.ts's established composition pattern. Real PrimeNG root/part class names (.p-datatable*) renamed .p-*\u2192.u-*."
   },
   {
     "originalPath": "packages/ng/src/table/table.spec.ts",
     "ultimateDestination": "packages/ng/src/table/table.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeNG test file. Covers sort (single/multi, aria-sort attribute, sort emit), filter (operator+constraints per column), v-model selection, keyboard row navigation, and composition of the real UPaginator/UScroller instances (rather than reimplemented paging/virtualization), per the plan's testing matrix (spec §18)."
+    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeNG test file. Covers sort (single/multi, aria-sort attribute, sort emit), filter (operator+constraints per column), v-model selection, keyboard row navigation, and composition of the real UPaginator/UScroller instances (rather than reimplemented paging/virtualization), per the plan's testing matrix (spec \u00a718)."
   },
   {
     "originalPath": "n/a",
@@ -321,13 +321,13 @@
     "originalPath": "packages/primeng/src/inputnumber/inputnumber.ts",
     "ultimateDestination": "packages/ng/src/input-number/input-number.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. InputNumber→UInputNumber, selector p-inputnumber→u-inputnumber, extends UBaseInput (the richer input-config tier — min/max/step/pattern/etc — that UInputText skips, matching real InputNumber extends BaseInput). Unlike UInputText (an attribute directive implementing no CVA of its own), UInputNumber IS a @Component and DOES implement ControlValueAccessor directly via providers: [NG_VALUE_ACCESSOR], a genuine architectural difference between the two real components. value = signal<number|null>(null) is this component's own local state (a signal, not a plain field, so OnPush re-renders on .set() without a manual markForCheck() call — final-review fix: a plain field left the rendered <input> stale on Forms-driven writes) — writeControlValue populates BOTH value (real state) AND modelValue/$filled (via setModelValue) from the same CVA write, matching UCheckbox's established pattern (Task 2); onInput also calls writeModelValue directly, keeping modelValue in sync on user-driven changes. clampToRange is a scoped-down port of real source's validateValue (only min/max branches; locale/currency/grouping explicitly excluded per spec), applied from CVA writes and user input only — NOT re-applied merely because min/max change while a value is already set. writeControlValue now passes the CLAMPED value (not the raw CVA-written value) into setModelValue and also calls onModelChange with it, so value/modelValue/the FormControl all agree after a clamp (final-review fix: previously only value was clamped, leaving modelValue and the FormControl unclamped). Deliberately excludes locale-aware Intl.NumberFormat formatting, clipboard paste handling, cursor/caret-position insertion logic, configurable spinner button layouts (showButtons/buttonLayout), prefix/suffix/currency/locale inputs — all out of scope per spec's Non-Goals. Ships via real secondary entry point (@ultimate/ng/input-number subpath), not main barrel, since input-number.ts has zero direct import of UFluid's class — ancestor-fluid detection happens entirely within UBaseInput/ng-core via the U_FLUID_ANCESTOR token."
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. InputNumber\u2192UInputNumber, selector p-inputnumber\u2192u-inputnumber, extends UBaseInput (the richer input-config tier \u2014 min/max/step/pattern/etc \u2014 that UInputText skips, matching real InputNumber extends BaseInput). Unlike UInputText (an attribute directive implementing no CVA of its own), UInputNumber IS a @Component and DOES implement ControlValueAccessor directly via providers: [NG_VALUE_ACCESSOR], a genuine architectural difference between the two real components. value = signal<number|null>(null) is this component's own local state (a signal, not a plain field, so OnPush re-renders on .set() without a manual markForCheck() call \u2014 final-review fix: a plain field left the rendered <input> stale on Forms-driven writes) \u2014 writeControlValue populates BOTH value (real state) AND modelValue/$filled (via setModelValue) from the same CVA write, matching UCheckbox's established pattern (Task 2); onInput also calls writeModelValue directly, keeping modelValue in sync on user-driven changes. clampToRange is a scoped-down port of real source's validateValue (only min/max branches; locale/currency/grouping explicitly excluded per spec), applied from CVA writes and user input only \u2014 NOT re-applied merely because min/max change while a value is already set. writeControlValue now passes the CLAMPED value (not the raw CVA-written value) into setModelValue and also calls onModelChange with it, so value/modelValue/the FormControl all agree after a clamp (final-review fix: previously only value was clamped, leaving modelValue and the FormControl unclamped). Deliberately excludes locale-aware Intl.NumberFormat formatting, clipboard paste handling, cursor/caret-position insertion logic, configurable spinner button layouts (showButtons/buttonLayout), prefix/suffix/currency/locale inputs \u2014 all out of scope per spec's Non-Goals. Ships via real secondary entry point (@ultimate/ng/input-number subpath), not main barrel, since input-number.ts has zero direct import of UFluid's class \u2014 ancestor-fluid detection happens entirely within UBaseInput/ng-core via the U_FLUID_ANCESTOR token."
   },
   {
     "originalPath": "packages/primeng/src/inputnumber/style/inputnumberstyle.ts",
     "ultimateDestination": "packages/ng/src/input-number/input-number-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Ported from the extracted InputNumberStyle's own style/classes shape, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (Task 4 — no @Injectable DI service, unlike upstream's own @Injectable InputNumberStyle). style is imported from @ultimate/uix-styles/inputnumber (style-only, no classes export — Task 3's corrected finding that @primeuix/styles never exports a classes object). classes.root resolver takes a plain params object (invalid/fluid) matching UBaseComponent.cx(key, params)'s actual call contract, ported locally with .p-inputnumber*→.u-inputnumber* renaming, and reflects invalid/fluid on the HOST element — matching real source's own classes.root resolver, which puts both p-inputnumber-fluid and p-invalid on InputNumber's own host. classes.pcInputText is a bare 'u-inputnumber-input' string with no modifiers, matching real source's own pcInputText resolver exactly (final-review fix: an earlier revision incorrectly placed invalid/fluid on pcInputText instead of root, which left @ultimate/uix-styles/inputnumber's `.u-inputnumber-fluid .u-inputnumber-input` descendant-selector fluid-width rule permanently unmatchable)."
+    "modificationDescription": "Ported from the extracted InputNumberStyle's own style/classes shape, reshaped to a plain {css, classes} object matching UBaseComponent's styleModule contract (Task 4 \u2014 no @Injectable DI service, unlike upstream's own @Injectable InputNumberStyle). style is imported from @ultimate/uix-styles/inputnumber (style-only, no classes export \u2014 Task 3's corrected finding that @primeuix/styles never exports a classes object). classes.root resolver takes a plain params object (invalid/fluid) matching UBaseComponent.cx(key, params)'s actual call contract, ported locally with .p-inputnumber*\u2192.u-inputnumber* renaming, and reflects invalid/fluid on the HOST element \u2014 matching real source's own classes.root resolver, which puts both p-inputnumber-fluid and p-invalid on InputNumber's own host. classes.pcInputText is a bare 'u-inputnumber-input' string with no modifiers, matching real source's own pcInputText resolver exactly (final-review fix: an earlier revision incorrectly placed invalid/fluid on pcInputText instead of root, which left @ultimate/uix-styles/inputnumber's `.u-inputnumber-fluid .u-inputnumber-input` descendant-selector fluid-width rule permanently unmatchable)."
   },
   {
     "originalPath": "n/a",
@@ -345,7 +345,7 @@
     "originalPath": "packages/primeng/src/fluid/fluid.ts",
     "ultimateDestination": "packages/ng/src/fluid/fluid.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Fluid→UFluid, selector p-fluid→u-fluid, host class .p-fluid→.u-fluid. Real upstream Fluid is a component with an <ng-content> template and a `p-fluid` element selector, NOT an attribute directive with a [pFluid] selector as this task's brief illustratively described — no [pFluid] selector exists anywhere in upstream source; adapted to match the real mechanism per the brief's own instruction to verify against extracted source. Deliberately excludes upstream's Bind/passthrough hostDirectives wiring and FLUID_INSTANCE/PARENT_INSTANCE injection-token parent lookup — see UBaseComponent's doc comment for the same Option B architectural exclusion pattern. Provides U_FLUID_ANCESTOR token on itself (providers: [{provide: U_FLUID_ANCESTOR, useValue: true}]) so ng-core-tier classes (e.g. UBaseInput) can detect an ancestor <u-fluid> wrapper via DI injection without ng-core depending on ng (avoids circular workspace dependency)."
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Fluid\u2192UFluid, selector p-fluid\u2192u-fluid, host class .p-fluid\u2192.u-fluid. Real upstream Fluid is a component with an <ng-content> template and a `p-fluid` element selector, NOT an attribute directive with a [pFluid] selector as this task's brief illustratively described \u2014 no [pFluid] selector exists anywhere in upstream source; adapted to match the real mechanism per the brief's own instruction to verify against extracted source. Deliberately excludes upstream's Bind/passthrough hostDirectives wiring and FLUID_INSTANCE/PARENT_INSTANCE injection-token parent lookup \u2014 see UBaseComponent's doc comment for the same Option B architectural exclusion pattern. Provides U_FLUID_ANCESTOR token on itself (providers: [{provide: U_FLUID_ANCESTOR, useValue: true}]) so ng-core-tier classes (e.g. UBaseInput) can detect an ancestor <u-fluid> wrapper via DI injection without ng-core depending on ng (avoids circular workspace dependency)."
   },
   {
     "originalPath": "packages/primeng/src/orderlist/orderlist.ts",
@@ -357,7 +357,7 @@
     "originalPath": "@primeuix/styles@2.0.3 orderlist",
     "ultimateDestination": "packages/ng/src/order-list/order-list-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 orderlist: 3 of 3 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs); the list rule targets the list container [data-pc-section=\"listcontainer\"]. The PrimeNG-local controls-position rule is recorded, not ported (feature absent). Ultimate-authored, not upstream: the retained rules for the drag-mode list reset (E3-V1), drag items and selected drag items, and striped rows."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 orderlist: 3 of 3 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs); the list rule targets the list container [data-pc-section=\"listcontainer\"]. The PrimeNG-local controls-position rule is recorded, not ported (feature absent). Ultimate-authored, not upstream: the retained rules for the drag-mode list reset (E3-V1), drag items and selected drag items, and striped rows."
   },
   {
     "originalPath": "n/a",
@@ -387,7 +387,7 @@
     "originalPath": "@primeuix/styles@2.0.3 picklist",
     "ultimateDestination": "packages/ng/src/pick-list/pick-list-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 picklist: 4 of 4 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained rules for the drag-mode list reset (E3-V1), drag items and selected drag items, and the source/controls/target order (GAP-122)."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 picklist: 4 of 4 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained rules for the drag-mode list reset (E3-V1), drag items and selected drag items, and the source/controls/target order (GAP-122)."
   },
   {
     "originalPath": "n/a",
@@ -411,7 +411,7 @@
     "originalPath": "@primeuix/styles@2.0.3 dataview",
     "ultimateDestination": "packages/ng/src/data-view/data-view-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 dataview: 5 of 7 upstream groups (header/footer omitted, no facets), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Base role from Prime's base styles: the loading overlay mask (X-5). Ultimate-authored, not upstream: the retained grid layout rule (intentional, D-E4-1) and the Angular list reset."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 dataview: 5 of 7 upstream groups (header/footer omitted, no facets), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Base role from Prime's base styles: the loading overlay mask (X-5). Ultimate-authored, not upstream: the retained grid layout rule (intentional, D-E4-1) and the Angular list reset."
   },
   {
     "originalPath": "n/a",
@@ -447,169 +447,169 @@
     "originalPath": "src/chip/index.ts",
     "ultimateDestination": "packages/ng/src/chip/chip-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 chip, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A5."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 chip, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A5."
   },
   {
     "originalPath": "src/tag/index.ts",
     "ultimateDestination": "packages/ng/src/tag/tag-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 tag, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 tag, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
   },
   {
     "originalPath": "src/skeleton/index.ts",
     "ultimateDestination": "packages/ng/src/skeleton/skeleton-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 skeleton, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A3, PX-A6, FX-A2."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 skeleton, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A3, PX-A6, FX-A2."
   },
   {
     "originalPath": "src/overlaybadge/index.ts",
     "ultimateDestination": "packages/ng/src/overlay-badge/overlay-badge-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 overlaybadge, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 overlaybadge, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
   },
   {
     "originalPath": "src/knob/index.ts",
     "ultimateDestination": "packages/ng/src/knob/knob-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 knob, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 knob, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
   },
   {
     "originalPath": "src/progressbar/index.ts",
     "ultimateDestination": "packages/ng/src/progress-bar/progress-bar-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 progressbar, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A1."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 progressbar, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A1."
   },
   {
     "originalPath": "src/progressspinner/index.ts",
     "ultimateDestination": "packages/ng/src/progress-spinner/progress-spinner-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 progressspinner, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 progressspinner, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
   },
   {
     "originalPath": "src/metergroup/index.ts",
     "ultimateDestination": "packages/ng/src/meter-group/meter-group-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 metergroup, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A2."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 metergroup, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A2."
   },
   {
     "originalPath": "src/timeline/index.ts",
     "ultimateDestination": "packages/ng/src/timeline/timeline-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 timeline, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A3."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 timeline, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A3."
   },
   {
     "originalPath": "src/terminal/index.ts",
     "ultimateDestination": "packages/ng/src/terminal/terminal-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 terminal, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A5, FX-A4."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 terminal, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A5, FX-A4."
   },
   {
     "originalPath": "src/message/index.ts",
     "ultimateDestination": "packages/ng/src/message/message-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 message, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A5."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 message, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A5."
   },
   {
     "originalPath": "src/toast/index.ts",
     "ultimateDestination": "packages/ng/src/toast/toast-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 toast, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A4, FX-A7."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 toast, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A4, FX-A7."
   },
   {
     "originalPath": "src/accordion/index.ts",
     "ultimateDestination": "packages/ng/src/accordion/accordion-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 accordion, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B1, PX-B11, FX-B1."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 accordion, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B1, PX-B11, FX-B1."
   },
   {
     "originalPath": "src/blockui/index.ts",
     "ultimateDestination": "packages/ng/src/block-ui/block-ui-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 blockui, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B3, PX-B4."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 blockui, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B3, PX-B4."
   },
   {
     "originalPath": "src/card/index.ts",
     "ultimateDestination": "packages/ng/src/card/card-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 card, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B10, FX-B2."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 card, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B10, FX-B2."
   },
   {
     "originalPath": "src/divider/index.ts",
     "ultimateDestination": "packages/ng/src/divider/divider-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 divider, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B6, FX-B3, FX-B4."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 divider, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B6, FX-B3, FX-B4."
   },
   {
     "originalPath": "src/fieldset/index.ts",
     "ultimateDestination": "packages/ng/src/fieldset/fieldset-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 fieldset, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B9, FX-B1."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 fieldset, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B9, FX-B1."
   },
   {
     "originalPath": "src/inplace/index.ts",
     "ultimateDestination": "packages/ng/src/inplace/inplace-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 inplace, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B2, PX-B5."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 inplace, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B2, PX-B5."
   },
   {
     "originalPath": "src/panel/index.ts",
     "ultimateDestination": "packages/ng/src/panel/panel-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 panel, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B7, FX-B1, FX-B5."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 panel, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B7, FX-B1, FX-B5."
   },
   {
     "originalPath": "src/scrollpanel/index.ts",
     "ultimateDestination": "packages/ng/src/scroll-panel/scroll-panel-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 scrollpanel, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions unresolved-token exception (Spec §5.6)."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 scrollpanel, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions unresolved-token exception (Spec \u00a75.6)."
   },
   {
     "originalPath": "src/splitter/index.ts",
     "ultimateDestination": "packages/ng/src/splitter/splitter-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 splitter, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B8, PX-B9, FX-B6."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 splitter, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B8, PX-B9, FX-B6."
   },
   {
     "originalPath": "src/toolbar/index.ts",
     "ultimateDestination": "packages/ng/src/toolbar/toolbar-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 toolbar, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); no exceptions."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 toolbar, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); no exceptions."
   },
   {
     "originalPath": "src/breadcrumb/index.ts",
     "ultimateDestination": "packages/ng/src/breadcrumb/breadcrumb-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 breadcrumb, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role, FX-C1."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 breadcrumb, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role, FX-C1."
   },
   {
     "originalPath": "src/dock/index.ts",
     "ultimateDestination": "packages/ng/src/dock/dock-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 dock, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role, R-C1, R-C2, FX-C2, FX-C3."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 dock, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role, R-C1, R-C2, FX-C2, FX-C3."
   },
   {
     "originalPath": "src/steps/index.ts",
     "ultimateDestination": "packages/ng/src/steps/steps-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 steps, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions PX-C1, PX-C2, FX-C4."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 steps, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions PX-C1, PX-C2, FX-C4."
   },
   {
     "originalPath": "src/stepper/index.ts",
     "ultimateDestination": "packages/ng/src/stepper/stepper-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 stepper, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role, R-C3, FX-C5, FX-C6."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 stepper, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role, R-C3, FX-C5, FX-C6."
   },
   {
     "originalPath": "src/tabs/index.ts",
     "ultimateDestination": "packages/ng/src/tabs/tabs-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 tabs, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 tabs, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role."
   },
   {
     "originalPath": "packages/primeng/src/contextmenu/contextmenu.ts",
     "ultimateDestination": "packages/ng/src/context-menu/context-menu.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Adapted from primeng@21.1.9 ContextMenu. ContextMenu→UContextMenu: flat UMenuItem list (no nested submenus), native contextmenu trigger on the document (global) or on the u-context-menu host element (Ultimate adaptation; no target input), body-appended via UOverlay, dismissed on outside click, Escape and resize, positioned at pageX/pageY + 1 with viewport flip and 0 clamp after the list renders (afterNextRender; upstream positions in onBeforeEnter). Excludes nested submenus, roving/virtual keyboard focus, touch long-press, breakpoints styling, router-link items and scroll-aware flip/fit. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
+    "modificationDescription": "Adapted from primeng@21.1.9 ContextMenu. ContextMenu\u2192UContextMenu: flat UMenuItem list (no nested submenus), native contextmenu trigger on the document (global) or on the u-context-menu host element (Ultimate adaptation; no target input), body-appended via UOverlay, dismissed on outside click, Escape and resize, positioned at pageX/pageY + 1 with viewport flip and 0 clamp after the list renders (afterNextRender; upstream positions in onBeforeEnter). Excludes nested submenus, roving/virtual keyboard focus, touch long-press, breakpoints styling, router-link items and scroll-aware flip/fit. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "n/a",
@@ -621,13 +621,13 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/context-menu/context-menu.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored ContextMenu stories: Default (host-element trigger with an inline-styled hit area) and Global (document trigger). Also includes the GAP-064 G3-C2 ItemStates verification story (Spec §9.1; icons, disabled items and nesting as the component supports)."
+    "modificationDescription": "Ultimate-authored ContextMenu stories: Default (host-element trigger with an inline-styled hit area) and Global (document trigger). Also includes the GAP-064 G3-C2 ItemStates verification story (Spec \u00a79.1; icons, disabled items and nesting as the component supports)."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 contextmenu",
     "ultimateDestination": "packages/ng/src/context-menu/context-menu-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 contextmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M3"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 contextmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M3"
   },
   {
     "originalPath": "n/a",
@@ -645,31 +645,31 @@
     "originalPath": "@primeuix/styles@2.0.3 megamenu",
     "ultimateDestination": "packages/ng/src/mega-menu/mega-menu-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 megamenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M4, FX-M5, FX-M6, FX-M7, PX-M5; item-focus groups ported as :has(:focus-visible) adaptations (Spec §20); Ultimate-only D5 rule R-M1"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 megamenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M4, FX-M5, FX-M6, FX-M7, PX-M5; item-focus groups ported as :has(:focus-visible) adaptations (Spec \u00a720); Ultimate-only D5 rule R-M1"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/mega-menu/mega-menu.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored MegaMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec §9.1; icons, disabled items and nesting as the component supports)."
+    "modificationDescription": "Ultimate-authored MegaMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec \u00a79.1; icons, disabled items and nesting as the component supports)."
   },
   {
     "originalPath": "packages/primeng/src/megamenu/megamenu.ts",
     "ultimateDestination": "packages/ng/src/mega-menu/mega-menu.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Adapted from primeng@21.1.9 MegaMenu. MegaMenu→UMegaMenu: the root component, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
+    "modificationDescription": "Adapted from primeng@21.1.9 MegaMenu. MegaMenu\u2192UMegaMenu: the root component, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 menubar",
     "ultimateDestination": "packages/ng/src/menubar/menubar-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 menubar, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M4; item-focus groups ported as :has(:focus-visible) adaptations (Spec §20); F-3a/F-3b corrections recorded in the G3-C2 Spec §7"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 menubar, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M4; item-focus groups ported as :has(:focus-visible) adaptations (Spec \u00a720); F-3a/F-3b corrections recorded in the G3-C2 Spec \u00a77"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/menubar/menubar.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored Menubar stories, including the GAP-064 G3-C2 ItemStates verification story (Spec §9.1; icons, disabled items and nesting as the component supports)."
+    "modificationDescription": "Ultimate-authored Menubar stories, including the GAP-064 G3-C2 ItemStates verification story (Spec \u00a79.1; icons, disabled items and nesting as the component supports)."
   },
   {
     "originalPath": "packages/primeng/src/panelmenu/panelmenu.ts",
@@ -681,49 +681,49 @@
     "originalPath": "@primeuix/styles@2.0.3 panelmenu",
     "ultimateDestination": "packages/ng/src/panel-menu/panel-menu-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 panelmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M2, PX-M3, PX-M4; Ultimate-only D5 rules R-M4, R-M5; F-3a/F-3b corrections recorded in the G3-C2 Spec §7"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 panelmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M2, PX-M3, PX-M4; Ultimate-only D5 rules R-M4, R-M5; F-3a/F-3b corrections recorded in the G3-C2 Spec \u00a77"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/panel-menu/panel-menu.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored PanelMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec §9.1; icons, disabled items and nesting as the component supports)."
+    "modificationDescription": "Ultimate-authored PanelMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec \u00a79.1; icons, disabled items and nesting as the component supports)."
   },
   {
     "originalPath": "packages/primeng/src/panelmenu/panelmenu.ts",
     "ultimateDestination": "packages/ng/src/panel-menu/panel-menu.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Adapted from primeng@21.1.9 PanelMenu. PanelMenu→UPanelMenu: the root component, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
+    "modificationDescription": "Adapted from primeng@21.1.9 PanelMenu. PanelMenu\u2192UPanelMenu: the root component, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 tieredmenu",
     "ultimateDestination": "packages/ng/src/tiered-menu/tiered-menu-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 tieredmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, PX-M1, PX-M2; item-focus groups ported as :has(:focus-visible) adaptations (Spec §20); Ultimate-only D5 rule R-M3; F-3a/F-3b corrections recorded in the G3-C2 Spec §7"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 tieredmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, PX-M1, PX-M2; item-focus groups ported as :has(:focus-visible) adaptations (Spec \u00a720); Ultimate-only D5 rule R-M3; F-3a/F-3b corrections recorded in the G3-C2 Spec \u00a77"
   },
   {
     "originalPath": "packages/primeng/src/tieredmenu/tieredmenu.ts",
     "ultimateDestination": "packages/ng/src/tiered-menu/tiered-menu-sub.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Adapted from primeng@21.1.9 TieredMenuSub. TieredMenuSub→UTieredMenuSub: the nested submenu list, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
+    "modificationDescription": "Adapted from primeng@21.1.9 TieredMenuSub. TieredMenuSub\u2192UTieredMenuSub: the nested submenu list, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/tiered-menu/tiered-menu.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored TieredMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec §9.1; icons, disabled items and nesting as the component supports)."
+    "modificationDescription": "Ultimate-authored TieredMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec \u00a79.1; icons, disabled items and nesting as the component supports)."
   },
   {
     "originalPath": "packages/primeng/src/tieredmenu/tieredmenu.ts",
     "ultimateDestination": "packages/ng/src/tiered-menu/tiered-menu.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Adapted from primeng@21.1.9 TieredMenu. TieredMenu→UTieredMenu: the root component, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
+    "modificationDescription": "Adapted from primeng@21.1.9 TieredMenu. TieredMenu\u2192UTieredMenu: the root component, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "packages/primeng/src/popover/popover.ts",
     "ultimateDestination": "packages/ng/src/popover/popover.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Adapted from primeng@21.1.9 Popover. Popover→UPopover: imperatively toggled overlay appended to body via UOverlay, dismissed on outside click (unless dismissable is false), Escape and resize, positioned below its target from getBoundingClientRect (top = target bottom, left = target left) after the overlay renders (afterNextRender; upstream aligns its container in the enter hook). GAP-064 D-0: placement now runs after render and targets the overlay container, not the inner content. Excludes the arrow, viewport flip (absolutePosition), focus-on-show, content templates and motion."
+    "modificationDescription": "Adapted from primeng@21.1.9 Popover. Popover\u2192UPopover: imperatively toggled overlay appended to body via UOverlay, dismissed on outside click (unless dismissable is false), Escape and resize, positioned below its target from getBoundingClientRect (top = target bottom, left = target left) after the overlay renders (afterNextRender; upstream aligns its container in the enter hook). GAP-064 D-0: placement now runs after render and targets the overlay container, not the inner content. Excludes the arrow, viewport flip (absolutePosition), focus-on-show, content templates and motion."
   },
   {
     "originalPath": "n/a",
@@ -735,7 +735,7 @@
     "originalPath": "packages/primeng/src/confirmpopup/confirmpopup.ts",
     "ultimateDestination": "packages/ng/src/confirm-popup/confirm-popup.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Adapted from primeng@21.1.9 ConfirmPopup. ConfirmPopup→UConfirmPopup: service-driven (UConfirmationService) popup appended to body via UOverlay, accept/reject via UButton, dismissed on outside click and resize, rejected on Escape, positioned below confirmation.target from getBoundingClientRect after the popup renders (afterNextRender; upstream aligns in the enter hook). GAP-064 D-0: placement now runs after render. Excludes the arrow, viewport flip, focus management beyond restoring focus to the target, templates and motion. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
+    "modificationDescription": "Adapted from primeng@21.1.9 ConfirmPopup. ConfirmPopup\u2192UConfirmPopup: service-driven (UConfirmationService) popup appended to body via UOverlay, accept/reject via UButton, dismissed on outside click and resize, rejected on Escape, positioned below confirmation.target from getBoundingClientRect after the popup renders (afterNextRender; upstream aligns in the enter hook). GAP-064 D-0: placement now runs after render. Excludes the arrow, viewport flip, focus management beyond restoring focus to the target, templates and motion. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "n/a",
@@ -747,43 +747,43 @@
     "originalPath": "@primeuix/styles@2.0.3 confirmdialog",
     "ultimateDestination": "packages/ng/src/confirm-dialog/confirm-dialog-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 confirmdialog, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); D-D2 content scoping by :has(> .u-confirmdialog-message) (PX-D6); D5 rules R-D3, R-D4; F-D2 correction (content scoping) recorded in the G3-D Spec §7"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 confirmdialog, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); D-D2 content scoping by :has(> .u-confirmdialog-message) (PX-D6); D5 rules R-D3, R-D4; F-D2 correction (content scoping) recorded in the G3-D Spec \u00a77"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/confirm-dialog/confirm-dialog.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored ConfirmDialog stories, including the GAP-064 G3-D WithIcon verification story (Spec §9.1)."
+    "modificationDescription": "Ultimate-authored ConfirmDialog stories, including the GAP-064 G3-D WithIcon verification story (Spec \u00a79.1)."
   },
   {
     "originalPath": "packages/primeng/src/confirmdialog/confirmdialog.ts",
     "ultimateDestination": "packages/ng/src/confirm-dialog/confirm-dialog.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Adapted from primeng@21.1.9 ConfirmDialog (ConfirmDialog→UConfirmDialog), adapted to Ultimate's DOM and services. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
+    "modificationDescription": "Adapted from primeng@21.1.9 ConfirmDialog (ConfirmDialog\u2192UConfirmDialog), adapted to Ultimate's DOM and services. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 confirmpopup",
     "ultimateDestination": "packages/ng/src/confirm-popup/confirm-popup-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 confirmpopup, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D1, FX-D2 (no arrow, no flip; PX-D1)"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 confirmpopup, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D1, FX-D2 (no arrow, no flip; PX-D1)"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/confirm-popup/confirm-popup.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored ConfirmPopup stories, including the GAP-064 G3-D WithIcon verification story (Spec §9.1)."
+    "modificationDescription": "Ultimate-authored ConfirmPopup stories, including the GAP-064 G3-D WithIcon verification story (Spec \u00a79.1)."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 drawer",
     "ultimateDestination": "packages/ng/src/drawer/drawer-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 drawer, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D3, FX-D4 (no animation, no mask open class; PX-D2, PX-D7); Angular focus-trap wrapper rule (D-D7, ng only); F-D3 correction (Angular wrapper) recorded in the G3-D Spec §7"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 drawer, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D3, FX-D4 (no animation, no mask open class; PX-D2, PX-D7); Angular focus-trap wrapper rule (D-D7, ng only); F-D3 correction (Angular wrapper) recorded in the G3-D Spec \u00a77"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/drawer/drawer.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored Drawer stories, including the GAP-064 G3-D position (Top, Bottom, Full) and Rtl verification stories (Spec §9.1)."
+    "modificationDescription": "Ultimate-authored Drawer stories, including the GAP-064 G3-D position (Top, Bottom, Full) and Rtl verification stories (Spec \u00a79.1)."
   },
   {
     "originalPath": "n/a",
@@ -795,37 +795,37 @@
     "originalPath": "@primeuix/styles@2.0.3 popover",
     "ultimateDestination": "packages/ng/src/popover/popover-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 popover, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D1, FX-D2 (no arrow, no flip; PX-D1); OI-D1 position rule only"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 popover, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D1, FX-D2 (no arrow, no flip; PX-D1); OI-D1 position rule only"
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 speeddial",
     "ultimateDestination": "packages/ng/src/speed-dial/speed-dial-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 speeddial, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); base mask and disabled roles (B-2), D-D3a :has open state, D5 rules R-D1, R-D2; exceptions FX-D7, FX-D8 (PX-D3, PX-D4); F-D1 correction (trigger reachability) recorded in the G3-D Spec §7"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 speeddial, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); base mask and disabled roles (B-2), D-D3a :has open state, D5 rules R-D1, R-D2; exceptions FX-D7, FX-D8 (PX-D3, PX-D4); F-D1 correction (trigger reachability) recorded in the G3-D Spec \u00a77"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/speed-dial/speed-dial.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored SpeedDial stories, including the GAP-064 G3-D Directions and Mask verification stories (Spec §9.1; PR-2 layout scaffolding)."
+    "modificationDescription": "Ultimate-authored SpeedDial stories, including the GAP-064 G3-D Directions and Mask verification stories (Spec \u00a79.1; PR-2 layout scaffolding)."
   },
   {
     "originalPath": "packages/primeng/src/speeddial/speeddial.ts",
     "ultimateDestination": "packages/ng/src/speed-dial/speed-dial.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Adapted from primeng@21.1.9 SpeedDial (SpeedDial→USpeedDial), adapted to Ultimate's DOM and services. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
+    "modificationDescription": "Adapted from primeng@21.1.9 SpeedDial (SpeedDial\u2192USpeedDial), adapted to Ultimate's DOM and services. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 splitbutton",
     "ultimateDestination": "packages/ng/src/split-button/split-button-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 splitbutton, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D5, FX-D6 (popup menu portaled; no fluid/rounded/raised variants; PX-D5)"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 splitbutton, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D5, FX-D6 (popup menu portaled; no fluid/rounded/raised variants; PX-D5)"
   },
   {
     "originalPath": "packages/primeng/src/splitbutton/splitbutton.ts",
     "ultimateDestination": "packages/ng/src/split-button/split-button.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Adapted from primeng@21.1.9 SplitButton (SplitButton→USplitButton), adapted to Ultimate's DOM and services. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
+    "modificationDescription": "Adapted from primeng@21.1.9 SplitButton (SplitButton\u2192USplitButton), adapted to Ultimate's DOM and services. GAP-064 G3-D: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 imagecompare",
@@ -837,19 +837,19 @@
     "originalPath": "@primeuix/styles@2.0.3 image",
     "ultimateDestination": "packages/ng/src/image/image-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 image: 12 of 16 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs); groups 13–16 (enter/leave motion) omitted (E1-7, D). Base roles from Prime's base styles: `.u-image-mask` overlay mask (X-5) and `.u-image-toolbar > button:disabled` opacity. Ultimate-authored, not upstream: the runtime role `.u-image-mask { z-index: 1100 }` (X-4; Ultimate's existing value retained)."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 image: 12 of 16 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs); groups 13\u201316 (enter/leave motion) omitted (E1-7, D). Base roles from Prime's base styles: `.u-image-mask` overlay mask (X-5) and `.u-image-toolbar > button:disabled` opacity. Ultimate-authored, not upstream: the runtime role `.u-image-mask { z-index: 1100 }` (X-4; Ultimate's existing value retained)."
   },
   {
     "originalPath": "packages/primeng/src/imagecompare/imagecompare.ts",
     "ultimateDestination": "packages/ng/src/image-compare/image-compare.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Adapted from PrimeNG ImageCompare (ImageCompare→UImageCompare), adapted to Ultimate's DOM. Version: the PrimeNG 21.1.9 source baseline recorded in docs/architecture/PROVENANCE.md; the local vendor extract this file cites carries no version stamp. GAP-064 G3-E E-1: style key renamed to the Aura key (ADR-051)"
+    "modificationDescription": "Adapted from PrimeNG ImageCompare (ImageCompare\u2192UImageCompare), adapted to Ultimate's DOM. Version: the PrimeNG 21.1.9 source baseline recorded in docs/architecture/PROVENANCE.md; the local vendor extract this file cites carries no version stamp. GAP-064 G3-E E-1: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/image-compare/image-compare.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored ImageCompare stories, including the GAP-064 G3-E Sized and Rtl verification stories (Spec §5.2); their wrapper is a flex container (D-E1-1(a)), the canonical PrimeNG showcase setup."
+    "modificationDescription": "Ultimate-authored ImageCompare stories, including the GAP-064 G3-E Sized and Rtl verification stories (Spec \u00a75.2); their wrapper is a flex container (D-E1-1(a)), the canonical PrimeNG showcase setup."
   },
   {
     "originalPath": "n/a",
@@ -861,31 +861,31 @@
     "originalPath": "@primeuix/styles@2.0.3 carousel",
     "ultimateDestination": "packages/ng/src/carousel/carousel-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 carousel: 15 of 17 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); groups 16–17 (`.p-items-hidden` visibility) omitted (FX-E3, GAP-107). Ultimate-authored, not upstream: the runtime role `.u-carousel-item-list { transition: transform 500ms ease 0s }` (X-4) and the retained rules `.u-carousel-item` (flex-shrink, box-sizing) and the disabled navigator rule (PX-E1, GAP-106)."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 carousel: 15 of 17 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); groups 16\u201317 (`.p-items-hidden` visibility) omitted (FX-E3, GAP-107). Ultimate-authored, not upstream: the runtime role `.u-carousel-item-list { transition: transform 500ms ease 0s }` (X-4) and the retained rules `.u-carousel-item` (flex-shrink, box-sizing) and the disabled navigator rule (PX-E1, GAP-106)."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 galleria",
     "ultimateDestination": "packages/ng/src/galleria/galleria-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 galleria: 24 of 67 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); 43 groups omitted (FX-E4 nav icon, FX-E5 indicators/caption/thumbnail positions, FX-E6 thumbnail carousel GAP-110, FX-E7 motion). Base roles from Prime's base styles: `.u-galleria-mask` overlay mask background/colour (X-5) and the disabled navigator opacity. Ultimate-authored, not upstream: the runtime role `.u-galleria-mask { z-index: 1100 }` (X-4)."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 galleria: 24 of 67 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); 43 groups omitted (FX-E4 nav icon, FX-E5 indicators/caption/thumbnail positions, FX-E6 thumbnail carousel GAP-110, FX-E7 motion). Base roles from Prime's base styles: `.u-galleria-mask` overlay mask background/colour (X-5) and the disabled navigator opacity. Ultimate-authored, not upstream: the runtime role `.u-galleria-mask { z-index: 1100 }` (X-4)."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/image/image.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored Image stories, including the GAP-064 G3-E verification stories added in E-0 (Spec §5.2)."
+    "modificationDescription": "Ultimate-authored Image stories, including the GAP-064 G3-E verification stories added in E-0 (Spec \u00a75.2)."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/carousel/carousel.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored Carousel stories, including the GAP-064 G3-E Vertical and Rtl verification stories added in E-0 (Spec §5.2)."
+    "modificationDescription": "Ultimate-authored Carousel stories, including the GAP-064 G3-E Vertical and Rtl verification stories added in E-0 (Spec \u00a75.2)."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/src/galleria/galleria.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored Galleria stories, including the GAP-064 G3-E WithoutThumbnails and FullScreen verification stories added in E-0 (Spec §5.2)."
+    "modificationDescription": "Ultimate-authored Galleria stories, including the GAP-064 G3-E WithoutThumbnails and FullScreen verification stories added in E-0 (Spec \u00a75.2)."
   },
   {
     "originalPath": "n/a",
@@ -897,13 +897,13 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/e2e/non-text-contrast.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored browser-test helper. GAP-124 B-AC1/B-AC2/B-AC6/B-AC7 coverage-based non-text contrast measurement (Spec §10)."
+    "modificationDescription": "Ultimate-authored browser-test helper. GAP-124 B-AC1/B-AC2/B-AC6/B-AC7 coverage-based non-text contrast measurement (Spec \u00a710)."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng/e2e/gap-124-contrast.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored browser test. GAP-124 B-AC1/B-AC2/B-AC6/B-AC7 coverage-based non-text contrast measurement of the DataView loading icon (Spec §10)."
+    "modificationDescription": "Ultimate-authored browser test. GAP-124 B-AC1/B-AC2/B-AC6/B-AC7 coverage-based non-text contrast measurement of the DataView loading icon (Spec \u00a710)."
   },
   {
     "originalPath": "packages/primeng/src/chip/chip.ts",
@@ -1000,5 +1000,23 @@
     "ultimateDestination": "packages/ng/src/overlay-badge/badge-directive.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG badge/badge.ts `BadgeDirective` (`[pBadge]`): the inputs (badgeDisabled, badgeSize, severity, value, badgeStyle, badgeStyleClass) and the result (a badge inside the host, the host marked as an overlay) are upstream's, with the selector `[uBadge]`. Upstream builds a span by hand and marks the host with `p-overlay-badge`; this file instead creates a real `UBadge` with `createComponent` on a Renderer2-made host element and takes the overlay look from `overlay-badge-style.ts`, so the badge carries `pt`, `unstyled`, `dt` and the shared Badge classes. `pt` is forwarded to the badge as `pcBadge`, replacing `pBadgePT`; `pBadgeUnstyled` is replaced by `unstyled`. Not carried: the deprecated `size` setter and its console.log, the first-child targeting for hosts whose tag has a dash, `styleClass`, `data-p`, and the NgModule wrapper. New in #202."
+  },
+  {
+    "originalPath": "packages/primeng/src/floatlabel/floatlabel.ts",
+    "ultimateDestination": "packages/ng/src/float-label/float-label.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG 21.1.9 floatlabel/floatlabel.ts for #191 (ADR-090): the ng-content template, the host class from `cx('root')`, the `variant` input with default `over`, the `Bind` host directive with the `ptms(['host', 'root'])` binding in the after-view-checked hook, and the PARENT_INSTANCE provider (renamed UBind and U_PARENT_INSTANCE) are upstream's. PrimeNG's `BaseComponent`, the injected `FloatLabelStyle` service, the NgModule wrapper and the `FLOATLABEL_INSTANCE` token with its nested `$pcFloatLabel` lookup are not carried: the token has no consumer in PrimeNG 21.1.9. Existing file, entry added in #191 because the file now carries the pass-through wiring."
+  },
+  {
+    "originalPath": "packages/primeng/src/floatlabel/style/floatlabelstyle.ts",
+    "ultimateDestination": "packages/ng/src/float-label/float-label-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver and the Angular-only rule (ADR-064). Side-by-side with PrimeNG 21.1.9 floatlabelstyle.ts: `classes.root` (`p-floatlabel` with the `-over`, `-on` and `-in` variants renamed to `u-float-label*`) and the `.ng-invalid.ng-dirty` label colour rule are upstream's. The resolver takes a plain params object instead of the instance wrapper, and the service shape is a plain css and classes module. The shared CSS comes from `@ultimate/uix-styles/floatlabel` (ADR-082); this file holds none of its own. Changed for #191."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/float-label/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
   }
 ]

@@ -57,19 +57,19 @@
     "originalPath": ".vendor-extracted/uix-styles-components/src/virtualscroller/index.ts",
     "ultimateDestination": "packages/uix-styles/src/virtualscroller/index.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Directly ported from the extracted @primeuix/styles@2.0.3 virtualscroller module (loader mask/icon dt() token references only — upstream's virtualscroller style module has no structural/layout CSS of its own, unlike badge/button/checkbox/dialog/menu/tooltip); .p-virtualscroller-loader/.p-virtualscroller-loading-icon class-name string literals renamed to .u-scroller-loader/.u-scroller-loading-icon to match Phase 2's Ultimate namespace decision. Consumed by all three frameworks' scroller-style.ts modules (packages/ng, packages/react, packages/vue) via ${virtualscrollerStyle} interpolation."
+    "modificationDescription": "Directly ported from the extracted @primeuix/styles@2.0.3 virtualscroller module (loader mask/icon dt() token references only \u2014 upstream's virtualscroller style module has no structural/layout CSS of its own, unlike badge/button/checkbox/dialog/menu/tooltip); .p-virtualscroller-loader/.p-virtualscroller-loading-icon class-name string literals renamed to .u-scroller-loader/.u-scroller-loading-icon to match Phase 2's Ultimate namespace decision. Consumed by all three frameworks' scroller-style.ts modules (packages/ng, packages/react, packages/vue) via ${virtualscrollerStyle} interpolation."
   },
   {
     "originalPath": ".vendor-extracted/uix-styles-components/src/paginator/index.ts",
     "ultimateDestination": "packages/uix-styles/src/paginator/index.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Directly ported from the extracted @primeuix/styles@2.0.3 paginator module (root/content/first/prev/next/last/page structural CSS with dt() token references); .p-paginator* class-name string literals renamed to .u-paginator* to match Phase 2's Ultimate namespace decision. Consumed by all three frameworks' paginator-style.ts modules (packages/ng, packages/react, packages/vue) via ${paginatorStyle}/${paginatorCss} interpolation. Exports only a plain style: string (no pre-shaped classes resolver), same shape as the base/badge/button/checkbox/dialog/menu/tooltip modules — each consuming framework's own paginator-style.ts authors its own classes map locally, matching button-style.ts's established pattern (see each framework's own provenance entry)."
+    "modificationDescription": "Directly ported from the extracted @primeuix/styles@2.0.3 paginator module (root/content/first/prev/next/last/page structural CSS with dt() token references); .p-paginator* class-name string literals renamed to .u-paginator* to match Phase 2's Ultimate namespace decision. Consumed by all three frameworks' paginator-style.ts modules (packages/ng, packages/react, packages/vue) via ${paginatorStyle}/${paginatorCss} interpolation. Exports only a plain style: string (no pre-shaped classes resolver), same shape as the base/badge/button/checkbox/dialog/menu/tooltip modules \u2014 each consuming framework's own paginator-style.ts authors its own classes map locally, matching button-style.ts's established pattern (see each framework's own provenance entry)."
   },
   {
     "originalPath": ".vendor-extracted/uix-styles-components/src/datatable/index.ts",
     "ultimateDestination": "packages/uix-styles/src/table/index.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Directly ported from the extracted @primeuix/styles@2.0.3 datatable module (root/table/thead/tbody/row structural CSS with dt() token references); .p-datatable* class-name string literals renamed to .u-table* to match Phase 2's Ultimate namespace decision. Exports only a plain style: string (no pre-shaped classes resolver), same shape as the base/badge/button/checkbox/dialog/menu/tooltip/paginator modules — each consuming framework's own table-style.ts authors its own classes map locally, matching button-style.ts's/paginator-style.ts's established pattern (see each framework's own provenance entry). Consumed by all three frameworks' table-style.ts modules (packages/ng, packages/react, packages/vue) via ${tableStyle}/${tableCss} interpolation."
+    "modificationDescription": "Directly ported from the extracted @primeuix/styles@2.0.3 datatable module (root/table/thead/tbody/row structural CSS with dt() token references); .p-datatable* class-name string literals renamed to .u-table* to match Phase 2's Ultimate namespace decision. Exports only a plain style: string (no pre-shaped classes resolver), same shape as the base/badge/button/checkbox/dialog/menu/tooltip/paginator modules \u2014 each consuming framework's own table-style.ts authors its own classes map locally, matching button-style.ts's/paginator-style.ts's established pattern (see each framework's own provenance entry). Consumed by all three frameworks' table-style.ts modules (packages/ng, packages/react, packages/vue) via ${tableStyle}/${tableCss} interpolation."
   },
   {
     "originalPath": "src/inputnumber/index.ts",
@@ -88,5 +88,11 @@
     "ultimateDestination": "packages/uix-styles/src/avatar/index.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/avatar/index.ts, recovered from dist/avatar/index.mjs. Only .p-avatar* selectors are renamed to .u-avatar*. One rule is added: `.u-avatar-clickable { cursor: pointer; }` for PrimeReact's click styling (ADR-087). Shared by the Angular, React and Vue avatar and avatar group style modules (ADR-082). Changed for #201."
+  },
+  {
+    "originalPath": "src/floatlabel/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/floatlabel/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/floatlabel/index.ts, recovered from dist/floatlabel/index.mjs (ADR-082, #191). The `.p-floatlabel*` selectors are renamed to `.u-float-label*` (the name Ultimate already emits), and the sibling-field selectors are changed to the classes the Ultimate siblings emit: `.p-inputtext` becomes `.u-inputtext`, `.p-multiselect-label` becomes `.u-multi-select-label`, `.p-cascadeselect-label` becomes `.u-cascade-select-label`, `.p-inputicon` becomes `.u-input-icon`, `.p-treeselect-label` becomes `.u-treeselect-label`, and `.p-chip` becomes `.u-chip`. The state classes `p-filled`, `p-invalid` and `p-inputwrapper-*` are kept, because the siblings emit them unrenamed. Upstream's `.p-multiselect-label:has(.p-chip)` and `.p-treeselect-label` padding selectors are carried, which the earlier local copies had dropped. Shared by the Angular, React and Vue float label style modules."
   }
 ]

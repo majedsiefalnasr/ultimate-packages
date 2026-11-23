@@ -310,8 +310,8 @@
       "scope": "shared-component-styles-146",
       "ticket": 146,
       "revision": "b9051a6668bf08b91654c23925a41cdcd9b84119",
-      "records": 14,
-      "aliases": 15,
+      "records": 15,
+      "aliases": 16,
       "pending": 1
     },
     {
@@ -1743,6 +1743,11 @@
       "id": "package.ultimate.uix-styles.dialog",
       "owner": "#146",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.dialog"
+    },
+    {
+      "id": "package.ultimate.uix-styles.floatlabel",
+      "owner": "#146",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.floatlabel"
     },
     {
       "id": "package.ultimate.uix-styles.inputnumber",
@@ -12133,6 +12138,22 @@
     {
       "from": "scripts/inventory/shared-component-styles.json",
       "origin": "relationship",
+      "source": "uixstyles.floatlabel",
+      "target": "package.ultimate.uix-styled.root",
+      "resolution": "scripts/inventory/styled-runtime.json#uixstyled.root",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.floatlabel",
+      "target": "uixstyles.root",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.root",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
       "source": "uixstyles.inputnumber",
       "target": "package.ultimate.uix-styled.root",
       "resolution": "scripts/inventory/styled-runtime.json#uixstyled.root",
@@ -12240,6 +12261,14 @@
       "source": "uixstyles.root",
       "target": "uixstyles.dialog",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.dialog",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.root",
+      "target": "uixstyles.floatlabel",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.floatlabel",
       "via": "record"
     },
     {

@@ -1,44 +1,63 @@
 import * as React from "react";
-import { useComponentBase } from "@ultimate/react-core";
+import {
+  createPassThrough,
+  useComponentBase,
+  useMergeProps,
+  type PassThrough,
+  type PassThroughOptions,
+} from "@ultimate/react-core";
 import { floatLabelStyleModule } from "./float-label-style";
 
-export interface UFloatLabelProps {
+export interface UFloatLabelProps extends React.HTMLAttributes<HTMLSpanElement> {
+  /** Position of the label relative to the input. PrimeReact has no variant. */
   variant?: "in" | "over" | "on";
-  className?: string;
-  children?: React.ReactNode;
+  /** Renders the component with no Ultimate classes or styles. */
+  unstyled?: boolean;
+  /** Attributes for the root element. */
+  pt?: PassThrough;
+  ptOptions?: PassThroughOptions;
 }
 
 /**
  * Ultimate-owned adaptation of PrimeReact's `FloatLabel` (real source:
- * `components/lib/floatlabel/FloatLabel.js`/`FloatLabelBase.js`, extracted
- * this session via `scripts/provenance/extract-primereact-source.mjs`).
+ * `components/lib/floatlabel/FloatLabel.js`/`FloatLabelBase.js`).
  * FloatLabel visually integrates a label with its form element, floating
  * the label above the input once it has content or focus — a label-position
  * wrapper, not a form control itself.
  *
  * Real source renders a single `<span>{children}</span>` with no internal
- * state of its own — no `useState`, no CVA/controlled-value concept, only a
- * `cx('root')` class resolution and `children` passthrough. This
- * realization follows suit exactly: a plain functional component using
- * `useComponentBase` only, matching `button.tsx`'s own "no controlled-value
- * hook needed" precedent for a display/layout primitive.
+ * state of its own. This realization follows suit: the root span merges
+ * its own class, the remaining props and `ptm('root')`, and the ref is that
+ * span. The CSS is the shared `@ultimate/uix-styles/floatlabel` module
+ * (ADR-082), so it reads the Aura `floatlabel` tokens and matches Angular
+ * and Vue.
  *
  * The label-float trigger itself is pure CSS (`:has()` pseudo-class
- * selectors against `.u-filled`/`:focus`/`[placeholder]` on the projected
- * input — see `float-label-style.ts`), matching real source exactly: no
- * JS-side focus/content tracking exists in real `FloatLabel` at all.
+ * selectors against `p-filled`, `:focus` and `[placeholder]` on the
+ * projected input), matching real source: no JS-side focus or content
+ * tracking exists in real `FloatLabel`.
  */
 export const UFloatLabel = React.forwardRef<HTMLSpanElement, UFloatLabelProps>(function UFloatLabel(
-  { variant = "over", className, children },
+  { variant = "over", className, children, unstyled, pt, ptOptions, ...rest },
   ref
 ) {
   const { cx } = useComponentBase({
-    componentName: "float-label",
+    componentName: "floatlabel",
     styleModule: floatLabelStyleModule,
+    unstyled,
   });
+  const { ptm } = createPassThrough("floatlabel", { props: { pt, ptOptions } });
+  const mergeProps = useMergeProps();
 
   return (
-    <span ref={ref} className={[cx("root", { variant }), className].filter(Boolean).join(" ")}>
+    <span
+      ref={ref}
+      {...mergeProps(
+        rest,
+        { className: [cx("root", { variant }), className].filter(Boolean).join(" ") },
+        ptm("root")
+      )}
+    >
       {children}
     </span>
   );

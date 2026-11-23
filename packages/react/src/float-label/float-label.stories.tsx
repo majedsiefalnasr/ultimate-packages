@@ -28,7 +28,7 @@ export const Default: Story = {
   args: { variant: "over" },
   render: (args) => (
     <UFloatLabel {...args}>
-      <input id="username" type="text" className="u-input-text" />
+      <input id="username" type="text" className="u-inputtext" />
       <label htmlFor="username">Username</label>
     </UFloatLabel>
   ),
@@ -39,7 +39,7 @@ export const InVariant: Story = {
   args: { variant: "in" },
   render: (args) => (
     <UFloatLabel {...args}>
-      <input id="username-in" type="text" className="u-input-text" />
+      <input id="username-in" type="text" className="u-inputtext" />
       <label htmlFor="username-in">Username</label>
     </UFloatLabel>
   ),
@@ -50,7 +50,7 @@ export const OnVariant: Story = {
   args: { variant: "on" },
   render: (args) => (
     <UFloatLabel {...args}>
-      <input id="username-on" type="text" className="u-input-text" />
+      <input id="username-on" type="text" className="u-inputtext" />
       <label htmlFor="username-on">Username</label>
     </UFloatLabel>
   ),

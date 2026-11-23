@@ -8,6 +8,7 @@ Scoped sample only; not platform completeness.
 - [Button styles](uixstyles.button.md)
 - [Checkbox styles](uixstyles.checkbox.md)
 - [Dialog styles](uixstyles.dialog.md)
+- [FloatLabel styles](uixstyles.floatlabel.md)
 - [Input number styles](uixstyles.inputnumber.md)
 - [Input text styles](uixstyles.inputtext.md)
 - [Menu styles](uixstyles.menu.md)

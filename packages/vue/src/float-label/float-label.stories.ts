@@ -32,7 +32,7 @@ export const Default: Story = {
     },
     template: `
       <UFloatLabel v-bind="args">
-        <input id="username" type="text" class="u-input-text" />
+        <input id="username" type="text" class="u-inputtext" />
         <label for="username">Username</label>
       </UFloatLabel>
     `,
@@ -49,7 +49,7 @@ export const InVariant: Story = {
     },
     template: `
       <UFloatLabel v-bind="args">
-        <input id="username-in" type="text" class="u-input-text" />
+        <input id="username-in" type="text" class="u-inputtext" />
         <label for="username-in">Username</label>
       </UFloatLabel>
     `,
@@ -66,7 +66,7 @@ export const OnVariant: Story = {
     },
     template: `
       <UFloatLabel v-bind="args">
-        <input id="username-on" type="text" class="u-input-text" />
+        <input id="username-on" type="text" class="u-inputtext" />
         <label for="username-on">Username</label>
       </UFloatLabel>
     `,

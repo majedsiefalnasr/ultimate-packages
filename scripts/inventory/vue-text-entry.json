@@ -604,7 +604,7 @@
       "framework": "vue",
       "availability": "public",
       "purpose": "Label wrapper that floats a slotted label by CSS :has selectors.",
-      "surface": "UFloatLabel (FloatLabel.vue, name \"UFloatLabel\") and createBaseFloatLabel (BaseFloatLabel.ts) plus floatLabelStyleModule (float-label-style.ts). Base chain: createBaseComponent directly, componentName floatlabel, no v-model. Declared prop: variant (String, default \"over\"; in, over and on are styled but the value is not validated). No emits. Template: a root span rendering the default slot, class cx('root', { variant }). The float behavior is pure CSS :has() with no JavaScript focus or value tracking. The filled and invalid selectors target input.u-filled, textarea.u-filled, .u-inputwrapper-focus, .u-inputwrapper-filled and .u-invalid, but UInputText and UTextarea render p-invalid and p-variant-filled (neither renders p-filled; only UPassword among the scoped inputs does), and no scoped template renders u-inputwrapper, so those selectors do not match those inputs (focus, placeholder and autofill selectors do not depend on classes; UInputChips root renders u-invalid). Style module registered as floatlabel.",
+      "surface": "UFloatLabel (FloatLabel.vue, name \"UFloatLabel\") and createBaseFloatLabel (BaseFloatLabel.ts) plus floatLabelStyleModule (float-label-style.ts). Base chain: createBaseComponent directly, componentName floatlabel, no v-model. Declared prop: variant (String, default \"over\"; in, over and on are styled but the value is not validated). No emits. Template: a root span rendering the default slot, class cx('root', { variant }) and v-bind ptmi('root') with inheritAttrs false, so pt, ptOptions and the fall-through attributes reach the root; unstyled and dt come from the base chain, and every instance already provides itself as $parentInstance through the vue-core pass-through mixin ($pcFloatLabel has no consumer and is not provided, ADR-090). The float behavior is pure CSS :has() with no JavaScript focus or value tracking. The CSS is the shared @ultimate/uix-styles/floatlabel module (ADR-082); it keys the float state on the classes the sibling fields emit (u-inputtext, u-textarea, p-filled, p-invalid, p-inputwrapper-filled and -focus), so the filled and invalid label states apply to UInputText and UTextarea. Style module registered as floatlabel.",
       "files": [
         "packages/vue/src/float-label/BaseFloatLabel.ts",
         "packages/vue/src/float-label/FloatLabel.vue",
@@ -631,8 +631,8 @@
           "contains": "export const floatLabelStyleModule"
         },
         {
-          "path": "packages/vue/src/float-label/float-label-style.ts",
-          "contains": ".u-float-label:has(input.u-filled) label"
+          "path": "packages/uix-styles/src/floatlabel/index.ts",
+          "contains": ".u-float-label:has(input.p-filled) label"
         },
         {
           "path": "packages/vue/src/float-label/BaseFloatLabel.ts",
