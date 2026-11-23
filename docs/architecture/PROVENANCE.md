@@ -353,3 +353,16 @@ Ticket #193 (spec #167, ADR-092) brings IftaLabel to parity in Angular and Vue a
 - **Specs and stories.** The IftaLabel specs and stories are Ultimate-authored.
 
 The seven IftaLabel source files left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/ng.json`, `vue.json` and `uix-styles.json`.
+
+### L0a InputGroup source disclosure
+
+Ticket #194 (spec #167, ADR-093 and ADR-094) brings InputGroup to parity in Angular and Vue against the pinned oracles PrimeNG 21.1.9 and PrimeVue 4.5.5. PrimeReact ships no InputGroup component, only a CSS pattern, so the React components are Ultimate-authored (ADR-094). No Prime package is a dependency (ADR-004). The sources were read from the installed `primeng` 21.1.9, `primevue` 4.5.5 and `@primeuix/styles` 2.0.3 packages in `node_modules` (ADR-064).
+
+- **`packages/uix-styles/src/inputgroup/index.ts` (source class COPY, sub-label `adapted`).** Recovered from `@primeuix/styles` 2.0.3 `inputgroup`. The `.p-inputgroup*` selectors are renamed to `.u-input-group*`, and the `.p-iconfield`, `.p-floatlabel` and `.p-iftalabel` wrappers to `.u-icon-field`, `.u-float-label` and `.u-ifta-label`. The text-field selector is changed to `.u-inputtext`, and the focus rule keys on the `.p-focus` state class the Select family emits. The `.p-inputwrapper` and `.p-inputwrapper-focus` state classes are kept.
+- **Angular `input-group.ts` and `input-group-style.ts` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeNG `inputgroup.ts`, `inputgroupaddon.ts` and their style modules. The template, host class, `Bind` binding and the `p-button` and `p-inputmask` host-element rules are upstream's, renamed to `u-button` and `u-input-mask`. The `:first-child` guard on the button reset rule is dropped (ADR-093).
+- **Vue `InputGroup.vue`, `InputGroupAddon.vue` and `input-group-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeVue `InputGroup.vue`, `InputGroupAddon.vue` and their style modules. The root element, the default slot and the class key are upstream's; the `ptmi('root')` binding is added in #194.
+- **Vue `BaseInputGroup.ts`, `BaseInputGroupAddon.ts` and the barrel (source class REFERENCE).** They share only interface facts with the compared upstream files.
+- **React `input-group.tsx`, `input-group-style.ts` and `index.ts` (source class AUTHORED).** No upstream file exists. They mirror the Angular and Vue components and consume the shared module.
+- **Specs and stories.** Ultimate-authored.
+
+The nine InputGroup source files left `known-missing.json` because they now have manifest entries (three Angular, six Vue). Per-file records are in `docs/architecture/provenance/ng.json`, `vue.json` and `uix-styles.json`.

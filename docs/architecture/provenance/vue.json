@@ -1144,5 +1144,41 @@
     "ultimateDestination": "packages/vue/src/ifta-label/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UIftaLabel; it shares only the exported component name with PrimeVue's iftalabel module."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputgroup/InputGroup.vue",
+    "ultimateDestination": "packages/vue/src/input-group/InputGroup.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 inputgroup/InputGroup.vue for #194 (ADR-093): the single root div rendering the default slot, with `cx('root')` on it, are upstream's. The `ptmi('root')` binding alongside it and `inheritAttrs: false` were added in #194 to reach the upstream pass-through contract."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputgroupaddon/InputGroupAddon.vue",
+    "ultimateDestination": "packages/vue/src/input-group/InputGroupAddon.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 inputgroupaddon/InputGroupAddon.vue for #194 (ADR-093): the single root div rendering the default slot is upstream's. The `ptmi('root')` binding and `inheritAttrs: false` were added in #194, as on the group."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputgroup/BaseInputGroup.vue",
+    "ultimateDestination": "packages/vue/src/input-group/BaseInputGroup.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064). Shares only the one-tier `extends: BaseComponent` chain with PrimeVue 4.5.5 BaseInputGroup.vue, here `createBaseComponent` with the component name `inputgroup`."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputgroupaddon/BaseInputGroupAddon.vue",
+    "ultimateDestination": "packages/vue/src/input-group/BaseInputGroupAddon.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064). Shares only the one-tier `extends: BaseComponent` chain with PrimeVue 4.5.5 BaseInputGroupAddon.vue, here `createBaseComponent` with the component name `inputgroupaddon`, as in PrimeVue's style key (renamed from `input-group-addon` in #194)."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputgroup/style/InputGroupStyle.js",
+    "ultimateDestination": "packages/vue/src/input-group/input-group-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolvers (ADR-064). Side-by-side with PrimeVue 4.5.5 inputgroup/style/InputGroupStyle.js and inputgroupaddon/style/InputGroupAddonStyle.js for #194 (ADR-093): `classes.root` (`p-inputgroup` renamed to `u-input-group`) and the addon's classes-only shape are upstream's. The hand-ported CSS copy is replaced by the shared `@ultimate/uix-styles/inputgroup` module (ADR-082), which carries the sibling selectors fixed in #194. Changed in #194."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputgroup/InputGroup.vue",
+    "ultimateDestination": "packages/vue/src/input-group/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UInputGroup and UInputGroupAddon; it shares only the exported component names with PrimeVue's inputgroup module."
   }
 ]

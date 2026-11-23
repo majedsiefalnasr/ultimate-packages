@@ -106,5 +106,11 @@
     "ultimateDestination": "packages/uix-styles/src/iftalabel/index.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/iftalabel/index.ts, recovered from dist/iftalabel/index.mjs (ADR-082, #193). The `.p-iftalabel*` selectors are renamed to `.u-ifta-label*` and `.p-inputicon` to `.u-input-icon`, the names Ultimate emits. The sibling-field selectors follow the classes the Ultimate siblings emit: `.p-inputtext` becomes `.u-inputtext`, `.p-multiselect-label` becomes `.u-multi-select-label`, `.p-cascadeselect-label` becomes `.u-cascade-select-label`, `.p-treeselect-label` becomes `.u-treeselect-label`, and `.p-chip` becomes `.u-chip`. The state classes `p-invalid` and `p-inputwrapper-focus` are kept, because the siblings emit them unrenamed. Upstream's `.p-multiselect-label:has(.p-chip)` and `.p-treeselect-label` padding selectors are carried, which the earlier local copies had dropped. Shared by the Angular and Vue ifta label style modules."
+  },
+  {
+    "originalPath": "src/inputgroup/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/inputgroup/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/inputgroup/index.ts, recovered from dist/inputgroup/index.mjs (ADR-082, #194). The `.p-inputgroup*` selectors are renamed to `.u-input-group*`, and the `.p-iconfield`, `.p-floatlabel` and `.p-iftalabel` wrappers to `.u-icon-field`, `.u-float-label` and `.u-ifta-label`. The sibling-field selectors follow the classes the Ultimate siblings emit: `.p-inputtext` becomes `.u-inputtext`, and the focus rule keys on the `.p-focus` state class the Select family emits (upstream's `.u-focus` is not rendered by any component). Upstream's `.p-inputwrapper` and `.p-inputwrapper-focus` state classes are kept, because the siblings emit them unrenamed. Shared by the Angular and Vue input group style modules."
   }
 ]

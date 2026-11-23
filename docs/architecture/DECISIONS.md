@@ -1540,3 +1540,77 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 - An invalid field now gives the label the invalid colour, and a plain input or textarea in focus gives it the focus colour. The field is padded for the label. These are visible changes for `UInputText` inside an IftaLabel in both frameworks.
 - The IftaLabel stories hand-write the field class; they now use `u-inputtext`, so their browser baselines can change.
 - Tests cover the root class, attribute fall-through (Vue), `pt`, `unstyled`, per-instance `dt` and the parent instance. Their effect is asserted on classes and DOM, not in a browser.
+
+## ADR-093 — InputGroup: one shared stylesheet keyed on the classes the sibling fields emit, `pt` and unstyled on Angular and Vue, and React delivery left open (L0a, ticket #194)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#194](https://github.com/majedsiefalnasr/ultimate-packages/issues/194)). The React delivery is recorded separately in ADR-094.
+
+**Context.**
+
+- InputGroup is a layout wrapper. Its joined-field rules (radius collapse, borders, focus stacking) live in CSS, and the two frameworks kept two copies that did not match what the sibling fields emit.
+- The rules keyed on `u-input-text`, `u-inputwrapper` and `u-focus`. `UInputText` renders `u-inputtext`, the Select family renders `p-inputwrapper` and `p-focus`, and no component renders `u-inputwrapper` or `u-focus`. So the joined rules did not reach the fields they were written for.
+- The Angular rules for PrimeNG's `p-button` and `p-inputmask` host elements were missing, so a button or mask in a group kept its own radius.
+- `UInputGroup` and `UInputGroupAddon` had no `pt`, `ptOptions`, `unstyled` or per-instance `dt` wiring, as the IftaLabel ticket had before #193.
+- PrimeReact has no InputGroup component. Its only InputGroup is a CSS pattern: a `p-inputgroup` container with `p-inputgroup-addon` children.
+
+**Decision.**
+
+1. **Shared module.** The structural CSS is `@ultimate/uix-styles/inputgroup` (ADR-082), consumed by the Angular and Vue style modules, so both read the Aura `inputgroup` tokens.
+2. **Selectors follow what the siblings emit.** The module keys on `u-inputtext`, `p-inputwrapper`, `p-inputwrapper-focus` and `p-focus`, and on the L0a wrapper roots `u-icon-field`, `u-float-label` and `u-ifta-label`.
+3. **Framework-local rules.** Angular adds the rules PrimeNG applies to the `p-button` and `p-inputmask` host elements, renamed to `u-button` and `u-input-mask`. Vue has no counterpart.
+4. **Root and addon classes.** The root class stays `u-input-group` and the addon class `u-input-group-addon`. The addon's component name becomes `inputgroupaddon`, the Aura key, as in the other ports.
+5. **Pass-through.** Angular binds the root and the addon through `UBind` (`ptms` host and root). Vue binds `ptmi('root')` with `inheritAttrs: false`. `unstyled` and per-instance `dt` come from the base.
+6. **React is recorded in ADR-094.** PrimeReact has the CSS pattern and no component; the user ruled that React ships components over the shared module.
+
+**Divergences from Prime.**
+
+1. The Angular button reset rule drops PrimeNG's `:first-child` guard on the group, which limited the reset to a group that is itself a first child.
+2. `p-inputgroup-fluid` is not carried. PrimeNG gates it on an input the component never declares (Phase 4 row 6, N).
+3. The deprecated `styleClass` input is not carried; classes come from the host binding.
+4. PrimeNG's alias selectors `p-inputGroup` and `p-input-group` are not carried. Ultimate keeps one root selector.
+5. `ptOptions` has no visible effect until the global `pt` source exists (ADR-080), so row 8 stays partial.
+
+**Classification after this ticket** (C / P / M / I / N-A / N / U, from a source re-read of the 11 rows; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+- Angular 9 / 1 / 0 / 0 / 1 / 0. Open: row 8. Row 6 is N.
+- Vue 9 / 1 / 0 / 0 / 1 / 0. Open: row 8. Row 6 is N.
+- React: see ADR-094.
+
+**Consequences.**
+
+- A text input inside an InputGroup now gets the joined radius and border rules, and a focused field gets the focus stacking, in Angular and Vue.
+- Angular buttons and masks in a group match PrimeNG's host-element rules.
+- The InputGroup stories now use `u-inputtext`, so their browser baselines can change. They are not verified in a browser here.
+- Tests cover the root and addon `pt`, `unstyled`, per-instance `dt` and attribute fall-through (Vue). They assert classes and DOM, not pixels.
+
+## ADR-094 — InputGroup in React: `UInputGroup` and `UInputGroupAddon` over the shared stylesheet (L0a, ticket #194)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#194](https://github.com/majedsiefalnasr/ultimate-packages/issues/194)). User ruling: option A, React ships components.
+
+**Context.**
+
+- PrimeReact has no InputGroup component, only the `p-inputgroup` and `p-inputgroup-addon` CSS pattern. Angular and Vue ship components.
+- The shared base CSS reaches React only through `useComponentStyle`, which a component calls. Without a component nothing registers the shared InputGroup rules.
+- Ultimate's goal is one API and one architecture across Angular, React and Vue.
+
+**Decision.**
+
+1. **Two React components.** `UInputGroup` and `UInputGroupAddon` render a single root `div` each, with the root class, the remaining props, `ptm('root')` and a forwarded ref, in the shape of `UIconField`. `pt`, `ptOptions` and `unstyled` come from the base.
+2. **One stylesheet.** `UInputGroup` registers `@ultimate/uix-styles/inputgroup` (ADR-082, ADR-093). `UInputGroupAddon` carries classes only, as in Angular and Vue.
+3. **Entry point.** The package exports `@ultimate/react/input-group` and the barrel.
+
+**Divergences from Prime.**
+
+1. This is an Ultimate addition. PrimeReact has no component, so the React rows have no upstream source to copy; the provenance entries are `authored`.
+2. Per-instance `dt` is not supported in React, as PrimeReact does not support it either.
+3. `ptOptions` has no visible effect until the global `pt` source exists (ADR-080).
+
+**Classification after this ticket** (C / P / M / I / N-A / N / U, from the Phase 4 report; the report is not edited, and nothing is browser-verified).
+
+- React 3 / 0 / 0 / 0 / 8 / 0. Rows 1 to 3 move from M to C. Rows 4 to 11 stay N: PrimeReact has no component API to compare against.
+
+**Consequences.**
+
+- React users get the same grouped-field layout as Angular and Vue, from the same CSS, without writing `p-inputgroup` rules.
+- The new React export is public API with no Prime counterpart, so it needs maintenance that PrimeReact users do not expect.
+- Tests assert classes, DOM, `pt`, `unstyled` and the registered CSS, not pixels. The React stories are not browser-verified here.
