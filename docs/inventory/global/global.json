@@ -310,8 +310,8 @@
       "scope": "shared-component-styles-146",
       "ticket": 146,
       "revision": "b9051a6668bf08b91654c23925a41cdcd9b84119",
-      "records": 15,
-      "aliases": 16,
+      "records": 16,
+      "aliases": 17,
       "pending": 1
     },
     {
@@ -1748,6 +1748,11 @@
       "id": "package.ultimate.uix-styles.floatlabel",
       "owner": "#146",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.floatlabel"
+    },
+    {
+      "id": "package.ultimate.uix-styles.iconfield",
+      "owner": "#146",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.iconfield"
     },
     {
       "id": "package.ultimate.uix-styles.inputnumber",
@@ -12154,6 +12159,22 @@
     {
       "from": "scripts/inventory/shared-component-styles.json",
       "origin": "relationship",
+      "source": "uixstyles.iconfield",
+      "target": "package.ultimate.uix-styled.root",
+      "resolution": "scripts/inventory/styled-runtime.json#uixstyled.root",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.iconfield",
+      "target": "uixstyles.root",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.root",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
       "source": "uixstyles.inputnumber",
       "target": "package.ultimate.uix-styled.root",
       "resolution": "scripts/inventory/styled-runtime.json#uixstyled.root",
@@ -12269,6 +12290,14 @@
       "source": "uixstyles.root",
       "target": "uixstyles.floatlabel",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.floatlabel",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.root",
+      "target": "uixstyles.iconfield",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.iconfield",
       "via": "record"
     },
     {
