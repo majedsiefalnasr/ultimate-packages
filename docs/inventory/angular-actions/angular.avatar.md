@@ -6,11 +6,11 @@ Framework: angular; availability: public
 
 ## Authored interpretation
 
-Person identity rendered as image, label or icon; image failure switches to label/icon fallback.
+Person identity rendered as projected content, label, icon or image; a failed image only emits onImageError.
 
 ## Framework surface
 
-label/icon/image/ariaLabel string inputs; size normal|large|xlarge default normal; shape square|circle default square; onImageError(Event). imageFailed and handlers are protected internals. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/avatar. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. Theme identity avatar matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: AvatarClassesParams, avatarStyleModule. AvatarClassesParams describes hasImage/imageFailed/shape/size for local root classes.
+label/icon/image/ariaLabel string inputs; projected ng-content is shown first, then label, else icon, else image; size normal|large|xlarge default normal; shape square|circle default square; onImageError(Event) output only emits, with no fallback or failed state (ADR-087). hostDirectives [UBind]; ngAfterViewChecked applies ptms(['host','root']), and the label, icon and image elements bind ptm through uBind. Inherits dt, unstyled, pt and ptOptions from UBaseComponent (ADR-077, ADR-085); ptOptions has no visible effect until the global pt source exists (ADR-080). Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/avatar. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS is the shared @ultimate/uix-styles/avatar module (ADR-082, ADR-087); the local avatarStyleModule supplies the class resolvers. Theme identity avatar matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: AvatarClassesParams, avatarStyleModule. AvatarClassesParams describes hasImage/shape/size for the root classes.
 
 ## Public exports
 
@@ -33,6 +33,8 @@ packages/ng/src/avatar/avatar-style.ts: AvatarClassesParams
 packages/ng/src/avatar/avatar-style.ts: avatarStyleModule
 .github/workflows/ci.yml: run: pnpm run test
 packages/ng/package.json: "test": "ng test --project=ng"
+packages/ng/src/avatar/avatar.ts: hostDirectives: [UBind]
+packages/ng/src/avatar/avatar-style.ts: @ultimate/uix-styles/avatar
 ```
 
 ## Relationships

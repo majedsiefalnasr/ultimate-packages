@@ -532,6 +532,7 @@ package.ultimate.uix-styles; implemented; packages/uix-styles
 
 Coverage: #146
 
+- package.ultimate.uix-styles.avatar: #146 (pending)
 - package.ultimate.uix-styles.badge: #146 (pending)
 - package.ultimate.uix-styles.base: #146 (pending)
 - package.ultimate.uix-styles.button: #146 (pending)
@@ -549,6 +550,7 @@ Coverage: #146
 - Entry .: packages/uix-styles/src/index.ts (manifest)
 - Entry ./base: packages/uix-styles/src/base/index.ts (manifest)
 - Entry ./badge: packages/uix-styles/src/badge/index.ts (manifest)
+- Entry ./avatar: packages/uix-styles/src/avatar/index.ts (manifest)
 - Entry ./button: packages/uix-styles/src/button/index.ts (manifest)
 - Entry ./checkbox: packages/uix-styles/src/checkbox/index.ts (manifest)
 - Entry ./dialog: packages/uix-styles/src/dialog/index.ts (manifest)

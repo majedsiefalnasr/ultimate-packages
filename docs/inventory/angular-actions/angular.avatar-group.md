@@ -6,11 +6,11 @@ Framework: angular; availability: public
 
 ## Authored interpretation
 
-Projected identity group; overlap is CSS-only and there is no UAvatar import or child-management API.
+Projected identity group; overlap is CSS-only with logical, size-specific offsets, and there is no UAvatar import or child-management API.
 
 ## Framework surface
 
-No own inputs/outputs; ng-content wrapper, no public child collection. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/avatar-group. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. No matching Aura component registry entry; fixed local layout CSS is not a theme-token relationship. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: avatarGroupStyleModule.
+No own inputs/outputs; ng-content wrapper, no public child collection. hostDirectives [UBind]; ngAfterViewChecked applies ptms(['host','root']), so pt reaches the host. Inherits dt, unstyled, pt and ptOptions from UBaseComponent (ADR-077, ADR-085); ptOptions has no visible effect until the global pt source exists (ADR-080). Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/avatar-group. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS is the shared @ultimate/uix-styles/avatar module (ADR-082, ADR-087), with logical margin-inline-start offsets from the avatar.group tokens. No matching Aura component registry entry for the group name; the offsets use the avatar namespace tokens. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: avatarGroupStyleModule.
 
 ## Public exports
 
@@ -31,6 +31,8 @@ packages/ng-core/src/basecomponent/base-component.ts: registerThemeVariables(she
 packages/ng/src/avatar-group/avatar-group-style.ts: avatarGroupStyleModule
 .github/workflows/ci.yml: run: pnpm run test
 packages/ng/package.json: "test": "ng test --project=ng"
+packages/ng/src/avatar-group/avatar-group.ts: hostDirectives: [UBind]
+packages/ng/src/avatar-group/avatar-group-style.ts: @ultimate/uix-styles/avatar
 ```
 
 ## Relationships

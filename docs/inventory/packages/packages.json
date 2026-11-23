@@ -5864,6 +5864,10 @@
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
         {
+          "path": "packages/uix-styles/test/avatar.test.ts",
+          "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
+        },
+        {
           "path": "packages/uix-styles/test/badge.test.ts",
           "reason": "Package documentation, configuration, build/test support or evidence; not independently classified as product items"
         },
@@ -13129,6 +13133,20 @@
       }
     },
     {
+      "id": "package.ultimate.uix-styles.avatar",
+      "package": "package.ultimate.uix-styles",
+      "name": "avatar",
+      "files": [
+        "packages/uix-styles/src/avatar/index.ts"
+      ],
+      "coverage": {
+        "id": "package.ultimate.uix-styles.avatar",
+        "tickets": [
+          146
+        ]
+      }
+    },
+    {
       "id": "package.ultimate.uix-styles.badge",
       "package": "package.ultimate.uix-styles",
       "name": "badge",
@@ -17454,6 +17472,18 @@
       }
     },
     {
+      "id": "package.ultimate.uix-styles:./avatar",
+      "package": "package.ultimate.uix-styles",
+      "subpath": "./avatar",
+      "source": "packages/uix-styles/src/avatar/index.ts",
+      "origin": "manifest",
+      "target": {
+        "types": "./dist/avatar/index.d.mts",
+        "import": "./dist/avatar/index.mjs",
+        "default": "./dist/avatar/index.mjs"
+      }
+    },
+    {
       "id": "package.ultimate.uix-styles:./button",
       "package": "package.ultimate.uix-styles",
       "subpath": "./button",
@@ -20091,6 +20121,11 @@
     {
       "id": "package.ultimate.uix-styled.utils",
       "batch": "#145",
+      "reason": "Detailed inventory coverage pending owning ticket"
+    },
+    {
+      "id": "package.ultimate.uix-styles.avatar",
+      "batch": "#146",
       "reason": "Detailed inventory coverage pending owning ticket"
     },
     {

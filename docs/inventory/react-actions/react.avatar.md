@@ -6,11 +6,11 @@ Framework: react; availability: public
 
 ## Authored interpretation
 
-Identity image, label or icon with local image-error fallback state.
+Identity children, image, label or icon with a failed-image fallback to the label or icon, or to a fallback image URL.
 
 ## Framework surface
 
-UAvatar and UAvatarProps forward HTMLDivElement ref. Props: label?:string, icon?:ReactNode, image?:string, size:normal|large|xlarge (default normal), shape:square|circle (default square), ariaLabel, onImageError:(SyntheticEvent<HTMLImageElement,Event>)=>void and className. No native attribute spread or children contract. imageFailed state hides failed image and prefers label then icon; changing image does not reset that state. ariaLabel becomes root aria-label and image alt. avatarStyleModule and AvatarClassesParams own hasImage/imageFailed/shape/size class resolution, local dimensions and circle styling; source-only, not public exports. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/avatar. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution and delegates mounting/style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is registered; no scoped style module imports @ultimate/uix-styles. Comments claiming missing shared modules are historical, not availability evidence. Aura key avatar exists; local CSS uses fixed dimensions, not avatar dt() tokens. No dedicated record for this family is present in the current metadata registry; no metadata association is inferred from its name.
+UAvatar and UAvatarProps forward HTMLDivElement ref. Props: label?:string, icon?:string|ReactNode (a string is a CSS class on the icon span), image?:string, imageAlt (default avatar), imageFallback (default 'default'; any other value is the fallback image URL), size:normal|large|xlarge (default normal), shape:square|circle (default square), ariaLabel, onImageError:(SyntheticEvent<HTMLImageElement,Event>)=>void, children, className, onClick, unstyled, pt and ptOptions; the remaining HTMLDivElement attributes spread onto the root. Content order is children, else the image (unless it failed), else label, else icon. A failed image with the default imageFallback is dropped, and with another imageFallback the source switches to that URL; onImageError is always called, and the failed state resets when image changes (ADR-087). onClick adds the u-avatar-clickable class. pt reaches the root, label, icon and image elements through ptm; unstyled drops the Ultimate classes; ptOptions has no visible effect until the global pt source exists (ADR-080); there is no per-instance dt. ariaLabel becomes the root aria-label. avatarStyleModule and AvatarClassesParams own hasImage/clickable/shape/size class resolution; source-only, not public exports. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/avatar. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution and delegates mounting/style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. The CSS is the shared @ultimate/uix-styles/avatar module (ADR-082, ADR-087). Aura key avatar exists and the CSS reads the avatar dt() tokens. No dedicated record for this family is present in the current metadata registry; no metadata association is inferred from its name.
 
 ## Public exports
 
@@ -29,6 +29,8 @@ packages/react/src/avatar/avatar-style.ts
 packages/react/src/avatar/avatar.tsx: export interface UAvatarProps
 packages/react/src/avatar/avatar-style.ts: export const avatarStyleModule
 packages/react/src/index.ts: export * from "./avatar";
+packages/react/src/avatar/avatar.tsx: imageFallback = "default"
+packages/react/src/avatar/avatar-style.ts: @ultimate/uix-styles/avatar
 ```
 
 ## Relationships

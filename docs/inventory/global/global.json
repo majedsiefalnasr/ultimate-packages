@@ -310,8 +310,8 @@
       "scope": "shared-component-styles-146",
       "ticket": 146,
       "revision": "b9051a6668bf08b91654c23925a41cdcd9b84119",
-      "records": 13,
-      "aliases": 14,
+      "records": 14,
+      "aliases": 15,
       "pending": 1
     },
     {
@@ -1708,6 +1708,11 @@
       "id": "package.ultimate.uix-styles",
       "owner": "#146",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.root"
+    },
+    {
+      "id": "package.ultimate.uix-styles.avatar",
+      "owner": "#146",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.avatar"
     },
     {
       "id": "package.ultimate.uix-styles.badge",
@@ -11971,6 +11976,22 @@
     {
       "from": "scripts/inventory/shared-component-styles.json",
       "origin": "relationship",
+      "source": "uixstyles.avatar",
+      "target": "package.ultimate.uix-styled.root",
+      "resolution": "scripts/inventory/styled-runtime.json#uixstyled.root",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.avatar",
+      "target": "uixstyles.root",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.root",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
       "source": "uixstyles.badge",
       "target": "package.ultimate.uix-styled.root",
       "resolution": "scripts/inventory/styled-runtime.json#uixstyled.root",
@@ -12110,6 +12131,14 @@
       "source": "uixstyles.paginator",
       "target": "uixstyles.root",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.root",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.root",
+      "target": "uixstyles.avatar",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.avatar",
       "via": "record"
     },
     {

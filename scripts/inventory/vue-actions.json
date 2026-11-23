@@ -291,8 +291,8 @@
       "name": "Vue UAvatar",
       "framework": "vue",
       "availability": "public",
-      "purpose": "Displays image, label or icon identity with image-error fallback.",
-      "surface": "label/icon/image, size(normal), shape(square), ariaLabelledby/ariaLabel props; error event. Image wins unless imageFailed, then label, then CSS-class icon. onError sets imageFailed and emits error; there is no image-change reset watcher. No default or icon slots. inheritAttrs:false. AvatarClassesParams owns hasImage/imageFailed/shape/size class resolution; source-only type, not public barrel API. UAvatar and createBaseAvatar are named exports from both @ultimate/vue and @ultimate/vue/avatar. createBaseAvatar is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. AvatarClassesParams, avatarStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. Aura registry has the avatar token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
+      "purpose": "Displays default-slot content, label, icon or image identity; a failed image only emits error.",
+      "surface": "label/icon/image, size(normal), shape(square), ariaLabelledby/ariaLabel props; error event. The default slot replaces the content; otherwise label, then the icon slot, then the CSS-class icon, then the image. onError only emits error: there is no failed state, no fallback and no reset watcher, as in PrimeVue (ADR-087). ptmi('root') carries pt and fall-through attributes onto the root, and the label, icon and image elements bind ptm; inheritAttrs:false. unstyled and per-instance dt come from the base chain; ptOptions has no visible effect until the global pt source exists (ADR-080). The icon slot's root does not receive the u-avatar-icon class. AvatarClassesParams owns hasImage/shape/size class resolution; source-only type, not public barrel API. UAvatar and createBaseAvatar are named exports from both @ultimate/vue and @ultimate/vue/avatar. createBaseAvatar is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. AvatarClassesParams, avatarStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. The CSS is the shared @ultimate/uix-styles/avatar module (ADR-082, ADR-087). Aura registry has the avatar token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
       "files": [
         "packages/vue/src/avatar/Avatar.vue",
         "packages/vue/src/avatar/BaseAvatar.ts",
@@ -321,6 +321,14 @@
         {
           "path": "packages/vue/src/avatar/Avatar.vue",
           "contains": "name: \"UAvatar\""
+        },
+        {
+          "path": "packages/vue/src/avatar/Avatar.vue",
+          "contains": "ptmi('root')"
+        },
+        {
+          "path": "packages/vue/src/avatar/avatar-style.ts",
+          "contains": "@ultimate/uix-styles/avatar"
         }
       ],
       "relationships": [
@@ -350,8 +358,8 @@
       "name": "Vue UAvatarGroup",
       "framework": "vue",
       "availability": "public",
-      "purpose": "Groups caller-supplied avatars with overlapping CSS.",
-      "surface": "No own props/events. div role=group projects default slot. inheritAttrs:false. Local CSS uses adjacent-avatar margin-left:-1rem and var(--u-avatar-group-border-color,#fff); no dt() calls or dedicated Aura avatar-group registry key. UAvatarGroup and createBaseAvatarGroup are named exports from both @ultimate/vue and @ultimate/vue/avatar-group. createBaseAvatarGroup is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. avatarGroupStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. No dedicated Aura registry key is inferred for this grouping wrapper. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
+      "purpose": "Groups caller-supplied avatars with overlapping CSS that uses logical, size-specific offsets.",
+      "surface": "No own props/events. div role=group projects default slot; ptmi('root') carries pt and fall-through attributes onto the root, and inheritAttrs:false. The overlap uses margin-inline-start offsets from the avatar.group dt() tokens (ADR-087); there is no dedicated Aura avatar-group registry key. UAvatarGroup and createBaseAvatarGroup are named exports from both @ultimate/vue and @ultimate/vue/avatar-group. createBaseAvatarGroup is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. avatarGroupStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. The CSS is the shared @ultimate/uix-styles/avatar module (ADR-082, ADR-087). No dedicated Aura registry key is inferred for this grouping wrapper. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
       "files": [
         "packages/vue/src/avatar-group/AvatarGroup.vue",
         "packages/vue/src/avatar-group/BaseAvatarGroup.ts",
@@ -380,6 +388,14 @@
         {
           "path": "packages/vue/src/avatar-group/AvatarGroup.vue",
           "contains": "name: \"UAvatarGroup\""
+        },
+        {
+          "path": "packages/vue/src/avatar-group/AvatarGroup.vue",
+          "contains": "ptmi('root')"
+        },
+        {
+          "path": "packages/vue/src/avatar-group/avatar-group-style.ts",
+          "contains": "@ultimate/uix-styles/avatar"
         }
       ],
       "relationships": [

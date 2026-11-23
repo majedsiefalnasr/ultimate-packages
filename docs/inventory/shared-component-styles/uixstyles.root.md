@@ -10,7 +10,7 @@ The package root barrel and the shared StyleType alias, plus reconciliation of s
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). src/index.ts re-exports the base module's style as the named root export base and re-exports everything from src/types.ts with a relative star re-export. src/types.ts declares `export type StyleType = string;`, a type contract (no runtime value) redefined locally instead of importing from another package; no module in this package currently imports it. Subpath reconciliation: packages/uix-styles/package.json declares 13 exports (the root plus ./base, ./badge, ./button, ./checkbox, ./dialog, ./inputnumber, ./inputtext, ./menu, ./paginator, ./table, ./tooltip, ./virtualscroller). packages/uix-styles/tsup.config.ts builds src/index.ts plus one entry per directory found under src, which yields the same 12 subpath entries by directory discovery. The two sets agree at the inspected revision. The root does not re-export any component style.
+See [authored signatures and interpretation](README.md). src/index.ts re-exports the base module's style as the named root export base and re-exports everything from src/types.ts with a relative star re-export. src/types.ts declares `export type StyleType = string;`, a type contract (no runtime value) redefined locally instead of importing from another package; no module in this package currently imports it. Subpath reconciliation: packages/uix-styles/package.json declares 14 exports (the root plus ./avatar, ./base, ./badge, ./button, ./checkbox, ./dialog, ./inputnumber, ./inputtext, ./menu, ./paginator, ./table, ./tooltip, ./virtualscroller). packages/uix-styles/tsup.config.ts builds src/index.ts plus one entry per directory found under src, which yields the same 13 subpath entries by directory discovery. The two sets agree at the inspected revision. The root does not re-export any component style.
 
 ## Public exports
 
@@ -32,6 +32,7 @@ packages/uix-styles/src/../tsup.config.ts: readdirSync
 ## Relationships
 
 uixstyles.base
+uixstyles.avatar
 uixstyles.badge
 uixstyles.button
 uixstyles.checkbox
