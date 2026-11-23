@@ -7,7 +7,9 @@
   >
     <slot>
       <span v-if="label" :class="cx('label')" v-bind="ptm('label')">{{ label }}</span>
-      <component :is="$slots.icon" v-else-if="$slots.icon" :class="cx('icon')" />
+      <span v-else-if="$slots.icon" :class="cx('icon')" v-bind="ptm('icon')"
+        ><slot name="icon"
+      /></span>
       <span v-else-if="icon" :class="[cx('icon'), icon]" v-bind="ptm('icon')" />
       <img v-else-if="image" :src="image" :alt="ariaLabel" @error="onError" v-bind="ptm('image')" />
     </slot>

@@ -1324,7 +1324,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 2. React falls back after a failed image even when `onImageError` is supplied, where PrimeReact suppresses its built-in fallback (item 1 of the decision).
 3. Angular does not offer `styleClass` or `style`; the host takes a normal `class` and `style`.
 4. `ptOptions` is accepted everywhere but has no visible effect until the global `pt` source exists (ADR-080), so row 12a is P.
-5. The Vue `icon` slot's root does not receive the `u-avatar-icon` class, because the slot is rendered through a dynamic component as in PrimeVue. Angular and React wrap the icon in a span that carries the class. This is open for a ruling.
+5. The Vue `icon` slot is wrapped in a span that carries `u-avatar-icon` and the icon `ptm`, as Angular and React already do. PrimeVue renders the slot through a dynamic component and the class never reaches it, so the shared icon-size rule would not apply to a slot icon. Ruled by the user for #201.
 
 **Classification after this ticket** (C / P / M / I / N-A / N / U, from a source re-read; the Phase 4 report is not edited).
 

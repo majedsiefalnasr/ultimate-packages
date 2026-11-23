@@ -1011,7 +1011,7 @@
     "originalPath": "packages/primevue/src/avatar/Avatar.vue",
     "ultimateDestination": "packages/vue/src/avatar/Avatar.vue",
     "modificationStatus": "adapted",
-    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 Avatar.vue: the default slot that replaces the content, the content order (`label`, else the `icon` slot, else the `icon` class string, else the `image`), the `@error` handler that only emits `error` (no fallback and no failed state, as upstream), `aria-label` and `aria-labelledby` and `ptmi('root')` with `inheritAttrs: false` are upstream's. `ptm('label')`, `ptm('icon')` and `ptm('image')` on the inner elements are Ultimate's wiring (ADR-087). The `data-p` attribute is absent. The class does not reach an `icon` slot's root, as in upstream. Changed for #201."
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 Avatar.vue: the default slot that replaces the content, the content order (`label`, else the `icon` slot, else the `icon` class string, else the `image`), the `@error` handler that only emits `error` (no fallback and no failed state, as upstream), `aria-label` and `aria-labelledby` and `ptmi('root')` with `inheritAttrs: false` are upstream's. `ptm('label')`, `ptm('icon')` and `ptm('image')` on the inner elements are Ultimate's wiring (ADR-087). The `data-p` attribute is absent. The `icon` slot is wrapped in a span that carries `u-avatar-icon` and the icon `ptm`, which upstream does not do (ADR-087, divergence 5). Changed for #201."
   },
   {
     "originalPath": "packages/primevue/src/avatar/BaseAvatar.vue",

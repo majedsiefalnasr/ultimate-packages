@@ -48,6 +48,7 @@ describe("UAvatar", () => {
       });
       const icon = wrapper.find(".custom-icon");
       expect(icon.exists()).toBe(true);
+      expect(icon.element.parentElement?.classList.contains("u-avatar-icon")).toBe(true);
       expect(wrapper.find(".pi-user").exists()).toBe(false);
       expect(wrapper.find("img").exists()).toBe(false);
     });
