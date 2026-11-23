@@ -472,5 +472,41 @@
     "ultimateDestination": "packages/react/src/input-text/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UInputText and UInputTextProps; it shares only the exported component with PrimeReact's inputtext module."
+  },
+  {
+    "originalPath": "components/lib/avatar/Avatar.js",
+    "ultimateDestination": "packages/react/src/avatar/avatar.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 Avatar.js: the content order (children, else image, label, icon), the string-or-node `icon`, `imageAlt` with the default `avatar`, `imageFallback` with the default `default`, the always-called `onImageError`, the `u-avatar-clickable` class when `onClick` is set, and the merge of the component's props, the remaining props and `ptm('root')` are upstream's. PrimeReactContext, AvatarBase.getProps, useHandleStyle and the `template` function prop are replaced by useComponentBase, createPassThrough and React state; `children` covers the node form of `template`. A failed image with the default `imageFallback` is dropped even when `onImageError` is supplied, where upstream suppresses that fallback (user ruling 2026-11-18, reference-defect in the Phase 4 report). The failed state resets when `image` changes. `unstyled` and `pt` on the root, label, icon and image are Ultimate's wiring (ADR-087). Changed for #201."
+  },
+  {
+    "originalPath": "components/lib/avatar/AvatarBase.js",
+    "ultimateDestination": "packages/react/src/avatar/avatar-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 AvatarBase.js `classes`: `p-avatar p-component` becomes `u-avatar u-component`, and `p-avatar-image`, `p-avatar-clickable`, `p-avatar-circle`, `p-avatar-lg` and `p-avatar-xl` keep their keys under the `u-` prefix. The label and icon classes are `u-avatar-text` and `u-avatar-icon`. The CSS is the shared `@ultimate/uix-styles/avatar` module (ADR-082, ADR-087); the hard-coded React CSS is gone. Changed for #201."
+  },
+  {
+    "originalPath": "components/lib/avatar/Avatar.js",
+    "ultimateDestination": "packages/react/src/avatar/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UAvatar and UAvatarProps; it shares only the exported component with PrimeReact's avatar module."
+  },
+  {
+    "originalPath": "components/lib/avatargroup/AvatarGroup.js",
+    "ultimateDestination": "packages/react/src/avatar-group/avatar-group.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 AvatarGroup.js: a single `span` with `role=\"group\"` that renders its children, and the merge of the remaining props and `ptm('root')`, are upstream's. PrimeReactContext, AvatarGroupBase.getProps and useHandleStyle are replaced by useComponentBase and createPassThrough; `unstyled` and `pt` are Ultimate's wiring (ADR-087). Changed for #201."
+  },
+  {
+    "originalPath": "components/lib/avatargroup/AvatarGroupBase.js",
+    "ultimateDestination": "packages/react/src/avatar-group/avatar-group-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). The group root class is PrimeReact 10.9.9 AvatarGroupBase.js `p-avatar-group p-component`, renamed to `u-avatar-group u-component`. The CSS is the shared `@ultimate/uix-styles/avatar` module (ADR-082), with a logical `margin-inline-start` and size-specific offsets from the `avatar.group.*` tokens (ADR-087); the fixed `margin-left` is gone. Changed for #201."
+  },
+  {
+    "originalPath": "components/lib/avatargroup/AvatarGroup.js",
+    "ultimateDestination": "packages/react/src/avatar-group/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UAvatarGroup and UAvatarGroupProps; it shares only the exported component with PrimeReact's avatargroup module."
   }
 ]

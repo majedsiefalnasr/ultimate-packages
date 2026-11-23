@@ -444,10 +444,10 @@
     "modificationDescription": "GAP-063 (Prime-parity Vue Plan). Mirrors PrimeVue 4.5.5's StepperSeparator.vue: a single span carrying the stepper style module's separator class. Ultimate differences: built on vue-core's createBaseComponent with the stepper style module (no $pcStepper inject or pass-through ptmo binding), renamed UStepperSeparator, internal to UStepPanel's vertical layout and not exported from index.ts."
   },
   {
-    "originalPath": "src/avatar/index.ts",
+    "originalPath": "packages/primevue/src/avatar/style/AvatarStyle.js",
     "ultimateDestination": "packages/vue/src/avatar/avatar-style.ts",
-    "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 avatar, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A1."
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). The resolver keys (`image`, `circle`, `lg`, `xl`, `label` and `icon`) are PrimeVue 4.5.5 AvatarStyle.js `classes` with `p-avatar` renamed to `u-avatar`. The CSS is the shared `@ultimate/uix-styles/avatar` module (ADR-082, ADR-087); this file holds none of its own. Changed for #201."
   },
   {
     "originalPath": "src/chip/index.ts",
@@ -1006,5 +1006,47 @@
     "ultimateDestination": "packages/vue/src/input-text/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UInputText and createBaseInputText; it shares only the exported component with PrimeVue's inputtext module."
+  },
+  {
+    "originalPath": "packages/primevue/src/avatar/Avatar.vue",
+    "ultimateDestination": "packages/vue/src/avatar/Avatar.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 Avatar.vue: the default slot that replaces the content, the content order (`label`, else the `icon` slot, else the `icon` class string, else the `image`), the `@error` handler that only emits `error` (no fallback and no failed state, as upstream), `aria-label` and `aria-labelledby` and `ptmi('root')` with `inheritAttrs: false` are upstream's. `ptm('label')`, `ptm('icon')` and `ptm('image')` on the inner elements are Ultimate's wiring (ADR-087). The `data-p` attribute is absent. The class does not reach an `icon` slot's root, as in upstream. Changed for #201."
+  },
+  {
+    "originalPath": "packages/primevue/src/avatar/BaseAvatar.vue",
+    "ultimateDestination": "packages/vue/src/avatar/BaseAvatar.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064). Shares the `extends` of the component base and the `label`, `icon`, `image`, `size`, `shape`, `ariaLabelledby` and `ariaLabel` props with PrimeVue 4.5.5 BaseAvatar.vue; the file is a typed factory (`createBaseAvatar`) and attaches the avatar style through `createBaseComponent`. Changed for #201."
+  },
+  {
+    "originalPath": "packages/primevue/src/avatar/Avatar.vue",
+    "ultimateDestination": "packages/vue/src/avatar/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UAvatar and createBaseAvatar; it shares only the exported component with PrimeVue's avatar module."
+  },
+  {
+    "originalPath": "packages/primevue/src/avatargroup/AvatarGroup.vue",
+    "ultimateDestination": "packages/vue/src/avatar-group/AvatarGroup.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 AvatarGroup.vue: a single root with `role=\"group\"` that renders the default slot, with `ptmi('root')` and `inheritAttrs: false`, are upstream's. The root is a `div` in both (ADR-087). Changed for #201."
+  },
+  {
+    "originalPath": "packages/primevue/src/avatargroup/BaseAvatarGroup.vue",
+    "ultimateDestination": "packages/vue/src/avatar-group/BaseAvatarGroup.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064). Shares the `extends` of the component base with PrimeVue 4.5.5 BaseAvatarGroup.vue; the file is a typed factory (`createBaseAvatarGroup`) and attaches the group style through `createBaseComponent`. Changed for #201."
+  },
+  {
+    "originalPath": "packages/primevue/src/avatargroup/AvatarGroup.vue",
+    "ultimateDestination": "packages/vue/src/avatar-group/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UAvatarGroup and createBaseAvatarGroup; it shares only the exported component with PrimeVue's avatargroup module."
+  },
+  {
+    "originalPath": "packages/primevue/src/avatargroup/style/AvatarGroupStyle.js",
+    "ultimateDestination": "packages/vue/src/avatar-group/avatar-group-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). The group root class is PrimeVue 4.5.5 AvatarGroupStyle.js `classes.root` (`p-avatar-group p-component`), renamed to `u-avatar-group u-component`. Like upstream, the group uses the whole avatar style: the CSS is the shared `@ultimate/uix-styles/avatar` module (ADR-082), with logical, size-specific offsets from the `avatar.group.*` tokens (ADR-087). Changed for #201."
   }
 ]

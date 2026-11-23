@@ -272,6 +272,20 @@ Ticket #188 (spec #167, ADR-086) brings InputText to parity across the three fra
 
 The seven React and Vue InputText files left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json`, `vue.json` and `vue-core.json`.
 
+### L0a Avatar source disclosure
+
+Ticket #201 (spec #167, ADR-087) brings Avatar and AvatarGroup to parity across the three frameworks against the pinned oracles PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5. No Prime package is a dependency (ADR-004); the sources were read from the checksum-verified archives re-fetched into `.vendor-cache` (ADR-064).
+
+- **Angular `avatar.ts` and `avatar-group.ts` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeNG `avatar/avatar.ts` and `avatargroup/avatargroup.ts`. The content order, the `label`, `icon`, `image`, `size`, `shape` and aria inputs, the emit-only `onImageError` and the content-projecting group host are upstream's. `pt`, `unstyled` and `dt` come from `UBaseComponent` and the `UBind` host directive.
+- **React `avatar.tsx` and `avatar-group.tsx` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeReact `avatar/Avatar.js` and `avatargroup/AvatarGroup.js`. The content order, `imageAlt`, `imageFallback`, `onImageError`, the clickable class, the group's `role="group"` span and the prop merge with `ptm('root')` are upstream's. The `template` function prop is replaced by `children`. A fallback after a failed image is kept when `onImageError` is supplied (user ruling 2026-11-18).
+- **Vue `Avatar.vue` and `AvatarGroup.vue` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeVue `avatar/Avatar.vue` and `avatargroup/AvatarGroup.vue`. The default slot, the `icon` slot, the emit-only `@error` and `ptmi('root')` are upstream's; the `data-p` attribute is absent.
+- **Style resolvers (source class COPY, sub-label `adapted`).** The six `avatar-style.ts` and `avatar-group-style.ts` files keep the upstream class resolver keys under the `u-` prefix. Their CSS is the shared `packages/uix-styles/src/avatar/index.ts`.
+- **`packages/uix-styles/src/avatar/index.ts` (source class COPY, sub-label `adapted`).** The `@primeuix/styles` 2.0.3 avatar module with `.p-avatar*` renamed to `.u-avatar*`, plus one added rule, `.u-avatar-clickable { cursor: pointer; }`, which is PrimeReact's own click styling.
+- **`BaseAvatar.ts`, `BaseAvatarGroup.ts` and the barrels (source class REFERENCE).** They share only interface facts with the compared upstream files.
+- **Specs.** The Avatar and AvatarGroup specs are Ultimate-authored.
+
+The 18 Avatar files left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json`, `vue.json` and `uix-styles.json`.
+
 ### F13 motion default name source disclosure
 
 `packages/uix-motion/src/config/index.ts` is copied from `@primeuix/motion` (source class COPY, ADR-064). Ticket #177 (spec #167) changes one value in `DEFAULT_MOTION_OPTIONS`: the default `name` is `"u"` instead of upstream's `"p"`, so a `createMotion` call without a name generates `u-enter-*` and `u-leave-*` classes, matching the `u` prefix Ultimate already uses for the theme, the CSS layer and the SSR attribute. Every Dialog and Menu call site in Angular, React and Vue already passes its own `u-dialog` or `u-menu` name, so no component source changed and no new upstream package or version was introduced. The file-level record is `docs/architecture/provenance/uix-motion.json`, with the sub-label moved from `import-path-adapted` to `adapted`.
