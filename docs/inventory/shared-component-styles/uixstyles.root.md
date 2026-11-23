@@ -40,6 +40,7 @@ uixstyles.dialog
 uixstyles.floatlabel
 uixstyles.iconfield
 uixstyles.iftalabel
+uixstyles.inputgroup
 uixstyles.inputnumber
 uixstyles.inputtext
 uixstyles.menu

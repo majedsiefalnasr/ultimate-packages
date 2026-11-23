@@ -10,7 +10,7 @@ Composition pair joining projected controls and addons into one connected group.
 
 ## Framework surface
 
-Two standalone OnPush components in one file. UInputGroup selector u-input-group extends UBaseComponent, projects content, no inputs or outputs, host class u-input-group. UInputGroupAddon selector u-input-group-addon extends UBaseComponent, projects content, declares inlineStyle: Record<string, unknown>|null|undefined bound to host [style], host class u-input-group-addon. componentNames inputgroup and input-group-addon; Theme identity inputgroup matches the Aura components registry, input-group-addon has no registry key. The group style module owns all CSS (including addon rules and nested .u-icon-field/.u-float-label/.u-ifta-label layout); the addon style module has empty css. CSS is hand-ported locally (no @ultimate/uix-styles/input-group subpath). Public API: UInputGroup, UInputGroupAddon (classes). Owned source-only declarations: inputGroupStyleModule, inputGroupAddonStyleModule; no class-parameter interface. Layout-only wrapper: template is <ng-content>, no ControlValueAccessor or model tier; it extends UBaseComponent so it inherits dt/unstyled. No dedicated component-metadata record exists in the current records directory. Also exposed via @ultimate/ng/input-group. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.
+Two standalone OnPush components in one file. UInputGroup selector u-input-group extends UBaseComponent, projects content, no inputs or outputs, host class u-input-group. UInputGroupAddon selector u-input-group-addon extends UBaseComponent, projects content, declares inlineStyle: Record<string, unknown>|null|undefined bound to host [style], host class u-input-group-addon. Both bind the host through the UBind host directive (ptms host and root in ngAfterViewChecked), so pt, ptOptions, unstyled and per-instance dt apply (ADR-093). componentNames inputgroup and inputgroupaddon; the Aura components registry has inputgroup but no inputgroupaddon key. The group style module owns the CSS: the shared @ultimate/uix-styles/inputgroup module (ADR-082, ADR-093), which also lays out nested .u-icon-field, .u-float-label and .u-ifta-label, plus the Angular-only rules for the u-button and u-input-mask host elements; the addon style module has empty css. Public API: UInputGroup, UInputGroupAddon (classes). Owned source-only declarations: inputGroupStyleModule, inputGroupAddonStyleModule; no class-parameter interface. Layout-only wrapper: template is <ng-content>, no ControlValueAccessor or model tier. No dedicated component-metadata record exists in the current records directory. Also exposed via @ultimate/ng/input-group. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.
 
 ## Public exports
 
@@ -35,6 +35,8 @@ packages/ng/src/input-group/input-group-style.ts: export const inputGroupAddonSt
 packages/themes/src/presets/aura/index.ts: inputgroup: inputGroup
 .github/workflows/ci.yml: run: pnpm run test
 packages/ng/package.json: "test": "ng test --project=ng"
+packages/ng/src/input-group/input-group.ts: hostDirectives: [UBind]
+packages/ng/src/input-group/input-group-style.ts: @ultimate/uix-styles/inputgroup"
 ```
 
 ## Relationships

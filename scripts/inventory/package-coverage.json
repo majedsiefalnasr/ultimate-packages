@@ -879,6 +879,10 @@
       "tickets": [111]
     },
     {
+      "id": "package.ultimate.react.input-group",
+      "tickets": [111]
+    },
+    {
       "id": "package.ultimate.react.input-mask",
       "tickets": [111]
     },
@@ -1256,6 +1260,10 @@
     },
     {
       "id": "package.ultimate.uix-styles.iftalabel",
+      "tickets": [146]
+    },
+    {
+      "id": "package.ultimate.uix-styles.inputgroup",
       "tickets": [146]
     },
     {

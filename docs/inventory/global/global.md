@@ -182,7 +182,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 - package.ultimate.ng.toggle-switch: #113 -> scripts/inventory/angular-choice-range.json#angular.toggle-switch
 - package.ultimate.ng.toolbar: #107 -> scripts/inventory/angular-actions.json#angular.toolbar
 - package.ultimate.ng.tooltip: #122 -> scripts/inventory/angular-overlays-notifications.json#angular.tooltip
-- package.ultimate.react: #108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141 -> aggregate of 88 resolved families (#108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141)
+- package.ultimate.react: #108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141 -> aggregate of 89 resolved families (#108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141)
 - package.ultimate.react-core: #149 -> scripts/inventory/react-core.json#reactcore.root
 - package.ultimate.react-core.base: #149 -> scripts/inventory/react-core.json#reactcore.base
 - package.ultimate.react-core.confirmation: #149 -> scripts/inventory/react-core.json#reactcore.confirmation
@@ -230,6 +230,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 - package.ultimate.react.image: #138 -> scripts/inventory/react-media-containers.json#react.image
 - package.ultimate.react.inplace: #141 -> scripts/inventory/react-feedback.json#react.inplace
 - package.ultimate.react.input-chips: #111 -> scripts/inventory/react-text-entry.json#react.input-chips
+- package.ultimate.react.input-group: #111 -> scripts/inventory/react-text-entry.json#react.input-group
 - package.ultimate.react.input-mask: #111 -> scripts/inventory/react-text-entry.json#react.input-mask
 - package.ultimate.react.input-number: #120 -> scripts/inventory/react-numeric-date-color-file.json#react.input-number
 - package.ultimate.react.input-otp: #111 -> scripts/inventory/react-text-entry.json#react.input-otp
@@ -318,6 +319,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 - package.ultimate.uix-styles.floatlabel: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.floatlabel
 - package.ultimate.uix-styles.iconfield: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.iconfield
 - package.ultimate.uix-styles.iftalabel: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.iftalabel
+- package.ultimate.uix-styles.inputgroup: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.inputgroup
 - package.ultimate.uix-styles.inputnumber: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.inputnumber
 - package.ultimate.uix-styles.inputtext: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.inputtext
 - package.ultimate.uix-styles.menu: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.menu
@@ -449,7 +451,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 
 ## References
 
-1887 references; 0 unresolved.
+1892 references; 0 unresolved.
 
 - scripts/inventory/ai.json: 18 references, 0 unresolved
 - scripts/inventory/angular-actions.json: 47 references, 0 unresolved
@@ -482,9 +484,9 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 - scripts/inventory/react-option-selection.json: 23 references, 0 unresolved
 - scripts/inventory/react-overlays-notifications.json: 83 references, 0 unresolved
 - scripts/inventory/react-table-viewport.json: 34 references, 0 unresolved
-- scripts/inventory/react-text-entry.json: 41 references, 0 unresolved
+- scripts/inventory/react-text-entry.json: 43 references, 0 unresolved
 - scripts/inventory/root-files.json: 0 references, 0 unresolved
-- scripts/inventory/shared-component-styles.json: 49 references, 0 unresolved
+- scripts/inventory/shared-component-styles.json: 52 references, 0 unresolved
 - scripts/inventory/styled-runtime.json: 33 references, 0 unresolved
 - scripts/inventory/theme-contract.json: 20 references, 0 unresolved
 - scripts/inventory/uix-utils-dom.json: 9 references, 0 unresolved
