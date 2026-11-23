@@ -1,15 +1,36 @@
 import * as React from "react";
-import { useComponentBase } from "@ultimate/react-core";
+import {
+  createPassThrough,
+  useComponentBase,
+  useMergeProps,
+  type PassThrough,
+  type PassThroughOptions,
+} from "@ultimate/react-core";
 import { toolbarStyleModule } from "./toolbar-style";
 
-export interface UToolbarProps {
+/** Region content: a node, or a function that receives the toolbar props and returns one. */
+export type UToolbarRegion = React.ReactNode | ((props: UToolbarProps) => React.ReactNode);
+
+export interface UToolbarProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "children" | "className" | "style"
+> {
   ariaLabelledBy?: string;
-  start?: React.ReactNode;
-  center?: React.ReactNode;
-  end?: React.ReactNode;
+  start?: UToolbarRegion;
+  center?: UToolbarRegion;
+  end?: UToolbarRegion;
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  /** Renders the component with no Ultimate classes or styles. */
+  unstyled?: boolean;
+  /** Attributes for the toolbar's elements by section: root, start, center, end. */
+  pt?: PassThrough;
+  ptOptions?: PassThroughOptions;
+}
+
+function resolveRegion(region: UToolbarRegion, props: UToolbarProps): React.ReactNode {
+  return typeof region === "function" ? region(props) : region;
 }
 
 /**
@@ -20,29 +41,62 @@ export interface UToolbarProps {
  * never a form control.
  *
  * This port keeps real source's `start`/`center`/`end` three-slot layout as
- * `React.ReactNode` props (React's established fully-controlled idiom,
- * matching real source's own `left`/`right`-deprecated-alias-carrying
- * `start`/`end`/`center` render props) plus `children` for any un-slotted
- * default content.
+ * props that take a node or a function of the toolbar props (as
+ * `getJSXElement` does in real source), plus `children` for any un-slotted
+ * default content. A region renders only when its prop is defined. The
+ * deprecated `left`/`right` aliases are not offered (ADR-089); the ref is the
+ * root element itself.
  */
-export const UToolbar = React.forwardRef<HTMLDivElement, UToolbarProps>(function UToolbar(
-  { ariaLabelledBy, start, center, end, children, className, style },
-  ref
-) {
-  const { cx } = useComponentBase({ componentName: "toolbar", styleModule: toolbarStyleModule });
+export const UToolbar = React.forwardRef<HTMLDivElement, UToolbarProps>(
+  function UToolbar(props, ref) {
+    const {
+      ariaLabelledBy,
+      start,
+      center,
+      end,
+      children,
+      className,
+      style,
+      unstyled,
+      pt,
+      ptOptions,
+      ...rest
+    } = props;
+    const { cx } = useComponentBase({
+      componentName: "toolbar",
+      styleModule: toolbarStyleModule,
+      unstyled,
+    });
+    const { ptm } = createPassThrough("toolbar", { props: { pt, ptOptions } });
+    const mergeProps = useMergeProps();
 
-  return (
-    <div
-      ref={ref}
-      className={[cx("root"), className].filter(Boolean).join(" ")}
-      role="toolbar"
-      aria-labelledby={ariaLabelledBy}
-      style={style}
-    >
-      {children}
-      {start !== undefined && <div className={cx("start")}>{start}</div>}
-      {center !== undefined && <div className={cx("center")}>{center}</div>}
-      {end !== undefined && <div className={cx("end")}>{end}</div>}
-    </div>
-  );
-});
+    return (
+      <div
+        ref={ref}
+        {...mergeProps(
+          { role: "toolbar", "aria-labelledby": ariaLabelledBy, style },
+          rest,
+          { className: [cx("root"), className].filter(Boolean).join(" ") },
+          ptm("root")
+        )}
+      >
+        {children}
+        {start !== undefined && (
+          <div {...mergeProps({ className: cx("start") }, ptm("start"))}>
+            {resolveRegion(start, props)}
+          </div>
+        )}
+        {center !== undefined && (
+          <div {...mergeProps({ className: cx("center") }, ptm("center"))}>
+            {resolveRegion(center, props)}
+          </div>
+        )}
+        {end !== undefined && (
+          <div {...mergeProps({ className: cx("end") }, ptm("end"))}>
+            {resolveRegion(end, props)}
+          </div>
+        )}
+      </div>
+    );
+  }
+);

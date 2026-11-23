@@ -1,9 +1,15 @@
 <template>
-  <div :class="cx('root')" role="toolbar" :aria-labelledby="ariaLabelledby">
+  <div :class="cx('root')" role="toolbar" :aria-labelledby="ariaLabelledby" v-bind="ptmi('root')">
     <slot></slot>
-    <div v-if="$slots.start" :class="cx('start')"><slot name="start"></slot></div>
-    <div v-if="$slots.center" :class="cx('center')"><slot name="center"></slot></div>
-    <div v-if="$slots.end" :class="cx('end')"><slot name="end"></slot></div>
+    <div v-if="$slots.start" :class="cx('start')" v-bind="ptm('start')">
+      <slot name="start"></slot>
+    </div>
+    <div v-if="$slots.center" :class="cx('center')" v-bind="ptm('center')">
+      <slot name="center"></slot>
+    </div>
+    <div v-if="$slots.end" :class="cx('end')" v-bind="ptm('end')">
+      <slot name="end"></slot>
+    </div>
   </div>
 </template>
 
@@ -16,7 +22,9 @@
 //
 // This port keeps real source's `start`/`center`/`end` three-slot layout,
 // matching real PrimeVue's own named-slot shape exactly, plus the default
-// slot for any un-slotted content.
+// slot for any un-slotted content. A region renders only when its slot is
+// provided (ADR-089). `ptmi('root')` carries `pt` and the fall-through
+// attributes onto the root; `unstyled` and `dt` come from the base chain.
 import { createBaseToolbar } from "./BaseToolbar";
 
 export default {
