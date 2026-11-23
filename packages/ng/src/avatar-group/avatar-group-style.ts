@@ -1,19 +1,16 @@
+import { style as avatarStyle } from "@ultimate/uix-styles/avatar";
+
 /**
  * Ultimate-owned adaptation of PrimeNG's `AvatarGroupStyle` (see
  * `.vendor-extracted/ng/avatargroup/style/avatargroupstyle.ts`), shaped to
- * match `UBaseComponent`'s `styleModule: {css, classes}` contract. No
- * `@ultimate/uix-styles/avatar-group` entry exists yet, so `css`/`classes`
- * are authored locally (same precedent as `avatarStyleModule`).
- *
- * The overlapping-avatar layout (negative left margin + a border to
- * separate stacked avatars) is real PrimeNG's own documented `AvatarGroup`
- * visual behavior (see PrimeNG's live demo), ported here as plain CSS —
- * no JS overlap-calculation logic exists in any of the 3 real sources.
+ * match `UBaseComponent`'s `styleModule: {css, classes}` contract. Like
+ * PrimeNG, the group uses the whole avatar style: the overlapping layout is
+ * the `.u-avatar-group` rules of the shared `@ultimate/uix-styles/avatar`
+ * module (ADR-082), with a logical `margin-inline-start` and a size-specific
+ * offset taken from the `avatar.group.*` tokens (ADR-087).
  */
 const css = /*css*/ `
-.u-avatar-group { display: flex; align-items: center; }
-.u-avatar-group .u-avatar + .u-avatar { margin-left: -1rem; }
-.u-avatar-group .u-avatar { border: 2px solid var(--u-avatar-group-border-color, #fff); }
+    ${avatarStyle}
 `;
 
 const classes = {

@@ -24,6 +24,11 @@
       "import": "./dist/badge/index.mjs",
       "default": "./dist/badge/index.mjs"
     },
+    "./avatar": {
+      "types": "./dist/avatar/index.d.mts",
+      "import": "./dist/avatar/index.mjs",
+      "default": "./dist/avatar/index.mjs"
+    },
     "./button": {
       "types": "./dist/button/index.d.mts",
       "import": "./dist/button/index.mjs",

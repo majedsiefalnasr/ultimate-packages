@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { style as base } from "../src/base";
+import { style as avatarStyle } from "../src/avatar";
 import { style as badgeStyle } from "../src/badge";
 import { style as buttonStyle } from "../src/button";
 import { style as checkboxStyle } from "../src/checkbox";
@@ -51,6 +52,7 @@ describe("component style modules — exactly 12 exist alongside base", () => {
     expect(actualModules).toEqual(
       [
         "base",
+        "avatar",
         "badge",
         "button",
         "checkbox",
@@ -64,6 +66,10 @@ describe("component style modules — exactly 12 exist alongside base", () => {
         "virtualscroller",
       ].sort()
     );
+  });
+
+  it("avatar style uses only .u-avatar* selectors", () => {
+    expect(avatarStyle).not.toMatch(/\.p-avatar/);
   });
 
   it("badge style uses only .u-badge* selectors", () => {

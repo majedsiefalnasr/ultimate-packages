@@ -1,33 +1,30 @@
+import type { StyleModule } from "@ultimate/react-core";
+import { style as avatarStyle } from "@ultimate/uix-styles/avatar";
+
 /**
- * Ultimate-owned adaptation of PrimeReact's `AvatarBase` style (see
- * `.vendor-extracted/react/avatar/AvatarBase.js`), shaped to match
- * `useComponentBase`'s `styleModule: {css, classes}` contract. No
- * `@ultimate/uix-styles/avatar` entry exists yet, so `css`/`classes` are
- * authored locally (same precedent as `contextMenuStyleModule`).
+ * `useComponentBase`-shaped style module for `UAvatar`. The structural CSS is
+ * the shared `@ultimate/uix-styles/avatar` module (ADR-082, ADR-087), so it
+ * reads the Aura `avatar` tokens and matches Angular and Vue.
  */
 const css = /*css*/ `
-.u-avatar { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; font-size: 1rem; }
-.u-avatar.u-avatar-image { background-color: transparent; }
-.u-avatar.u-avatar-circle { border-radius: 50%; }
-.u-avatar.u-avatar-circle img { border-radius: 50%; }
-.u-avatar .u-avatar-icon { font-size: 1rem; }
-.u-avatar img { width: 100%; height: 100%; }
+    ${avatarStyle}
 `;
 
 export interface AvatarClassesParams {
   hasImage?: boolean;
-  imageFailed?: boolean;
+  clickable?: boolean;
   shape?: string | null;
   size?: string | null;
 }
 
 const classes = {
   root: (params: AvatarClassesParams = {}) => {
-    const { hasImage, imageFailed, shape, size } = params;
+    const { hasImage, clickable, shape, size } = params;
     return [
-      "u-avatar",
+      "u-avatar u-component",
       {
-        "u-avatar-image": !!hasImage && !imageFailed,
+        "u-avatar-image": !!hasImage,
+        "u-avatar-clickable": !!clickable,
         "u-avatar-circle": shape === "circle",
         "u-avatar-lg": size === "large",
         "u-avatar-xl": size === "xlarge",
@@ -38,5 +35,4 @@ const classes = {
   icon: "u-avatar-icon",
 };
 
-/** `useComponentBase`-shaped style module for `UAvatar`. */
-export const avatarStyleModule = { css, classes };
+export const avatarStyleModule: StyleModule = { css, classes };
