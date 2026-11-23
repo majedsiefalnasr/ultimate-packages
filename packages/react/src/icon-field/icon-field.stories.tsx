@@ -11,8 +11,9 @@ import { UIconField, UInputIcon } from "./icon-field";
  * record.
  *
  * Accessibility notes: `UIconField` renders a `<div>` with no ARIA role of
- * its own. `UInputIcon` renders `aria-hidden="true"` by default, matching
- * its purely decorative real-source usage pattern.
+ * its own. `UInputIcon` renders `aria-hidden="true"` by default because the
+ * icon is decorative (ADR-091); pass `aria-hidden={false}` when the content
+ * is interactive, such as a clear button.
  */
 const meta: Meta<typeof UIconField> = {
   title: "React/IconField",
@@ -28,7 +29,7 @@ export const LeadingIcon: Story = {
   render: (args) => (
     <UIconField {...args}>
       <UInputIcon>search</UInputIcon>
-      <input type="text" className="u-input-text" placeholder="Search" />
+      <input type="text" className="u-inputtext" placeholder="Search" />
     </UIconField>
   ),
 };
@@ -38,7 +39,7 @@ export const TrailingIcon: Story = {
   args: { iconPosition: "right" },
   render: (args) => (
     <UIconField {...args}>
-      <input type="text" className="u-input-text" placeholder="Search" />
+      <input type="text" className="u-inputtext" placeholder="Search" />
       <UInputIcon>search</UInputIcon>
     </UIconField>
   ),

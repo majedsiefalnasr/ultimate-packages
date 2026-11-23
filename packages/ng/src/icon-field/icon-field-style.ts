@@ -1,71 +1,41 @@
+import { style as iconFieldStyle } from "@ultimate/uix-styles/iconfield";
+
 /**
- * Ultimate-owned adaptation of PrimeNG's `IconFieldStyle` + `InputIconStyle`
- * (see `.vendor-extracted/ng/iconfield/style/iconfieldstyle.ts` and
- * `.vendor-extracted/ng/inputicon/style/inputiconstyle.ts`; CSS body sourced
- * from `.vendor-extracted/uix-styles-full/src/iconfield/index.ts` — the real
- * `@primeuix/styles/iconfield` module, which also defines `.p-inputicon`
- * itself; real `InputIconStyle` carries `classes` only, no own `style`
- * string, confirming InputIcon's CSS is entirely owned by IconField's style
- * module). Bundled as one file per this batch's established
- * "two Prime directories, one canonical capability" convention. Hand-ported
- * directly: no `@ultimate/uix-styles/icon-field` subpath exists yet and this
- * task may not add one. `.p-iconfield`/`.p-inputicon` selectors renamed to
- * `.u-icon-field`/`.u-input-icon`.
+ * `UBaseComponent`-shaped style modules for `UIconField` and `UInputIcon`.
+ * The structural CSS is the shared `@ultimate/uix-styles/iconfield` module
+ * (ADR-082), so it reads the Aura `iconfield` tokens and matches React and
+ * Vue. Real `InputIconStyle` carries `classes` only, so `.u-input-icon` is
+ * styled by the IconField module.
  */
 const css = /*css*/ `
-    .u-icon-field {
-        position: relative;
-        display: block;
-    }
-
-    .u-input-icon {
-        position: absolute;
-        top: 50%;
-        margin-top: calc(-1 * (dt('icon.size') / 2));
-        color: dt('iconfield.icon.color');
-        line-height: 1;
-        z-index: 1;
-    }
-
-    .u-icon-field .u-input-icon:first-child {
-        inset-inline-start: dt('form.field.padding.x');
-    }
-
-    .u-icon-field .u-input-icon:last-child {
-        inset-inline-end: dt('form.field.padding.x');
-    }
-
-    .u-icon-field .u-input-text:not(:first-child),
-    .u-icon-field .u-inputwrapper:not(:first-child) .u-input-text {
-        padding-inline-start: calc((dt('form.field.padding.x') * 2) + dt('icon.size'));
-    }
-
-    .u-icon-field .u-input-text:not(:last-child) {
-        padding-inline-end: calc((dt('form.field.padding.x') * 2) + dt('icon.size'));
-    }
-
-    .u-icon-field:has(.u-inputfield-sm) .u-input-icon {
-        font-size: dt('form.field.sm.font.size');
-        width: dt('form.field.sm.font.size');
-        height: dt('form.field.sm.font.size');
-        margin-top: calc(-1 * (dt('form.field.sm.font.size') / 2));
-    }
-
-    .u-icon-field:has(.u-inputfield-lg) .u-input-icon {
-        font-size: dt('form.field.lg.font.size');
-        width: dt('form.field.lg.font.size');
-        height: dt('form.field.lg.font.size');
-        margin-top: calc(-1 * (dt('form.field.lg.font.size') / 2));
-    }
+    ${iconFieldStyle}
 `;
 
-/** `UBaseComponent`-shaped style module for `UIconField` — owns the shared `.u-icon-field`/`.u-input-icon` CSS. */
-export const iconFieldStyleModule = {
-  css,
-  classes: {
-    root: "u-icon-field",
+/** Params `UIconField` passes into `cx('root', params)` — see `UBaseComponent.cx()`. */
+export interface IconFieldClassesParams {
+  iconPosition?: "left" | "right";
+}
+
+/**
+ * Class-name-slot resolver for `UIconField`, ported from the extracted
+ * `IconFieldStyle`'s own `classes.root` function (`.p-iconfield*` renamed to
+ * `.u-icon-field*`).
+ */
+const classes = {
+  root: (params: IconFieldClassesParams = {}) => {
+    const { iconPosition } = params;
+    return [
+      "u-icon-field",
+      {
+        "u-icon-field-left": iconPosition === "left",
+        "u-icon-field-right": iconPosition === "right",
+      },
+    ];
   },
 };
+
+/** `UBaseComponent`-shaped style module for `UIconField` — owns the shared `.u-icon-field`/`.u-input-icon` CSS. */
+export const iconFieldStyleModule = { css, classes };
 
 /**
  * `UBaseComponent`-shaped style module for `UInputIcon` — classes only, no

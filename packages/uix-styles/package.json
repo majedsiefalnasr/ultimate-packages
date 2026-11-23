@@ -49,6 +49,11 @@
       "import": "./dist/floatlabel/index.mjs",
       "default": "./dist/floatlabel/index.mjs"
     },
+    "./iconfield": {
+      "types": "./dist/iconfield/index.d.mts",
+      "import": "./dist/iconfield/index.mjs",
+      "default": "./dist/iconfield/index.mjs"
+    },
     "./inputnumber": {
       "types": "./dist/inputnumber/index.d.mts",
       "import": "./dist/inputnumber/index.mjs",
