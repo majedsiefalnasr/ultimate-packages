@@ -10,7 +10,7 @@ Toolbar layout with default projected content and named start/center/end Templat
 
 ## Framework surface
 
-ariaLabelledBy string input sets aria-labelledby; host role toolbar. Public startTemplate, centerTemplate, endTemplate?: TemplateRef<void> are ContentChild queries for #start/#center/#end; default content projects independently. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/toolbar. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. Theme identity toolbar matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: toolbarStyleModule.
+ariaLabelledBy string input sets aria-labelledby; host role toolbar. Public startTemplate, centerTemplate, endTemplate?: TemplateRef<void> are ContentChild queries for #start/#center/#end; default content projects independently. Inherits dt, unstyled, pt and ptOptions from UBaseComponent: unstyled drops the root class and per-instance dt writes a scoped variable block (ADR-085). pt reaches the root, start, center and end sections: the host binds ptms(['host','root']) through the UBind host directive, and each region carries [uBind]=ptm(section); U_PARENT_INSTANCE is provided (ADR-089). Regions render only when their template exists; the deprecated left and right aliases, styleClass, getBlockableElement() and PrimeTemplate are not offered (ADR-089). Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/toolbar. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. Theme identity toolbar matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: toolbarStyleModule.
 
 ## Public exports
 
@@ -32,6 +32,8 @@ packages/themes/src/presets/aura/index.ts:     toolbar,
 packages/ng/src/toolbar/toolbar-style.ts: toolbarStyleModule
 .github/workflows/ci.yml: run: pnpm run test
 packages/ng/package.json: "test": "ng test --project=ng"
+packages/ng/src/toolbar/toolbar.ts: hostDirectives: [UBind],
+packages/ng/src/toolbar/toolbar.ts: [uBind]="ptm('start')"
 ```
 
 ## Relationships
