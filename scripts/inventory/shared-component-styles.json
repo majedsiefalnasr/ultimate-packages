@@ -66,6 +66,10 @@
     {
       "id": "package.ultimate.uix-styles.avatar",
       "record": "uixstyles.avatar"
+    },
+    {
+      "id": "package.ultimate.uix-styles.floatlabel",
+      "record": "uixstyles.floatlabel"
     }
   ],
   "packages": [
@@ -100,6 +104,10 @@
         {
           "subpath": "./dialog",
           "source": "packages/uix-styles/src/dialog/index.ts"
+        },
+        {
+          "subpath": "./floatlabel",
+          "source": "packages/uix-styles/src/floatlabel/index.ts"
         },
         {
           "subpath": "./inputnumber",
@@ -165,6 +173,41 @@
         {
           "state": "not-run",
           "behavior": "This inventory update ran no product tests or browser checks. Test files under packages/uix-styles/test exist but their presence is not a passing result here."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.floatlabel",
+      "name": "FloatLabel styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the float label component.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/floatlabel only (it is not re-exported from the package root). Selectors: .u-float-label with the -over, -on and -in variant classes, keyed with :has() on the classes the sibling fields emit (u-inputtext, u-textarea, u-select-label, u-multi-select-label, u-cascade-select-label, u-input-icon, p-filled, p-invalid and p-inputwrapper-filled and -focus); tokens use the floatlabel.* namespace plus form.field.padding.x and icon.size. It is the @primeuix/styles 2.0.3 floatlabel module with the root renamed to u-float-label and the sibling selectors changed to the emitted class names (ADR-090).",
+      "files": ["packages/uix-styles/src/floatlabel/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/floatlabel#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/floatlabel/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/floatlabel/index.ts",
+          "contains": ".u-float-label {"
+        },
+        {
+          "path": "packages/uix-styles/src/floatlabel/index.ts",
+          "contains": ".u-float-label:has(input.p-filled) label"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for FloatLabel styles is present and is consumed by the Angular, React and Vue float label style modules; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "This inventory update ran no browser checks. The module has a unit test under packages/uix-styles/test that checks the style string and the sibling class names; it does not render the CSS."
         }
       ]
     },
@@ -725,7 +768,7 @@
       "name": "Shared styles package entry and type",
       "framework": "shared",
       "purpose": "The package root barrel and the shared StyleType alias, plus reconciliation of subpath entries against package exports and build configuration.",
-      "surface": "See [authored signatures and interpretation](README.md). src/index.ts re-exports the base module's style as the named root export base and re-exports everything from src/types.ts with a relative star re-export. src/types.ts declares `export type StyleType = string;`, a type contract (no runtime value) redefined locally instead of importing from another package; no module in this package currently imports it. Subpath reconciliation: packages/uix-styles/package.json declares 14 exports (the root plus ./avatar, ./base, ./badge, ./button, ./checkbox, ./dialog, ./inputnumber, ./inputtext, ./menu, ./paginator, ./table, ./tooltip, ./virtualscroller). packages/uix-styles/tsup.config.ts builds src/index.ts plus one entry per directory found under src, which yields the same 13 subpath entries by directory discovery. The two sets agree at the inspected revision. The root does not re-export any component style.",
+      "surface": "See [authored signatures and interpretation](README.md). src/index.ts re-exports the base module's style as the named root export base and re-exports everything from src/types.ts with a relative star re-export. src/types.ts declares `export type StyleType = string;`, a type contract (no runtime value) redefined locally instead of importing from another package; no module in this package currently imports it. Subpath reconciliation: packages/uix-styles/package.json declares 15 exports (the root plus ./avatar, ./base, ./badge, ./button, ./checkbox, ./dialog, ./floatlabel, ./inputnumber, ./inputtext, ./menu, ./paginator, ./table, ./tooltip, ./virtualscroller). packages/uix-styles/tsup.config.ts builds src/index.ts plus one entry per directory found under src, which yields the same 14 subpath entries by directory discovery. The two sets agree at the inspected revision. The root does not re-export any component style.",
       "files": ["packages/uix-styles/src/index.ts", "packages/uix-styles/src/types.ts"],
       "availability": "public",
       "exports": ["@ultimate/uix-styles#StyleType", "@ultimate/uix-styles#base"],
@@ -754,6 +797,7 @@
         "uixstyles.button",
         "uixstyles.checkbox",
         "uixstyles.dialog",
+        "uixstyles.floatlabel",
         "uixstyles.inputnumber",
         "uixstyles.inputtext",
         "uixstyles.menu",
