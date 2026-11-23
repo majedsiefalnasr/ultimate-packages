@@ -438,10 +438,10 @@
     "modificationDescription": "Ultimate-authored DataView test, story, barrel, or structural style."
   },
   {
-    "originalPath": "src/avatar/index.ts",
+    "originalPath": "packages/primeng/src/avatar/style/avatarstyle.ts",
     "ultimateDestination": "packages/ng/src/avatar/avatar-style.ts",
-    "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 avatar, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A1."
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). The resolver keys (`image`, `circle`, `lg`, `xl`, `label` and `icon`) are PrimeNG 21.1.9 avatarstyle.ts `classes` with `p-avatar` renamed to `u-avatar`. The CSS is the shared `@ultimate/uix-styles/avatar` module (ADR-082, ADR-087); this file holds none of its own. Changed for #201."
   },
   {
     "originalPath": "src/chip/index.ts",
@@ -958,6 +958,36 @@
     "ultimateDestination": "packages/ng/src/card/card.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG 21.1.9 card.ts: the template keeps upstream's section structure and `[pBind]=\"ptm('x')\" [class]=\"cx('x')\"` pairing per section (header, body, title, subtitle, content, footer), renamed to uBind and the u- style module. Subset: the template-override facets (headerTemplate, PrimeTemplate, BlockableUI), the styleClass and style inputs and the ptms(['host', 'root']) host binding are replaced by plain ng-content slots and header/subheader inputs. Ultimate's A0 pilot (#170) wires the sections to ptm, adds hostDirectives UBind, a setAttrs of the root section in ngAfterViewChecked, and provides U_PARENT_INSTANCE for the card. Existing file, entry added in A0 (#170) because the file now carries the passthrough wiring."
+  },
+  {
+    "originalPath": "packages/primeng/src/avatar/avatar.ts",
+    "ultimateDestination": "packages/ng/src/avatar/avatar.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG 21.1.9 avatar.ts: the content order (projected content, then `label`, else `icon`, else `image`), the `label`, `icon`, `image`, `size`, `shape`, `ariaLabel` and `ariaLabelledBy` surface, the `onImageError` output that only emits (no fallback and no failed state, as upstream) and the size and shape root classes are upstream's. `styleClass` and the `pt` input are replaced by `UBaseComponent`, the `UBind` host directive and `ptms(['host','root'])`, with `ptm('label')`, `ptm('icon')` and `ptm('image')` on the inner elements. The ADR-087 rulings: Prime content priority and error contract, Prime-equivalent customization. Changed for #201."
+  },
+  {
+    "originalPath": "packages/primeng/src/avatar/avatar.ts",
+    "ultimateDestination": "packages/ng/src/avatar/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UAvatar; it shares only the exported component with PrimeNG's avatar module."
+  },
+  {
+    "originalPath": "packages/primeng/src/avatargroup/avatargroup.ts",
+    "ultimateDestination": "packages/ng/src/avatar-group/avatar-group.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG 21.1.9 avatargroup.ts: a content-projecting host with a `group` root class. `styleClass` and `style` are replaced by the host's own `class` and `style`; `pt`, `unstyled` and `dt` come from `UBaseComponent`, with the host and root sections bound through the `UBind` host directive (ADR-087). Changed for #201."
+  },
+  {
+    "originalPath": "packages/primeng/src/avatargroup/avatargroup.ts",
+    "ultimateDestination": "packages/ng/src/avatar-group/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UAvatarGroup; it shares only the exported component with PrimeNG's avatargroup module."
+  },
+  {
+    "originalPath": "packages/primeng/src/avatargroup/style/avatargroupstyle.ts",
+    "ultimateDestination": "packages/ng/src/avatar-group/avatar-group-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). The group root class is PrimeNG 21.1.9 avatargroupstyle.ts `classes.root` (`p-avatar-group p-component`), renamed to `u-avatar-group u-component`. Like upstream, the group uses the whole avatar style: the CSS is the shared `@ultimate/uix-styles/avatar` module (ADR-082), with logical, size-specific offsets from the `avatar.group.*` tokens (ADR-087). Changed for #201."
   },
   {
     "originalPath": "packages/primeng/src/overlaybadge/overlaybadge.ts",

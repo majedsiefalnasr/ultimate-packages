@@ -1301,6 +1301,43 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 - The Vue InputText baseline changes visually, because the shared module adds placeholder color, focus outline offset and filled hover and focus backgrounds. Any changed baseline comes with before and after images in the PR.
 - Tests cover size, value-derived filled, `data-p`, `pt`, `unstyled` and per-instance `dt` in the frameworks that support each. The Angular invalid style is asserted on the style module's CSS, not in a browser.
 
+## ADR-087 — Avatar and AvatarGroup: Prime content and error contracts, pass-through, shared styles, and logical size-specific group offsets (L0a, ticket #201)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#201](https://github.com/majedsiefalnasr/ultimate-packages/issues/201)). The user ruled on the three decisions of the Phase 4 report before implementation (all option A). This ADR records those rulings, the divergences and the rows that stay open.
+
+**Context.**
+
+- The Phase 4 Avatar audit found 18 rows per framework. The gaps were: image-first content order in Angular, React and Vue where PrimeNG and PrimeVue show the label first (row 1); a fallback after a failed image in Angular and Vue where upstream only emits the error, and a Vue failed state that never reset (row 4); no `imageAlt`, native attribute spread, `children`, `imageFallback` or click styling in React (rows 5, 6, 7, 9, 10); no default slot or `icon` slot in Vue (rows 7, 8) and no content projection in Angular (row 7); fixed physical-left group offsets with no size awareness (row 11); no `pt`, `ptOptions`, `unstyled` or `dt` (rows 12 to 13); and hard-coded React CSS (row 15).
+- ADR-082 puts structural style in `@ultimate/uix-styles` by default. ADR-079 and ADR-080 define `pt` and `ptOptions`; ADR-085 defines `unstyled` and `dt`.
+
+**Decision.**
+
+1. **Content priority and image error (rows 1, 4): match each Prime contract.** Angular and Vue show projected or slot content first, then the `label`, then the `icon`, then the `image`, as PrimeNG and PrimeVue do. A failed image only emits the error (`onImageError` in Angular, `error` in Vue); there is no fallback and no failed state, so the Vue reset question disappears. React keeps the image first, then the `label`, then the `icon`, as PrimeReact does. React keeps its fallback after a failed image even when `onImageError` is supplied (user ruling 2026-11-18, recorded as a reference defect in the Phase 4 report), and the failed state resets when `image` changes.
+2. **Customization (rows 5 to 10): Prime-equivalent.** React gains `imageAlt` (default `avatar`), `imageFallback` (default `default`, any other value is the fallback image URL), `children` that replace the content, the remaining root attributes, and the `u-avatar-clickable` class when `onClick` is set. React `icon` accepts a CSS class string or a node. Vue gains the default slot and the `icon` slot. Angular gains content projection.
+3. **Group offsets (row 11): logical, tokenized and size-specific.** The shared module uses `margin-inline-start` from `avatar.group.offset`, `avatar.lg.group.offset` and `avatar.xl.group.offset`, so the overlap follows the writing direction and the avatar size. The fixed physical `margin-left` is gone.
+4. **Pass-through (rows 12, 13).** `pt` applies to Avatar (`root`, `label`, `icon`, `image`) and AvatarGroup (`root`). Angular binds `ptms(["host","root"])` through the `UBind` host directive and `ptm` on the inner elements. React and Vue apply `ptm`, and Vue uses `ptmi('root')` with `inheritAttrs: false`. `unstyled` drops the Ultimate classes in all three. Per-instance `dt` is available in Angular and Vue; React has none (n/a, as PrimeReact).
+5. **Shared styles (row 15).** Angular, React and Vue import `style` from `@ultimate/uix-styles/avatar` (a new module: the `@primeuix/styles` 2.0.3 avatar module with the `u-` prefix and one added rule, `.u-avatar-clickable`). The hard-coded React CSS is gone, and all three read the Aura `avatar` tokens.
+
+**Divergences from Prime.**
+
+1. React does not offer PrimeReact's `template` function prop or the function form of `icon`. `children` and a node `icon` cover the node forms.
+2. React falls back after a failed image even when `onImageError` is supplied, where PrimeReact suppresses its built-in fallback (item 1 of the decision).
+3. Angular does not offer `styleClass` or `style`; the host takes a normal `class` and `style`.
+4. `ptOptions` is accepted everywhere but has no visible effect until the global `pt` source exists (ADR-080), so row 12a is P.
+5. The Vue `icon` slot is wrapped in a span that carries `u-avatar-icon` and the icon `ptm`, as Angular and React already do. PrimeVue renders the slot through a dynamic component and the class never reaches it, so the shared icon-size rule would not apply to a slot icon. Ruled by the user for #201.
+
+**Classification after this ticket** (C / P / M / I / N-A / N / U, from a source re-read; the Phase 4 report is not edited).
+
+- Angular 13 / 1 / 0 / 0 / 4 / 0 / 0. Open: row 12a.
+- React 15 / 1 / 0 / 0 / 2 / 0 / 0. Open: row 12a. Row 4 stays complete with its recorded reference defect.
+- Vue 14 / 1 / 0 / 0 / 3 / 0 / 0. Open: row 12a.
+
+**Consequences.**
+
+- The group overlap and the avatar sizes now come from Aura tokens, so the Avatar and AvatarGroup baselines can change visually. No browser run was made for this ADR; a changed baseline comes with before and after images in the PR.
+- React's `u-avatar-image` class is now set only while the image is shown, so a failed image removes the transparent background.
+- Tests cover the content order, the error contract, `imageAlt`, `imageFallback`, `children`, the clickable class, `pt` on every section, `unstyled`, and per-instance `dt` where supported. Group behavior in RTL is not runtime-verified.
+
 ## ADR-088 — Badge: React `UBadge`, Angular `[uBadge]`, Vue `v-badge` stays out, and OverlayBadge forwards style and class (L0a, ticket #202)
 
 Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#202](https://github.com/majedsiefalnasr/ultimate-packages/issues/202)). The user ruled on the four decisions below before implementation. This ADR records those rulings and the rows that stay open.

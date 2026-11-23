@@ -6,11 +6,11 @@ Framework: vue; availability: public
 
 ## Authored interpretation
 
-Groups caller-supplied avatars with overlapping CSS.
+Groups caller-supplied avatars with overlapping CSS that uses logical, size-specific offsets.
 
 ## Framework surface
 
-No own props/events. div role=group projects default slot. inheritAttrs:false. Local CSS uses adjacent-avatar margin-left:-1rem and var(--u-avatar-group-border-color,#fff); no dt() calls or dedicated Aura avatar-group registry key. UAvatarGroup and createBaseAvatarGroup are named exports from both @ultimate/vue and @ultimate/vue/avatar-group. createBaseAvatarGroup is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. avatarGroupStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. No dedicated Aura registry key is inferred for this grouping wrapper. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.
+No own props/events. div role=group projects default slot; ptmi('root') carries pt and fall-through attributes onto the root, and inheritAttrs:false. The overlap uses margin-inline-start offsets from the avatar.group dt() tokens (ADR-087); there is no dedicated Aura avatar-group registry key. UAvatarGroup and createBaseAvatarGroup are named exports from both @ultimate/vue and @ultimate/vue/avatar-group. createBaseAvatarGroup is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. avatarGroupStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. The CSS is the shared @ultimate/uix-styles/avatar module (ADR-082, ADR-087). No dedicated Aura registry key is inferred for this grouping wrapper. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.
 
 ## Public exports
 
@@ -32,6 +32,8 @@ export { createBaseAvatarGroup } from "./BaseAvatarGroup";
 packages/vue/src/avatar-group/BaseAvatarGroup.ts: export function createBaseAvatarGroup
 packages/vue/src/avatar-group/avatar-group-style.ts: export const avatarGroupStyleModule
 packages/vue/src/avatar-group/AvatarGroup.vue: name: "UAvatarGroup"
+packages/vue/src/avatar-group/AvatarGroup.vue: ptmi('root')
+packages/vue/src/avatar-group/avatar-group-style.ts: @ultimate/uix-styles/avatar
 ```
 
 ## Relationships

@@ -1,22 +1,19 @@
+import type { StyleModule } from "@ultimate/react-core";
+import { style as avatarStyle } from "@ultimate/uix-styles/avatar";
+
 /**
- * Ultimate-owned adaptation of PrimeReact's `AvatarGroupBase` style (real
- * source has no dedicated `AvatarGroupBase.js` styles — `AvatarGroup.js`
- * composes only `p-avatar-group p-component` from its own `cx('root')`, no
- * `styles` block of its own beyond real PrimeReact's Avatar/AvatarGroup CSS
- * layer), shaped to match `useComponentBase`'s `styleModule: {css,
- * classes}` contract. No `@ultimate/uix-styles/avatar-group` entry exists
- * yet, so `css`/`classes` are authored locally (same precedent as
- * `avatarStyleModule`).
+ * `useComponentBase`-shaped style module for `UAvatarGroup`. Like PrimeReact,
+ * the group uses the whole avatar style: the overlapping layout is the
+ * `.u-avatar-group` rules of the shared `@ultimate/uix-styles/avatar` module
+ * (ADR-082, ADR-087), with a logical `margin-inline-start` and a size-specific
+ * offset taken from the `avatar.group.*` tokens.
  */
 const css = /*css*/ `
-.u-avatar-group { display: flex; align-items: center; }
-.u-avatar-group .u-avatar + .u-avatar { margin-left: -1rem; }
-.u-avatar-group .u-avatar { border: 2px solid var(--u-avatar-group-border-color, #fff); }
+    ${avatarStyle}
 `;
 
 const classes = {
   root: () => ["u-avatar-group u-component"],
 };
 
-/** `useComponentBase`-shaped style module for `UAvatarGroup`. */
-export const avatarGroupStyleModule = { css, classes };
+export const avatarGroupStyleModule: StyleModule = { css, classes };

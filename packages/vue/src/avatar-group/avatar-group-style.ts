@@ -1,14 +1,16 @@
+import { style as avatarStyle } from "@ultimate/uix-styles/avatar";
+
 /**
  * Ultimate-owned adaptation of PrimeVue's `AvatarGroupStyle` (see
  * `.vendor-extracted/vue/avatargroup/style/AvatarGroupStyle.js`), shaped to
- * match `createBaseComponent`'s `styleModule: {css, classes}` contract. No
- * `@ultimate/uix-styles/avatar-group` entry exists yet, so `css`/`classes`
- * are authored locally (same precedent as `avatarStyleModule`).
+ * match `createBaseComponent`'s `styleModule: {css, classes}` contract. Like
+ * PrimeVue, the group uses the whole avatar style: the overlapping layout is
+ * the `.u-avatar-group` rules of the shared `@ultimate/uix-styles/avatar`
+ * module (ADR-082), with a logical `margin-inline-start` and a size-specific
+ * offset taken from the `avatar.group.*` tokens (ADR-087).
  */
 const css = /*css*/ `
-.u-avatar-group { display: flex; align-items: center; }
-.u-avatar-group .u-avatar + .u-avatar { margin-left: -1rem; }
-.u-avatar-group .u-avatar { border: 2px solid var(--u-avatar-group-border-color, #fff); }
+    ${avatarStyle}
 `;
 
 const classes = {

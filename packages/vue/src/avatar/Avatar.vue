@@ -1,21 +1,29 @@
 <template>
-  <div :class="cx('root', styleParams)" :aria-labelledby="ariaLabelledby" :aria-label="ariaLabel">
-    <img v-if="image && !imageFailed" :src="image" :alt="ariaLabel" @error="onError" />
-    <span v-else-if="label" :class="cx('label')">{{ label }}</span>
-    <span v-else-if="icon" :class="[cx('icon'), icon]" />
+  <div
+    :class="cx('root', styleParams)"
+    :aria-labelledby="ariaLabelledby"
+    :aria-label="ariaLabel"
+    v-bind="ptmi('root')"
+  >
+    <slot>
+      <span v-if="label" :class="cx('label')" v-bind="ptm('label')">{{ label }}</span>
+      <span v-else-if="$slots.icon" :class="cx('icon')" v-bind="ptm('icon')"
+        ><slot name="icon"
+      /></span>
+      <span v-else-if="icon" :class="[cx('icon'), icon]" v-bind="ptm('icon')" />
+      <img v-else-if="image" :src="image" :alt="ariaLabel" @error="onError" v-bind="ptm('image')" />
+    </slot>
   </div>
 </template>
 
 <script>
 // Ultimate-owned adaptation of PrimeVue's `Avatar` component (see
-// .vendor-extracted/vue/avatar/Avatar.vue). Renders an image when `image`
-// is set (falling back to `label`/`icon` on a load error, matching real
-// source's own `onError` handler), else a text `label`, else an `icon`.
-//
-// Deliberately excludes real source's default-slot content-projection
-// override and `$slots.icon` render-function branch — this port's `icon`
-// prop is a CSS icon-class string (matching Angular's `UAvatar`/real
-// PrimeNG's own `icon` input shape), not a component/render-function slot.
+// .vendor-extracted/vue/avatar/Avatar.vue). The default slot replaces the
+// content; otherwise it shows the `label`, else the `icon` slot, else the
+// `icon` class string, else the `image`, as PrimeVue does. A failed image only
+// emits `error` (ADR-087). `ptmi('root')` carries `pt` and the fall-through
+// attributes onto the root, so `inheritAttrs` is off; `unstyled` and `dt` come
+// from the base chain. Excludes the `data-p` attribute.
 import { createBaseAvatar } from "./BaseAvatar";
 
 export default {
@@ -23,16 +31,10 @@ export default {
   extends: createBaseAvatar(),
   inheritAttrs: false,
   emits: ["error"],
-  data() {
-    return {
-      imageFailed: false,
-    };
-  },
   computed: {
     styleParams() {
       return {
         hasImage: Boolean(this.image),
-        imageFailed: this.imageFailed,
         shape: this.shape,
         size: this.size,
       };
@@ -40,7 +42,6 @@ export default {
   },
   methods: {
     onError(event) {
-      this.imageFailed = true;
       this.$emit("error", event);
     },
   },

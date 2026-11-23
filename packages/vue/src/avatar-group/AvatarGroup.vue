@@ -1,5 +1,5 @@
 <template>
-  <div :class="cx('root')" role="group">
+  <div :class="cx('root')" role="group" v-bind="ptmi('root')">
     <slot />
   </div>
 </template>
@@ -7,10 +7,11 @@
 <script>
 // Ultimate-owned adaptation of PrimeVue's `AvatarGroup` component (see
 // .vendor-extracted/vue/avatargroup/AvatarGroup.vue). A trivial
-// content-projecting wrapper for a set of `UAvatar` instances — matches
-// real source's own minimal template shape exactly (a single root <div>
-// rendering the default slot, no props of its own). The overlapping-avatars
-// visual is CSS-only (see `avatar-group-style.ts`).
+// content-projecting wrapper for a set of `UAvatar` instances: a single root
+// <div> rendering the default slot, no props of its own. `ptmi('root')`
+// carries `pt` and the fall-through attributes onto the root, so
+// `inheritAttrs` is off; `unstyled` and `dt` come from the base chain. The
+// overlapping-avatars visual is CSS-only (see `avatar-group-style.ts`).
 import { createBaseAvatarGroup } from "./BaseAvatarGroup";
 
 export default {

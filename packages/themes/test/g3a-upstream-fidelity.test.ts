@@ -22,8 +22,12 @@ import fixture from "./fixtures/primeuix-styles-g3a.json";
  * and retained rules derived from the committed @primeuix/styles 2.0.3 fixture
  * of the 14 unique Aura keys — nothing more, nothing less.
  */
+const SHARED_STYLE_KEYS = ["avatar"];
+
 const CASES = (["ng", "vue"] as const).flatMap((fw) =>
-  (FRAMEWORK_KEYS[fw] as string[]).map((key) => ({ fw, key }))
+  (FRAMEWORK_KEYS[fw] as string[])
+    .filter((key) => !SHARED_STYLE_KEYS.includes(key))
+    .map((key) => ({ fw, key }))
 );
 
 describe("G3-A upstream fixture", () => {

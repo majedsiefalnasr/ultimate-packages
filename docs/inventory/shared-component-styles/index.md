@@ -2,6 +2,7 @@
 
 Scoped sample only; not platform completeness.
 
+- [Avatar styles](uixstyles.avatar.md)
 - [Badge styles](uixstyles.badge.md)
 - [Base styles](uixstyles.base.md)
 - [Button styles](uixstyles.button.md)

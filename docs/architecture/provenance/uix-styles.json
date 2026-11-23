@@ -82,5 +82,11 @@
     "ultimateDestination": "packages/uix-styles/src/inputtext/index.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/inputtext/index.ts, recovered from dist/inputtext/index.mjs.map sourcesContent (GAP-094 backfill batch 1). Only .p-inputtext* selectors are renamed to .u-inputtext*; the .p-invalid and .p-variant-filled modifiers are kept. Verified: applying that rename to upstream yields this file byte for byte. Added in 541238d7 (Angular form-foundation Plan) and rewritten to this faithful copy in 3da383df."
+  },
+  {
+    "originalPath": "src/avatar/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/avatar/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/avatar/index.ts, recovered from dist/avatar/index.mjs. Only .p-avatar* selectors are renamed to .u-avatar*. One rule is added: `.u-avatar-clickable { cursor: pointer; }` for PrimeReact's click styling (ADR-087). Shared by the Angular, React and Vue avatar and avatar group style modules (ADR-082). Changed for #201."
   }
 ]
