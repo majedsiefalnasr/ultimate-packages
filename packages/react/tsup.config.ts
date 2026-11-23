@@ -15,6 +15,7 @@ export default defineConfig({
     "autocomplete/index": "src/autocomplete/index.ts",
     "avatar/index": "src/avatar/index.ts",
     "avatar-group/index": "src/avatar-group/index.ts",
+    "badge/index": "src/badge/index.ts",
     "block-ui/index": "src/block-ui/index.ts",
     "breadcrumb/index": "src/breadcrumb/index.ts",
     "button-group/index": "src/button-group/index.ts",

@@ -1,5 +1,6 @@
 export * from "./avatar";
 export * from "./avatar-group";
+export * from "./badge";
 export * from "./block-ui";
 export * from "./button";
 export * from "./button-group";

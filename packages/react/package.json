@@ -294,6 +294,11 @@
       "import": "./dist/avatar-group/index.mjs",
       "default": "./dist/avatar-group/index.mjs"
     },
+    "./badge": {
+      "types": "./dist/badge/index.d.mts",
+      "import": "./dist/badge/index.mjs",
+      "default": "./dist/badge/index.mjs"
+    },
     "./block-ui": {
       "types": "./dist/block-ui/index.d.mts",
       "import": "./dist/block-ui/index.mjs",
