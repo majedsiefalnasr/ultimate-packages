@@ -263,7 +263,7 @@ describe("GAP-064 Tranche 1 — Vue style keys and variables", () => {
       mount(UInputNumber);
       mount(UInputText);
       expect(count("inputtext")).toBe(1);
-      expect(cssFor("inputtext")).toContain(".u-input-text");
+      expect(cssFor("inputtext")).toContain(".u-inputtext");
       expect(count("inputtext-variables")).toBe(1);
     });
 
@@ -271,7 +271,7 @@ describe("GAP-064 Tranche 1 — Vue style keys and variables", () => {
       mount(UInputText);
       mount(UInputNumber);
       expect(count("inputtext")).toBe(1);
-      expect(cssFor("inputtext")).toContain(".u-input-text");
+      expect(cssFor("inputtext")).toContain(".u-inputtext");
       expect(count("inputtext-variables")).toBe(1);
       expect(count("inputnumber")).toBe(1);
     });

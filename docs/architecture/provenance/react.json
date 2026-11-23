@@ -454,5 +454,23 @@
     "ultimateDestination": "packages/react/src/card/card.tsx",
     "modificationStatus": "adapted",
     "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 Card.js: the header, title, subTitle, content, footer and body elements keep upstream's structure and its `mergeProps({ className: cx(x) }, ptm(x))` pairing per section, in TSX. Subset: PrimeReactContext, CardBase.getProps, useHandleStyle and ObjectUtils.getJSXElement are replaced by useComponentBase and plain nodes. Ultimate's A0 pilot (#170) wires every section to ptm from createPassThrough and adds the pt and ptOptions props. Existing file, entry added in A0 (#170) because the file now carries the passthrough wiring."
+  },
+  {
+    "originalPath": "components/lib/inputtext/InputText.js",
+    "ultimateDestination": "packages/react/src/input-text/input-text.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 InputText.js: the single native input, the `mergeProps` of the component's own props, the remaining props and `ptm('root')`, and the `p-filled` rule (set when `value` or `defaultValue` is not empty, and again on every input event) are upstream's. PrimeReactContext, InputTextBase.getProps, useHandleStyle and the DomHandler class toggling are replaced by useComponentBase, createPassThrough and React state for the uncontrolled filled state. `keyfilter`, `validateOnly`, `tooltip` and `tooltipOptions` are not props (ADR-086, rows 12 to 14). `size` is Ultimate's visual-size prop (PrimeReact has none), `inputRef` and `unstyled` are Ultimate's, and `iconPosition` is not exposed. Changed for #188."
+  },
+  {
+    "originalPath": "components/lib/inputtext/InputTextBase.js",
+    "ultimateDestination": "packages/react/src/input-text/input-text-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 InputTextBase.js `classes.root`: `p-inputtext p-component` becomes `u-inputtext u-component`, and `p-filled`, `p-invalid` and `p-variant-filled` are kept. There is no `p-disabled` (the shared CSS styles `:disabled`) and no `context.inputStyle` fallback for the variant (row 4, blocked on the config surface). `u-inputtext-fluid`, `u-inputtext-sm` and `u-inputtext-lg` are the shared module's modifier classes. The CSS is the shared `@ultimate/uix-styles/inputtext` module (ADR-082); this file holds none of its own. Changed for #188."
+  },
+  {
+    "originalPath": "components/lib/inputtext/InputText.js",
+    "ultimateDestination": "packages/react/src/input-text/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UInputText and UInputTextProps; it shares only the exported component with PrimeReact's inputtext module."
   }
 ]

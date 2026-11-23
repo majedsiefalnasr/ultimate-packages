@@ -1,6 +1,7 @@
 import type { PropType } from "vue";
 import { defineComponent } from "vue";
 import { createBaseEditableHolder } from "./base-editable-holder";
+import type { BaseComponentOptions } from "./base-component";
 
 // Layered on createBaseEditableHolder via `extends:`, matching verified
 // BaseInput.vue's own `extends: BaseEditableHolder` chain — a real
@@ -8,9 +9,14 @@ import { createBaseEditableHolder } from "./base-editable-holder";
 // verification gap closed (spec §7, §19). Matches the same ambient-Fluid-
 // context pattern already independently confirmed for Button (spec §18) and
 // Angular's UButton (ADR-018).
-export function createBaseInput() {
+//
+// `base` is forwarded to the editable holder, so a component that passes its
+// `componentName` and `styleModule` gets `unstyled`, per-instance `dt`, `pt`
+// and style registration from the base chain instead of shadowing `cx` and
+// `mounted` locally. Omitting it keeps the earlier no-style behavior.
+export function createBaseInput(base?: Partial<BaseComponentOptions>) {
   return defineComponent({
-    extends: createBaseEditableHolder(),
+    extends: createBaseEditableHolder(base),
     props: {
       size: { type: null as unknown as PropType<string | null>, default: null },
       fluid: { type: null as unknown as PropType<boolean | null>, default: null },

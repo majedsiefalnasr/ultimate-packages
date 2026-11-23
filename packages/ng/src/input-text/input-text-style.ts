@@ -18,9 +18,22 @@ import { style as inputTextStyle } from "@ultimate/uix-styles/inputtext";
  * unrenamed — confirmed against `@ultimate/uix-styles/inputtext`'s own CSS,
  * which references these literal class names (same precedent as
  * `checkbox-style.ts`'s `p-highlight`/`p-disabled`).
+ *
+ * The `.ng-invalid.ng-dirty` rules are Angular-only (PrimeNG
+ * `inputtextstyle.ts:5-16`): Angular forms mark a control invalid through
+ * those classes, which React and Vue have no counterpart for (ADR-082
+ * framework-local exception).
  */
 const css = /*css*/ `
     ${inputTextStyle}
+
+    .u-inputtext.ng-invalid.ng-dirty {
+        border-color: dt('inputtext.invalid.border.color');
+    }
+
+    .u-inputtext.ng-invalid.ng-dirty::placeholder {
+        color: dt('inputtext.invalid.placeholder.color');
+    }
 `;
 
 /** Params `UInputText` passes into `cx('root', params)`. */
@@ -29,11 +42,12 @@ export interface InputTextClassesParams {
   invalid?: boolean;
   fluid?: boolean;
   variantFilled?: boolean;
+  size?: "small" | "large";
 }
 
 const classes = {
   root: (params: InputTextClassesParams = {}) => {
-    const { filled, invalid, fluid, variantFilled } = params;
+    const { filled, invalid, fluid, variantFilled, size } = params;
     return [
       "u-inputtext u-component",
       {
@@ -41,6 +55,8 @@ const classes = {
         "p-invalid": invalid,
         "u-inputtext-fluid": fluid,
         "p-variant-filled": variantFilled,
+        "u-inputtext-sm": size === "small",
+        "u-inputtext-lg": size === "large",
       },
     ];
   },

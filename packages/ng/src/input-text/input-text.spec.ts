@@ -2,10 +2,82 @@ import { Component } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { describe, expect, it } from "vitest";
+import { Theme } from "@ultimate/uix-styled";
 import { UFluid } from "../fluid/fluid";
 import { UInputText } from "./input-text";
+import { inputTextStyleModule } from "./input-text-style";
 
 describe("UInputText", () => {
+  it("keeps the Angular-only .ng-invalid.ng-dirty rules in the style module", () => {
+    expect(inputTextStyleModule.css).toContain(".u-inputtext.ng-invalid.ng-dirty {");
+    expect(inputTextStyleModule.css).toContain(".u-inputtext.ng-invalid.ng-dirty::placeholder {");
+  });
+
+  it("scopes dt variables to the instance", () => {
+    Theme.setTheme({
+      preset: { components: { inputtext: { borderRadius: "4px" } } },
+      options: { prefix: "u", darkModeSelector: "system", cssLayer: false },
+    });
+    @Component({
+      standalone: true,
+      imports: [UInputText],
+      template: `<input uInputText [dt]="{ borderRadius: '2rem' }" />`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const input: HTMLElement = fixture.nativeElement.querySelector("input");
+    const [attr] = input.getAttributeNames().filter((name) => name.startsWith("pc"));
+    const scoped = document.head.querySelector(`style[data-u-ng-style="${attr}-inputtext"]`);
+    expect(scoped?.textContent).toContain(`[${attr}]{--u-inputtext-border-radius:2rem;}`);
+
+    fixture.destroy();
+    expect(document.head.querySelector(`style[data-u-ng-style="${attr}-inputtext"]`)).toBeNull();
+  });
+
+  it("uSize emits the shared sm/lg classes and the data-p size token", () => {
+    @Component({
+      standalone: true,
+      imports: [UInputText],
+      template: `<input uInputText uSize="small" /><input uInputText uSize="large" />`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const [small, large] = Array.from(
+      fixture.nativeElement.querySelectorAll("input")
+    ) as HTMLInputElement[];
+    expect(small.classList.contains("u-inputtext-sm")).toBe(true);
+    expect(small.getAttribute("data-p")).toContain("small");
+    expect(large.classList.contains("u-inputtext-lg")).toBe(true);
+  });
+
+  it("pt root attributes reach the input", () => {
+    @Component({
+      standalone: true,
+      imports: [UInputText],
+      template: `<input uInputText [pt]="{ root: { 'data-test': 'x' } }" />`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("input").getAttribute("data-test")).toBe("x");
+  });
+
+  it("unstyled drops the Ultimate classes", () => {
+    @Component({
+      standalone: true,
+      imports: [UInputText],
+      template: `<input uInputText [unstyled]="true" />`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("input").classList.contains("u-inputtext")).toBe(
+      false
+    );
+  });
+
   it("applies to a native input via the [uInputText] selector", () => {
     @Component({
       standalone: true,
