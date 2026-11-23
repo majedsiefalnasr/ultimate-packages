@@ -184,9 +184,9 @@
       "scope": "react-actions",
       "ticket": 108,
       "revision": "c7a8d706e9ebfb22ebf6cc6635a77819cce95576",
-      "records": 8,
-      "aliases": 8,
-      "pending": 7
+      "records": 9,
+      "aliases": 9,
+      "pending": 8
     },
     {
       "path": "scripts/inventory/react-choice-range.json",
@@ -1082,7 +1082,7 @@
     {
       "id": "package.ultimate.react",
       "owner": "#108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141",
-      "resolution": "aggregate of 87 resolved families (#108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141)"
+      "resolution": "aggregate of 88 resolved families (#108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141)"
     },
     {
       "id": "package.ultimate.react-core",
@@ -1168,6 +1168,11 @@
       "id": "package.ultimate.react.avatar-group",
       "owner": "#108",
       "resolution": "scripts/inventory/react-actions.json#react.avatar-group"
+    },
+    {
+      "id": "package.ultimate.react.badge",
+      "owner": "#108",
+      "resolution": "scripts/inventory/react-actions.json#react.badge"
     },
     {
       "id": "package.ultimate.react.block-ui",
@@ -8015,6 +8020,14 @@
     },
     {
       "from": "scripts/inventory/react-actions.json",
+      "origin": "pending",
+      "source": "react-actions",
+      "target": "package.ultimate.uix-styles.badge",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.badge",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/react-actions.json",
       "origin": "relationship",
       "source": "react.avatar",
       "target": "package.ultimate.react-core.base",
@@ -8088,6 +8101,46 @@
     {
       "from": "scripts/inventory/react-actions.json",
       "origin": "relationship",
+      "source": "react.badge",
+      "target": "package.ultimate.react-core.base",
+      "resolution": "scripts/inventory/react-core.json#reactcore.base",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/react-actions.json",
+      "origin": "relationship",
+      "source": "react.badge",
+      "target": "package.ultimate.react-core.styling",
+      "resolution": "scripts/inventory/react-core.json#reactcore.styling",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/react-actions.json",
+      "origin": "relationship",
+      "source": "react.badge",
+      "target": "package.ultimate.react.badge",
+      "resolution": "scripts/inventory/react-actions.json#react.badge",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/react-actions.json",
+      "origin": "relationship",
+      "source": "react.badge",
+      "target": "package.ultimate.themes.presets",
+      "resolution": "scripts/inventory/theme-contract.json#themes.aura",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/react-actions.json",
+      "origin": "relationship",
+      "source": "react.badge",
+      "target": "package.ultimate.uix-styles.badge",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.badge",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/react-actions.json",
+      "origin": "relationship",
       "source": "react.button",
       "target": "package.ultimate.component-metadata.records",
       "resolution": "scripts/inventory/metadata-registry.json#metadata.root",
@@ -8115,6 +8168,14 @@
       "source": "react.button",
       "target": "package.ultimate.react-core.styling",
       "resolution": "scripts/inventory/react-core.json#reactcore.styling",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/react-actions.json",
+      "origin": "relationship",
+      "source": "react.button",
+      "target": "package.ultimate.react.badge",
+      "resolution": "scripts/inventory/react-actions.json#react.badge",
       "via": "alias"
     },
     {

@@ -963,7 +963,7 @@
     "originalPath": "packages/primevue/src/toolbar/Toolbar.vue",
     "ultimateDestination": "packages/vue/src/toolbar/Toolbar.vue",
     "modificationStatus": "adapted",
-    "modificationDescription": "COPY, conservative under ADR-064's ambiguity rule (GAP-094 backfill batch 3). Compared with PrimeVue 4.5.5 Toolbar.vue: the root element line is kept token for token apart from pt (:class=\"cx('root')\" role=\"toolbar\" :aria-labelledby=\"ariaLabelledby\", including PrimeVue's own ariaLabelledby spelling), and the div with cx('start'/'center'/'end') around each named slot is kept in the same order (rendered conditionally here). Uncertainty stated: these are standard attributes and public slot names. Adds a leading default slot and renders each region only when its slot is given. Added in be9f35e4 (Phase C Batch 1, Toolbar row)."
+    "modificationDescription": "COPY, conservative under ADR-064's ambiguity rule (GAP-094 backfill batch 3). Compared with PrimeVue 4.5.5 Toolbar.vue: the root element line is kept token for token (:class=\"cx('root')\" role=\"toolbar\" :aria-labelledby=\"ariaLabelledby\" v-bind=\"ptmi('root')\", including PrimeVue's own ariaLabelledby spelling), and the div with cx('start'/'center'/'end') and v-bind=\"ptm('start'|'center'|'end')\" around each named slot is kept in the same order (rendered conditionally here, ADR-089). Uncertainty stated: these are standard attributes and public slot names. Adds a leading default slot and renders each region only when its slot is given. Added in be9f35e4 (Phase C Batch 1, Toolbar row); #205 adds the ptmi and ptm bindings, which also fall the root's attributes through."
   },
   {
     "originalPath": "packages/primevue/src/toolbar/BaseToolbar.vue",
@@ -1048,5 +1048,17 @@
     "ultimateDestination": "packages/vue/src/avatar-group/avatar-group-style.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Source class COPY for the root class resolver (ADR-064). The group root class is PrimeVue 4.5.5 AvatarGroupStyle.js `classes.root` (`p-avatar-group p-component`), renamed to `u-avatar-group u-component`. Like upstream, the group uses the whole avatar style: the CSS is the shared `@ultimate/uix-styles/avatar` module (ADR-082), with logical, size-specific offsets from the `avatar.group.*` tokens (ADR-087). Changed for #201."
+  },
+  {
+    "originalPath": "packages/primevue/src/badge/Badge.vue",
+    "ultimateDestination": "packages/vue/src/badge/Badge.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 Badge.vue: the single root span with `:class=\"cx('root')\"`, `v-bind=\"ptmi('root')\"` and the default slot that falls back to `value` are upstream's. `inheritAttrs: false` is kept because `ptmi('root')` carries the fall-through attributes. The `data-p` attribute and the `$pcBadge`/`$parentInstance` provide pair are not carried: upstream uses them for the deprecated `v-badge` directive, which is a deliberate gap here (ADR-088). Existing file, entry added in #202 because the file now carries the pass-through wiring."
+  },
+  {
+    "originalPath": "packages/primevue/src/overlaybadge/OverlayBadge.vue",
+    "ultimateDestination": "packages/vue/src/overlay-badge/OverlayBadge.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 OverlayBadge.vue: the root div with `:class=\"cx('root')\"` and `v-bind=\"ptmi('root')\"`, the default slot and the composed badge with `v-bind=\"$props\"` and `:pt=\"ptm('pcBadge')\"` are upstream's. `inheritAttrs: false` is kept because `ptmi('root')` carries the fall-through attributes. Existing file, entry added in #202 because the file now carries the pass-through wiring."
   }
 ]

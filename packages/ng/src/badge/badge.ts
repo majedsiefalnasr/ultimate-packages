@@ -3,23 +3,21 @@ import {
   Component,
   ViewEncapsulation,
   booleanAttribute,
+  inject,
   input,
 } from "@angular/core";
-import { UBaseComponent } from "@ultimate/ng-core";
+import { UBaseComponent, UBind, U_PARENT_INSTANCE } from "@ultimate/ng-core";
 import { badgeStyleModule } from "./badge-style";
 
 /**
- * Ultimate-owned adaptation of PrimeNG's `Badge` component (see
- * `.vendor-extracted/ng/badge/badge.ts`). A small status indicator for
+ * Ultimate-owned adaptation of PrimeNG's `Badge` component and `BadgeDirective`
+ * (see `.vendor-extracted/ng/badge/badge.ts`). A small status indicator for
  * another element.
  *
- * Deliberately excludes PrimeNG's `BadgeDirective` (the `[pBadge]`
- * attribute form for attaching a badge to another element — this Phase 2
- * proof set only needs the `u-badge` component form, per this task's file
- * list), `Bind`/passthrough `hostDirectives` wiring, and
- * `BADGE_INSTANCE`/`PARENT_INSTANCE` injection-token parent lookup — see
- * `UBaseComponent`'s doc comment for the same architectural exclusion
- * pattern (Option B).
+ * `pt`, `unstyled` and `dt` come from `UBaseComponent`; the root section is
+ * bound through the `UBind` host directive. The attribute form lives with the
+ * overlay wrapper as `UBadgeDirective` (`[uBadge]`, ADR-088). `styleClass` is
+ * not offered; the host takes a normal `class`.
  */
 @Component({
   standalone: true,
@@ -27,15 +25,19 @@ import { badgeStyleModule } from "./badge-style";
   template: `{{ value() }}`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  providers: [{ provide: U_PARENT_INSTANCE, useExisting: UBadge }],
   host: {
     "[class]":
       "cx('root', { value: value(), size: size(), badgeSize: badgeSize(), severity: severity() })",
     "[style.display]": "badgeDisabled() ? 'none' : null",
   },
+  hostDirectives: [UBind],
 })
 export class UBadge extends UBaseComponent {
   protected override readonly componentName = "badge";
   protected override readonly styleModule = badgeStyleModule;
+
+  private readonly bindDirective = inject(UBind, { self: true });
 
   /** Size of the badge, valid options are "small", "large" and "xlarge". */
   badgeSize = input<"small" | "large" | "xlarge" | null>();
@@ -50,4 +52,8 @@ export class UBadge extends UBaseComponent {
   value = input<string | number | null>();
   /** When specified, disables the component. */
   badgeDisabled = input<boolean, boolean>(false, { transform: booleanAttribute });
+
+  ngAfterViewChecked(): void {
+    this.bindDirective.setAttrs(this.ptms(["host", "root"]));
+  }
 }

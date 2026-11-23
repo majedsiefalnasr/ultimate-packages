@@ -182,7 +182,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 - package.ultimate.ng.toggle-switch: #113 -> scripts/inventory/angular-choice-range.json#angular.toggle-switch
 - package.ultimate.ng.toolbar: #107 -> scripts/inventory/angular-actions.json#angular.toolbar
 - package.ultimate.ng.tooltip: #122 -> scripts/inventory/angular-overlays-notifications.json#angular.tooltip
-- package.ultimate.react: #108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141 -> aggregate of 87 resolved families (#108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141)
+- package.ultimate.react: #108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141 -> aggregate of 88 resolved families (#108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141)
 - package.ultimate.react-core: #149 -> scripts/inventory/react-core.json#reactcore.root
 - package.ultimate.react-core.base: #149 -> scripts/inventory/react-core.json#reactcore.base
 - package.ultimate.react-core.confirmation: #149 -> scripts/inventory/react-core.json#reactcore.confirmation
@@ -200,6 +200,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 - package.ultimate.react.autocomplete: #117 -> scripts/inventory/react-option-selection.json#react.autocomplete
 - package.ultimate.react.avatar: #108 -> scripts/inventory/react-actions.json#react.avatar
 - package.ultimate.react.avatar-group: #108 -> scripts/inventory/react-actions.json#react.avatar-group
+- package.ultimate.react.badge: #108 -> scripts/inventory/react-actions.json#react.badge
 - package.ultimate.react.block-ui: #123 -> scripts/inventory/react-overlays-notifications.json#react.block-ui
 - package.ultimate.react.breadcrumb: #126 -> scripts/inventory/react-menu-navigation.json#react.breadcrumb
 - package.ultimate.react.button: #108 -> scripts/inventory/react-actions.json#react.button
@@ -445,7 +446,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 
 ## References
 
-1871 references; 0 unresolved.
+1878 references; 0 unresolved.
 
 - scripts/inventory/ai.json: 18 references, 0 unresolved
 - scripts/inventory/angular-actions.json: 47 references, 0 unresolved
@@ -466,7 +467,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 - scripts/inventory/data-motion-primitives.json: 31 references, 0 unresolved
 - scripts/inventory/mcp.json: 37 references, 0 unresolved
 - scripts/inventory/metadata-registry.json: 41 references, 0 unresolved
-- scripts/inventory/react-actions.json: 47 references, 0 unresolved
+- scripts/inventory/react-actions.json: 54 references, 0 unresolved
 - scripts/inventory/react-choice-range.json: 48 references, 0 unresolved
 - scripts/inventory/react-collection-presentation.json: 22 references, 0 unresolved
 - scripts/inventory/react-core.json: 35 references, 0 unresolved

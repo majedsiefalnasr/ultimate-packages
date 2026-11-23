@@ -1337,3 +1337,82 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 - The group overlap and the avatar sizes now come from Aura tokens, so the Avatar and AvatarGroup baselines can change visually. No browser run was made for this ADR; a changed baseline comes with before and after images in the PR.
 - React's `u-avatar-image` class is now set only while the image is shown, so a failed image removes the transparent background.
 - Tests cover the content order, the error contract, `imageAlt`, `imageFallback`, `children`, the clickable class, `pt` on every section, `unstyled`, and per-instance `dt` where supported. Group behavior in RTL is not runtime-verified.
+
+## ADR-088 — Badge: React `UBadge`, Angular `[uBadge]`, Vue `v-badge` stays out, and OverlayBadge forwards style and class (L0a, ticket #202)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#202](https://github.com/majedsiefalnasr/ultimate-packages/issues/202)). The user ruled on the four decisions below before implementation. This ADR records those rulings and the rows that stay open.
+
+**Context.**
+
+- The Phase 4 Badge audit found 15 rows per framework. React had no Badge at all (10 rows missing: the component, severity, size, the shape rules, attributes, element access, the overlay wrapper, `pt`, `ptOptions` and `unstyled`). Angular lacked the `[pBadge]` directive, `pt`, `ptOptions` and OverlayBadge's `style` and `styleClass` forwarding. Vue lacked `pt`, `ptOptions`, `unstyled`, per-instance `dt` and the deprecated `v-badge` directive.
+- ADR-077, ADR-079 and ADR-080 (A0) give every family the instance-level `pt` and `ptOptions`; ADR-085 gives it `unstyled` and per-instance `dt`; ADR-082 makes the structural CSS a shared `@ultimate/uix-styles` module.
+
+**Decision.**
+
+1. **React `UBadge` (rows 1 to 4, 7, 8).** React gets a standalone `UBadge` on the shared `@ultimate/uix-styles/badge` module, so it reads the same Aura `badge` tokens as Angular and Vue. `severity` accepts both `warn` and `warning`, which map to the same `u-badge-warn` class, so PrimeReact code and the cross-framework spelling both work. `size` takes `small`, `large` and `xlarge`. `UButton` renders its badge through `UBadge` and keeps `badgeClassName`.
+2. **Angular `[uBadge]` directive (row 11).** `UBadgeDirective` is the equivalent of PrimeNG's `[pBadge]`, with the same inputs (`badgeDisabled`, `badgeSize`, `severity`, `value`, `badgeStyle`, `badgeStyleClass`). It lives with `UOverlayBadge` and creates a real `UBadge` inside the host with `createComponent` and a `Renderer2`-made element, so it works on the server. The host takes `u-overlaybadge` from the overlay-badge module, so the placement CSS stays in one Angular place. `pt` on the directive reaches the badge as `pcBadge`, and `unstyled` is forwarded, which replaces PrimeNG's `pBadgePT` and `pBadgeUnstyled`. The selector and class take Ultimate's `u` prefix.
+3. **Vue `v-badge` (row 11).** It stays out. PrimeVue deprecates it in v4 and points to OverlayBadge. This is a deliberate gap (I): a consumer migrating from `v-badge` uses `UOverlayBadge`.
+4. **Angular OverlayBadge forwarding (row 9).** `badgeStyle` and `badgeStyleClass` are forwarded to the composed badge, as PrimeNG forwards `style` and `styleClass`. The deprecated `size` and `styleClass` are not offered. The names differ from PrimeNG's because `style` and `class` are already the host's own attributes in Angular.
+5. **Pass-through, `unstyled` and `dt` (rows 12 to 13a).** Angular `UBadge` binds `ptms(["host", "root"])` through `UBind`. React and Vue apply `ptm("root")` and `ptmi("root")`. Angular and Vue OverlayBadge bind `root` (and `host` in Angular) and forward `pcBadge` to the composed badge. Vue Badge and OverlayBadge keep `inheritAttrs: false` because `ptmi("root")` carries the fall-through attributes, so `id`, `class` and `style` reach the root span (row 7). `unstyled` and `dt` come from the base chain; React takes `unstyled` as a prop and has no per-instance `dt`, because PrimeReact has none.
+6. **React element access (row 8).** The ref is the root span. PrimeReact's handle is `{ props, getElement() }`. This is a usage difference, recorded as intentional (I), as in ADR-089.
+7. **React overlay wrapper (row 10).** The wrapper CSS is not carried. React has no OverlayBadge component, as in PrimeReact, and the `.u-overlaybadge` rules would be a copy of the Angular and Vue ones. They move to a shared `@ultimate/uix-styles` overlaybadge module in a later ticket. This is an intentional gap (I) and differs from the Phase 4 report, which expected the row to close with the component.
+
+**Divergences from Prime.**
+
+1. Angular `[uBadge]` and OverlayBadge use `uBadge`, `badgeStyle` and `badgeStyleClass`; the directive does not attach to the first child of a host whose tag has a dash. The badge it creates is a `u-badge` element, where PrimeNG creates a span.
+2. The directive takes `pt` and `unstyled` through the standard inputs and forwards them to the badge, instead of `pBadgePT` and `pBadgeUnstyled`.
+3. Vue `v-badge` is not offered (item 3). The React ref is the element (item 6).
+4. `ptOptions` is accepted everywhere but has no visible effect until the global `pt` source exists (ADR-080), so row 12a stays partial.
+5. The `.u-overlaybadge` rules exist in two places (the Angular and Vue overlay-badge modules). A shared `@ultimate/uix-styles` overlaybadge module would remove the copy; it is a follow-up, not part of this ticket.
+
+**Classification after this ticket** (C / P / M / I / N-A / N / U, from a source re-read; the Phase 4 report is not edited).
+
+- Angular 11 / 1 / 0 / 0 / 3 / 0 / 0. Open: row 12a.
+- React 7 / 1 / 0 / 2 / 5 / 0 / 0. Open: row 12a. I: rows 8 and 10.
+- Vue 10 / 1 / 0 / 1 / 3 / 0 / 0. Open: row 12a. I: row 11.
+
+**Consequences.**
+
+- React consumers get `UBadge` from `@ultimate/react` and `@ultimate/react/badge`. A React Button badge now carries the shared badge look (padding, background from `badge.*` tokens, circle for one character), where it was an unstyled span.
+- Tests cover shape, severity (including `warning`), size, attribute fall-through, `pt`, `unstyled` and per-instance `dt` in the frameworks that support each, the directive's create, update, disable and style-clearing paths, and OverlayBadge forwarding. The effect of the overlay CSS and of `unstyled` is asserted on classes and rules, not in a browser.
+- No existing Badge or OverlayBadge story changes its output, and no React story rendered a Button badge, so no browser baseline changes. Overlay positioning in LTR and RTL is not runtime-verified.
+
+## ADR-089 — Toolbar: regions render only when provided, `pt` reaches every section, and the deprecated and Angular-template surface stays out (L0a, ticket #205)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#205](https://github.com/majedsiefalnasr/ultimate-packages/issues/205)). The user ruled on region rendering, the React function form and the deprecated surface before implementation. This ADR records those rulings and the rows that stay open.
+
+**Context.**
+
+- The Phase 4 Toolbar audit found 14 rows (1 to 12, plus 10a and 11a). The gaps were: no `pt` or `ptOptions` anywhere (rows 11, 11a), `unstyled` and `dt` never read in Angular and absent in React and Vue (rows 10, 10a), a Vue root that swallowed consumer attributes because `inheritAttrs: false` had no `$attrs` binding (row 6), a React root that took only `className` and `style` (row 6), no function form for React `start`, `center` and `end` (row 2), and three rows where Ultimate renders differently from Prime (rows 3, 5, 7).
+- ADR-077, ADR-079 and ADR-080 (A0) give every family the instance-level `pt` and `ptOptions`; ADR-085 gives it `unstyled` and per-instance `dt`.
+
+**Decision.**
+
+1. **Region rendering (row 3).** The start, center and end elements render only when their template, prop or slot is provided, in all three frameworks. Angular already did this, as PrimeNG does. Prime React and Prime Vue always render three divs. Ultimate keeps the conditional form: the DOM has no empty regions, an empty region cannot add a flex `gap` or a spacing artifact, and the three frameworks behave alike. This is intentional (I) in React and Vue.
+2. **React function form (row 2).** `start`, `center` and `end` accept a node or a function that receives the toolbar props and returns a node, as PrimeReact's `getJSXElement(props.start, props)` does.
+3. **Deprecated surface (rows 5, 7).** The deprecated `left` and `right` aliases (Angular templates, React props) and Angular `getBlockableElement()` are not offered, the same position as the deprecated `styleClass`. They are intentional (I).
+4. **Pass-through (rows 11, 11a).** `pt` reaches four sections, `root`, `start`, `center` and `end`. Angular binds `ptms(["host", "root"])` through the `UBind` host directive and `ptm("start" | "center" | "end")` on each region, and provides `U_PARENT_INSTANCE`. React merges `ptm(section)` into each element's props. Vue binds `ptmi("root")` and `ptm(section)`.
+5. **`unstyled` and `dt` (rows 10, 10a).** They come from the base chain, as ADR-085 specifies. React takes `unstyled` as a prop and has no per-instance `dt`, because PrimeReact has none.
+6. **Attributes (row 6).** The Vue root binds `ptmi("root")`, which carries `$attrs`, so `id`, `class`, `style` and native attributes reach the root. The React root takes the other `div` props and merges them with `className`, `style` and `ptm("root")`, as PrimeReact's `getOtherProps` does.
+7. **React ref (row 7).** The ref is the root `div`. PrimeReact's handle is `{ props, getElement() }`. This is a usage difference, recorded as intentional (I).
+8. **Angular template source (row 2).** Content templates are plain `ng-template #start`, `#center` and `#end`. The `PrimeTemplate` and `pTemplate` mechanism is not offered, the same position as `UTimeline`. This is intentional (I) and was not among the three rulings; it is listed here for review.
+
+**Divergences from Prime.**
+
+1. React and Vue render a region only when provided (item 1).
+2. The React ref is the element, not a handle (item 7).
+3. No `left` and `right` aliases, no `getBlockableElement()`, no `pTemplate` (items 3 and 8).
+4. `ptOptions` is accepted everywhere but has no visible effect until the global `pt` source exists (ADR-080), so rows 11a are partial.
+5. React `unstyled` is a prop of `UToolbar` and `dt` is absent, as in PrimeReact.
+
+**Classification after this ticket** (C / P / M / I / N-A / N / U, from a source re-read; the Phase 4 report is not edited).
+
+- Angular 9 / 1 / 0 / 3 / 1 / 0 / 0. Open: row 11a. I: rows 2, 5, 7.
+- React 7 / 1 / 0 / 3 / 3 / 0 / 0. Open: row 11a. I: rows 3, 5, 7.
+- Vue 8 / 1 / 0 / 1 / 4 / 0 / 0. Open: row 11a. I: row 3.
+
+**Consequences.**
+
+- Existing selectors on the three regions keep working. A consumer that expects three divs from React or Vue, as in Prime, gets only the regions it provided.
+- Tests cover the function form, attribute fall-through, `pt` on all four sections, `unstyled` and per-instance `dt` in the frameworks that support each. The effect of `unstyled` is asserted on the classes, not in a browser.
+- No Toolbar visual output changes, so no browser baseline changes.

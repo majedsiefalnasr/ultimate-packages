@@ -52,4 +52,49 @@ describe("UOverlayBadge", () => {
     expect(badge).not.toBeNull();
     expect(badge.textContent?.trim()).toBe("");
   });
+
+  it("forwards badgeStyle and badgeStyleClass to the composed badge", () => {
+    @Component({
+      standalone: true,
+      imports: [UOverlayBadge],
+      template: `<u-overlay-badge
+        value="4"
+        [badgeStyle]="{ 'background-color': 'red' }"
+        badgeStyleClass="mine"
+        ><span>Icon</span></u-overlay-badge
+      >`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    fixture.detectChanges();
+
+    const badge = fixture.nativeElement.querySelector("u-badge") as HTMLElement;
+    expect(badge.classList.contains("mine")).toBe(true);
+    expect(badge.classList.contains("u-badge")).toBe(true);
+    expect(badge.style.backgroundColor).toBe("red");
+  });
+
+  it("applies pt to the host, the root and the composed badge", () => {
+    @Component({
+      standalone: true,
+      imports: [UOverlayBadge],
+      template: `<u-overlay-badge value="4" [pt]="pt"><span>Icon</span></u-overlay-badge>`,
+    })
+    class HostComponent {
+      pt = {
+        host: { "data-host": "h" },
+        root: { "data-root": "r" },
+        pcBadge: { root: { "data-badge": "b" } },
+      };
+    }
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector("u-overlay-badge")?.getAttribute("data-host")).toBe("h");
+    expect(element.querySelector(".u-overlaybadge")?.getAttribute("data-root")).toBe("r");
+    expect(element.querySelector("u-badge")?.getAttribute("data-badge")).toBe("b");
+  });
 });

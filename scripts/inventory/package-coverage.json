@@ -755,6 +755,10 @@
       "tickets": [108]
     },
     {
+      "id": "package.ultimate.react.badge",
+      "tickets": [108]
+    },
+    {
       "id": "package.ultimate.react.block-ui",
       "tickets": [123]
     },

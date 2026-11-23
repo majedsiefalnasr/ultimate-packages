@@ -10,7 +10,7 @@ Native action button with loading/disabled gating, icons, badge and optional too
 
 ## Framework surface
 
-UButton and UButtonProps expose a forwarded HTMLButtonElement ref. UButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "disabled">: native events, children and attributes remain available. Adds label:string, icon/loadingIcon:ReactNode, iconPos:left|right|top|bottom, loading/disabled, severity:secondary|success|info|warning|danger|help|contrast, size:small|large, text/raised/rounded/outlined/link/plain, badge/badgeClassName, visible, tooltip and tooltipOptions:Record<string,unknown>. visible=false returns null; loading disables the button. Label plus badge supplies aria-label when label exists, even over an explicit aria-label; type defaults to button but rest attributes follow it. Internal setRef/renderIcon and buttonStyleModule belong here. ButtonClassesParams is an owned source-only class resolver contract for hasIcon/label/loading/severity/raised/rounded/text/outlined/link/plain/size/iconPos; not a barrel export. USpinnerIcon and UTooltip are dependencies, not owned products. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/button. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution and delegates mounting/style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is registered; no scoped style module imports @ultimate/uix-styles. Comments claiming missing shared modules are historical, not availability evidence. Aura registry key button exists; this local structural CSS has no dt() token references. BUTTON_METADATA names this React sourcePath.
+UButton and UButtonProps expose a forwarded HTMLButtonElement ref. UButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "disabled">: native events, children and attributes remain available. Adds label:string, icon/loadingIcon:ReactNode, iconPos:left|right|top|bottom, loading/disabled, severity:secondary|success|info|warning|danger|help|contrast, size:small|large, text/raised/rounded/outlined/link/plain, badge/badgeClassName (the badge renders through UBadge, ADR-088), visible, tooltip and tooltipOptions:Record<string,unknown>. visible=false returns null; loading disables the button. Label plus badge supplies aria-label when label exists, even over an explicit aria-label; type defaults to button but rest attributes follow it. Internal setRef/renderIcon and buttonStyleModule belong here. ButtonClassesParams is an owned source-only class resolver contract for hasIcon/label/loading/severity/raised/rounded/text/outlined/link/plain/size/iconPos; not a barrel export. USpinnerIcon and UTooltip are dependencies, not owned products. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/button. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution and delegates mounting/style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is registered; no scoped style module imports @ultimate/uix-styles. Comments claiming missing shared modules are historical, not availability evidence. Aura registry key button exists; this local structural CSS has no dt() token references. BUTTON_METADATA names this React sourcePath.
 
 ## Public exports
 
@@ -29,6 +29,7 @@ packages/react/src/button/button-style.ts
 packages/react/src/button/button.tsx: export interface UButtonProps
 packages/react/src/button/button-style.ts: export const buttonStyleModule
 packages/react/src/index.ts: export * from "./button";
+packages/react/src/button/button.tsx: <UBadge value={badge}
 ```
 
 ## Relationships
@@ -40,6 +41,7 @@ package.ultimate.themes.presets (pending cross-batch)
 package.ultimate.react-core.icons (pending cross-batch)
 package.ultimate.react.tooltip (pending cross-batch)
 package.ultimate.component-metadata.records (pending cross-batch)
+package.ultimate.react.badge → [react.badge](react.badge.md) (reconciled family alias)
 
 ## Verification
 

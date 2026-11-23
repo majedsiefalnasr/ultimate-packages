@@ -10,7 +10,7 @@ Positions a composed UBadge at the top-right of supplied host content.
 
 ## Framework surface
 
-value:string|number|null, severity and size props forwarded via $props to UBadge. div projects default host slot then UBadge. Attrs fall through. createBaseOverlayBadge is source-exported internally but not re-exported by index.ts, hence unavailable from declared public entrypoints. Local positioning CSS includes RTL transform and overlaybadge outline tokens. UOverlayBadge are named exports from both @ultimate/vue and @ultimate/vue/overlay-badge. createBaseOverlayBadge is an owned source-only zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. overlayBadgeStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. Aura registry has the overlaybadge token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.
+value:string|number|null, severity and size props forwarded via $props to UBadge. div projects default host slot then UBadge. inheritAttrs is false and ptmi('root') carries pt and the fall-through attrs onto the root div; pt.pcBadge is forwarded to the composed UBadge (ADR-088). createBaseOverlayBadge is source-exported internally but not re-exported by index.ts, hence unavailable from declared public entrypoints. Local positioning CSS includes RTL transform and overlaybadge outline tokens. UOverlayBadge are named exports from both @ultimate/vue and @ultimate/vue/overlay-badge. createBaseOverlayBadge is an owned source-only zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. overlayBadgeStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. Aura registry has the overlaybadge token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.
 
 ## Public exports
 
@@ -29,6 +29,7 @@ packages/vue/src/overlay-badge/index.ts: export { default as UOverlayBadge } fro
 packages/vue/src/overlay-badge/BaseOverlayBadge.ts: export function createBaseOverlayBadge
 packages/vue/src/overlay-badge/overlay-badge-style.ts: export const overlayBadgeStyleModule
 packages/vue/src/overlay-badge/OverlayBadge.vue: name: "UOverlayBadge"
+packages/vue/src/overlay-badge/OverlayBadge.vue: :pt="ptm('pcBadge')"
 ```
 
 ## Relationships

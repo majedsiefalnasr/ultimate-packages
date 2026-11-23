@@ -426,7 +426,7 @@
       "framework": "vue",
       "availability": "public",
       "purpose": "Compact count or status display with value fallback and caller content.",
-      "surface": "value:string|number|null, severity:string|null, size:string|null props. span default slot falls back to value; styleParams tracks value, slot presence, size and severity. BadgeClassesParams is source-only: small/large/xlarge; secondary/info/success/warn/danger/contrast. Dot class is null value without default slot; one-character values get circle class. Attrs fall through to single root. There is no badge directive export in this family. UBadge and createBaseBadge are named exports from both @ultimate/vue and @ultimate/vue/badge. createBaseBadge is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. BadgeClassesParams, badgeStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS imports the shared token-bearing style string from @ultimate/uix-styles/badge. Aura registry has the badge token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
+      "surface": "value:string|number|null, severity:string|null, size:string|null props. span default slot falls back to value; styleParams tracks value, slot presence, size and severity. BadgeClassesParams is source-only: small/large/xlarge; secondary/info/success/warn/danger/contrast. Dot class is null value without default slot; one-character values get circle class. inheritAttrs is false and ptmi('root') carries pt and the fall-through attrs onto the single root; unstyled and dt come from the base chain (ADR-088). There is no badge directive export in this family. UBadge and createBaseBadge are named exports from both @ultimate/vue and @ultimate/vue/badge. createBaseBadge is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. BadgeClassesParams, badgeStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS imports the shared token-bearing style string from @ultimate/uix-styles/badge. Aura registry has the badge token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
       "files": [
         "packages/vue/src/badge/Badge.vue",
         "packages/vue/src/badge/badge-style.ts",
@@ -455,6 +455,10 @@
         {
           "path": "packages/vue/src/badge/Badge.vue",
           "contains": "name: \"UBadge\""
+        },
+        {
+          "path": "packages/vue/src/badge/Badge.vue",
+          "contains": "v-bind=\"ptmi('root')\""
         }
       ],
       "relationships": [
@@ -486,7 +490,7 @@
       "framework": "vue",
       "availability": "public",
       "purpose": "Positions a composed UBadge at the top-right of supplied host content.",
-      "surface": "value:string|number|null, severity and size props forwarded via $props to UBadge. div projects default host slot then UBadge. Attrs fall through. createBaseOverlayBadge is source-exported internally but not re-exported by index.ts, hence unavailable from declared public entrypoints. Local positioning CSS includes RTL transform and overlaybadge outline tokens. UOverlayBadge are named exports from both @ultimate/vue and @ultimate/vue/overlay-badge. createBaseOverlayBadge is an owned source-only zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. overlayBadgeStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. Aura registry has the overlaybadge token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
+      "surface": "value:string|number|null, severity and size props forwarded via $props to UBadge. div projects default host slot then UBadge. inheritAttrs is false and ptmi('root') carries pt and the fall-through attrs onto the root div; pt.pcBadge is forwarded to the composed UBadge (ADR-088). createBaseOverlayBadge is source-exported internally but not re-exported by index.ts, hence unavailable from declared public entrypoints. Local positioning CSS includes RTL transform and overlaybadge outline tokens. UOverlayBadge are named exports from both @ultimate/vue and @ultimate/vue/overlay-badge. createBaseOverlayBadge is an owned source-only zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. overlayBadgeStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. Aura registry has the overlaybadge token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
       "files": [
         "packages/vue/src/overlay-badge/BaseOverlayBadge.ts",
         "packages/vue/src/overlay-badge/OverlayBadge.vue",
@@ -510,6 +514,10 @@
         {
           "path": "packages/vue/src/overlay-badge/OverlayBadge.vue",
           "contains": "name: \"UOverlayBadge\""
+        },
+        {
+          "path": "packages/vue/src/overlay-badge/OverlayBadge.vue",
+          "contains": ":pt=\"ptm('pcBadge')\""
         }
       ],
       "relationships": [
@@ -660,7 +668,7 @@
       "framework": "vue",
       "availability": "public",
       "purpose": "Layout container for actions and content in named sections.",
-      "surface": "ariaLabelledby:string|null prop. div role=toolbar binds aria-labelledby. Default slot plus independently conditional start, center and end named slots compose content. No button management, keyboard navigation, model interface or own events. inheritAttrs:false; local class keys root/start/center/end belong here. UToolbar and createBaseToolbar are named exports from both @ultimate/vue and @ultimate/vue/toolbar. createBaseToolbar is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. toolbarStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. Aura registry has the toolbar token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
+      "surface": "ariaLabelledby:string|null prop. div role=toolbar binds aria-labelledby. Default slot plus independently conditional start, center and end named slots compose content. No button management, keyboard navigation, model interface or own events. inheritAttrs:false with the root bound through ptmi('root'), so id, class and native attributes reach the root, and each region bound through ptm(section); regions render only when their slot is provided (ADR-089). unstyled, dt, pt and ptOptions come from the base chain; local class keys root/start/center/end belong here. UToolbar and createBaseToolbar are named exports from both @ultimate/vue and @ultimate/vue/toolbar. createBaseToolbar is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. toolbarStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. Aura registry has the toolbar token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.",
       "files": [
         "packages/vue/src/toolbar/BaseToolbar.ts",
         "packages/vue/src/toolbar/Toolbar.vue",
@@ -689,6 +697,14 @@
         {
           "path": "packages/vue/src/toolbar/Toolbar.vue",
           "contains": "name: \"UToolbar\""
+        },
+        {
+          "path": "packages/vue/src/toolbar/Toolbar.vue",
+          "contains": "v-bind=\"ptmi('root')\""
+        },
+        {
+          "path": "packages/vue/src/toolbar/Toolbar.vue",
+          "contains": "v-bind=\"ptm('start')\""
         }
       ],
       "relationships": [

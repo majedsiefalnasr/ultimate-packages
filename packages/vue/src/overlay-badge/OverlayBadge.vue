@@ -1,7 +1,7 @@
 <template>
-  <div :class="cx('root')">
+  <div :class="cx('root')" v-bind="ptmi('root')">
     <slot />
-    <UBadge v-bind="$props" />
+    <UBadge v-bind="$props" :pt="ptm('pcBadge')" />
   </div>
 </template>
 
@@ -23,6 +23,7 @@ import { createBaseOverlayBadge } from "./BaseOverlayBadge";
 export default {
   name: "UOverlayBadge",
   extends: createBaseOverlayBadge(),
+  inheritAttrs: false,
   components: { UBadge },
 };
 </script>

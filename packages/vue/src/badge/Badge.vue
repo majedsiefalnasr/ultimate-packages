@@ -1,5 +1,5 @@
 <template>
-  <span :class="cx('root', styleParams)">
+  <span :class="cx('root', styleParams)" v-bind="ptmi('root')">
     <slot>{{ value }}</slot>
   </span>
 </template>
@@ -10,17 +10,15 @@ import { createBaseBadge } from "./base-badge";
 // Rendering shape verified against the real extracted Badge.vue
 // (primevue root, badge/Badge.vue): a single root <span> rendering the
 // default slot, falling back to the `value` prop when no slot content is
-// provided. Deliberately excludes upstream's `pt`/`ptOptions` passthrough
-// binding (`v-bind="ptmi('root')"`) and `data-p` attribute (both Option B
-// exclusions already established by every other Ultimate component in this
-// package), and excludes the `$pcBadge`/`$parentInstance` provide() pair
-// from BaseBadge.vue — that wiring exists upstream only to support the
-// attribute-directive/OverlayBadge composition path, which this task's
-// brief explicitly excludes (component form only, no attribute-directive
-// variant, matching Angular's already-Built UBadge).
+// provided. `ptmi('root')` carries `pt` and the fall-through attributes onto
+// the root, so `inheritAttrs` is off; `unstyled` and `dt` come from the base
+// chain. Excludes the `data-p` attribute and the `$pcBadge`/`$parentInstance`
+// provide() pair: that wiring only supports upstream's deprecated `v-badge`
+// directive, which is a deliberate gap here (ADR-088).
 export default {
   name: "UBadge",
   extends: createBaseBadge(),
+  inheritAttrs: false,
   computed: {
     styleParams() {
       return {
