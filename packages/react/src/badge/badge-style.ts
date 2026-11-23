@@ -34,13 +34,7 @@ const css = /*css*/ `
 `;
 
 export type BadgeSeverity =
-  | "secondary"
-  | "info"
-  | "success"
-  | "warn"
-  | "warning"
-  | "danger"
-  | "contrast";
+  "secondary" | "info" | "success" | "warn" | "warning" | "danger" | "contrast";
 
 export interface BadgeClassesParams {
   value?: string | number | null;

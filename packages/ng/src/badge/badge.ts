@@ -133,7 +133,10 @@ export class UBadgeDirective extends UBaseComponent {
     this.applyStyle(this.badgeElement, this.badgeStyle());
   }
 
-  private applyStyle(badge: HTMLElement, style: Record<string, string | number> | null | undefined) {
+  private applyStyle(
+    badge: HTMLElement,
+    style: Record<string, string | number> | null | undefined
+  ) {
     for (const key of this.appliedStyleKeys) {
       this.renderer.removeStyle(badge, key);
     }
