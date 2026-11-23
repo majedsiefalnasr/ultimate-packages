@@ -416,8 +416,8 @@
   {
     "originalPath": "components/lib/toolbar/Toolbar.js",
     "ultimateDestination": "packages/react/src/toolbar/toolbar.tsx",
-    "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "REFERENCE (ADR-064; GAP-094 backfill batch 3). Compared with PrimeReact 10.9.9 Toolbar.js: every statement is rewritten (no mergeProps, ObjectUtils.getJSXElement, left/right aliases or imperative handle). Shared are only standard ARIA (role=\"toolbar\") and the public start/center/end props with equivalent slot output; children render first, slots render only when given, and aria-labelledby is an explicit prop (upstream passes it through as an other prop). Added in be9f35e4 (Phase C Batch 1, Toolbar row)."
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064), re-classified for #205 from a source re-read. Side-by-side with PrimeReact 10.9.9 Toolbar.js: the `mergeProps({ className: cx(x) }, ptm(x))` pairing for the start, center and end elements, the root `mergeProps` of the component's own props, the remaining props and `ptm('root')`, `role: 'toolbar'`, the passthrough of `id` and other props, and the function form of start, center and end (`getJSXElement(props.start, props)`) are upstream's, in TSX. Subset and differences: PrimeReactContext, ToolbarBase.getProps, useHandleStyle and the imperative handle are replaced by useComponentBase and a ref that is the root element (ADR-089); the deprecated `left` and `right` aliases are not offered (ADR-089); regions render only when their prop is defined, where upstream always renders three divs (ADR-089); children render first and `aria-labelledby` is the explicit `ariaLabelledBy` prop. Added in be9f35e4 (Phase C Batch 1, Toolbar row); changed for #205."
   },
   {
     "originalPath": "components/lib/toolbar/package.json",
