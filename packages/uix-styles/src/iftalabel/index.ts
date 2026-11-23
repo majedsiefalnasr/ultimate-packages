@@ -1,0 +1,49 @@
+export const style = /*css*/ `
+    .u-ifta-label {
+        display: block;
+        position: relative;
+    }
+
+    .u-ifta-label label {
+        position: absolute;
+        pointer-events: none;
+        top: dt('iftalabel.top');
+        transition-property: all;
+        transition-timing-function: ease;
+        line-height: 1;
+        font-size: dt('iftalabel.font.size');
+        font-weight: dt('iftalabel.font.weight');
+        inset-inline-start: dt('iftalabel.position.x');
+        color: dt('iftalabel.color');
+        transition-duration: dt('iftalabel.transition.duration');
+    }
+
+    .u-ifta-label .u-inputtext,
+    .u-ifta-label .u-textarea,
+    .u-ifta-label .u-select-label,
+    .u-ifta-label .u-multi-select-label,
+    .u-ifta-label .u-multi-select-label:has(.u-chip),
+    .u-ifta-label .u-autocomplete-input-multiple,
+    .u-ifta-label .u-cascade-select-label,
+    .u-ifta-label .u-treeselect-label {
+        padding-block-start: dt('iftalabel.input.padding.top');
+        padding-block-end: dt('iftalabel.input.padding.bottom');
+    }
+
+    .u-ifta-label:has(.p-invalid) label {
+        color: dt('iftalabel.invalid.color');
+    }
+
+    .u-ifta-label:has(input:focus) label,
+    .u-ifta-label:has(input:-webkit-autofill) label,
+    .u-ifta-label:has(textarea:focus) label,
+    .u-ifta-label:has(.p-inputwrapper-focus) label {
+        color: dt('iftalabel.focus.color');
+    }
+
+    .u-ifta-label .u-input-icon {
+        top: dt('iftalabel.input.padding.top');
+        transform: translateY(25%);
+        margin-top: 0;
+    }
+`;
