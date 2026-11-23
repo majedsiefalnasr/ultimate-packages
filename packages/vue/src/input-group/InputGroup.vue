@@ -1,5 +1,5 @@
 <template>
-  <div :class="cx('root')">
+  <div :class="cx('root')" v-bind="ptmi('root')">
     <slot />
   </div>
 </template>
@@ -13,5 +13,6 @@ import { createBaseInputGroup } from "./BaseInputGroup";
 export default {
   name: "UInputGroup",
   extends: createBaseInputGroup(),
+  inheritAttrs: false,
 };
 </script>

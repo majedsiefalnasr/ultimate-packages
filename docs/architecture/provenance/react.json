@@ -562,5 +562,23 @@
     "ultimateDestination": "packages/react/src/icon-field/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UIconField, UInputIcon and their prop types; it shares only the exported component names with PrimeReact's iconfield module."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/input-group/input-group.tsx",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored (#194, ADR-093 and ADR-094). PrimeReact 10.9.9 ships no InputGroup component, only the `p-inputgroup` CSS pattern, so there is no upstream file. UInputGroup and UInputGroupAddon mirror Angular's and Vue's components from PrimeNG 21.1.9 and PrimeVue 4.5.5: a single root div that merges its own class, the remaining props and `ptm('root')` around the children, and a forwarded ref, in the shape of the React IconField port. `pt`, `ptOptions` and `unstyled` come from createPassThrough and useComponentBase."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/input-group/input-group-style.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored (#194, ADR-094). Class resolvers `u-input-group` and `u-input-group-addon`; the structural CSS is the shared `@ultimate/uix-styles/inputgroup` module (ADR-082), which reads the Aura `inputgroup` tokens and matches Angular and Vue. No upstream file: PrimeReact has no InputGroup style module."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/react/src/input-group/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export of UInputGroup, UInputGroupAddon and their prop types, with no upstream equivalent file."
   }
 ]

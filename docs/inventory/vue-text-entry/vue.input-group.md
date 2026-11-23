@@ -10,7 +10,7 @@ Layout wrapper pair joining inputs and addons into one bordered group by CSS.
 
 ## Framework surface
 
-UInputGroup (InputGroup.vue) and UInputGroupAddon (InputGroupAddon.vue) with createBaseInputGroup (BaseInputGroup.ts) and createBaseInputGroupAddon (BaseInputGroupAddon.ts), plus inputGroupStyleModule and inputGroupAddonStyleModule (input-group-style.ts). Base chain: createBaseComponent directly (componentName inputgroup and input-group-addon); both declare no props and no emits. Template: each is a root div rendering the default slot. inputGroupAddonStyleModule has an empty css string; the shared CSS is in inputGroupStyleModule and depends on u-component, u-inputwrapper and u-button classes: among the scoped sources only the password root emits u-component, no scoped template renders u-inputwrapper or u-button, so the radius and border rules keyed on them do not apply to UInputText, UTextarea, UInputMask or UInputOtp. The Aura registry key for this family is inputgroup; there is no inputgroupaddon key.
+UInputGroup (InputGroup.vue) and UInputGroupAddon (InputGroupAddon.vue) with createBaseInputGroup (BaseInputGroup.ts) and createBaseInputGroupAddon (BaseInputGroupAddon.ts), plus inputGroupStyleModule and inputGroupAddonStyleModule (input-group-style.ts). Base chain: createBaseComponent directly (componentName inputgroup and inputgroupaddon); both declare no props and no emits. Template: each is a root div rendering the default slot, with inheritAttrs: false and ptmi('root') bound on the root. inputGroupAddonStyleModule has an empty css string; the shared CSS is in inputGroupStyleModule and comes from the shared @ultimate/uix-styles/inputgroup module (ADR-082, ADR-093), keyed on the classes the sibling fields emit (u-inputtext, p-inputwrapper, p-inputwrapper-focus and p-focus) and on the u-icon-field, u-float-label and u-ifta-label wrappers. The Aura registry key for this family is inputgroup; there is no inputgroupaddon key.
 
 ## Public exports
 
@@ -41,6 +41,7 @@ packages/vue/src/input-group/BaseInputGroup.ts: export function createBaseInputG
 packages/vue/src/input-group/BaseInputGroupAddon.ts: export function createBaseInputGroupAddon
 packages/vue/src/index.ts: export * from "./input-group";
 packages/vue/package.json: "./input-group": {
+packages/vue/src/input-group/input-group-style.ts: @ultimate/uix-styles/inputgroup"
 ```
 
 ## Relationships

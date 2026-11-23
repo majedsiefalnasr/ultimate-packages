@@ -1054,5 +1054,35 @@
     "ultimateDestination": "packages/ng/src/ifta-label/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/inputgroup/inputgroup.ts",
+    "ultimateDestination": "packages/ng/src/input-group/input-group.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG 21.1.9 inputgroup/inputgroup.ts and inputgroupaddon/inputgroupaddon.ts for #194 (ADR-093): the ng-content template, the host class from `cx('root')`, the `Bind` host directive with the `ptms(['host', 'root'])` binding in the after-view-checked hook, and the addon's `inlineStyle` input bound to `[style]` are upstream's, renamed to UBind. PrimeNG's BaseComponent, the injected InputGroupStyle and InputGroupAddonStyle services and the NgModule wrapper are not carried. The deprecated `styleClass` input is not carried; classes come from the host binding. Existing file, entries added in #194."
+  },
+  {
+    "originalPath": "packages/primeng/src/inputgroupaddon/inputgroupaddon.ts",
+    "ultimateDestination": "packages/ng/src/input-group/input-group.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064), the addon half of input-group.ts. Compared with PrimeNG 21.1.9 inputgroupaddon/inputgroupaddon.ts for #194 (ADR-093): the ng-content template, the host class and the `[style]` binding from the inline style input are upstream's, with the same Bind pass-through as the group. Changed in #194."
+  },
+  {
+    "originalPath": "packages/primeng/src/inputgroup/style/inputgroupstyle.ts",
+    "ultimateDestination": "packages/ng/src/input-group/input-group-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver and the Angular-only host-element rules (ADR-064). Side-by-side with PrimeNG 21.1.9 inputgroup/style/inputgroupstyle.ts for #194 (ADR-093): the `classes.root` name (`p-inputgroup` renamed to `u-input-group`) and the `p-button` and `p-inputmask` host-element rules (renamed to `u-button` and `u-input-mask`) are upstream's. One deliberate change: the `:first-child` guard on the button reset rule is dropped, because it limited the reset to a group that is itself a first child. The `p-inputgroup-fluid` class is not carried, because the fluid input it reads is not declared (Phase 4 row 6, N). The shared CSS comes from `@ultimate/uix-styles/inputgroup` (ADR-082). Changed in #194."
+  },
+  {
+    "originalPath": "packages/primeng/src/inputgroupaddon/style/inputgroupaddonstyle.ts",
+    "ultimateDestination": "packages/ng/src/input-group/input-group-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the addon class resolver (ADR-064). Compared with PrimeNG 21.1.9 inputgroupaddon/style/inputgroupaddonstyle.ts for #194: `classes.root` (`p-inputgroupaddon` renamed to `u-input-group-addon`) is upstream's, and the addon owns no CSS of its own, as upstream. Changed in #194."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/input-group/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
   }
 ]

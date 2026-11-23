@@ -36,6 +36,7 @@ export * from "./file-upload";
 export * from "./key-filter";
 export * from "./float-label";
 export * from "./icon-field";
+export * from "./input-group";
 export * from "./input-chips";
 export * from "./mention";
 export * from "./multi-state-checkbox";

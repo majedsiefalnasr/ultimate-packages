@@ -292,8 +292,8 @@
       "scope": "react-text-entry",
       "ticket": 111,
       "revision": "c49aa4e6906a9d72a1893b3fc006fce55489d0b7",
-      "records": 9,
-      "aliases": 9,
+      "records": 10,
+      "aliases": 10,
       "pending": 5
     },
     {
@@ -310,8 +310,8 @@
       "scope": "shared-component-styles-146",
       "ticket": 146,
       "revision": "b9051a6668bf08b91654c23925a41cdcd9b84119",
-      "records": 17,
-      "aliases": 18,
+      "records": 18,
+      "aliases": 19,
       "pending": 1
     },
     {
@@ -1082,7 +1082,7 @@
     {
       "id": "package.ultimate.react",
       "owner": "#108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141",
-      "resolution": "aggregate of 88 resolved families (#108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141)"
+      "resolution": "aggregate of 89 resolved families (#108, #111, #114, #117, #120, #123, #126, #129, #132, #135, #138, #141)"
     },
     {
       "id": "package.ultimate.react-core",
@@ -1318,6 +1318,11 @@
       "id": "package.ultimate.react.input-chips",
       "owner": "#111",
       "resolution": "scripts/inventory/react-text-entry.json#react.input-chips"
+    },
+    {
+      "id": "package.ultimate.react.input-group",
+      "owner": "#111",
+      "resolution": "scripts/inventory/react-text-entry.json#react.input-group"
     },
     {
       "id": "package.ultimate.react.input-mask",
@@ -1758,6 +1763,11 @@
       "id": "package.ultimate.uix-styles.iftalabel",
       "owner": "#146",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.iftalabel"
+    },
+    {
+      "id": "package.ultimate.uix-styles.inputgroup",
+      "owner": "#146",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.inputgroup"
     },
     {
       "id": "package.ultimate.uix-styles.inputnumber",
@@ -11860,6 +11870,22 @@
     {
       "from": "scripts/inventory/react-text-entry.json",
       "origin": "relationship",
+      "source": "react.input-group",
+      "target": "package.ultimate.react.input-group",
+      "resolution": "scripts/inventory/react-text-entry.json#react.input-group",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/react-text-entry.json",
+      "origin": "relationship",
+      "source": "react.input-group",
+      "target": "package.ultimate.themes.presets",
+      "resolution": "scripts/inventory/theme-contract.json#themes.aura",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/react-text-entry.json",
+      "origin": "relationship",
       "source": "react.input-mask",
       "target": "package.ultimate.react-core.base",
       "resolution": "scripts/inventory/react-core.json#reactcore.base",
@@ -12196,6 +12222,22 @@
     {
       "from": "scripts/inventory/shared-component-styles.json",
       "origin": "relationship",
+      "source": "uixstyles.inputgroup",
+      "target": "package.ultimate.uix-styled.root",
+      "resolution": "scripts/inventory/styled-runtime.json#uixstyled.root",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.inputgroup",
+      "target": "uixstyles.root",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.root",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
       "source": "uixstyles.inputnumber",
       "target": "package.ultimate.uix-styled.root",
       "resolution": "scripts/inventory/styled-runtime.json#uixstyled.root",
@@ -12327,6 +12369,14 @@
       "source": "uixstyles.root",
       "target": "uixstyles.iftalabel",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.iftalabel",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.root",
+      "target": "uixstyles.inputgroup",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.inputgroup",
       "via": "record"
     },
     {
