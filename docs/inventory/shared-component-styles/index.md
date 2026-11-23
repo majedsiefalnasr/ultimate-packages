@@ -10,6 +10,7 @@ Scoped sample only; not platform completeness.
 - [Dialog styles](uixstyles.dialog.md)
 - [FloatLabel styles](uixstyles.floatlabel.md)
 - [IconField styles](uixstyles.iconfield.md)
+- [IftaLabel styles](uixstyles.iftalabel.md)
 - [Input number styles](uixstyles.inputnumber.md)
 - [Input text styles](uixstyles.inputtext.md)
 - [Menu styles](uixstyles.menu.md)

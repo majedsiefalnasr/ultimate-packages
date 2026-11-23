@@ -39,6 +39,7 @@ uixstyles.checkbox
 uixstyles.dialog
 uixstyles.floatlabel
 uixstyles.iconfield
+uixstyles.iftalabel
 uixstyles.inputnumber
 uixstyles.inputtext
 uixstyles.menu

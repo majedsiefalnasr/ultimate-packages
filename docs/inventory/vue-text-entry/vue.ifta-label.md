@@ -10,7 +10,7 @@ Label wrapper positioning a slotted label above the input by CSS.
 
 ## Framework surface
 
-UIftaLabel (IftaLabel.vue, name "UIftaLabel") and createBaseIftaLabel (BaseIftaLabel.ts) plus iftaLabelStyleModule (ifta-label-style.ts). Base chain: createBaseComponent directly, componentName iftalabel; no props, no emits, no v-model. Template: a root span rendering the default slot. Behavior is pure CSS :has(); the invalid selector .u-ifta-label:has(.u-invalid) label does not match UInputText or UTextarea, which render p-invalid. Padding rules target .u-input-text, .u-textarea and other select classes. Style module registered as iftalabel.
+UIftaLabel (IftaLabel.vue, name "UIftaLabel") and createBaseIftaLabel (BaseIftaLabel.ts) plus iftaLabelStyleModule (ifta-label-style.ts). Base chain: createBaseComponent directly, componentName iftalabel; no props, no emits, no v-model. Template: a root span rendering the default slot, with inheritAttrs: false and ptmi('root') bound on the root. Every instance provides itself as $parentInstance through the vue-core pass-through mixin. Behavior is pure CSS :has() from the shared @ultimate/uix-styles/iftalabel module (ADR-082, ADR-092): the invalid selector .u-ifta-label:has(.p-invalid) label matches UInputText and UTextarea, and the padding rules target u-inputtext, u-textarea and the select classes. No component emits p-inputwrapper-focus yet, so the focus colour reaches plain inputs and textareas only. Style module registered as iftalabel.
 
 ## Public exports
 
@@ -29,7 +29,7 @@ packages/vue/src/ifta-label/index.ts
 ```text
 packages/vue/src/ifta-label/IftaLabel.vue: name: "UIftaLabel"
 packages/vue/src/ifta-label/ifta-label-style.ts: export const iftaLabelStyleModule
-packages/vue/src/ifta-label/ifta-label-style.ts: .u-ifta-label:has(.u-invalid) label
+packages/uix-styles/src/iftalabel/index.ts: .u-ifta-label:has(.p-invalid) label
 packages/vue/src/ifta-label/BaseIftaLabel.ts: export function createBaseIftaLabel
 packages/vue/src/index.ts: export * from "./ifta-label";
 packages/vue/package.json: "./ifta-label": {
