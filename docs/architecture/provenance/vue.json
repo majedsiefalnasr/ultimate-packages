@@ -1084,5 +1084,41 @@
     "ultimateDestination": "packages/vue/src/float-label/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UFloatLabel; it shares only the exported component with PrimeVue's floatlabel module."
+  },
+  {
+    "originalPath": "packages/primevue/src/iconfield/IconField.vue",
+    "ultimateDestination": "packages/vue/src/icon-field/IconField.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 IconField.vue for #192 (ADR-091): the single root element with the `cx('root')` class, `ptmi('root')` bound on it and the default slot, with `inheritAttrs: false`, are upstream's. Like PrimeVue it has no `iconPosition` prop. The `$pcIconField` provide key is not carried (no consumer). Existing file, entry added in #192."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputicon/InputIcon.vue",
+    "ultimateDestination": "packages/vue/src/icon-field/InputIcon.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 InputIcon.vue for #192 (ADR-091): the single root element with `cx('root')`, `ptmi('root')` and the default slot, with `inheritAttrs: false`, are upstream's. PrimeVue sets `aria-hidden=\"true\"` as a fixed attribute; here it is placed before `v-bind` so an attribute or `pt` entry replaces it (user ruling, ADR-091). The `$pcInputIcon` provide key and the `class` prop are not carried. Existing file, entry added in #192."
+  },
+  {
+    "originalPath": "packages/primevue/src/iconfield/BaseIconField.vue",
+    "ultimateDestination": "packages/vue/src/icon-field/BaseIconField.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064). Shares only the one-tier `extends: BaseComponent` chain with PrimeVue 4.5.5 BaseIconField.vue, here `createBaseComponent` with the component name `iconfield`. The `provide()` pair is not carried (see IconField.vue)."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputicon/BaseInputIcon.vue",
+    "ultimateDestination": "packages/vue/src/icon-field/BaseInputIcon.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064). Shares only the one-tier `extends: BaseComponent` chain with PrimeVue 4.5.5 BaseInputIcon.vue, here `createBaseComponent` with the component name `inputicon`. The `class` prop and the `provide()` pair are not carried (see InputIcon.vue)."
+  },
+  {
+    "originalPath": "packages/primevue/src/iconfield/style/IconFieldStyle.js",
+    "ultimateDestination": "packages/vue/src/icon-field/icon-field-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeVue 4.5.5 IconFieldStyle.js `classes`: `p-iconfield` becomes `u-icon-field` and the `inputicon` class becomes `u-input-icon`. The hand-ported CSS copy is replaced by the shared `@ultimate/uix-styles/iconfield` module (ADR-082). Changed for #192."
+  },
+  {
+    "originalPath": "packages/primevue/src/iconfield/IconField.vue",
+    "ultimateDestination": "packages/vue/src/icon-field/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UIconField and UInputIcon; it shares only the exported component names with PrimeVue's iconfield module."
   }
 ]
