@@ -11,6 +11,7 @@
         "packages/react/src/split-button",
         "packages/react/src/avatar",
         "packages/react/src/avatar-group",
+        "packages/react/src/badge",
         "packages/react/src/chip",
         "packages/react/src/tag",
         "packages/react/src/toolbar"
@@ -58,6 +59,14 @@
         },
         {
           "subpath": ".",
+          "source": "packages/react/src/badge/index.ts"
+        },
+        {
+          "subpath": "./badge",
+          "source": "packages/react/src/badge/index.ts"
+        },
+        {
+          "subpath": ".",
           "source": "packages/react/src/chip/index.ts"
         },
         {
@@ -90,7 +99,7 @@
       "framework": "react",
       "availability": "public",
       "purpose": "Native action button with loading/disabled gating, icons, badge and optional tooltip. Reuses the pilot react.button identity rather than introducing a second product.",
-      "surface": "UButton and UButtonProps expose a forwarded HTMLButtonElement ref. UButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, \"disabled\">: native events, children and attributes remain available. Adds label:string, icon/loadingIcon:ReactNode, iconPos:left|right|top|bottom, loading/disabled, severity:secondary|success|info|warning|danger|help|contrast, size:small|large, text/raised/rounded/outlined/link/plain, badge/badgeClassName, visible, tooltip and tooltipOptions:Record<string,unknown>. visible=false returns null; loading disables the button. Label plus badge supplies aria-label when label exists, even over an explicit aria-label; type defaults to button but rest attributes follow it. Internal setRef/renderIcon and buttonStyleModule belong here. ButtonClassesParams is an owned source-only class resolver contract for hasIcon/label/loading/severity/raised/rounded/text/outlined/link/plain/size/iconPos; not a barrel export. USpinnerIcon and UTooltip are dependencies, not owned products. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/button. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution and delegates mounting/style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is registered; no scoped style module imports @ultimate/uix-styles. Comments claiming missing shared modules are historical, not availability evidence. Aura registry key button exists; this local structural CSS has no dt() token references. BUTTON_METADATA names this React sourcePath.",
+      "surface": "UButton and UButtonProps expose a forwarded HTMLButtonElement ref. UButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, \"disabled\">: native events, children and attributes remain available. Adds label:string, icon/loadingIcon:ReactNode, iconPos:left|right|top|bottom, loading/disabled, severity:secondary|success|info|warning|danger|help|contrast, size:small|large, text/raised/rounded/outlined/link/plain, badge/badgeClassName (the badge renders through UBadge, ADR-088), visible, tooltip and tooltipOptions:Record<string,unknown>. visible=false returns null; loading disables the button. Label plus badge supplies aria-label when label exists, even over an explicit aria-label; type defaults to button but rest attributes follow it. Internal setRef/renderIcon and buttonStyleModule belong here. ButtonClassesParams is an owned source-only class resolver contract for hasIcon/label/loading/severity/raised/rounded/text/outlined/link/plain/size/iconPos; not a barrel export. USpinnerIcon and UTooltip are dependencies, not owned products. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/button. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution and delegates mounting/style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is registered; no scoped style module imports @ultimate/uix-styles. Comments claiming missing shared modules are historical, not availability evidence. Aura registry key button exists; this local structural CSS has no dt() token references. BUTTON_METADATA names this React sourcePath.",
       "files": [
         "packages/react/src/button/index.ts",
         "packages/react/src/button/button.tsx",
@@ -114,6 +123,10 @@
         {
           "path": "packages/react/src/index.ts",
           "contains": "export * from \"./button\";"
+        },
+        {
+          "path": "packages/react/src/button/button.tsx",
+          "contains": "<UBadge value={badge}"
         }
       ],
       "relationships": [
@@ -123,7 +136,8 @@
         "package.ultimate.themes.presets",
         "package.ultimate.react-core.icons",
         "package.ultimate.react.tooltip",
-        "package.ultimate.component-metadata.records"
+        "package.ultimate.component-metadata.records",
+        "package.ultimate.react.badge"
       ],
       "claims": [
         {
@@ -362,6 +376,58 @@
       ]
     },
     {
+      "id": "react.badge",
+      "name": "React UBadge",
+      "framework": "react",
+      "availability": "public",
+      "purpose": "Standalone status badge showing a value, with severity and size, a dot for an empty value and a circle for one character.",
+      "surface": "UBadge and UBadgeProps forward an HTMLSpanElement ref; the ref is the root span, where PrimeReact exposes getElement() (ADR-088). UBadgeProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, \"children\">: value:string|number|null, severity:secondary|info|success|warn|warning|danger|contrast (warning is an alias of warn), size:small|large|xlarge, unstyled:boolean, pt and ptOptions; className, style and the other span attributes are merged onto the root with ptm('root'). The root renders value. BadgeSeverity is exported from the barrel; BadgeClassesParams and badgeStyleModule are owned source-only declarations. The shared @ultimate/uix-styles/badge module supplies the structural CSS (ADR-082), and badgeStyleModule adds the .u-overlaybadge wrapper rules that replace PrimeReact's .p-overlay-badge; there is no React OverlayBadge component, as in PrimeReact. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/badge. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution; createPassThrough owns ptm. Aura registry key badge matches componentName and the dt() references in the shared module. No dedicated record for this family is present in the current metadata registry; no metadata association is inferred from its name.",
+      "files": [
+        "packages/react/src/badge/index.ts",
+        "packages/react/src/badge/badge.tsx",
+        "packages/react/src/badge/badge-style.ts"
+      ],
+      "exports": [
+        "@ultimate/react#UBadge",
+        "@ultimate/react#UBadgeProps",
+        "@ultimate/react#BadgeSeverity",
+        "@ultimate/react/badge#UBadge",
+        "@ultimate/react/badge#UBadgeProps",
+        "@ultimate/react/badge#BadgeSeverity"
+      ],
+      "evidence": [
+        {
+          "path": "packages/react/src/badge/badge.tsx",
+          "contains": "export interface UBadgeProps"
+        },
+        {
+          "path": "packages/react/src/badge/badge-style.ts",
+          "contains": "export const badgeStyleModule"
+        },
+        {
+          "path": "packages/react/src/badge/badge-style.ts",
+          "contains": "@ultimate/uix-styles/badge"
+        },
+        {
+          "path": "packages/react/src/index.ts",
+          "contains": "export * from \"./badge\";"
+        }
+      ],
+      "relationships": [
+        "package.ultimate.react.badge",
+        "package.ultimate.react-core.base",
+        "package.ultimate.react-core.styling",
+        "package.ultimate.themes.presets",
+        "package.ultimate.uix-styles.badge"
+      ],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Forward-ref component, declared props, shared style module and described composition exist in source; not behavioral proof."
+        }
+      ]
+    },
+    {
       "id": "react.chip",
       "name": "React UChip",
       "framework": "react",
@@ -527,6 +593,38 @@
   ],
   "dispositions": [
     {
+      "path": "packages/react/src/avatar-group/avatar-group.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/avatar-group/avatar-group.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/avatar/avatar.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/avatar/avatar.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/badge/badge.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/badge/badge.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/button-group/button-group.spec.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
+      "path": "packages/react/src/button-group/button-group.stories.tsx",
+      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
+    },
+    {
       "path": "packages/react/src/button/button.api.mdx",
       "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
     },
@@ -543,11 +641,11 @@
       "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
     },
     {
-      "path": "packages/react/src/button-group/button-group.spec.tsx",
+      "path": "packages/react/src/chip/chip.spec.tsx",
       "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
     },
     {
-      "path": "packages/react/src/button-group/button-group.stories.tsx",
+      "path": "packages/react/src/chip/chip.stories.tsx",
       "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
     },
     {
@@ -556,30 +654,6 @@
     },
     {
       "path": "packages/react/src/split-button/split-button.stories.tsx",
-      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
-    },
-    {
-      "path": "packages/react/src/avatar/avatar.spec.tsx",
-      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
-    },
-    {
-      "path": "packages/react/src/avatar/avatar.stories.tsx",
-      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
-    },
-    {
-      "path": "packages/react/src/avatar-group/avatar-group.spec.tsx",
-      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
-    },
-    {
-      "path": "packages/react/src/avatar-group/avatar-group.stories.tsx",
-      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
-    },
-    {
-      "path": "packages/react/src/chip/chip.spec.tsx",
-      "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
-    },
-    {
-      "path": "packages/react/src/chip/chip.stories.tsx",
       "reason": "Supporting test, story or API documentation; not an independent runtime product or public type. Test presence is not executed passing evidence."
     },
     {
@@ -634,6 +708,11 @@
       "id": "package.ultimate.themes.presets",
       "batch": "ticket-151",
       "reason": "Detailed inventory remains owned by [#151](https://github.com/majedsiefalnasr/ultimate-packages/issues/151). Reconciled identity: [package index](../packages/packages.md); source relationship is described here, not external-ticket completion."
+    },
+    {
+      "id": "package.ultimate.uix-styles.badge",
+      "batch": "packages",
+      "reason": "Identity reconciled against package-coverage ownership; detailed external foundation/theme/metadata inventory belongs to its separate batch, not fabricated here."
     }
   ],
   "aliases": [
@@ -656,6 +735,10 @@
     {
       "id": "package.ultimate.react.avatar-group",
       "record": "react.avatar-group"
+    },
+    {
+      "id": "package.ultimate.react.badge",
+      "record": "react.badge"
     },
     {
       "id": "package.ultimate.react.chip",

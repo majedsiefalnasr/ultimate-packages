@@ -10,7 +10,7 @@ Projects arbitrary content and positions a composed UBadge at its corner; this i
 
 ## Framework surface
 
-value string|number|null; severity secondary|info|success|warn|danger|contrast|null; badgeSize small|large|xlarge|null; badgeDisabled boolean false; all forwarded to UBadge. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. No dedicated manifest subpath; root entry only. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. Theme identity overlaybadge matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: overlayBadgeStyleModule.
+value string|number|null; severity secondary|info|success|warn|danger|contrast|null; badgeSize small|large|xlarge|null; badgeDisabled boolean false; all forwarded to UBadge, as are badgeStyle (Record<string, string|number>|null) and badgeStyleClass (string), which stand in for PrimeNG's style and styleClass. pt reaches the host, the root div and the composed badge (pcBadge) through UBind (ADR-088). Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. No dedicated manifest subpath; root entry only. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. Theme identity overlaybadge matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: overlayBadgeStyleModule.
 
 ## Public exports
 
@@ -31,6 +31,7 @@ packages/themes/src/presets/aura/index.ts: overlaybadge:
 packages/ng/src/overlay-badge/overlay-badge-style.ts: overlayBadgeStyleModule
 .github/workflows/ci.yml: run: pnpm run test
 packages/ng/package.json: "test": "ng test --project=ng"
+packages/ng/src/overlay-badge/overlay-badge.ts: badgeStyleClass = input<string>()
 ```
 
 ## Relationships
