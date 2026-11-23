@@ -27,7 +27,7 @@ export const Default: Story = {
     components: { UIftaLabel },
     template: `
       <UIftaLabel>
-        <input id="ifta-username" type="text" class="u-input-text" />
+        <input id="ifta-username" type="text" class="u-inputtext" />
         <label for="ifta-username">Username</label>
       </UIftaLabel>
     `,

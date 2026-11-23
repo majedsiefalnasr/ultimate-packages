@@ -1036,5 +1036,23 @@
     "ultimateDestination": "packages/ng/src/icon-field/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/iftalabel/iftalabel.ts",
+    "ultimateDestination": "packages/ng/src/ifta-label/ifta-label.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG 21.1.9 iftalabel/iftalabel.ts for #193 (ADR-092): the ng-content template, the host class from `cx('root')`, and the `Bind` host directive with the `ptms(['host', 'root'])` binding in the after-view-checked hook and the PARENT_INSTANCE provider (renamed UBind and U_PARENT_INSTANCE) are upstream's. PrimeNG's `BaseComponent`, the injected `IftaLabelStyle` service and the NgModule wrapper are not carried. The `IFTALABEL_INSTANCE` token and the nested `$pcIftaLabel` lookup are not carried, because nothing consumes them. Existing file, entry added in #193 because the file now carries the pass-through wiring."
+  },
+  {
+    "originalPath": "packages/primeng/src/iftalabel/style/iftalabelstyle.ts",
+    "ultimateDestination": "packages/ng/src/ifta-label/ifta-label-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver and the Angular-only rule (ADR-064). Side-by-side with PrimeNG 21.1.9 iftalabelstyle.ts: `classes.root` (`p-iftalabel` renamed to `u-ifta-label`) and the `.ng-invalid.ng-dirty` label colour rule are upstream's. The service shape is a plain css and classes module. The shared CSS comes from `@ultimate/uix-styles/iftalabel` (ADR-082); this file holds none of its own beyond the Angular-only rule. Changed for #193."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/ifta-label/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
   }
 ]

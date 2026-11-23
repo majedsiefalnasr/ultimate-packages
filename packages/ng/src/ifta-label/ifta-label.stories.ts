@@ -27,7 +27,7 @@ export const Default: Story = {
   render: () => ({
     template: `
       <u-ifta-label>
-        <input id="ifta-username" type="text" class="u-input-text" />
+        <input id="ifta-username" type="text" class="u-inputtext" />
         <label for="ifta-username">Username</label>
       </u-ifta-label>
     `,

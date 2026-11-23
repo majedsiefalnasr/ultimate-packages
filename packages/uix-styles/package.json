@@ -54,6 +54,11 @@
       "import": "./dist/iconfield/index.mjs",
       "default": "./dist/iconfield/index.mjs"
     },
+    "./iftalabel": {
+      "types": "./dist/iftalabel/index.d.mts",
+      "import": "./dist/iftalabel/index.mjs",
+      "default": "./dist/iftalabel/index.mjs"
+    },
     "./inputnumber": {
       "types": "./dist/inputnumber/index.d.mts",
       "import": "./dist/inputnumber/index.mjs",

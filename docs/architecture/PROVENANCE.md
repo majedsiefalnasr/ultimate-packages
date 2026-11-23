@@ -341,3 +341,15 @@ Ticket #192 (spec #167, ADR-091) brings IconField and InputIcon to parity across
 - **Specs and stories.** The IconField specs and stories are Ultimate-authored.
 
 The twelve IconField source files left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json`, `vue.json` and `uix-styles.json`.
+
+### L0a IftaLabel source disclosure
+
+Ticket #193 (spec #167, ADR-092) brings IftaLabel to parity in Angular and Vue against the pinned oracles PrimeNG 21.1.9 and PrimeVue 4.5.5. PrimeReact ships no IftaLabel, so React has no component and no entry. No Prime package is a dependency (ADR-004). The `.vendor-cache` archives are absent in this worktree, so the sources were read from the installed `primeng` 21.1.9 (`fesm2022/primeng-iftalabel.mjs`), `primevue` 4.5.5 (`iftalabel/*.vue`) and `@primeuix/styles` 2.0.3 (`dist/iftalabel/index.mjs`) packages in `node_modules` (ADR-064).
+
+- **`packages/uix-styles/src/iftalabel/index.ts` (source class COPY, sub-label `adapted`).** Recovered from `@primeuix/styles` 2.0.3 `iftalabel`. The `.p-iftalabel*` selectors are renamed to `.u-ifta-label*` and `.p-inputicon` to `.u-input-icon`, and the sibling-field selectors are changed to the classes the Ultimate siblings emit; the state classes stay `p-invalid` and `p-inputwrapper-focus`. The two padding selectors the earlier local copies lacked are carried from upstream.
+- **Angular `ifta-label.ts` and `ifta-label-style.ts` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeNG `iftalabel.ts` and `iftalabelstyle.ts`. The template, host class, `Bind` binding and parent-instance provider are upstream's; the `.ng-invalid.ng-dirty` rule is upstream's and was missing from the local copy.
+- **Vue `IftaLabel.vue` and `ifta-label-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeVue `IftaLabel.vue` and `IftaLabelStyle.js`. The root span, `ptmi('root')` and the class key are upstream's; the hand-ported CSS copy is replaced by the shared module.
+- **Vue `BaseIftaLabel.ts` and the barrels (source class REFERENCE).** They share only interface facts with the compared upstream files.
+- **Specs and stories.** The IftaLabel specs and stories are Ultimate-authored.
+
+The seven IftaLabel source files left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/ng.json`, `vue.json` and `uix-styles.json`.

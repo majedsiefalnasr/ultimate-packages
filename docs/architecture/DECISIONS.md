@@ -1498,3 +1498,45 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 - Screen readers stop announcing decorative icons. An icon that must be announced sets `aria-hidden="false"` or a label.
 - Nothing emits `u-inputfield-sm` or `-lg` yet; the Select family tickets in L0b own that.
 - Tests cover the root and position classes, attribute fall-through, `pt`, `unstyled`, `aria-hidden` and its replacement, per-instance `dt` (Angular and Vue) and the parent instance. Their effect is asserted on classes and DOM, not in a browser.
+
+## ADR-092 — IftaLabel: one shared stylesheet keyed on the classes the sibling fields emit, `pt` and parent instance, the Angular-only invalid rule, and no React component (L0a, ticket #193)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#193](https://github.com/majedsiefalnasr/ultimate-packages/issues/193)). No ruling was needed before implementation; this ADR records the decisions the ticket made and the rows that stay open.
+
+**Context.**
+
+- IftaLabel is pure CSS: an absolutely positioned label sits above the field, and the field is padded to make room. The two frameworks kept two copies of that CSS, and neither matched what the sibling fields render.
+- The padding selectors keyed on `u-input-text`, the invalid colour on `u-invalid`, and the focus colour on `u-inputwrapper-focus`. `UInputText` renders `u-inputtext` and `p-invalid`. So the label never took the invalid colour and the field was never padded.
+- The local copies dropped two upstream padding selectors (`.p-multiselect-label:has(.p-chip)` and `.p-treeselect-label`) and, in Angular, PrimeNG's `.ng-invalid.ng-dirty` label colour rule.
+- `UIftaLabel` had no `pt`, `ptOptions`, `unstyled` or per-instance `dt` wiring, and neither framework provided itself to descendants.
+- PrimeReact ships no IftaLabel (`docs/prime-reference/components/iftalabel.md`).
+
+**Decision.**
+
+1. **Shared module.** The structural CSS is `@ultimate/uix-styles/iftalabel` (ADR-082), consumed by the Angular and Vue style modules, so both read the Aura `iftalabel` tokens. Angular adds one framework-local rule, `.u-ifta-label:has(.ng-invalid.ng-dirty) label`, as PrimeNG does, because Vue has no counterpart.
+2. **Selectors follow what the siblings emit.** The module keys on `u-inputtext`, `u-textarea`, `u-select-label`, `u-multi-select-label`, `u-autocomplete-input-multiple`, `u-cascade-select-label`, `u-treeselect-label`, `u-chip` and `u-input-icon`, and on the state classes `p-invalid` and `p-inputwrapper-focus`. It also carries Prime's two padding selectors that the local copies had dropped.
+3. **Root class.** The root class stays `u-ifta-label`. Prime's name after the `p-` to `u-` rename would be `u-iftalabel`; renaming a class that InputGroup and consumers already select would break them for no capability gain, as in ADR-090.
+4. **Pass-through.** Angular binds the root through `UBind` (`ptms` host and root) and provides itself as `U_PARENT_INSTANCE`. Vue binds `ptmi('root')` with `inheritAttrs: false`; the vue-core mixin already provides every instance as `$parentInstance`. `unstyled` and per-instance `dt` come from the base. The component name is `iftalabel`, the Aura key.
+5. **Not carried.** The `IFTALABEL_INSTANCE` token and PrimeVue's `$pcIftaLabel` key have no consumer in the pinned sources. PrimeNG's two extra selector aliases (`p-iftaLabel` and `p-ifta-label`) are not carried; Ultimate keeps one `u-ifta-label` selector.
+6. **React.** No component is added. Every React row is N because PrimeReact ships none.
+
+**Finding recorded here.** No component in the source emits `p-inputwrapper-focus`; the Select family emits `p-inputwrapper` and `p-inputwrapper-filled` only. So the focus label colour applies to a plain input or textarea (`:focus`) and not to a compound widget. ADR-090 states that the siblings emit `p-inputwrapper-focus`, which was wrong, and the same gap affects the FloatLabel focus selectors. It is a Select-family gap (L0b), not an IftaLabel change, so it stays open here and ADR-090 is not rewritten.
+
+**Divergences from Prime.**
+
+1. The root class is `u-ifta-label`, not `u-iftalabel` (item 3).
+2. One selector, not three (item 5).
+3. No `IFTALABEL_INSTANCE` token and no `$pcIftaLabel` key (item 5).
+4. `ptOptions` is accepted everywhere but has no visible effect until the global `pt` source exists (ADR-080), so row 14 is partial.
+
+**Classification after this ticket** (C / P / M / I / N-A / N / U, from a source re-read of the 16 rows; the Phase 4 report is not edited, and nothing here is browser-verified). Row 5 stays partial because AutoComplete's multiple-value input and TreeSelect's label do not render the classes the module names yet. Row 6 stays partial for the finding above.
+
+- Angular 13 / 3 / 0 / 0 / 0 / 0 / 0. Open: rows 5, 6 and 14. Row 7 (invalid colour), row 8 (`.ng-invalid.ng-dirty`), rows 11, 13, 15 and 16 are now C.
+- React 0 / 0 / 0 / 0 / 0 / 16 / 0. N: every row.
+- Vue 12 / 3 / 0 / 0 / 0 / 1 / 0. Open: rows 5, 6 and 14. Row 8 is N (no Vue counterpart). Rows 7, 11, 13, 15 and 16 are now C.
+
+**Consequences.**
+
+- An invalid field now gives the label the invalid colour, and a plain input or textarea in focus gives it the focus colour. The field is padded for the label. These are visible changes for `UInputText` inside an IftaLabel in both frameworks.
+- The IftaLabel stories hand-write the field class; they now use `u-inputtext`, so their browser baselines can change.
+- Tests cover the root class, attribute fall-through (Vue), `pt`, `unstyled`, per-instance `dt` and the parent instance. Their effect is asserted on classes and DOM, not in a browser.
