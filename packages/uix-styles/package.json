@@ -44,6 +44,11 @@
       "import": "./dist/dialog/index.mjs",
       "default": "./dist/dialog/index.mjs"
     },
+    "./floatlabel": {
+      "types": "./dist/floatlabel/index.d.mts",
+      "import": "./dist/floatlabel/index.mjs",
+      "default": "./dist/floatlabel/index.mjs"
+    },
     "./inputnumber": {
       "types": "./dist/inputnumber/index.d.mts",
       "import": "./dist/inputnumber/index.mjs",

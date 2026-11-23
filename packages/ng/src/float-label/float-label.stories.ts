@@ -31,7 +31,7 @@ export const Default: Story = {
     props: args,
     template: `
       <u-float-label [variant]="variant">
-        <input id="username" type="text" class="u-input-text" />
+        <input id="username" type="text" class="u-inputtext" />
         <label for="username">Username</label>
       </u-float-label>
     `,
@@ -45,7 +45,7 @@ export const InVariant: Story = {
     props: args,
     template: `
       <u-float-label [variant]="variant">
-        <input id="username-in" type="text" class="u-input-text" />
+        <input id="username-in" type="text" class="u-inputtext" />
         <label for="username-in">Username</label>
       </u-float-label>
     `,
@@ -59,7 +59,7 @@ export const OnVariant: Story = {
     props: args,
     template: `
       <u-float-label [variant]="variant">
-        <input id="username-on" type="text" class="u-input-text" />
+        <input id="username-on" type="text" class="u-inputtext" />
         <label for="username-on">Username</label>
       </u-float-label>
     `,
