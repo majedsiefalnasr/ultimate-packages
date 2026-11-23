@@ -8,6 +8,7 @@ import { style as buttonStyle } from "../src/button";
 import { style as checkboxStyle } from "../src/checkbox";
 import { style as dialogStyle } from "../src/dialog";
 import { style as floatlabelStyle } from "../src/floatlabel";
+import { style as iconfieldStyle } from "../src/iconfield";
 import { style as inputnumberStyle } from "../src/inputnumber";
 import { style as inputtextStyle } from "../src/inputtext";
 import { style as menuStyle } from "../src/menu";
@@ -44,8 +45,8 @@ describe("base module scope guard", () => {
   });
 });
 
-describe("component style modules — exactly 13 exist alongside base", () => {
-  it("uix-styles/src/ contains only base + the Phase 2 component modules + virtualscroller + table + inputtext + inputnumber + floatlabel", () => {
+describe("component style modules — exactly 14 exist alongside base", () => {
+  it("uix-styles/src/ contains only base + the Phase 2 component modules + virtualscroller + table + inputtext + inputnumber + floatlabel + iconfield", () => {
     const actualModules = readdirSync(join(__dirname, "..", "src"), { withFileTypes: true })
       .filter((e) => e.isDirectory())
       .map((e) => e.name)
@@ -59,6 +60,7 @@ describe("component style modules — exactly 13 exist alongside base", () => {
         "checkbox",
         "dialog",
         "floatlabel",
+        "iconfield",
         "inputnumber",
         "inputtext",
         "menu",
@@ -95,6 +97,10 @@ describe("component style modules — exactly 13 exist alongside base", () => {
   });
   it("floatlabel style uses only .u-float-label* selectors", () => {
     expect(floatlabelStyle).not.toMatch(/\.p-floatlabel/);
+  });
+  it("iconfield style uses only .u-icon-field and .u-input-icon selectors", () => {
+    expect(iconfieldStyle).not.toMatch(/\.p-iconfield/);
+    expect(iconfieldStyle).not.toMatch(/\.p-inputicon/);
   });
   it("menu style uses only .u-menu* selectors", () => {
     expect(menuStyle).not.toMatch(/\.p-menu/);

@@ -328,3 +328,16 @@ Ticket #191 (spec #167, ADR-090) brings FloatLabel to parity across the three fr
 - **Specs and stories.** The FloatLabel specs and stories are Ultimate-authored.
 
 The ten FloatLabel source files left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json`, `vue.json` and `uix-styles.json`.
+
+### L0a IconField source disclosure
+
+Ticket #192 (spec #167, ADR-091) brings IconField and InputIcon to parity across the three frameworks against the pinned oracles PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5. No Prime package is a dependency (ADR-004); the sources were read from the checksum-verified archives in `.vendor-cache` (ADR-064).
+
+- **`packages/uix-styles/src/iconfield/index.ts` (source class COPY, sub-label `adapted`).** Recovered from `@primeuix/styles` 2.0.3 `iconfield`. The `.p-iconfield*` and `.p-inputicon` selectors are renamed to `.u-icon-field*` and `.u-input-icon`, and the sibling-field selectors are changed to the classes the Ultimate siblings emit (`.u-inputtext`, `.p-inputwrapper`, and `-sm`/`-lg` under both `u-inputtext-*` and `u-inputfield-*`).
+- **Angular `icon-field.ts` and `icon-field-style.ts` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeNG `iconfield/iconfield.ts`, `inputicon/inputicon.ts` and `iconfieldstyle.ts`. The templates, the `iconPosition` input and its host class, the `Bind` binding and the parent-instance provider are upstream's. The instance tokens and the deprecated `styleClass` input are not carried. `aria-hidden` on InputIcon is an Ultimate addition (user ruling).
+- **React `icon-field.tsx` and `icon-field-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeReact `IconField.js`, `InputIcon.js` and `IconFieldBase.js`. The root element, the prop merge with `ptm('root')` and the root class key are upstream's. `iconPosition` defaults to `left`, where PrimeReact defaults to `right` (user ruling). The `cloneElement` injection is not carried. The hand-written CSS is replaced by the shared module.
+- **Vue `IconField.vue`, `InputIcon.vue` and `icon-field-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeVue `IconField.vue`, `InputIcon.vue` and `IconFieldStyle.js`. The root elements, `ptmi('root')` and the class keys are upstream's. `aria-hidden` sits before `v-bind` so it can be replaced, where PrimeVue writes it after. The hand-ported CSS copy is replaced by the shared module.
+- **Vue `BaseIconField.ts`, `BaseInputIcon.ts` and the three barrels (source class REFERENCE).** They share only interface facts with the compared upstream files.
+- **Specs and stories.** The IconField specs and stories are Ultimate-authored.
+
+The twelve IconField source files left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json`, `vue.json` and `uix-styles.json`.

@@ -544,5 +544,23 @@
     "ultimateDestination": "packages/react/src/float-label/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UFloatLabel and UFloatLabelProps; it shares only the exported component with PrimeReact's floatlabel module."
+  },
+  {
+    "originalPath": "components/lib/iconfield/IconField.js",
+    "ultimateDestination": "packages/react/src/icon-field/icon-field.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 IconField.js and InputIcon.js for #192 (ADR-091): the single root element that merges its own class, the remaining props and `ptm('root')` around the children, and the forwarded ref, are upstream's. PrimeReactContext, the base `getProps`, useHandleStyle and the combined-ref effect are replaced by useComponentBase, createPassThrough, useMergeProps and a plain forwarded ref. `iconPosition` defaults to `left` here, where PrimeReact defaults to `right` (user ruling, intentional divergence recorded in ADR-091). UInputIcon renders `aria-hidden=\"true\"` by default and a prop, attribute or `pt` entry replaces it. PrimeReact's `cloneElement` class injection into the children has no consumer and is not carried. Existing file, entry added in #192."
+  },
+  {
+    "originalPath": "components/lib/iconfield/IconFieldBase.js",
+    "ultimateDestination": "packages/react/src/icon-field/icon-field-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 IconFieldBase.js `classes.root`: `p-iconfield` with the position modifier becomes `u-icon-field*`. The hand-written literal-colour CSS is replaced by the shared `@ultimate/uix-styles/iconfield` module (ADR-082), which reads the Aura `iconfield` tokens (ADR-067). Changed for #192."
+  },
+  {
+    "originalPath": "components/lib/iconfield/IconField.js",
+    "ultimateDestination": "packages/react/src/icon-field/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UIconField, UInputIcon and their prop types; it shares only the exported component names with PrimeReact's iconfield module."
   }
 ]

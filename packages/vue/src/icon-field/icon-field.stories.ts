@@ -10,7 +10,9 @@ import { UIconField, UInputIcon } from "./index";
  * record.
  *
  * Accessibility notes: `UIconField` renders a `<div>` with no ARIA role of
- * its own. `UInputIcon` renders `aria-hidden="true"` by default.
+ * its own. `UInputIcon` renders `aria-hidden="true"` by default because the
+ * icon is decorative (ADR-091); set `aria-hidden="false"` on it when the
+ * content is interactive, such as a clear button.
  */
 const meta: Meta<typeof UIconField> = {
   title: "Vue/IconField",
@@ -27,7 +29,7 @@ export const LeadingIcon: Story = {
     template: `
       <UIconField>
         <UInputIcon>search</UInputIcon>
-        <input type="text" class="u-input-text" placeholder="Search" />
+        <input type="text" class="u-inputtext" placeholder="Search" />
       </UIconField>
     `,
   }),
@@ -39,7 +41,7 @@ export const TrailingIcon: Story = {
     components: { UIconField, UInputIcon },
     template: `
       <UIconField>
-        <input type="text" class="u-input-text" placeholder="Search" />
+        <input type="text" class="u-inputtext" placeholder="Search" />
         <UInputIcon>search</UInputIcon>
       </UIconField>
     `,

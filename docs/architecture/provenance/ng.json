@@ -1018,5 +1018,23 @@
     "ultimateDestination": "packages/ng/src/float-label/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/iconfield/iconfield.ts",
+    "ultimateDestination": "packages/ng/src/icon-field/icon-field.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG 21.1.9 iconfield/iconfield.ts and inputicon/inputicon.ts for #192 (ADR-091): the ng-content templates, the `iconPosition` input with its `p-iconfield-left` and `p-iconfield-right` host class, and the `Bind` host directive with the `ptms(['host', 'root'])` binding and the PARENT_INSTANCE provider (renamed UBind and U_PARENT_INSTANCE) are upstream's. The position class is renamed to `u-icon-field-left` and `u-icon-field-right`. UInputIcon sets `aria-hidden=\"true\"` as a host attribute, which PrimeNG does not (user ruling, ADR-091). PrimeNG's `BaseComponent`, the injected style services and the NgModule wrapper are not carried. The `ICONFIELD_INSTANCE` and `INPUTICON_INSTANCE` tokens and the nested `$pcIconField` and `$pcInputIcon` lookups are not carried, because nothing consumes them. The deprecated `styleClass` input is not carried. Existing file, entry added in #192 because the file now carries the pass-through wiring."
+  },
+  {
+    "originalPath": "packages/primeng/src/iconfield/style/iconfieldstyle.ts",
+    "ultimateDestination": "packages/ng/src/icon-field/icon-field-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver (ADR-064). Side-by-side with PrimeNG 21.1.9 iconfieldstyle.ts: `classes.root` with the position modifier and the `inputicon` class are upstream's, renamed to `u-icon-field*` and `u-input-icon`. The resolver takes a plain params object instead of the instance wrapper. The shared CSS comes from `@ultimate/uix-styles/iconfield` (ADR-082); this file holds none of its own. Changed for #192."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/icon-field/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
   }
 ]

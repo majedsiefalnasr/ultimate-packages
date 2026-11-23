@@ -1455,3 +1455,46 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 - The `in` variant now pads `UInputText`, because the selector names `u-inputtext`. FloatLabel stories hand-write the class on raw inputs; they now use `u-inputtext`, so their browser baselines can change for the `in` variant.
 - React FloatLabel colours now come from the theme instead of fixed values, so its appearance follows the active preset.
 - Tests cover the root class, variant classes, attribute fall-through, `pt`, `unstyled`, per-instance `dt` (Angular and Vue) and the parent instance. Their effect is asserted on classes and DOM, not in a browser.
+
+## ADR-091 — IconField: one shared stylesheet keyed on the classes the sibling fields emit, `pt` and parent instance, React `iconPosition` defaults to `left`, and InputIcon is `aria-hidden` by default (L0a, ticket #192)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#192](https://github.com/majedsiefalnasr/ultimate-packages/issues/192)). Two rulings were taken before implementation (items 3 and 4); the rest records decisions the ticket made and the rows that stay open.
+
+**Context.**
+
+- IconField positions an icon inside a text field by `:first-child` and `:last-child` selectors against DOM order, and pads the field to make room. The three frameworks kept three copies of that CSS (Angular and Vue with `dt()` tokens, React with literal colours and sizes).
+- The padding selectors keyed on `u-input-text` and `u-inputwrapper`. `UInputText` renders `u-inputtext`, and the wrapper classes the Select family renders are `p-inputwrapper*`. So the field was never padded and the icon sat on top of the text.
+- Neither component had `pt`, `ptOptions` or `unstyled` wiring in React, none provided itself to descendants in Angular or Vue, and React did not forward a ref or the remaining props.
+- InputIcon decorates a field. A screen reader announced the icon glyph or its name, and the three Prime packages differ: PrimeNG and PrimeReact set nothing, and PrimeVue sets `aria-hidden="true"` as a fixed attribute that cannot be replaced.
+
+**Decision.**
+
+1. **Shared module.** The structural CSS is `@ultimate/uix-styles/iconfield` (ADR-082), consumed by the Angular, React and Vue style modules, so all three read the Aura `iconfield` tokens.
+2. **Selectors follow what the siblings emit.** The padding selectors key on `u-inputtext` and `p-inputwrapper`. The `sm` and `lg` icon-size rules accept both `u-inputtext-sm`/`-lg` and `u-inputfield-sm`/`-lg`, so the Select family can emit the second name without a change here.
+3. **React `iconPosition` defaults to `left` (user ruling).** PrimeReact defaults to `right`. Angular, and PrimeNG, default to `left`, and a shared default keeps the three frameworks identical. The prop only adds the position class; the icon sits where it is placed in the DOM.
+4. **InputIcon is `aria-hidden="true"` by default in all three (user ruling).** An attribute, a prop or a `pt` entry replaces it, so an interactive icon such as a clear button stays reachable. Angular writes it as a host attribute, React merges it first, and Vue places it before `v-bind`.
+5. **Pass-through and parent instance.** Angular binds the root through `UBind` (`ptms` host and root) and provides itself as `U_PARENT_INSTANCE`. Vue binds `ptmi('root')` with `inheritAttrs: false`; the vue-core mixin already provides every instance as `$parentInstance`. React merges its own class, the remaining props and `ptm('root')`, and forwards the ref. `unstyled` and per-instance `dt` come from the base in Angular and Vue; React has `unstyled` and no `dt`. The component names are `iconfield` and `inputicon`, the Aura keys (Angular's was `input-icon`).
+6. **Not carried.** The `ICONFIELD_INSTANCE` and `INPUTICON_INSTANCE` tokens and the `$pcIconField` and `$pcInputIcon` keys have no consumer in the pinned sources (I). React's `cloneElement` injection of `iconPosition` into the children has no consumer (I). The deprecated `styleClass` input and Vue's `class` prop are not needed.
+7. **React CSS.** The literal colours and sizes are replaced by the Aura `iconfield` tokens through the shared module (ADR-067).
+
+**Divergences from Prime.**
+
+1. React `iconPosition` defaults to `left`, not `right` (item 3).
+2. InputIcon is `aria-hidden` by default in Angular and React, where PrimeNG and PrimeReact set nothing, and replaceable in Vue, where PrimeVue's attribute is fixed (item 4).
+3. The sibling selectors are `u-inputtext` and `p-inputwrapper`, not `p-inputtext` (item 2).
+4. No instance tokens and no `cloneElement` injection (item 6).
+5. `ptOptions` is accepted everywhere but has no visible effect until the global `pt` source exists (ADR-080), so row 11 is partial.
+
+**Classification after this ticket** (C / P / M / I / N-A / N / U, from a source re-read; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+- Angular 11 / 1 / 0 / 0 / 0 / 1 / 0. Open: row 11 (P). N: row 6.
+- React 8 / 1 / 0 / 1 / 0 / 3 / 0. Open: row 11 (P). I: row 3 (the default differs). N: rows 4, 6 and 13.
+- Vue 11 / 1 / 0 / 0 / 0 / 1 / 0. Open: row 11 (P). N: row 3.
+
+**Consequences.**
+
+- A field inside an IconField is now padded for the icon in all three frameworks, and the icon takes the theme colour and size. These are visible changes for `UInputText` inside an IconField.
+- React IconField now places the icon on the left by default. A consumer relying on the PrimeReact default writes `iconPosition="right"`.
+- Screen readers stop announcing decorative icons. An icon that must be announced sets `aria-hidden="false"` or a label.
+- Nothing emits `u-inputfield-sm` or `-lg` yet; the Select family tickets in L0b own that.
+- Tests cover the root and position classes, attribute fall-through, `pt`, `unstyled`, `aria-hidden` and its replacement, per-instance `dt` (Angular and Vue) and the parent instance. Their effect is asserted on classes and DOM, not in a browser.

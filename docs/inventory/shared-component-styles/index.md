@@ -9,6 +9,7 @@ Scoped sample only; not platform completeness.
 - [Checkbox styles](uixstyles.checkbox.md)
 - [Dialog styles](uixstyles.dialog.md)
 - [FloatLabel styles](uixstyles.floatlabel.md)
+- [IconField styles](uixstyles.iconfield.md)
 - [Input number styles](uixstyles.inputnumber.md)
 - [Input text styles](uixstyles.inputtext.md)
 - [Menu styles](uixstyles.menu.md)

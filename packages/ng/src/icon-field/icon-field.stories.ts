@@ -11,9 +11,9 @@ import { UIconField } from "./icon-field";
  *
  * Accessibility notes: `UIconField` renders a `<u-icon-field>` host wrapping
  * projected content (an icon plus an input). It applies no ARIA role of its
- * own. `UInputIcon` is purely decorative and should be marked
- * `aria-hidden="true"` by the consumer when it conveys no independent
- * meaning (matching real PrimeNG's own InputIcon usage pattern).
+ * own. `UInputIcon` is decorative and renders `aria-hidden="true"` by
+ * default (ADR-091); set `aria-hidden="false"` on it when the content is
+ * interactive, such as a clear button.
  */
 const meta: Meta<UIconField> = {
   title: "Ng/IconField",
@@ -30,8 +30,8 @@ export const LeadingIcon: Story = {
     props: args,
     template: `
       <u-icon-field [iconPosition]="iconPosition">
-        <u-input-icon aria-hidden="true">search</u-input-icon>
-        <input type="text" class="u-input-text" placeholder="Search" />
+        <u-input-icon>search</u-input-icon>
+        <input type="text" class="u-inputtext" placeholder="Search" />
       </u-icon-field>
     `,
   }),
@@ -44,8 +44,8 @@ export const TrailingIcon: Story = {
     props: args,
     template: `
       <u-icon-field [iconPosition]="iconPosition">
-        <input type="text" class="u-input-text" placeholder="Search" />
-        <u-input-icon aria-hidden="true">search</u-input-icon>
+        <input type="text" class="u-inputtext" placeholder="Search" />
+        <u-input-icon>search</u-input-icon>
       </u-icon-field>
     `,
   }),

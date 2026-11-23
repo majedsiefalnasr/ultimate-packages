@@ -94,5 +94,11 @@
     "ultimateDestination": "packages/uix-styles/src/floatlabel/index.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/floatlabel/index.ts, recovered from dist/floatlabel/index.mjs (ADR-082, #191). The `.p-floatlabel*` selectors are renamed to `.u-float-label*` (the name Ultimate already emits), and the sibling-field selectors are changed to the classes the Ultimate siblings emit: `.p-inputtext` becomes `.u-inputtext`, `.p-multiselect-label` becomes `.u-multi-select-label`, `.p-cascadeselect-label` becomes `.u-cascade-select-label`, `.p-inputicon` becomes `.u-input-icon`, `.p-treeselect-label` becomes `.u-treeselect-label`, and `.p-chip` becomes `.u-chip`. The state classes `p-filled`, `p-invalid` and `p-inputwrapper-*` are kept, because the siblings emit them unrenamed. Upstream's `.p-multiselect-label:has(.p-chip)` and `.p-treeselect-label` padding selectors are carried, which the earlier local copies had dropped. Shared by the Angular, React and Vue float label style modules."
+  },
+  {
+    "originalPath": "src/iconfield/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/iconfield/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/iconfield/index.ts, recovered from dist/iconfield/index.mjs (ADR-082, #192). The `.p-iconfield*` selectors are renamed to `.u-icon-field*` and `.p-inputicon` to `.u-input-icon`, the names Ultimate emits. The sibling-field selectors follow the classes the Ultimate siblings emit: `.p-inputtext` becomes `.u-inputtext`, and the size rules accept both `.u-inputtext-sm`/`-lg` and `.u-inputfield-sm`/`-lg`. The `p-inputwrapper` state class is kept because the siblings emit it unrenamed. Shared by the Angular, React and Vue icon field style modules."
   }
 ]
