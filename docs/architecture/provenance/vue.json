@@ -3,13 +3,13 @@
     "originalPath": "packages/primevue/src/ripple/Ripple.js",
     "ultimateDestination": "packages/vue/src/ripple/ripple.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified upstream mechanism (read in full via extract-primevue-source.mjs from primevue@4.5.5, cross-checked against @primeuix/styles' ripple/index.mjs stylesheet): mousedown listener sets the ink element's width/height/top/left as inline pixel styles computed from the host's offset and outer size (getOffset, getOuterWidth/getOuterHeight, getWidth/getHeight), then toggles a u-ink-active class (renamed from upstream's p-ink-active) which triggers a 0.4s CSS keyframe animation (scale 0->2.5, fade opacity) defined in the theme stylesheet — CSS-driven, not JS-driven. Also ports upstream's animationend listener and 401ms setTimeout fallback that removes the active class after the animation completes. Corrects an earlier task-brief draft that assumed a --ink-size CSS custom property; no such property exists in the real upstream source — sizing/positioning are plain inline styles, confirmed by reading Ripple.js and the ripple stylesheet directly. Standalone directive primitive built via vue-core's createDirective factory, matching Angular's URipple precedent (packages/ng/src/ripple/ripple.ts) both in mechanism fidelity and in the same Option B exclusion: no BaseRipple/RippleStyle DI-styling registration, no UltimateConfig ripple-toggle gating — the ripple effect applies unconditionally. Full Ultimate namespace rename (u-ink/u-ink-active, not p-ink/p-ink-active)."
+    "modificationDescription": "Verified upstream mechanism (read in full via extract-primevue-source.mjs from primevue@4.5.5, cross-checked against @primeuix/styles' ripple/index.mjs stylesheet): mousedown listener sets the ink element's width/height/top/left as inline pixel styles computed from the host's offset and outer size (getOffset, getOuterWidth/getOuterHeight, getWidth/getHeight), then toggles a u-ink-active class (renamed from upstream's p-ink-active) which triggers a 0.4s CSS keyframe animation (scale 0->2.5, fade opacity) defined in the theme stylesheet \u2014 CSS-driven, not JS-driven. Also ports upstream's animationend listener and 401ms setTimeout fallback that removes the active class after the animation completes. Corrects an earlier task-brief draft that assumed a --ink-size CSS custom property; no such property exists in the real upstream source \u2014 sizing/positioning are plain inline styles, confirmed by reading Ripple.js and the ripple stylesheet directly. Standalone directive primitive built via vue-core's createDirective factory, matching Angular's URipple precedent (packages/ng/src/ripple/ripple.ts) both in mechanism fidelity and in the same Option B exclusion: no BaseRipple/RippleStyle DI-styling registration, no UltimateConfig ripple-toggle gating \u2014 the ripple effect applies unconditionally. Full Ultimate namespace rename (u-ink/u-ink-active, not p-ink/p-ink-active)."
   },
   {
     "originalPath": "packages/primevue/src/ripple/BaseRipple.js",
     "ultimateDestination": "packages/vue/src/ripple/ripple.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified upstream: BaseRipple.extend('ripple', { style: RippleStyle }) registers PrimeVue's DI-based BaseDirective/theming plumbing. This file's Ultimate equivalent uses vue-core's createDirective factory instead (Option B — no pt/ptm/ptmo passthrough, no PrimeVueService global config-change subscription); no separate BaseRipple-equivalent file needed."
+    "modificationDescription": "Verified upstream: BaseRipple.extend('ripple', { style: RippleStyle }) registers PrimeVue's DI-based BaseDirective/theming plumbing. This file's Ultimate equivalent uses vue-core's createDirective factory instead (Option B \u2014 no pt/ptm/ptmo passthrough, no PrimeVueService global config-change subscription); no separate BaseRipple-equivalent file needed."
   },
   {
     "originalPath": "n/a",
@@ -27,19 +27,19 @@
     "originalPath": "packages/primevue/src/button/Button.vue",
     "ultimateDestination": "packages/vue/src/button/Button.vue",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified real prop surface and rendering order by extracting and reading Button.vue/BaseButton.vue in full (extract-primevue-source.mjs from primevue@4.5.5): loading-icon-or-icon -> label -> children (default slot) -> badge (conditional), root wraps all — matches the task brief's draft. v-ripple applied directly to the root element (unlike React's UButton, which deferred Ripple entirely per ADR-031 — Vue's real Button wires it directly, verified against the real source, and so does this implementation). Default aria-label computed as label + badge, matching verified BaseButton.vue's own defaultAriaLabel computed (upstream falls back to $attrs.ariaLabel; this implementation uses an explicit typed ariaLabel prop instead — see base-button.ts's own provenance entry for that deviation). Badge rendered as a plain span with badge/badgeClass (badgeSeverity accepted but not yet visually differentiated — no UBadge subcomponent exists in this package yet; upstream renders a real Badge subcomponent). First real .vue SFC in this package (everything built in Tasks 3-16 was plain .ts via defineComponent/h()/createDirective) — building it surfaced and required fixing two real, pre-existing defects in the Task 3/15 .vue-SFC esbuild-plugin build shim (packages/vue/tsup.config.ts): (1) the shim's onLoad handler called @vitejs/plugin-vue's transform() without ever running the plugin's buildStart lifecycle hook, leaving its internal `compiler` resolved-option null and crashing template parsing; (2) esbuild had no resolver for the `\\0plugin-vue:export-helper` virtual module the compiled SFC output imports. Both fixed in tsup.config.ts. A third, separate defect was found in tsup's own dts pipeline: `dts: true` bundles declarations via rollup-plugin-dts, a plain Rollup pass with no .vue awareness, which cannot resolve `.vue` imports at all (fails with \"'default' is not exported by 'Button.vue'\") — switched dts generation to a dedicated `vue-tsc --declaration --emitDeclarationOnly` build step (tsconfig.dts.json, package.json's build script), which understands .vue natively and is already a required devDependency. Also added packages/vue/src/shims-vue.d.ts (a standard `declare module \"*.vue\"` ambient shim), needed to keep vue-tsc's own --noEmit typecheck of this SFC reliably clean."
+    "modificationDescription": "Verified real prop surface and rendering order by extracting and reading Button.vue/BaseButton.vue in full (extract-primevue-source.mjs from primevue@4.5.5): loading-icon-or-icon -> label -> children (default slot) -> badge (conditional), root wraps all \u2014 matches the task brief's draft. v-ripple applied directly to the root element (unlike React's UButton, which deferred Ripple entirely per ADR-031 \u2014 Vue's real Button wires it directly, verified against the real source, and so does this implementation). Default aria-label computed as label + badge, matching verified BaseButton.vue's own defaultAriaLabel computed (upstream falls back to $attrs.ariaLabel; this implementation uses an explicit typed ariaLabel prop instead \u2014 see base-button.ts's own provenance entry for that deviation). Badge rendered as a plain span with badge/badgeClass (badgeSeverity accepted but not yet visually differentiated \u2014 no UBadge subcomponent exists in this package yet; upstream renders a real Badge subcomponent). First real .vue SFC in this package (everything built in Tasks 3-16 was plain .ts via defineComponent/h()/createDirective) \u2014 building it surfaced and required fixing two real, pre-existing defects in the Task 3/15 .vue-SFC esbuild-plugin build shim (packages/vue/tsup.config.ts): (1) the shim's onLoad handler called @vitejs/plugin-vue's transform() without ever running the plugin's buildStart lifecycle hook, leaving its internal `compiler` resolved-option null and crashing template parsing; (2) esbuild had no resolver for the `\\0plugin-vue:export-helper` virtual module the compiled SFC output imports. Both fixed in tsup.config.ts. A third, separate defect was found in tsup's own dts pipeline: `dts: true` bundles declarations via rollup-plugin-dts, a plain Rollup pass with no .vue awareness, which cannot resolve `.vue` imports at all (fails with \"'default' is not exported by 'Button.vue'\") \u2014 switched dts generation to a dedicated `vue-tsc --declaration --emitDeclarationOnly` build step (tsconfig.dts.json, package.json's build script), which understands .vue natively and is already a required devDependency. Also added packages/vue/src/shims-vue.d.ts (a standard `declare module \"*.vue\"` ambient shim), needed to keep vue-tsc's own --noEmit typecheck of this SFC reliably clean."
   },
   {
     "originalPath": "packages/primevue/src/button/BaseButton.vue",
     "ultimateDestination": "packages/vue/src/button/base-button.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified upstream prop surface (label, icon, iconPos, iconClass, badge, badgeClass, badgeSeverity, loading, loadingIcon, as, asChild, link, severity, raised, rounded, text, outlined, size, variant, plain, fluid) against the real extracted BaseButton.vue — matches verbatim, including the odd `fluid: { type: Boolean, default: null }`. Ported via createBaseComponent's extends: mechanism. pcFluid ambient-context injection preserved, matching Angular's UButton Fluid-ancestor-detection wiring (ADR-018). One deliberate deviation from upstream: upstream has no explicit ariaLabel prop (its defaultAriaLabel computed reads the arbitrary $attrs.ariaLabel fallthrough attr instead); this implementation declares ariaLabel as its own explicit, typed prop, consistent with Option B's no-passthrough-system posture and this task's own test contract. Filename is base-button.ts (kebab-case), not BaseButton.ts (PascalCase) as the task brief's draft suggested, matching this codebase's own established naming convention for every other non-SFC .ts file (button-style.ts, spinner-icon.ts, base-component.ts, etc.)."
+    "modificationDescription": "Verified upstream prop surface (label, icon, iconPos, iconClass, badge, badgeClass, badgeSeverity, loading, loadingIcon, as, asChild, link, severity, raised, rounded, text, outlined, size, variant, plain, fluid) against the real extracted BaseButton.vue \u2014 matches verbatim, including the odd `fluid: { type: Boolean, default: null }`. Ported via createBaseComponent's extends: mechanism. pcFluid ambient-context injection preserved, matching Angular's UButton Fluid-ancestor-detection wiring (ADR-018). One deliberate deviation from upstream: upstream has no explicit ariaLabel prop (its defaultAriaLabel computed reads the arbitrary $attrs.ariaLabel fallthrough attr instead); this implementation declares ariaLabel as its own explicit, typed prop, consistent with Option B's no-passthrough-system posture and this task's own test contract. Filename is base-button.ts (kebab-case), not BaseButton.ts (PascalCase) as the task brief's draft suggested, matching this codebase's own established naming convention for every other non-SFC .ts file (button-style.ts, spinner-icon.ts, base-component.ts, etc.)."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/button/button-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Implementation-time verification finding (this task's Step 2): the brief's draft assumed `@ultimate/uix-styles/button` exports a `buttonStyle` object already shaped as StyleModule's { css, classes } contract. The real file (packages/uix-styles/src/button/index.ts) only exports a plain `style: string` (raw CSS with dt() token references) — no `classes` resolver map exists anywhere in that package (confirmed via its own test/button.test.ts, which only asserts against the style string). StyleModule (packages/vue-core/src/base/base-component.ts) requires both css and a classes map. This file imports the real `style` export for css and authors the classes map locally — following the same adaptation already independently established for Angular's packages/ng/src/button/button-style.ts, which hit the identical mismatch and resolved it the same way."
+    "modificationDescription": "Implementation-time verification finding (this task's Step 2): the brief's draft assumed `@ultimate/uix-styles/button` exports a `buttonStyle` object already shaped as StyleModule's { css, classes } contract. The real file (packages/uix-styles/src/button/index.ts) only exports a plain `style: string` (raw CSS with dt() token references) \u2014 no `classes` resolver map exists anywhere in that package (confirmed via its own test/button.test.ts, which only asserts against the style string). StyleModule (packages/vue-core/src/base/base-component.ts) requires both css and a classes map. This file imports the real `style` export for css and authors the classes map locally \u2014 following the same adaptation already independently established for Angular's packages/ng/src/button/button-style.ts, which hit the identical mismatch and resolved it the same way."
   },
   {
     "originalPath": "n/a",
@@ -57,25 +57,25 @@
     "originalPath": "packages/primevue/src/tooltip/Tooltip.js",
     "ultimateDestination": "packages/vue/src/tooltip/tooltip.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified upstream target-based directive mechanism by extracting and reading Tooltip.js/BaseTooltip.js in full (extract-primevue-source.mjs from primevue@4.5.5): imperative event binding (mouseenter/mouseleave/focus/blur), floating panel created via createElement, ZIndex.set('tooltip', ...). Two-mode content-injection contract preserved exactly, confirmed against real upstream create(): `if (!el.$_ptooltipEscape) { tooltipText.innerHTML = el.$_ptooltipValue } else { tooltipText.textContent/createTextNode(...) }` — escape defaults to true (safe createTextNode path) in both the string-binding and object-binding branches of beforeMount/updated; escape: false is an explicit opt-in raw-innerHTML path only reachable when the caller passes an object binding with escape explicitly set to false (spec §25's verified security-relevant divergence). Intentional deviation: adds aria-describedby wiring absent from verified upstream — additive to any pre-existing value, owned-id-only removal on cleanup (spec §9). Simplified relative to upstream: this implementation always binds mouseenter/mouseleave/focus/blur (upstream's modifiers.focus branches to focus/blur-only OR mouseenter/mouseleave/click-only, plus keydown-Escape and window-resize handling, plus positional align()/alignTop/alignLeft/etc/arrow-element logic) — Option B's scoped-down architecture omits the modifier-driven placement/arrow system and click/keydown/resize handling as unnecessary complexity not required by this task's contract; simple fixed below-target positioning is used instead."
+    "modificationDescription": "Verified upstream target-based directive mechanism by extracting and reading Tooltip.js/BaseTooltip.js in full (extract-primevue-source.mjs from primevue@4.5.5): imperative event binding (mouseenter/mouseleave/focus/blur), floating panel created via createElement, ZIndex.set('tooltip', ...). Two-mode content-injection contract preserved exactly, confirmed against real upstream create(): `if (!el.$_ptooltipEscape) { tooltipText.innerHTML = el.$_ptooltipValue } else { tooltipText.textContent/createTextNode(...) }` \u2014 escape defaults to true (safe createTextNode path) in both the string-binding and object-binding branches of beforeMount/updated; escape: false is an explicit opt-in raw-innerHTML path only reachable when the caller passes an object binding with escape explicitly set to false (spec \u00a725's verified security-relevant divergence). Intentional deviation: adds aria-describedby wiring absent from verified upstream \u2014 additive to any pre-existing value, owned-id-only removal on cleanup (spec \u00a79). Simplified relative to upstream: this implementation always binds mouseenter/mouseleave/focus/blur (upstream's modifiers.focus branches to focus/blur-only OR mouseenter/mouseleave/click-only, plus keydown-Escape and window-resize handling, plus positional align()/alignTop/alignLeft/etc/arrow-element logic) \u2014 Option B's scoped-down architecture omits the modifier-driven placement/arrow system and click/keydown/resize handling as unnecessary complexity not required by this task's contract; simple fixed below-target positioning is used instead."
   },
   {
     "originalPath": "packages/primevue/src/tooltip/BaseTooltip.js",
     "ultimateDestination": "packages/vue/src/tooltip/tooltip.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified upstream: BaseTooltip.extend('tooltip', {...}) registering TooltipStyle — this file's Ultimate equivalent uses vue-core's createDirective factory instead, with style registration performed explicitly via registerComponentStyle('tooltip', tooltipStyleModule) inside showTooltip (a directive has no component mounted() lifecycle point to do this automatically, unlike createBaseComponent's own mounted() hook)."
+    "modificationDescription": "Verified upstream: BaseTooltip.extend('tooltip', {...}) registering TooltipStyle \u2014 this file's Ultimate equivalent uses vue-core's createDirective factory instead, with style registration performed explicitly via registerComponentStyle('tooltip', tooltipStyleModule) inside showTooltip (a directive has no component mounted() lifecycle point to do this automatically, unlike createBaseComponent's own mounted() hook)."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/tooltip/tooltip-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Implementation-time verification finding (this task's Step 2, same mismatch already found for @ultimate/uix-styles/button in Task 17): the brief's draft assumed @ultimate/uix-styles/tooltip exports a `tooltipStyle` object already shaped as StyleModule's { css, classes } contract. The real file (packages/uix-styles/src/tooltip/index.ts) only exports a plain `style: string` (raw CSS with dt() token references, named `style` not `tooltipStyle`) — no `classes` resolver map exists anywhere in that package. StyleModule (packages/vue-core/src/base/base-component.ts) requires both css and a classes map. This file imports the real `style` export (aliased to tooltipCss) for css and authors the classes map (root/text/arrow slots) locally, following the same adaptation already established for button-style.ts (Task 17) and Angular's tooltip-style.ts."
+    "modificationDescription": "Implementation-time verification finding (this task's Step 2, same mismatch already found for @ultimate/uix-styles/button in Task 17): the brief's draft assumed @ultimate/uix-styles/tooltip exports a `tooltipStyle` object already shaped as StyleModule's { css, classes } contract. The real file (packages/uix-styles/src/tooltip/index.ts) only exports a plain `style: string` (raw CSS with dt() token references, named `style` not `tooltipStyle`) \u2014 no `classes` resolver map exists anywhere in that package. StyleModule (packages/vue-core/src/base/base-component.ts) requires both css and a classes map. This file imports the real `style` export (aliased to tooltipCss) for css and authors the classes map (root/text/arrow slots) locally, following the same adaptation already established for button-style.ts (Task 17) and Angular's tooltip-style.ts."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/tooltip/tooltip.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test suite, including explicit regression coverage for the two-mode content-injection security contract (spec §25) and the aria-describedby accessibility deviation (spec §9)."
+    "modificationDescription": "Ultimate-authored test suite, including explicit regression coverage for the two-mode content-injection security contract (spec \u00a725) and the aria-describedby accessibility deviation (spec \u00a79)."
   },
   {
     "originalPath": "n/a",
@@ -87,19 +87,19 @@
     "originalPath": "packages/primevue/src/button/Button.vue",
     "ultimateDestination": "packages/vue/src/button/Button.vue",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "This task retrofitted the real, already-reviewed Task 17 Button.vue/base-button.ts (not rebuilt) to add tooltip/tooltipOptions prop sugar over v-tooltip, matching verified Button.vue's own tooltip integration pattern — third independent confirmation of the sugar-prop pattern already established for Angular/React (spec §9). All Task 17 logic (styleParams computed, resolvedAriaLabel, rootAttrs, rendering order) preserved unchanged; only the directives map, tooltipBinding computed, and the root element's v-tooltip binding were added."
+    "modificationDescription": "This task retrofitted the real, already-reviewed Task 17 Button.vue/base-button.ts (not rebuilt) to add tooltip/tooltipOptions prop sugar over v-tooltip, matching verified Button.vue's own tooltip integration pattern \u2014 third independent confirmation of the sugar-prop pattern already established for Angular/React (spec \u00a79). All Task 17 logic (styleParams computed, resolvedAriaLabel, rootAttrs, rendering order) preserved unchanged; only the directives map, tooltipBinding computed, and the root element's v-tooltip binding were added."
   },
   {
     "originalPath": "packages/primevue/src/checkbox/Checkbox.vue",
     "ultimateDestination": "packages/vue/src/checkbox/Checkbox.vue",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified real rendered DOM (this task's Step 1, read via extract-primevue-source.mjs against primevue@4.5.5): dual-element pattern — a real semantic native input[type=checkbox] plus a decorative box rendering CheckIcon/MinusIcon. indeterminate prop with d_indeterminate/update:indeterminate/updateIndeterminate() DOM-property sync in mounted/updated — verified real, opposite finding from PrimeReact's Checkbox (which has none). binary mode split (true: trueValue/falseValue against a single modelValue; false/default: array-membership mode against this checkbox's own value prop) — a real mode PrimeReact's Checkbox has no equivalent for at all. $pcCheckboxGroup composition, groupName/$formName resolution, and formField.onBlur explicitly excluded — out of Phase 4 proof-set scope. Corrected two brief-draft bugs found during verification: (1) real upstream's array-mode onChange branches on `this.checked || this.d_indeterminate`, not `this.checked` alone — the brief's draft would incorrectly add-instead-of-remove a value when unchecking from an indeterminate array-mode state; fixed to match upstream. (2) MinusIcon is the real, dedicated vue-core icon added as this task's own addendum to Task 14 (packages/vue-core/src/icons/minus-icon.ts), not the brief draft's WindowMinimizeIcon placeholder alias."
+    "modificationDescription": "Verified real rendered DOM (this task's Step 1, read via extract-primevue-source.mjs against primevue@4.5.5): dual-element pattern \u2014 a real semantic native input[type=checkbox] plus a decorative box rendering CheckIcon/MinusIcon. indeterminate prop with d_indeterminate/update:indeterminate/updateIndeterminate() DOM-property sync in mounted/updated \u2014 verified real, opposite finding from PrimeReact's Checkbox (which has none). binary mode split (true: trueValue/falseValue against a single modelValue; false/default: array-membership mode against this checkbox's own value prop) \u2014 a real mode PrimeReact's Checkbox has no equivalent for at all. $pcCheckboxGroup composition, groupName/$formName resolution, and formField.onBlur explicitly excluded \u2014 out of Phase 4 proof-set scope. Corrected two brief-draft bugs found during verification: (1) real upstream's array-mode onChange branches on `this.checked || this.d_indeterminate`, not `this.checked` alone \u2014 the brief's draft would incorrectly add-instead-of-remove a value when unchecking from an indeterminate array-mode state; fixed to match upstream. (2) MinusIcon is the real, dedicated vue-core icon added as this task's own addendum to Task 14 (packages/vue-core/src/icons/minus-icon.ts), not the brief draft's WindowMinimizeIcon placeholder alias."
   },
   {
     "originalPath": "packages/primevue/src/checkbox/BaseCheckbox.vue",
     "ultimateDestination": "packages/vue/src/checkbox/BaseCheckbox.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified real chain: Checkbox extends BaseCheckbox extends BaseInput extends BaseEditableHolder extends BaseComponent. formControl prop and its @primevue/forms coupling excluded (spec §20). Real prop surface (value/binary/indeterminate/trueValue/falseValue/readonly/required/tabindex/inputId/inputClass/inputStyle/ariaLabelledby/ariaLabel) verified against BaseCheckbox.vue verbatim, plus invalid/name (declared locally per this project's Option B posture of explicit typed props over PrimeVue's inject/$formName/$attrs-fallthrough resolution for these) and disabled (declared locally after verification found it referenced by real Checkbox.vue's template/onChange and CheckboxStyle.js's classes.root but never actually declared as a prop anywhere in the real BaseComponent/BaseEditableHolder/BaseInput/BaseCheckbox chain read in full — a genuine upstream .d.ts-vs-runtime-mixin discrepancy, not something this project could silently inherit). Implementation-time verification finding (Global Constraints: verify createBaseInput's real API, don't assume): createBaseInput() takes zero parameters and always internally builds createBaseEditableHolder() with that function's own default empty componentName/styleModule — there is no way to thread this component's real componentName/styleModule through createBaseInput() itself, so cx() would silently resolve no real checkbox classes if createBaseInput() were extended bare (the brief's original draft's bug). Fixed by extending createBaseInput() for the real 4-tier prop/computed/inject surface, then shadowing cx()/mounted() locally with closures over the real checkboxStyleModule (Vue's Options API methods-merge is override-by-name, closer to leaf wins) — writeValue/dValue themselves (used by Checkbox.vue) were verified as real, correctly-signatured BaseEditableHolder members needing no fix."
+    "modificationDescription": "Verified real chain: Checkbox extends BaseCheckbox extends BaseInput extends BaseEditableHolder extends BaseComponent. formControl prop and its @primevue/forms coupling excluded (spec \u00a720). Real prop surface (value/binary/indeterminate/trueValue/falseValue/readonly/required/tabindex/inputId/inputClass/inputStyle/ariaLabelledby/ariaLabel) verified against BaseCheckbox.vue verbatim, plus invalid/name (declared locally per this project's Option B posture of explicit typed props over PrimeVue's inject/$formName/$attrs-fallthrough resolution for these) and disabled (declared locally after verification found it referenced by real Checkbox.vue's template/onChange and CheckboxStyle.js's classes.root but never actually declared as a prop anywhere in the real BaseComponent/BaseEditableHolder/BaseInput/BaseCheckbox chain read in full \u2014 a genuine upstream .d.ts-vs-runtime-mixin discrepancy, not something this project could silently inherit). Implementation-time verification finding (Global Constraints: verify createBaseInput's real API, don't assume): createBaseInput() takes zero parameters and always internally builds createBaseEditableHolder() with that function's own default empty componentName/styleModule \u2014 there is no way to thread this component's real componentName/styleModule through createBaseInput() itself, so cx() would silently resolve no real checkbox classes if createBaseInput() were extended bare (the brief's original draft's bug). Fixed by extending createBaseInput() for the real 4-tier prop/computed/inject surface, then shadowing cx()/mounted() locally with closures over the real checkboxStyleModule (Vue's Options API methods-merge is override-by-name, closer to leaf wins) \u2014 writeValue/dValue themselves (used by Checkbox.vue) were verified as real, correctly-signatured BaseEditableHolder members needing no fix."
   },
   {
     "originalPath": "n/a",
@@ -111,7 +111,7 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/checkbox/checkbox.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test suite, including explicit coverage for both controlled/uncontrolled modes, indeterminate, and binary:false array-membership mode — a materially broader test surface than Phase 3's React UCheckbox needed, since Vue's verified BaseEditableHolder/Checkbox support all of these and PrimeReact's does not."
+    "modificationDescription": "Ultimate-authored test suite, including explicit coverage for both controlled/uncontrolled modes, indeterminate, and binary:false array-membership mode \u2014 a materially broader test surface than Phase 3's React UCheckbox needed, since Vue's verified BaseEditableHolder/Checkbox support all of these and PrimeReact's does not."
   },
   {
     "originalPath": "n/a",
@@ -123,13 +123,13 @@
     "originalPath": "packages/primevue/src/dialog/Dialog.vue",
     "ultimateDestination": "packages/vue/src/dialog/Dialog.vue",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified controlled contract: visible prop + emit('update:visible') (Vue's v-model convention, spec §15) — a genuine framework-native API-shape divergence from Angular's [visible]/(visibleChange) and React's visible/onHide. role=dialog/aria-modal/aria-labelledby already correct upstream, preserved. Composes UPortal (Task 7) + v-focustrap (Task 10, {disabled: !modal}) + native <transition> wired to createMotionTransitionHooks (Task 12, name: 'u-dialog') + shared Escape adapter (Task 8's createGlobalEscapeKeyMixin, PRIORITY.DIALOG) + ZIndex 'modal' key (Task 9) + scroll-lock adapter (Task 11) — each piece wired directly in this component's own body, matching the verified 'no shared orchestration service' pattern. Focus-return-on-close and mask-click drag-selection-guard behavior preserved: onEnter captures document.activeElement, onLeave restores it; onMaskMouseDown/onMaskMouseUp both require the mask element itself (a strict superset of upstream's mouseup-only comparison that still passes for a genuine mask click). EXCLUDES draggable and maximizable (verified real upstream features) per spec §15's resolved fork — no such props, handlers, or UI anywhere in this file. Real API-shape finding made and resolved during this task: <transition> without :css=\"false\" would double-apply the same u-dialog-enter-active/leave-active class names createMotionTransitionHooks' own createMotion already self-drives (both derive identical class names from the shared name option) — set :css=\"false\" so Vue's <transition> is a pure JS-hook dispatcher and createMotion owns all actual class toggling/timing, matching Task 12's own design intent. Also found: @vue/test-utils stubs <transition> by default, silently skipping onEnter/onLeave (and therefore all of scroll-lock/z-index/show/hide/mask-dismiss) unless global.stubs.transition is disabled for this component's tests specifically."
+    "modificationDescription": "Verified controlled contract: visible prop + emit('update:visible') (Vue's v-model convention, spec \u00a715) \u2014 a genuine framework-native API-shape divergence from Angular's [visible]/(visibleChange) and React's visible/onHide. role=dialog/aria-modal/aria-labelledby already correct upstream, preserved. Composes UPortal (Task 7) + v-focustrap (Task 10, {disabled: !modal}) + native <transition> wired to createMotionTransitionHooks (Task 12, name: 'u-dialog') + shared Escape adapter (Task 8's createGlobalEscapeKeyMixin, PRIORITY.DIALOG) + ZIndex 'modal' key (Task 9) + scroll-lock adapter (Task 11) \u2014 each piece wired directly in this component's own body, matching the verified 'no shared orchestration service' pattern. Focus-return-on-close and mask-click drag-selection-guard behavior preserved: onEnter captures document.activeElement, onLeave restores it; onMaskMouseDown/onMaskMouseUp both require the mask element itself (a strict superset of upstream's mouseup-only comparison that still passes for a genuine mask click). EXCLUDES draggable and maximizable (verified real upstream features) per spec \u00a715's resolved fork \u2014 no such props, handlers, or UI anywhere in this file. Real API-shape finding made and resolved during this task: <transition> without :css=\"false\" would double-apply the same u-dialog-enter-active/leave-active class names createMotionTransitionHooks' own createMotion already self-drives (both derive identical class names from the shared name option) \u2014 set :css=\"false\" so Vue's <transition> is a pure JS-hook dispatcher and createMotion owns all actual class toggling/timing, matching Task 12's own design intent. Also found: @vue/test-utils stubs <transition> by default, silently skipping onEnter/onLeave (and therefore all of scroll-lock/z-index/show/hide/mask-dismiss) unless global.stubs.transition is disabled for this component's tests specifically."
   },
   {
     "originalPath": "packages/primevue/src/dialog/BaseDialog.vue",
     "ultimateDestination": "packages/vue/src/dialog/BaseDialog.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified upstream prop surface (visible/header/footer/modal/closable/closeOnEscape/dismissableMask/blockScroll/baseZIndex/autoZIndex/position/appendTo), scoped to Phase 4's excluded-draggable/maximizable boundary — no draggable/keepInViewport/minX/minY/maximizable/maximizeIcon/minimizeIcon/breakpoints/maximizeButtonProps props declared. showHeader/contentStyle/contentClass/contentProps/closeIcon/closeButtonProps are real upstream props not reproduced here (no demonstrated Ultimate consumer need, YAGNI). ariaCloseLabel is this implementation's own addition, replacing upstream's $primevue.config.locale.aria.close (Option B — no PrimeVueService global config, spec §7). extends createBaseComponent({componentName, styleModule}) directly — Dialog needs no editable-holder/input tier, so createBaseComponent's real parameterized signature threads componentName/styleModule cleanly with no cx()-shadowing workaround (unlike BaseCheckbox.ts's own necessary workaround, Task 19)."
+    "modificationDescription": "Verified upstream prop surface (visible/header/footer/modal/closable/closeOnEscape/dismissableMask/blockScroll/baseZIndex/autoZIndex/position/appendTo), scoped to Phase 4's excluded-draggable/maximizable boundary \u2014 no draggable/keepInViewport/minX/minY/maximizable/maximizeIcon/minimizeIcon/breakpoints/maximizeButtonProps props declared. showHeader/contentStyle/contentClass/contentProps/closeIcon/closeButtonProps are real upstream props not reproduced here (no demonstrated Ultimate consumer need, YAGNI). ariaCloseLabel is this implementation's own addition, replacing upstream's $primevue.config.locale.aria.close (Option B \u2014 no PrimeVueService global config, spec \u00a77). extends createBaseComponent({componentName, styleModule}) directly \u2014 Dialog needs no editable-holder/input tier, so createBaseComponent's real parameterized signature threads componentName/styleModule cleanly with no cx()-shadowing workaround (unlike BaseCheckbox.ts's own necessary workaround, Task 19)."
   },
   {
     "originalPath": "n/a",
@@ -141,7 +141,7 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/dialog/dialog.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test suite (the Task 20 brief's own draft, verified to genuinely exercise real component behavior — not stubbed), including explicit negative regression tests for the draggable/maximizable exclusion (spec §15/§23), multi-dialog Escape-priority stacking (spec §11, verified via direct instrumentation during this task that the two dialogs under test receive genuinely distinct incrementing displayOrder values — 1 and 2 — not a hardcoded/undefined placeholder), and multi-dialog scroll-lock refcounting (spec §16). Adds global.stubs.transition = false for this file's mount() calls (restored after) — a required real-environment fix found during this task: @vue/test-utils stubs <transition> by default, which would otherwise skip the component's real onEnter/onLeave business logic entirely and make every interaction-dependent assertion in this suite pass or fail for the wrong reason."
+    "modificationDescription": "Ultimate-authored test suite (the Task 20 brief's own draft, verified to genuinely exercise real component behavior \u2014 not stubbed), including explicit negative regression tests for the draggable/maximizable exclusion (spec \u00a715/\u00a723), multi-dialog Escape-priority stacking (spec \u00a711, verified via direct instrumentation during this task that the two dialogs under test receive genuinely distinct incrementing displayOrder values \u2014 1 and 2 \u2014 not a hardcoded/undefined placeholder), and multi-dialog scroll-lock refcounting (spec \u00a716). Adds global.stubs.transition = false for this file's mount() calls (restored after) \u2014 a required real-environment fix found during this task: @vue/test-utils stubs <transition> by default, which would otherwise skip the component's real onEnter/onLeave business logic entirely and make every interaction-dependent assertion in this suite pass or fail for the wrong reason."
   },
   {
     "originalPath": "n/a",
@@ -153,31 +153,31 @@
     "originalPath": "packages/primevue/src/menu/Menu.vue",
     "ultimateDestination": "packages/vue/src/menu/Menu.vue",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified full behavior surface (Task 21's Step 1, re-reading .vendor-extracted/vue/menu/Menu.vue in full): dual-mode (inline/popup), aria-activedescendant virtual focus, full keyboard set (arrows/Home/End/Enter/Space/Escape/Tab), the verified Escape-case switch-statement fall-through into Tab preserved exactly as a documented quirk (not silently fixed). Escape handling is Menu's own LOCAL keydown handler on its list element — NOT the shared uix-utils/escape adapter (confirmed zero imports of createGlobalEscapeKeyMixin/createDisplayOrderMixin/escapeRegistry anywhere in menu/); focusTrapDirective (Task 10) is likewise genuinely not imported — real upstream Menu.vue has no FocusTrap. Outside-click/resize dismissal authored Menu-locally, matching Dialog's established posture. ZIndex 'menu' key verified (Z_INDEX_KEYS.menu) and reused via useZIndex(). Two real corrections against the brief's own Step 7 draft, found during implementation: (1) the draft tracked focusedOptionIndex as a bare index into `model` for aria-activedescendant while rendering each Menuitem's own :id as a separate `${_uid}_${i}` string — the two never matched, which would have silently broken the aria-activedescendant mechanism entirely (the referenced id never existed in the DOM) and this task's own Home/End/disabled-skip tests (`#${activeId}` lookups always resolving to nothing); fixed by deriving both the rendered item id and the aria-activedescendant value from the same `itemId(modelIndex)` helper. (2) scroll dismissal: real upstream Menu.vue (onEnter/onLeave) binds/unbinds a ConnectedOverlayScrollHandler (packages/core/src/utils/ConnectedOverlayScrollHandler.js, read during Step 1) on the target's scrollable ancestors via getScrollableParents, dismissing the popup when one of them scrolls — the brief's own Step 7 draft code omitted this and explicitly flagged it as a gap to close before the task is complete. Closed here as a Menu-local bindScrollListener/unbindScrollListener pair matching the brief's own specified shape (a single window-level listener in the capture phase, checking whether the scroll event's target is an ancestor of this.target, calling hide() if so) rather than porting the ConnectedOverlayScrollHandler class or using uix-utils/dom's real getScrollableParents export — same bind/unbind-pair shape and double-bind guard as bindResizeListener/bindOutsideClickListener, cleaned up in both onLeave and beforeUnmount. Also uses createMotionTransitionHooks (:css=\"false\") for the overlay <transition>, diverging from real upstream's plain CSS-driven transition (name=\"p-anchored-overlay\", no :css=\"false\", no JS done()) — a real-environment finding made while running this task's own tests: Vue's native CSS-driven <transition> never resolves its leave-transition-end wait in jsdom (no real computed transition/animation duration), so overlayVisible/v-if toggling never actually removed the rendered overlay under test; createMotionTransitionHooks' own whenEnd already resolves immediately when an element has no real transition/animation duration, matching the same jsdom-safe short-circuit Dialog (Task 20) already relies on for the identical reason."
+    "modificationDescription": "Verified full behavior surface (Task 21's Step 1, re-reading .vendor-extracted/vue/menu/Menu.vue in full): dual-mode (inline/popup), aria-activedescendant virtual focus, full keyboard set (arrows/Home/End/Enter/Space/Escape/Tab), the verified Escape-case switch-statement fall-through into Tab preserved exactly as a documented quirk (not silently fixed). Escape handling is Menu's own LOCAL keydown handler on its list element \u2014 NOT the shared uix-utils/escape adapter (confirmed zero imports of createGlobalEscapeKeyMixin/createDisplayOrderMixin/escapeRegistry anywhere in menu/); focusTrapDirective (Task 10) is likewise genuinely not imported \u2014 real upstream Menu.vue has no FocusTrap. Outside-click/resize dismissal authored Menu-locally, matching Dialog's established posture. ZIndex 'menu' key verified (Z_INDEX_KEYS.menu) and reused via useZIndex(). Two real corrections against the brief's own Step 7 draft, found during implementation: (1) the draft tracked focusedOptionIndex as a bare index into `model` for aria-activedescendant while rendering each Menuitem's own :id as a separate `${_uid}_${i}` string \u2014 the two never matched, which would have silently broken the aria-activedescendant mechanism entirely (the referenced id never existed in the DOM) and this task's own Home/End/disabled-skip tests (`#${activeId}` lookups always resolving to nothing); fixed by deriving both the rendered item id and the aria-activedescendant value from the same `itemId(modelIndex)` helper. (2) scroll dismissal: real upstream Menu.vue (onEnter/onLeave) binds/unbinds a ConnectedOverlayScrollHandler (packages/core/src/utils/ConnectedOverlayScrollHandler.js, read during Step 1) on the target's scrollable ancestors via getScrollableParents, dismissing the popup when one of them scrolls \u2014 the brief's own Step 7 draft code omitted this and explicitly flagged it as a gap to close before the task is complete. Closed here as a Menu-local bindScrollListener/unbindScrollListener pair matching the brief's own specified shape (a single window-level listener in the capture phase, checking whether the scroll event's target is an ancestor of this.target, calling hide() if so) rather than porting the ConnectedOverlayScrollHandler class or using uix-utils/dom's real getScrollableParents export \u2014 same bind/unbind-pair shape and double-bind guard as bindResizeListener/bindOutsideClickListener, cleaned up in both onLeave and beforeUnmount. Also uses createMotionTransitionHooks (:css=\"false\") for the overlay <transition>, diverging from real upstream's plain CSS-driven transition (name=\"p-anchored-overlay\", no :css=\"false\", no JS done()) \u2014 a real-environment finding made while running this task's own tests: Vue's native CSS-driven <transition> never resolves its leave-transition-end wait in jsdom (no real computed transition/animation duration), so overlayVisible/v-if toggling never actually removed the rendered overlay under test; createMotionTransitionHooks' own whenEnd already resolves immediately when an element has no real transition/animation duration, matching the same jsdom-safe short-circuit Dialog (Task 20) already relies on for the identical reason."
   },
   {
     "originalPath": "packages/primevue/src/menu/Menuitem.vue",
     "ultimateDestination": "packages/vue/src/menu/Menuitem.vue",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified real rendered attributes (Task 21's Step 1): role=menuitem, aria-label, aria-disabled. Selector-strategy deviation: Ultimate's own data-u-menuitem/data-u-disabled convention replaces PrimeVue's real data-pc-section/data-p-disabled/data-p-focused attributes, since those are passthrough-system-coupled and the full pt system is excluded (Option B). Restores real upstream's actual DOM shape more faithfully than the brief's own Step 6 draft: real Menuitem.vue wraps its <a> in an inner <div class=\"cx('itemContent')\">, which is the real click/mousemove target and the real hover/focus styling hook (.u-menu-item-content:hover in menu-style.ts) — the brief's draft put @click/@mousemove directly on the <a>, omitting the itemContent wrapper entirely; restored here. isFocused (focusedOptionId === id, matching real upstream's isItemFocused()) drives a real 'focused' class on the item via cx('item', {focused, disabled}), matching real upstream's .p-focus/.data-p-focused styling hook rather than leaving it unwired. Self-review finding: the item-mousemove emit payload includes `item` (not just `id`, as the brief's Step 6 draft had it) — Menu.vue's own model-index-based itemMouseMove needs the actual model item object (this.model.indexOf(event.item)) to resolve the hovered index; without it, event.item was undefined and hover-driven focus tracking silently reset focusedOptionIndex to -1 on every mousemove instead of tracking the hovered item. Caught and fixed during this task's own self-review; covered by a dedicated test in menu.spec.ts."
+    "modificationDescription": "Verified real rendered attributes (Task 21's Step 1): role=menuitem, aria-label, aria-disabled. Selector-strategy deviation: Ultimate's own data-u-menuitem/data-u-disabled convention replaces PrimeVue's real data-pc-section/data-p-disabled/data-p-focused attributes, since those are passthrough-system-coupled and the full pt system is excluded (Option B). Restores real upstream's actual DOM shape more faithfully than the brief's own Step 6 draft: real Menuitem.vue wraps its <a> in an inner <div class=\"cx('itemContent')\">, which is the real click/mousemove target and the real hover/focus styling hook (.u-menu-item-content:hover in menu-style.ts) \u2014 the brief's draft put @click/@mousemove directly on the <a>, omitting the itemContent wrapper entirely; restored here. isFocused (focusedOptionId === id, matching real upstream's isItemFocused()) drives a real 'focused' class on the item via cx('item', {focused, disabled}), matching real upstream's .p-focus/.data-p-focused styling hook rather than leaving it unwired. Self-review finding: the item-mousemove emit payload includes `item` (not just `id`, as the brief's Step 6 draft had it) \u2014 Menu.vue's own model-index-based itemMouseMove needs the actual model item object (this.model.indexOf(event.item)) to resolve the hovered index; without it, event.item was undefined and hover-driven focus tracking silently reset focusedOptionIndex to -1 on every mousemove instead of tracking the hovered item. Caught and fixed during this task's own self-review; covered by a dedicated test in menu.spec.ts."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/menu/menu-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Implementation-time verification finding (same mismatch already found for button/tooltip/checkbox/dialog in Tasks 17-20): @ultimate/uix-styles/menu only exports a plain `style: string` (raw CSS with dt() token references), not a pre-shaped `{ css, classes }` StyleModule as the brief's Step 2 draft assumed (`import { menuStyle } from \"@ultimate/uix-styles/menu\"` — no such named export exists). classes map (root/list/item/itemContent/itemLink/itemLabel/itemIcon/separator/submenuLabel) authored locally here, cross-checked against the real CSS selectors in packages/uix-styles/src/menu/index.ts and against real Menu.vue/Menuitem.vue's own cx(...) call sites read during Step 1, adapted to this project's u-menu* class-name convention and plain-string-array cx() contract. submenuLabel kept for CSS-selector completeness only — nested/multi-level model support (item.items) is out of this task's flat-model scope, matching Dialog's own maximizable-exclusion precedent."
+    "modificationDescription": "Implementation-time verification finding (same mismatch already found for button/tooltip/checkbox/dialog in Tasks 17-20): @ultimate/uix-styles/menu only exports a plain `style: string` (raw CSS with dt() token references), not a pre-shaped `{ css, classes }` StyleModule as the brief's Step 2 draft assumed (`import { menuStyle } from \"@ultimate/uix-styles/menu\"` \u2014 no such named export exists). classes map (root/list/item/itemContent/itemLink/itemLabel/itemIcon/separator/submenuLabel) authored locally here, cross-checked against the real CSS selectors in packages/uix-styles/src/menu/index.ts and against real Menu.vue/Menuitem.vue's own cx(...) call sites read during Step 1, adapted to this project's u-menu* class-name convention and plain-string-array cx() contract. submenuLabel kept for CSS-selector completeness only \u2014 nested/multi-level model support (item.items) is out of this task's flat-model scope, matching Dialog's own maximizable-exclusion precedent."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/menu/BaseMenu.ts",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified real upstream prop surface (.vendor-extracted/vue/menu/BaseMenu.vue, Task 21's Step 1): model/popup/appendTo/autoZIndex/baseZIndex/tabindex/ariaLabel/ariaLabelledby, matching the brief's Step 5 draft exactly. Real BaseMenu.vue's own provide() { $pcMenu: this, $parentInstance: this } (passthrough-system inject/provide wiring) deliberately not reproduced — Option B excludes it entirely."
+    "modificationDescription": "Verified real upstream prop surface (.vendor-extracted/vue/menu/BaseMenu.vue, Task 21's Step 1): model/popup/appendTo/autoZIndex/baseZIndex/tabindex/ariaLabel/ariaLabelledby, matching the brief's Step 5 draft exactly. Real BaseMenu.vue's own provide() { $pcMenu: this, $parentInstance: this } (passthrough-system inject/provide wiring) deliberately not reproduced \u2014 Option B excludes it entirely."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/menu/menu.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test suite (15 tests total) covering the brief's full verified key set (14 assertions matching the Step 3 draft, including a dedicated test confirming Escape uses Menu's own local handler rather than the shared uix-utils/escape mechanism), plus three additional Ultimate-authored tests: two exercising the scroll-dismissal gap the brief's own Step 7 note explicitly flagged as needing closure (dismissal when a scrollable ancestor of the trigger target scrolls; no dismissal when an unrelated, non-ancestor element scrolls), and one exercising real upstream Menu.vue's itemMouseMove hover-focus-tracking behavior — this last test also caught a real implementation bug during this task's own self-review (Menuitem's item-mousemove emit originally carried only `id`, not `item`; Menu.vue's model-index-based itemMouseMove needs `event.item` to resolve the hovered model index via this.model.indexOf(event.item), so the bug silently reset focusedOptionIndex to -1 on every hover instead of tracking it — fixed in Menuitem.vue by adding `item` to the item-mousemove payload). Three real-environment findings made while running this task's own tests, all documented inline: (1) same @vue/test-utils <transition>-stubbing fix already established in dialog.spec.ts (Task 20) — global.stubs.transition = false for this file, restored after. (2) A new finding specific to Menu: <UPortal> only swaps from rendering null to a real <Teleport> once its own onMounted-set `mounted` ref flips, a microtask boundary after mount() returns; calling show() synchronously in the same tick (as the brief's own Step 3 draft bodies do) toggles overlayVisible before Portal's Teleport has stabilized, so the wrapping <transition>'s first appearance never invokes its JS enter hook (onEnter — where listener binding/z-index/the show emit all happen). Fixed by awaiting nextTick() between mount() and show() in every popup-mode test. (3) wrapper.find('ul[role=\"menu\"]')/list.trigger(...) throw 'Cannot call trigger on an empty DOMWrapper' once popup mode actually teleports content outside @vue/test-utils' own wrapper tree (fixed via document.querySelector + real dispatchEvent, matching dialog.spec.ts's own established fix for the same class of problem); and the outside-click test's original document.body target made bindOutsideClickListener's isOutsideTarget check unconditionally false (document.body.contains(anything) is always true), masking the very dismissal behavior the test meant to exercise (fixed with a distinct non-body trigger element). Also fixes a pre-existing, project-wide latent typing gap surfaced for the first time by this file's own need to call real instance methods: `wrapper.vm.<method>()` type-checks as `never` for any Options-API component built via the `extends: createBase*()` pattern (confirmed the same gap exists for UDialog's own real `close()` method, never previously surfaced since no other component's tests call an instance method directly) — worked around locally in this file via a small `UMenuInstance` interface cast (`wrapper.vm as unknown as UMenuInstance`), not fixed project-wide (out of this task's scope)."
+    "modificationDescription": "Ultimate-authored test suite (15 tests total) covering the brief's full verified key set (14 assertions matching the Step 3 draft, including a dedicated test confirming Escape uses Menu's own local handler rather than the shared uix-utils/escape mechanism), plus three additional Ultimate-authored tests: two exercising the scroll-dismissal gap the brief's own Step 7 note explicitly flagged as needing closure (dismissal when a scrollable ancestor of the trigger target scrolls; no dismissal when an unrelated, non-ancestor element scrolls), and one exercising real upstream Menu.vue's itemMouseMove hover-focus-tracking behavior \u2014 this last test also caught a real implementation bug during this task's own self-review (Menuitem's item-mousemove emit originally carried only `id`, not `item`; Menu.vue's model-index-based itemMouseMove needs `event.item` to resolve the hovered model index via this.model.indexOf(event.item), so the bug silently reset focusedOptionIndex to -1 on every hover instead of tracking it \u2014 fixed in Menuitem.vue by adding `item` to the item-mousemove payload). Three real-environment findings made while running this task's own tests, all documented inline: (1) same @vue/test-utils <transition>-stubbing fix already established in dialog.spec.ts (Task 20) \u2014 global.stubs.transition = false for this file, restored after. (2) A new finding specific to Menu: <UPortal> only swaps from rendering null to a real <Teleport> once its own onMounted-set `mounted` ref flips, a microtask boundary after mount() returns; calling show() synchronously in the same tick (as the brief's own Step 3 draft bodies do) toggles overlayVisible before Portal's Teleport has stabilized, so the wrapping <transition>'s first appearance never invokes its JS enter hook (onEnter \u2014 where listener binding/z-index/the show emit all happen). Fixed by awaiting nextTick() between mount() and show() in every popup-mode test. (3) wrapper.find('ul[role=\"menu\"]')/list.trigger(...) throw 'Cannot call trigger on an empty DOMWrapper' once popup mode actually teleports content outside @vue/test-utils' own wrapper tree (fixed via document.querySelector + real dispatchEvent, matching dialog.spec.ts's own established fix for the same class of problem); and the outside-click test's original document.body target made bindOutsideClickListener's isOutsideTarget check unconditionally false (document.body.contains(anything) is always true), masking the very dismissal behavior the test meant to exercise (fixed with a distinct non-body trigger element). Also fixes a pre-existing, project-wide latent typing gap surfaced for the first time by this file's own need to call real instance methods: `wrapper.vm.<method>()` type-checks as `never` for any Options-API component built via the `extends: createBase*()` pattern (confirmed the same gap exists for UDialog's own real `close()` method, never previously surfaced since no other component's tests call an instance method directly) \u2014 worked around locally in this file via a small `UMenuInstance` interface cast (`wrapper.vm as unknown as UMenuInstance`), not fixed project-wide (out of this task's scope)."
   },
   {
     "originalPath": "n/a",
@@ -195,7 +195,7 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/shims-vue.d.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored TypeScript ambient module declaration for `*.vue` imports (standard Vue+TypeScript SFC type shim), no upstream equivalent — build-tooling infrastructure, not derived from any Prime source."
+    "modificationDescription": "Ultimate-authored TypeScript ambient module declaration for `*.vue` imports (standard Vue+TypeScript SFC type shim), no upstream equivalent \u2014 build-tooling infrastructure, not derived from any Prime source."
   },
   {
     "originalPath": "packages/primevue/src/virtualscroller/VirtualScroller.vue",
@@ -207,13 +207,13 @@
     "originalPath": "packages/primevue/src/virtualscroller/VirtualScroller.vue",
     "ultimateDestination": "packages/vue/src/scroller/Scroller.vue",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Verified real PrimeVue 4.5.5 VirtualScroller measurement/windowing architecture (VirtualScroller.vue:288-289,596-599): this.element.offsetHeight content measurement plus real ResizeObserver usage alongside a window-resize listener — the one framework of the three whose real upstream genuinely already uses ResizeObserver, confirming this plan's choice to use it for all three frameworks is a direct match to real upstream here (and a legitimate modern substitute for Angular/React, per the plan's targeted revision finding #2). calculateNumItemsInViewport/calculateLast consumed from @ultimate/uix-data (see that package's own provenance entry) rather than reimplemented locally. getLast(last, isCols=false) array-bounds clamp ported with isCols declared but unreachable in this vertical-only plan. Loader markup (.u-scroller-loader/.u-scroller-loading-icon), scrollTo/scrollToIndex instance methods, disabled passthrough mode, lazy-load firing via Promise.resolve().then() emitting lazy-load with {first,last} payload, and aria-busy binding all adapted from verified upstream behavior with full Ultimate namespace rename, using export default {...} (no nonexistent named export). Excludes horizontal/both orientation, getRenderedRange() (Vue's exact shape not independently re-verified at the call-site level this planning pass), rich virtualized-grid ARIA (aria-rowcount/aria-setsize) beyond aria-busy, and step-batched lazy-load-page grouping — each a real, confirmed upstream feature deliberately scoped out of this plan (see plan's Explicitly Deferred section)."
+    "modificationDescription": "Verified real PrimeVue 4.5.5 VirtualScroller measurement/windowing architecture (VirtualScroller.vue:288-289,596-599): this.element.offsetHeight content measurement plus real ResizeObserver usage alongside a window-resize listener \u2014 the one framework of the three whose real upstream genuinely already uses ResizeObserver, confirming this plan's choice to use it for all three frameworks is a direct match to real upstream here (and a legitimate modern substitute for Angular/React, per the plan's targeted revision finding #2). calculateNumItemsInViewport/calculateLast consumed from @ultimate/uix-data (see that package's own provenance entry) rather than reimplemented locally. getLast(last, isCols=false) array-bounds clamp ported with isCols declared but unreachable in this vertical-only plan. Loader markup (.u-scroller-loader/.u-scroller-loading-icon), scrollTo/scrollToIndex instance methods, disabled passthrough mode, lazy-load firing via Promise.resolve().then() emitting lazy-load with {first,last} payload, and aria-busy binding all adapted from verified upstream behavior with full Ultimate namespace rename, using export default {...} (no nonexistent named export). Excludes horizontal/both orientation, getRenderedRange() (Vue's exact shape not independently re-verified at the call-site level this planning pass), rich virtualized-grid ARIA (aria-rowcount/aria-setsize) beyond aria-busy, and step-batched lazy-load-page grouping \u2014 each a real, confirmed upstream feature deliberately scoped out of this plan (see plan's Explicitly Deferred section)."
   },
   {
     "originalPath": "packages/primevue/src/virtualscroller/VirtualScroller.vue",
     "ultimateDestination": "packages/vue/src/scroller/scroller-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Structural layout CSS (.u-scroller/.u-scroller-content/.u-scroller-item/.u-scroller-loader) adapted from real PrimeVue VirtualScroller's own rendered structure, reshaped to a plain {css, classes} object matching createBaseComponent's styleModule contract (same adaptation already established by button-style.ts/tooltip-style.ts/checkbox-style.ts/dialog-style.ts/menu-style.ts). Composes Task 1's ported @ultimate/uix-styles/virtualscroller loader mask/icon tokens via ${virtualscrollerStyle} interpolation, following the same composition pattern already established by packages/ng/src/scroller/scroller-style.ts (Angular Task 3) and packages/react/src/scroller/scroller-style.ts (React Task 8). Real PrimeVue loader class names renamed .p-*→.u-*."
+    "modificationDescription": "Structural layout CSS (.u-scroller/.u-scroller-content/.u-scroller-item/.u-scroller-loader) adapted from real PrimeVue VirtualScroller's own rendered structure, reshaped to a plain {css, classes} object matching createBaseComponent's styleModule contract (same adaptation already established by button-style.ts/tooltip-style.ts/checkbox-style.ts/dialog-style.ts/menu-style.ts). Composes Task 1's ported @ultimate/uix-styles/virtualscroller loader mask/icon tokens via ${virtualscrollerStyle} interpolation, following the same composition pattern already established by packages/ng/src/scroller/scroller-style.ts (Angular Task 3) and packages/react/src/scroller/scroller-style.ts (React Task 8). Real PrimeVue loader class names renamed .p-*\u2192.u-*."
   },
   {
     "originalPath": "n/a",
@@ -231,25 +231,25 @@
     "originalPath": "packages/primevue/src/paginator/Paginator.vue",
     "ultimateDestination": "packages/vue/src/paginator/base-paginator.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "props (first/rows/totalRecords/pageLinkSize) adapted from real PrimeVue 4.5.5 Paginator's own prop surface, composed with createBaseComponent (packages/vue-core) matching the same extends: createBase*() pattern already established by Button/Checkbox/Dialog/Menu/Scroller. d_first/d_rows internal data mirrors real upstream's own d_first/d_rows internal-state-with-full-v-model pattern (watchers sync d_first/d_rows when parent changes first/rows externally, per spec §8), and emits page/update:first/update:rows matching real upstream's two-way-binding event surface. Wires in this component's own paginatorStyleModule."
+    "modificationDescription": "props (first/rows/totalRecords/pageLinkSize) adapted from real PrimeVue 4.5.5 Paginator's own prop surface, composed with createBaseComponent (packages/vue-core) matching the same extends: createBase*() pattern already established by Button/Checkbox/Dialog/Menu/Scroller. d_first/d_rows internal data mirrors real upstream's own d_first/d_rows internal-state-with-full-v-model pattern (watchers sync d_first/d_rows when parent changes first/rows externally, per spec \u00a78), and emits page/update:first/update:rows matching real upstream's two-way-binding event surface. Wires in this component's own paginatorStyleModule."
   },
   {
     "originalPath": "packages/primevue/src/paginator/Paginator.vue",
     "ultimateDestination": "packages/vue/src/paginator/Paginator.vue",
     "modificationStatus": "adapted",
-    "modificationDescription": "Verified real PrimeVue 4.5.5 Paginator source (Paginator.vue and siblings, commit 66dde6788220fc9e6822342919d1ceb0e3460ece), adapted with full Ultimate namespace rename across Tasks 10-12: internal-with-full-v-model state-ownership model (v-model:first/v-model:rows round-trip correctly; d_first watcher-syncs when parent changes first externally, matching real upstream exactly per spec §8); pageCount derived via @ultimate/uix-data's getPageCount rather than reimplemented locally (see that package's own provenance entry); first/prev/next/last controls and page-link boundary algorithm (§9 of the spec) adapted from verified upstream behavior, using export default {...} (no nonexistent named export). Excludes rows-per-page dropdown, jump-to-page input, and named-slot template customization beyond icon overrides — each a real, confirmed upstream feature deliberately scoped out of this plan's task set (Tasks 10-12)."
+    "modificationDescription": "Verified real PrimeVue 4.5.5 Paginator source (Paginator.vue and siblings, commit 66dde6788220fc9e6822342919d1ceb0e3460ece), adapted with full Ultimate namespace rename across Tasks 10-12: internal-with-full-v-model state-ownership model (v-model:first/v-model:rows round-trip correctly; d_first watcher-syncs when parent changes first externally, matching real upstream exactly per spec \u00a78); pageCount derived via @ultimate/uix-data's getPageCount rather than reimplemented locally (see that package's own provenance entry); first/prev/next/last controls and page-link boundary algorithm (\u00a79 of the spec) adapted from verified upstream behavior, using export default {...} (no nonexistent named export). Excludes rows-per-page dropdown, jump-to-page input, and named-slot template customization beyond icon overrides \u2014 each a real, confirmed upstream feature deliberately scoped out of this plan's task set (Tasks 10-12)."
   },
   {
     "originalPath": "packages/primevue/src/paginator/Paginator.vue",
     "ultimateDestination": "packages/vue/src/paginator/paginator-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Structural layout CSS (.u-paginator/.u-paginator-content/.u-paginator-first/.u-paginator-prev/.u-paginator-next/.u-paginator-last/.u-paginator-page slots) adapted from real PrimeVue Paginator's own rendered structure, reshaped to a plain {css, classes} object matching createBaseComponent's styleModule contract (same adaptation already established by button-style.ts/checkbox-style.ts/scroller-style.ts). Composes Task 1's ported @ultimate/uix-styles/paginator tokens via ${paginatorCss} interpolation, following the same composition pattern already established by packages/ng/src/paginator/paginator-style.ts (Angular Tasks 2-6) and packages/react/src/paginator/paginator-style.ts (React Tasks 7-9). Implementation-time finding: the real @ultimate/uix-styles/paginator module (packages/uix-styles/src/paginator/index.ts) exports only a plain style: string, not a pre-shaped {css, classes} object, so the classes map is authored locally here rather than re-exported, matching button-style.ts's own established adaptation. Real PrimeVue root/part class names renamed .p-*→.u-*."
+    "modificationDescription": "Structural layout CSS (.u-paginator/.u-paginator-content/.u-paginator-first/.u-paginator-prev/.u-paginator-next/.u-paginator-last/.u-paginator-page slots) adapted from real PrimeVue Paginator's own rendered structure, reshaped to a plain {css, classes} object matching createBaseComponent's styleModule contract (same adaptation already established by button-style.ts/checkbox-style.ts/scroller-style.ts). Composes Task 1's ported @ultimate/uix-styles/paginator tokens via ${paginatorCss} interpolation, following the same composition pattern already established by packages/ng/src/paginator/paginator-style.ts (Angular Tasks 2-6) and packages/react/src/paginator/paginator-style.ts (React Tasks 7-9). Implementation-time finding: the real @ultimate/uix-styles/paginator module (packages/uix-styles/src/paginator/index.ts) exports only a plain style: string, not a pre-shaped {css, classes} object, so the classes map is authored locally here rather than re-exported, matching button-style.ts's own established adaptation. Real PrimeVue root/part class names renamed .p-*\u2192.u-*."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/paginator/paginator.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeVue test file. Confirms pageCount is computed via uix-data's getPageCount (exposed as a data-page-count attribute), verifies v-model:first round-trips correctly and d_first watcher-syncs when parent changes first externally (state-ownership behavior per spec §8), and covers the page-link boundary algorithm with known-input/known-output assertions, per the plan's testing matrix (spec §18)."
+    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeVue test file. Confirms pageCount is computed via uix-data's getPageCount (exposed as a data-page-count attribute), verifies v-model:first round-trips correctly and d_first watcher-syncs when parent changes first externally (state-ownership behavior per spec \u00a78), and covers the page-link boundary algorithm with known-input/known-output assertions, per the plan's testing matrix (spec \u00a718)."
   },
   {
     "originalPath": "n/a",
@@ -261,7 +261,7 @@
     "originalPath": "packages/primevue/src/virtualscroller/VirtualScroller.vue",
     "ultimateDestination": "packages/vue/src/scroller/Scroller.vue",
     "modificationStatus": "adapted",
-    "modificationDescription": "UScroller's optional content-level composition point is informed by real PrimeVue 4.5.5 VirtualScroller's own content-render mechanism (commit 66dde6788220fc9e6822342919d1ceb0e3460ece), specifically the `content` scoped slot and its props (VirtualScroller.vue:4-20), and `getOptions`'s real per-item metadata shape. Ultimate's implementation is informed by this cited upstream mechanism, not copied verbatim — the scoped-slot's props shape, dispatch structure, and getItemOptions naming are Ultimate's own, matching createBaseComponent's existing conventions; only the architectural mechanism (an optional content scoped slot carrying generic per-item metadata) is mirrored."
+    "modificationDescription": "UScroller's optional content-level composition point is informed by real PrimeVue 4.5.5 VirtualScroller's own content-render mechanism (commit 66dde6788220fc9e6822342919d1ceb0e3460ece), specifically the `content` scoped slot and its props (VirtualScroller.vue:4-20), and `getOptions`'s real per-item metadata shape. Ultimate's implementation is informed by this cited upstream mechanism, not copied verbatim \u2014 the scoped-slot's props shape, dispatch structure, and getItemOptions naming are Ultimate's own, matching createBaseComponent's existing conventions; only the architectural mechanism (an optional content scoped slot carrying generic per-item metadata) is mirrored."
   },
   {
     "originalPath": "packages/primevue/src/datatable/DataTable.vue",
@@ -273,19 +273,19 @@
     "originalPath": "packages/primevue/src/datatable/DataTable.vue",
     "ultimateDestination": "packages/vue/src/table/Table.vue",
     "modificationStatus": "adapted",
-    "modificationDescription": "Verified real PrimeVue 4.5.5 DataTable source (DataTable.vue and siblings, commit 66dde6788220fc9e6822342919d1ceb0e3460ece), adapted with full Ultimate namespace rename across Tasks 17-22: sort (single/multi mode, aria-sort, sort emit), filter (operator+constraints per column) and v-model:selection two-way-binding surface adapted from verified upstream behavior; row equality for selection uses @ultimate/uix-utils/object's deepEquals rather than reimplementing an object-diff locally; pagination composes the real UPaginator instance (Tasks 10-12) rather than reimplementing paging; virtualization composes the real UScroller instance's content scoped-slot (Tasks 10-12) rather than reimplementing windowing; also adds row editing and row grouping (subheader mode). Excludes column resize/reorder, frozen columns/rows, row expansion, export-to-CSV, and context-menu selection — each a real, confirmed upstream feature deliberately scoped out of this plan's task set (Tasks 17-22)."
+    "modificationDescription": "Verified real PrimeVue 4.5.5 DataTable source (DataTable.vue and siblings, commit 66dde6788220fc9e6822342919d1ceb0e3460ece), adapted with full Ultimate namespace rename across Tasks 17-22: sort (single/multi mode, aria-sort, sort emit), filter (operator+constraints per column) and v-model:selection two-way-binding surface adapted from verified upstream behavior; row equality for selection uses @ultimate/uix-utils/object's deepEquals rather than reimplementing an object-diff locally; pagination composes the real UPaginator instance (Tasks 10-12) rather than reimplementing paging; virtualization composes the real UScroller instance's content scoped-slot (Tasks 10-12) rather than reimplementing windowing; also adds row editing and row grouping (subheader mode). Excludes column resize/reorder, frozen columns/rows, row expansion, export-to-CSV, and context-menu selection \u2014 each a real, confirmed upstream feature deliberately scoped out of this plan's task set (Tasks 17-22)."
   },
   {
     "originalPath": "packages/primevue/src/datatable/DataTable.vue",
     "ultimateDestination": "packages/vue/src/table/table-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Structural layout CSS (.u-table/.u-table-table/.u-table-thead/.u-table-tbody/.u-table-row slots) adapted from real PrimeVue DataTable's own rendered structure, reshaped to a plain {css, classes} object matching createBaseComponent's styleModule contract (same adaptation already established by button-style.ts/checkbox-style.ts/scroller-style.ts/paginator-style.ts). Composes Task 1's ported @ultimate/uix-styles/table tokens via ${tableCss} interpolation, following the same composition pattern already established by packages/ng/src/table/table-style.ts and packages/react/src/table/table-style.ts. Implementation-time finding: the real @ultimate/uix-styles/table module (packages/uix-styles/src/table/index.ts) exports only a plain style: string, not a pre-shaped {css, classes} object, so the classes map is authored locally here rather than re-exported, matching paginator-style.ts's own established adaptation. Real PrimeVue root/part class names renamed .p-*→.u-*."
+    "modificationDescription": "Structural layout CSS (.u-table/.u-table-table/.u-table-thead/.u-table-tbody/.u-table-row slots) adapted from real PrimeVue DataTable's own rendered structure, reshaped to a plain {css, classes} object matching createBaseComponent's styleModule contract (same adaptation already established by button-style.ts/checkbox-style.ts/scroller-style.ts/paginator-style.ts). Composes Task 1's ported @ultimate/uix-styles/table tokens via ${tableCss} interpolation, following the same composition pattern already established by packages/ng/src/table/table-style.ts and packages/react/src/table/table-style.ts. Implementation-time finding: the real @ultimate/uix-styles/table module (packages/uix-styles/src/table/index.ts) exports only a plain style: string, not a pre-shaped {css, classes} object, so the classes map is authored locally here rather than re-exported, matching paginator-style.ts's own established adaptation. Real PrimeVue root/part class names renamed .p-*\u2192.u-*."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/table/table.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeVue test file. Covers sort (single/multi, aria-sort attribute, sort emit), filter (operator+constraints per column), v-model:selection round-tripping, keyboard row navigation, row editing, row grouping, and composition of the real UPaginator/UScroller instances (rather than reimplemented paging/virtualization), per the plan's testing matrix (spec §18)."
+    "modificationDescription": "Ultimate-authored test, not derived from an upstream PrimeVue test file. Covers sort (single/multi, aria-sort attribute, sort emit), filter (operator+constraints per column), v-model:selection round-tripping, keyboard row navigation, row editing, row grouping, and composition of the real UPaginator/UScroller instances (rather than reimplemented paging/virtualization), per the plan's testing matrix (spec \u00a718)."
   },
   {
     "originalPath": "n/a",
@@ -327,7 +327,7 @@
     "originalPath": "@primeuix/styles@2.0.3 orderlist",
     "ultimateDestination": "packages/vue/src/order-list/order-list-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 orderlist: 3 of 3 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs); the root rule targets the section wrapper and the list rule targets .u-order-list-list. The PrimeNG-local controls-position rule is recorded, not ported (feature absent). Ultimate-authored, not upstream: the retained rules for the narrow responsive controls and striped rows (E3-R2)."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 orderlist: 3 of 3 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs); the root rule targets the section wrapper and the list rule targets .u-order-list-list. The PrimeNG-local controls-position rule is recorded, not ported (feature absent). Ultimate-authored, not upstream: the retained rules for the narrow responsive controls and striped rows (E3-R2)."
   },
   {
     "originalPath": "packages/primevue/src/picklist/PickList.vue",
@@ -363,7 +363,7 @@
     "originalPath": "@primeuix/styles@2.0.3 picklist",
     "ultimateDestination": "packages/vue/src/pick-list/pick-list-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 picklist: 4 of 4 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained rules for striped rows."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 picklist: 4 of 4 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-3 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained rules for striped rows."
   },
   {
     "originalPath": "packages/primevue/src/dataview/DataView.vue",
@@ -399,7 +399,7 @@
     "originalPath": "@primeuix/styles@2.0.3 dataview",
     "ultimateDestination": "packages/vue/src/data-view/data-view-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 dataview: 5 of 7 upstream groups (header/footer omitted, no facets), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Base role from Prime's base styles: the loading overlay mask (X-5). Ultimate-authored, not upstream: the retained grid layout rule (intentional, D-E4-1)."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 dataview: 5 of 7 upstream groups (header/footer omitted, no facets), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Base role from Prime's base styles: the loading overlay mask (X-5). Ultimate-authored, not upstream: the retained grid layout rule (intentional, D-E4-1)."
   },
   {
     "originalPath": "packages/primevue/src/organizationchart/OrganizationChart.vue",
@@ -435,7 +435,7 @@
     "originalPath": "@primeuix/styles@2.0.3 organizationchart",
     "ultimateDestination": "packages/vue/src/organization-chart/organization-chart-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 organizationchart: 9 of 18 upstream groups (table layout and connectors omitted, GAP-127), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained flex-tree layout and pseudo-element connector rules."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 organizationchart: 9 of 18 upstream groups (table layout and connectors omitted, GAP-127), selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-4 mapping (packages/themes/test/utils/g3e-port.mjs). Ultimate-authored, not upstream: the retained flex-tree layout and pseudo-element connector rules."
   },
   {
     "originalPath": "packages/primevue/src/stepper/StepperSeparator.vue",
@@ -453,169 +453,169 @@
     "originalPath": "src/chip/index.ts",
     "ultimateDestination": "packages/vue/src/chip/chip-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 chip, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A5."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 chip, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A5."
   },
   {
     "originalPath": "src/tag/index.ts",
     "ultimateDestination": "packages/vue/src/tag/tag-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 tag, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 tag, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
   },
   {
     "originalPath": "src/skeleton/index.ts",
     "ultimateDestination": "packages/vue/src/skeleton/skeleton-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 skeleton, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A3, PX-A6, FX-A2."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 skeleton, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A3, PX-A6, FX-A2."
   },
   {
     "originalPath": "src/overlaybadge/index.ts",
     "ultimateDestination": "packages/vue/src/overlay-badge/overlay-badge-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 overlaybadge, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 overlaybadge, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
   },
   {
     "originalPath": "src/knob/index.ts",
     "ultimateDestination": "packages/vue/src/knob/knob-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 knob, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 knob, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
   },
   {
     "originalPath": "src/progressbar/index.ts",
     "ultimateDestination": "packages/vue/src/progress-bar/progress-bar-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 progressbar, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A1."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 progressbar, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A1."
   },
   {
     "originalPath": "src/progressspinner/index.ts",
     "ultimateDestination": "packages/vue/src/progress-spinner/progress-spinner-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 progressspinner, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 progressspinner, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
   },
   {
     "originalPath": "src/metergroup/index.ts",
     "ultimateDestination": "packages/vue/src/meter-group/meter-group-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 metergroup, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A2."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 metergroup, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A2."
   },
   {
     "originalPath": "src/timeline/index.ts",
     "ultimateDestination": "packages/vue/src/timeline/timeline-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 timeline, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A3."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 timeline, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A3."
   },
   {
     "originalPath": "src/terminal/index.ts",
     "ultimateDestination": "packages/vue/src/terminal/terminal-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 terminal, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A5, FX-A4."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 terminal, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A5, FX-A4."
   },
   {
     "originalPath": "src/message/index.ts",
     "ultimateDestination": "packages/vue/src/message/message-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 message, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A5."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 message, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A5."
   },
   {
     "originalPath": "src/toast/index.ts",
     "ultimateDestination": "packages/vue/src/toast/toast-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 toast, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A4, FX-A7."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 toast, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A4, FX-A7."
   },
   {
     "originalPath": "src/inlinemessage/index.ts",
     "ultimateDestination": "packages/vue/src/inline-message/inline-message-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 inlinemessage, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A6."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 inlinemessage, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions FX-A6."
   },
   {
     "originalPath": "src/accordion/index.ts",
     "ultimateDestination": "packages/vue/src/accordion/accordion-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 accordion, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B1, PX-B5, PX-B11, FX-B1."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 accordion, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B1, PX-B5, PX-B11, FX-B1."
   },
   {
     "originalPath": "src/blockui/index.ts",
     "ultimateDestination": "packages/vue/src/block-ui/block-ui-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 blockui, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B3, PX-B4."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 blockui, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B3, PX-B4."
   },
   {
     "originalPath": "src/card/index.ts",
     "ultimateDestination": "packages/vue/src/card/card-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 card, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); no exceptions."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 card, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); no exceptions."
   },
   {
     "originalPath": "src/divider/index.ts",
     "ultimateDestination": "packages/vue/src/divider/divider-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 divider, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B6, FX-B3, FX-B4."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 divider, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B6, FX-B3, FX-B4."
   },
   {
     "originalPath": "src/fieldset/index.ts",
     "ultimateDestination": "packages/vue/src/fieldset/fieldset-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 fieldset, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B9, FX-B1."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 fieldset, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B9, FX-B1."
   },
   {
     "originalPath": "src/inplace/index.ts",
     "ultimateDestination": "packages/vue/src/inplace/inplace-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 inplace, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B2, PX-B5."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 inplace, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B2, PX-B5."
   },
   {
     "originalPath": "src/panel/index.ts",
     "ultimateDestination": "packages/vue/src/panel/panel-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 panel, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B7, FX-B1."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 panel, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B7, FX-B1."
   },
   {
     "originalPath": "src/scrollpanel/index.ts",
     "ultimateDestination": "packages/vue/src/scroll-panel/scroll-panel-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 scrollpanel, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions unresolved-token exception (Spec §5.6)."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 scrollpanel, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions unresolved-token exception (Spec \u00a75.6)."
   },
   {
     "originalPath": "src/splitter/index.ts",
     "ultimateDestination": "packages/vue/src/splitter/splitter-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 splitter, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B9, FX-B6, FX-B7."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 splitter, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); exceptions PX-B9, FX-B6, FX-B7."
   },
   {
     "originalPath": "src/toolbar/index.ts",
     "ultimateDestination": "packages/vue/src/toolbar/toolbar-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 toolbar, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); no exceptions."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 toolbar, selectors adapted to Ultimate's DOM per the GAP-064 G3-B mapping (packages/themes/test/utils/g3b-port.mjs); no exceptions."
   },
   {
     "originalPath": "src/breadcrumb/index.ts",
     "ultimateDestination": "packages/vue/src/breadcrumb/breadcrumb-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 breadcrumb, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role, FX-C1."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 breadcrumb, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role, FX-C1."
   },
   {
     "originalPath": "src/dock/index.ts",
     "ultimateDestination": "packages/vue/src/dock/dock-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 dock, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role, R-C1, R-C2, FX-C2, FX-C3."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 dock, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role, R-C1, R-C2, FX-C2, FX-C3."
   },
   {
     "originalPath": "src/steps/index.ts",
     "ultimateDestination": "packages/vue/src/steps/steps-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 steps, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions PX-C1, PX-C2, FX-C4."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 steps, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions PX-C1, PX-C2, FX-C4."
   },
   {
     "originalPath": "src/stepper/index.ts",
     "ultimateDestination": "packages/vue/src/stepper/stepper-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 stepper, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role, FX-C5."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 stepper, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role, FX-C5."
   },
   {
     "originalPath": "src/tabs/index.ts",
     "ultimateDestination": "packages/vue/src/tabs/tabs-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 tabs, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 tabs, selectors adapted to Ultimate's DOM per the GAP-064 G3-C1 mapping (packages/themes/test/utils/g3c1-port.mjs); exceptions C-7 disabled base role."
   },
   {
     "originalPath": "packages/primevue/src/contextmenu/BaseContextMenu.vue",
@@ -627,13 +627,13 @@
     "originalPath": "@primeuix/styles@2.0.3 contextmenu",
     "ultimateDestination": "packages/vue/src/context-menu/context-menu-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 contextmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M3"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 contextmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M3"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/context-menu/context-menu.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored ContextMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec §9.1; icons, disabled items and nesting as the component supports)."
+    "modificationDescription": "Ultimate-authored ContextMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec \u00a79.1; icons, disabled items and nesting as the component supports)."
   },
   {
     "originalPath": "n/a",
@@ -651,13 +651,13 @@
     "originalPath": "@primeuix/styles@2.0.3 megamenu",
     "ultimateDestination": "packages/vue/src/mega-menu/mega-menu-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 megamenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M4, FX-M5, FX-M6, FX-M7, PX-M5; item-focus groups ported as :has(:focus-visible) adaptations (Spec §20); Ultimate-only D5 rule R-M1"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 megamenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M4, FX-M5, FX-M6, FX-M7, PX-M5; item-focus groups ported as :has(:focus-visible) adaptations (Spec \u00a720); Ultimate-only D5 rule R-M1"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/mega-menu/mega-menu.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored MegaMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec §9.1; icons, disabled items and nesting as the component supports)."
+    "modificationDescription": "Ultimate-authored MegaMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec \u00a79.1; icons, disabled items and nesting as the component supports)."
   },
   {
     "originalPath": "packages/primevue/src/megamenu/MegaMenu.vue",
@@ -669,13 +669,13 @@
     "originalPath": "@primeuix/styles@2.0.3 menubar",
     "ultimateDestination": "packages/vue/src/menubar/menubar-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 menubar, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M4; item-focus groups ported as :has(:focus-visible) adaptations (Spec §20)"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 menubar, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, FX-M4; item-focus groups ported as :has(:focus-visible) adaptations (Spec \u00a720)"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/menubar/menubar.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored Menubar stories, including the GAP-064 G3-C2 ItemStates verification story (Spec §9.1; icons, disabled items and nesting as the component supports)."
+    "modificationDescription": "Ultimate-authored Menubar stories, including the GAP-064 G3-C2 ItemStates verification story (Spec \u00a79.1; icons, disabled items and nesting as the component supports)."
   },
   {
     "originalPath": "packages/primevue/src/panelmenu/BasePanelMenu.vue",
@@ -687,13 +687,13 @@
     "originalPath": "@primeuix/styles@2.0.3 panelmenu",
     "ultimateDestination": "packages/vue/src/panel-menu/panel-menu-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 panelmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M2, PX-M3, PX-M4; Ultimate-only D5 rules R-M4, R-M5; F-3a/F-3b corrections recorded in the G3-C2 Spec §7"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 panelmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M2, PX-M3, PX-M4; Ultimate-only D5 rules R-M4, R-M5; F-3a/F-3b corrections recorded in the G3-C2 Spec \u00a77"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/panel-menu/panel-menu.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored PanelMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec §9.1; icons, disabled items and nesting as the component supports)."
+    "modificationDescription": "Ultimate-authored PanelMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec \u00a79.1; icons, disabled items and nesting as the component supports)."
   },
   {
     "originalPath": "packages/primevue/src/panelmenu/PanelMenuList.vue",
@@ -711,19 +711,19 @@
     "originalPath": "@primeuix/styles@2.0.3 tieredmenu",
     "ultimateDestination": "packages/vue/src/tiered-menu/tiered-menu-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 tieredmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, PX-M1, PX-M2; item-focus groups ported as :has(:focus-visible) adaptations (Spec §20); Ultimate-only D5 rule R-M3"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 tieredmenu, selectors adapted to Ultimate's DOM per the GAP-064 G3-C2 mapping (packages/themes/test/utils/g3c2-port.mjs); exceptions FX-M1, PX-M1, PX-M2; item-focus groups ported as :has(:focus-visible) adaptations (Spec \u00a720); Ultimate-only D5 rule R-M3"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/tiered-menu/tiered-menu.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored TieredMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec §9.1; icons, disabled items and nesting as the component supports)."
+    "modificationDescription": "Ultimate-authored TieredMenu stories, including the GAP-064 G3-C2 ItemStates verification story (Spec \u00a79.1; icons, disabled items and nesting as the component supports)."
   },
   {
     "originalPath": "packages/primevue/src/tieredmenu/TieredMenuSub.vue",
     "ultimateDestination": "packages/vue/src/tiered-menu/TieredMenuSub.vue",
     "modificationStatus": "adapted",
-    "modificationDescription": "Adapted from PrimeVue 4.5.5 TieredMenuSub. TieredMenuSub→UTieredMenuSub: the nested submenu list, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
+    "modificationDescription": "Adapted from PrimeVue 4.5.5 TieredMenuSub. TieredMenuSub\u2192UTieredMenuSub: the nested submenu list, adapted to Ultimate's UMenuItem model and DOM. GAP-064 G3-C2: style key renamed to the Aura key (ADR-051)"
   },
   {
     "originalPath": "packages/primevue/src/confirmdialog/BaseConfirmDialog.vue",
@@ -735,13 +735,13 @@
     "originalPath": "@primeuix/styles@2.0.3 confirmdialog",
     "ultimateDestination": "packages/vue/src/confirm-dialog/confirm-dialog-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 confirmdialog, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); D-D2 content scoping by :has(> .u-confirmdialog-message) (PX-D6); D5 rules R-D3, R-D4; F-D2 correction (content scoping) recorded in the G3-D Spec §7"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 confirmdialog, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); D-D2 content scoping by :has(> .u-confirmdialog-message) (PX-D6); D5 rules R-D3, R-D4; F-D2 correction (content scoping) recorded in the G3-D Spec \u00a77"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/confirm-dialog/confirm-dialog.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored ConfirmDialog stories, including the GAP-064 G3-D WithIcon verification story (Spec §9.1)."
+    "modificationDescription": "Ultimate-authored ConfirmDialog stories, including the GAP-064 G3-D WithIcon verification story (Spec \u00a79.1)."
   },
   {
     "originalPath": "packages/primevue/src/confirmpopup/BaseConfirmPopup.vue",
@@ -753,25 +753,25 @@
     "originalPath": "@primeuix/styles@2.0.3 confirmpopup",
     "ultimateDestination": "packages/vue/src/confirm-popup/confirm-popup-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 confirmpopup, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D1, FX-D2 (no arrow, no flip; PX-D1)"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 confirmpopup, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D1, FX-D2 (no arrow, no flip; PX-D1)"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/confirm-popup/confirm-popup.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored ConfirmPopup stories, including the GAP-064 G3-D WithIcon verification story (Spec §9.1)."
+    "modificationDescription": "Ultimate-authored ConfirmPopup stories, including the GAP-064 G3-D WithIcon verification story (Spec \u00a79.1)."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 drawer",
     "ultimateDestination": "packages/vue/src/drawer/drawer-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 drawer, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D3, FX-D4 (no animation, no mask open class; PX-D2, PX-D7)"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 drawer, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D3, FX-D4 (no animation, no mask open class; PX-D2, PX-D7)"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/drawer/drawer.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored Drawer stories, including the GAP-064 G3-D position (Top, Bottom, Full) and Rtl verification stories (Spec §9.1), plus the reach-only WithFooter story (X-1)."
+    "modificationDescription": "Ultimate-authored Drawer stories, including the GAP-064 G3-D position (Top, Bottom, Full) and Rtl verification stories (Spec \u00a79.1), plus the reach-only WithFooter story (X-1)."
   },
   {
     "originalPath": "n/a",
@@ -783,7 +783,7 @@
     "originalPath": "@primeuix/styles@2.0.3 popover",
     "ultimateDestination": "packages/vue/src/popover/popover-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 popover, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D1, FX-D2 (no arrow, no flip; PX-D1); OI-D1 position rule only"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 popover, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D1, FX-D2 (no arrow, no flip; PX-D1); OI-D1 position rule only"
   },
   {
     "originalPath": "packages/primevue/src/speeddial/BaseSpeedDial.vue",
@@ -795,13 +795,13 @@
     "originalPath": "@primeuix/styles@2.0.3 speeddial",
     "ultimateDestination": "packages/vue/src/speed-dial/speed-dial-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 speeddial, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); base mask and disabled roles (B-2), D-D3a :has open state, D5 rules R-D1, R-D2; exceptions FX-D7, FX-D8 (PX-D3, PX-D4); F-D1 correction (trigger reachability) recorded in the G3-D Spec §7"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 speeddial, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); base mask and disabled roles (B-2), D-D3a :has open state, D5 rules R-D1, R-D2; exceptions FX-D7, FX-D8 (PX-D3, PX-D4); F-D1 correction (trigger reachability) recorded in the G3-D Spec \u00a77"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/speed-dial/speed-dial.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored SpeedDial stories, including the GAP-064 G3-D Directions and Mask verification stories (Spec §9.1; PR-2 layout scaffolding)."
+    "modificationDescription": "Ultimate-authored SpeedDial stories, including the GAP-064 G3-D Directions and Mask verification stories (Spec \u00a79.1; PR-2 layout scaffolding)."
   },
   {
     "originalPath": "packages/primevue/src/splitbutton/BaseSplitButton.vue",
@@ -813,25 +813,25 @@
     "originalPath": "@primeuix/styles@2.0.3 splitbutton",
     "ultimateDestination": "packages/vue/src/split-button/split-button-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 splitbutton, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D5, FX-D6 (popup menu portaled; no fluid/rounded/raised variants; PX-D5)"
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 splitbutton, selectors adapted to Ultimate's DOM per the GAP-064 G3-D mapping (packages/themes/test/utils/g3d-port.mjs); exceptions FX-D5, FX-D6 (popup menu portaled; no fluid/rounded/raised variants; PX-D5)"
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/split-button/split-button.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored SplitButton stories, including the GAP-064 G3-D Disabled verification story (Spec §9.1)."
+    "modificationDescription": "Ultimate-authored SplitButton stories, including the GAP-064 G3-D Disabled verification story (Spec \u00a79.1)."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 image",
     "ultimateDestination": "packages/vue/src/image/image-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 image: 12 of 16 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs); groups 13–16 (enter/leave motion) omitted (E1-7, D). Base roles from Prime's base styles: `.u-image-mask` overlay mask (X-5) and `.u-image-toolbar > button:disabled` opacity. Ultimate-authored, not upstream: the runtime role `.u-image-mask { z-index: 1100 }` (X-4; Ultimate's existing value retained)."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 image: 12 of 16 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs); groups 13\u201316 (enter/leave motion) omitted (E1-7, D). Base roles from Prime's base styles: `.u-image-mask` overlay mask (X-5) and `.u-image-toolbar > button:disabled` opacity. Ultimate-authored, not upstream: the runtime role `.u-image-mask { z-index: 1100 }` (X-4; Ultimate's existing value retained)."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 imagecompare",
     "ultimateDestination": "packages/vue/src/image-compare/image-compare-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 imagecompare: 12 of 12 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs). The final D5 retained span rule `.u-image-compare > span { position: absolute; inset: 0; }` is Ultimate-authored, not an upstream declaration (the E1-V2 C1 adaptation is Angular-only). The approved Firefox thumb declaration references the undefined imagecompare.handle.border.style token (E1-B1)."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 imagecompare: 12 of 12 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-1 mapping (packages/themes/test/utils/g3e-port.mjs). The final D5 retained span rule `.u-image-compare > span { position: absolute; inset: 0; }` is Ultimate-authored, not an upstream declaration (the E1-V2 C1 adaptation is Angular-only). The approved Firefox thumb declaration references the undefined imagecompare.handle.border.style token (E1-B1)."
   },
   {
     "originalPath": "packages/primevue/src/imagecompare/BaseImageCompare.vue",
@@ -843,7 +843,7 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/image-compare/image-compare.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored ImageCompare stories, including the GAP-064 G3-E Sized and Rtl verification stories (Spec §5.2); their wrapper is a flex container (D-E1-1(a)), the canonical PrimeNG showcase setup."
+    "modificationDescription": "Ultimate-authored ImageCompare stories, including the GAP-064 G3-E Sized and Rtl verification stories (Spec \u00a75.2); their wrapper is a flex container (D-E1-1(a)), the canonical PrimeNG showcase setup."
   },
   {
     "originalPath": "n/a",
@@ -855,31 +855,31 @@
     "originalPath": "@primeuix/styles@2.0.3 carousel",
     "ultimateDestination": "packages/vue/src/carousel/carousel-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 carousel: 15 of 17 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); groups 16–17 (`.p-items-hidden` visibility) omitted (FX-E3, GAP-107). Ultimate-authored, not upstream: the runtime role `.u-carousel-item-list { transition: transform 500ms ease 0s }` (X-4) and the retained rules `.u-carousel-item` (flex-shrink, box-sizing) and the disabled navigator rule (PX-E1, GAP-106)."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 carousel: 15 of 17 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); groups 16\u201317 (`.p-items-hidden` visibility) omitted (FX-E3, GAP-107). Ultimate-authored, not upstream: the runtime role `.u-carousel-item-list { transition: transform 500ms ease 0s }` (X-4) and the retained rules `.u-carousel-item` (flex-shrink, box-sizing) and the disabled navigator rule (PX-E1, GAP-106)."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 galleria",
     "ultimateDestination": "packages/vue/src/galleria/galleria-style.ts",
     "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B — reference, not verbatim copy) from @primeuix/styles@2.0.3 galleria: 24 of 67 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); 43 groups omitted (FX-E4 nav icon, FX-E5 indicators/caption/thumbnail positions, FX-E6 thumbnail carousel GAP-110, FX-E7 motion). Base roles from Prime's base styles: `.u-galleria-mask` overlay mask background/colour (X-5) and the disabled navigator opacity. Ultimate-authored, not upstream: the runtime role `.u-galleria-mask { z-index: 1100 }` (X-4)."
+    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 galleria: 24 of 67 upstream groups, selectors adapted to Ultimate's DOM per the GAP-064 G3-E E-2 mapping (packages/themes/test/utils/g3e-port.mjs); 43 groups omitted (FX-E4 nav icon, FX-E5 indicators/caption/thumbnail positions, FX-E6 thumbnail carousel GAP-110, FX-E7 motion). Base roles from Prime's base styles: `.u-galleria-mask` overlay mask background/colour (X-5) and the disabled navigator opacity. Ultimate-authored, not upstream: the runtime role `.u-galleria-mask { z-index: 1100 }` (X-4)."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/image/image.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored Image stories, including the GAP-064 G3-E verification stories added in E-0 (Spec §5.2)."
+    "modificationDescription": "Ultimate-authored Image stories, including the GAP-064 G3-E verification stories added in E-0 (Spec \u00a75.2)."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/carousel/carousel.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored Carousel stories, including the GAP-064 G3-E Vertical and Rtl verification stories added in E-0 (Spec §5.2)."
+    "modificationDescription": "Ultimate-authored Carousel stories, including the GAP-064 G3-E Vertical and Rtl verification stories added in E-0 (Spec \u00a75.2)."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/src/galleria/galleria.stories.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored Galleria stories, including the GAP-064 G3-E WithoutThumbnails and FullScreen verification stories added in E-0 (Spec §5.2)."
+    "modificationDescription": "Ultimate-authored Galleria stories, including the GAP-064 G3-E WithoutThumbnails and FullScreen verification stories added in E-0 (Spec \u00a75.2)."
   },
   {
     "originalPath": "n/a",
@@ -891,13 +891,13 @@
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/e2e/non-text-contrast.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored browser-test helper. GAP-124 B-AC1/B-AC2/B-AC6/B-AC7 coverage-based non-text contrast measurement (Spec §10)."
+    "modificationDescription": "Ultimate-authored browser-test helper. GAP-124 B-AC1/B-AC2/B-AC6/B-AC7 coverage-based non-text contrast measurement (Spec \u00a710)."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/vue/e2e/gap-124-contrast.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored browser test. GAP-124 B-AC1/B-AC2/B-AC6/B-AC7 coverage-based non-text contrast measurement of the DataView loading icon (Spec §10)."
+    "modificationDescription": "Ultimate-authored browser test. GAP-124 B-AC1/B-AC2/B-AC6/B-AC7 coverage-based non-text contrast measurement of the DataView loading icon (Spec \u00a710)."
   },
   {
     "originalPath": "packages/primevue/src/chip/Chip.vue",
@@ -1060,5 +1060,29 @@
     "ultimateDestination": "packages/vue/src/overlay-badge/OverlayBadge.vue",
     "modificationStatus": "adapted",
     "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 OverlayBadge.vue: the root div with `:class=\"cx('root')\"` and `v-bind=\"ptmi('root')\"`, the default slot and the composed badge with `v-bind=\"$props\"` and `:pt=\"ptm('pcBadge')\"` are upstream's. `inheritAttrs: false` is kept because `ptmi('root')` carries the fall-through attributes. Existing file, entry added in #202 because the file now carries the pass-through wiring."
+  },
+  {
+    "originalPath": "packages/primevue/src/floatlabel/FloatLabel.vue",
+    "ultimateDestination": "packages/vue/src/float-label/FloatLabel.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 FloatLabel.vue for #191 (ADR-090): the single root span with the `cx('root')` class, `ptmi('root')` bound on it and the default slot, with `inheritAttrs: false`, are upstream's. The `variant` argument to `cx('root')` is Ultimate's (PrimeVue's class resolver reads the prop itself). The `$pcFloatLabel` provide key is not carried (no consumer); the `$parentInstance` lookup comes from the vue-core pass-through mixin. Existing file, entry added in #191."
+  },
+  {
+    "originalPath": "packages/primevue/src/floatlabel/BaseFloatLabel.vue",
+    "ultimateDestination": "packages/vue/src/float-label/BaseFloatLabel.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064). Shares only interface facts with PrimeVue 4.5.5 BaseFloatLabel.vue: the `variant` prop (String, default `over`) and the one-tier `extends: BaseComponent` chain, here `createBaseComponent`. The `provide()` pair is not carried (see FloatLabel.vue)."
+  },
+  {
+    "originalPath": "packages/primevue/src/floatlabel/style/FloatLabelStyle.js",
+    "ultimateDestination": "packages/vue/src/float-label/float-label-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeVue 4.5.5 FloatLabelStyle.js `classes.root`: `p-floatlabel` with the `-over`, `-on` and `-in` variants becomes `u-float-label*`, and the resolver takes a plain params object instead of the props wrapper. The hand-ported CSS copy is replaced by the shared `@ultimate/uix-styles/floatlabel` module (ADR-082). Changed for #191."
+  },
+  {
+    "originalPath": "packages/primevue/src/floatlabel/FloatLabel.vue",
+    "ultimateDestination": "packages/vue/src/float-label/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UFloatLabel; it shares only the exported component with PrimeVue's floatlabel module."
   }
 ]

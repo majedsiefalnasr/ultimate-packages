@@ -1416,3 +1416,42 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 - Existing selectors on the three regions keep working. A consumer that expects three divs from React or Vue, as in Prime, gets only the regions it provided.
 - Tests cover the function form, attribute fall-through, `pt` on all four sections, `unstyled` and per-instance `dt` in the frameworks that support each. The effect of `unstyled` is asserted on the classes, not in a browser.
 - No Toolbar visual output changes, so no browser baseline changes.
+
+## ADR-090 — FloatLabel: one shared stylesheet keyed on the classes the sibling fields emit, `pt` and parent instance, and the unused nested instance token stays out (L0a, ticket #191)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#191](https://github.com/majedsiefalnasr/ultimate-packages/issues/191)). No ruling was needed before implementation; this ADR records the decisions the ticket made and the rows that stay open.
+
+**Context.**
+
+- FloatLabel is pure CSS: the label floats on `:has()` selectors against the projected field. The three frameworks kept three copies of that CSS (two with `dt()` tokens, React with literal colours), and none of them matched what the sibling fields render.
+- The float and invalid selectors keyed on `u-filled`, `u-invalid` and `u-inputwrapper-*`, and the `in` padding selector on `u-input-text`. `UInputText` renders `u-inputtext`, `p-filled` and `p-invalid`, and the Select family renders `p-inputwrapper-filled`. So a filled field kept its label over the text, and the `in` padding and the invalid label colour never applied.
+- `UFloatLabel` had no `pt`, `ptOptions`, `unstyled` or per-instance `dt` wiring, React accepted only `className` and `children`, and Angular and Vue did not provide themselves to descendants.
+
+**Decision.**
+
+1. **Shared module.** The structural CSS is `@ultimate/uix-styles/floatlabel` (ADR-082), consumed by the Angular, React and Vue style modules. Angular adds one framework-local rule, `.u-float-label:has(.ng-invalid.ng-dirty) label`, as PrimeNG does, because React and Vue have no counterpart.
+2. **Selectors follow what the siblings emit.** The module keys on `u-inputtext`, `u-textarea`, `u-select-label`, `u-multi-select-label`, `u-cascade-select-label`, `u-input-icon`, `u-chip` and on the state classes `p-filled`, `p-invalid` and `p-inputwrapper-filled` and `-focus`, which the siblings emit unrenamed. It also carries Prime's `.p-multiselect-label:has(.p-chip)` and `.p-treeselect-label` padding selectors, which the local copies had dropped.
+3. **Root class.** The root class stays `u-float-label` with `-over`, `-on` and `-in`. Prime's name after the `p-` to `u-` rename would be `u-floatlabel`; renaming a class that InputGroup, IftaLabel and consumers already select would break them for no capability gain.
+4. **Pass-through.** Angular binds the root through `UBind` (`ptms` host and root), Vue binds `ptmi('root')` with `inheritAttrs: false`, and React merges its own class, the remaining props and `ptm('root')` on the span and forwards the ref. `unstyled` and per-instance `dt` come from the base in Angular and Vue; React has `unstyled` and no `dt`, as PrimeReact has none. The React `componentName` is `floatlabel`, the Aura key.
+5. **Parent instance.** Angular provides itself as `U_PARENT_INSTANCE`. Vue already provides every instance as `$parentInstance` through the vue-core pass-through mixin. PrimeNG's nested `FLOATLABEL_INSTANCE` token and PrimeVue's `$pcFloatLabel` key have no consumer in the pinned sources, so they are not carried (I).
+6. **React CSS.** The literal colours and sizes are replaced by the Aura `floatlabel` tokens through the shared module (ADR-067), and the `[placeholder]` selectors in the `in` and `on` variants are present.
+
+**Divergences from Prime.**
+
+1. The root class is `u-float-label`, not `u-floatlabel` (item 3).
+2. The `variant` prop exists in React and is absent from PrimeReact.
+3. No `FLOATLABEL_INSTANCE` token and no `$pcFloatLabel` key (item 5).
+4. `ptOptions` is accepted everywhere but has no visible effect until the global `pt` source exists (ADR-080), so row 11 is partial.
+
+**Classification after this ticket** (C / P / M / I / N-A / N / U, from a source re-read; the Phase 4 report is not edited). Row 5 stays partial because AutoComplete's multiple-value input and TreeSelect's label do not render the classes the module names yet; their family tickets (L0b) own that.
+
+- Angular 11 / 2 / 0 / 0 / 0 / 0 / 0. Open: rows 5 and 11.
+- React 6 / 2 / 0 / 0 / 5 / 0 / 0. Open: rows 5 and 11. N: rows 2, 6, 7, 8, 13.
+- Vue 11 / 2 / 0 / 0 / 0 / 0 / 0. Open: rows 5 and 11.
+
+**Consequences.**
+
+- A filled field now floats its label and takes the filled label colour, and an invalid field takes the invalid label colour. These are visible changes for `UInputText` and `UTextarea` inside a FloatLabel in all three frameworks.
+- The `in` variant now pads `UInputText`, because the selector names `u-inputtext`. FloatLabel stories hand-write the class on raw inputs; they now use `u-inputtext`, so their browser baselines can change for the `in` variant.
+- React FloatLabel colours now come from the theme instead of fixed values, so its appearance follows the active preset.
+- Tests cover the root class, variant classes, attribute fall-through, `pt`, `unstyled`, per-instance `dt` (Angular and Vue) and the parent instance. Their effect is asserted on classes and DOM, not in a browser.

@@ -315,3 +315,16 @@ Per-file records are in `docs/architecture/provenance/ng.json`, `react.json` and
 ### F13 motion default name source disclosure
 
 `packages/uix-motion/src/config/index.ts` is copied from `@primeuix/motion` (source class COPY, ADR-064). Ticket #177 (spec #167) changes one value in `DEFAULT_MOTION_OPTIONS`: the default `name` is `"u"` instead of upstream's `"p"`, so a `createMotion` call without a name generates `u-enter-*` and `u-leave-*` classes, matching the `u` prefix Ultimate already uses for the theme, the CSS layer and the SSR attribute. Every Dialog and Menu call site in Angular, React and Vue already passes its own `u-dialog` or `u-menu` name, so no component source changed and no new upstream package or version was introduced. The file-level record is `docs/architecture/provenance/uix-motion.json`, with the sub-label moved from `import-path-adapted` to `adapted`.
+
+### L0a FloatLabel source disclosure
+
+Ticket #191 (spec #167, ADR-090) brings FloatLabel to parity across the three frameworks against the pinned oracles PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5. No Prime package is a dependency (ADR-004); the sources were read from the checksum-verified archives in `.vendor-cache` (ADR-064).
+
+- **`packages/uix-styles/src/floatlabel/index.ts` (source class COPY, sub-label `adapted`).** Recovered from `@primeuix/styles` 2.0.3 `floatlabel`. The `.p-floatlabel*` selectors are renamed to `.u-float-label*`, and the sibling-field selectors are changed to the classes the Ultimate siblings emit; the state classes stay `p-filled`, `p-invalid` and `p-inputwrapper-*`. The two padding selectors the earlier local copies lacked are carried from upstream.
+- **Angular `float-label.ts` and `float-label-style.ts` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeNG `floatlabel/floatlabel.ts` and `floatlabelstyle.ts`. The template, host class, `variant` input, `Bind` binding and parent-instance provider are upstream's; the `.ng-invalid.ng-dirty` rule is upstream's.
+- **React `float-label.tsx` and `float-label-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeReact `FloatLabel.js` and `FloatLabelBase.js`. The root span, the prop merge with `ptm('root')` and the root class key are upstream's; the hand-written CSS is replaced by the shared module.
+- **Vue `FloatLabel.vue` and `float-label-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeVue `FloatLabel.vue` and `FloatLabelStyle.js`. The root span, `ptmi('root')` and the class key are upstream's; the hand-ported CSS copy is replaced by the shared module.
+- **Vue `BaseFloatLabel.ts` and the three barrels (source class REFERENCE).** They share only interface facts with the compared upstream files.
+- **Specs and stories.** The FloatLabel specs and stories are Ultimate-authored.
+
+The ten FloatLabel source files left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json`, `vue.json` and `uix-styles.json`.
