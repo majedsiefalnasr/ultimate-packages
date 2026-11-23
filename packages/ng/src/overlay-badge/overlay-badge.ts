@@ -3,9 +3,10 @@ import {
   Component,
   ViewEncapsulation,
   booleanAttribute,
+  inject,
   input,
 } from "@angular/core";
-import { UBaseComponent } from "@ultimate/ng-core";
+import { UBaseComponent, UBind, U_PARENT_INSTANCE } from "@ultimate/ng-core";
 import { UBadge } from "@ultimate/ng/badge";
 import { overlayBadgeStyleModule } from "./overlay-badge-style";
 
@@ -21,15 +22,23 @@ import { overlayBadgeStyleModule } from "./overlay-badge-style";
  * This port composes the already-Built `UBadge` (`packages/ng/src/badge/`)
  * the same way real upstream composes `p-badge`, forwarding the same
  * severity/value/size/disabled surface `UBadge` already exposes.
+ *
+ * `badgeStyle` and `badgeStyleClass` are forwarded to the composed badge, as
+ * PrimeNG forwards its `style` and `styleClass`; the deprecated `size` and
+ * `styleClass` inputs are not offered (ADR-088). `pt` reaches the host, the
+ * root div, and the badge (`pcBadge`).
  */
 @Component({
   standalone: true,
   selector: "u-overlay-badge",
-  imports: [UBadge],
+  imports: [UBadge, UBind],
   template: `
-    <div [class]="cx('root')">
+    <div [uBind]="ptm('root')" [class]="cx('root')">
       <ng-content></ng-content>
       <u-badge
+        [pt]="ptm('pcBadge')"
+        [class]="badgeStyleClass()"
+        [style]="badgeStyle()"
         [value]="value()"
         [severity]="severity()"
         [badgeSize]="badgeSize()"
@@ -39,10 +48,14 @@ import { overlayBadgeStyleModule } from "./overlay-badge-style";
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  providers: [{ provide: U_PARENT_INSTANCE, useExisting: UOverlayBadge }],
+  hostDirectives: [UBind],
 })
 export class UOverlayBadge extends UBaseComponent {
   protected override readonly componentName = "overlaybadge";
   protected override readonly styleModule = overlayBadgeStyleModule;
+
+  private readonly bindDirective = inject(UBind, { self: true });
 
   /** Value to display inside the badge. */
   value = input<string | number | null>();
@@ -52,4 +65,12 @@ export class UOverlayBadge extends UBaseComponent {
   badgeSize = input<"small" | "large" | "xlarge" | null>();
   /** When specified, disables the badge. */
   badgeDisabled = input(false, { transform: booleanAttribute });
+  /** Inline style of the composed badge. */
+  badgeStyle = input<Record<string, string | number> | null>();
+  /** Class of the composed badge. */
+  badgeStyleClass = input<string>();
+
+  ngAfterViewChecked(): void {
+    this.bindDirective.setAttrs(this.ptm("host"));
+  }
 }

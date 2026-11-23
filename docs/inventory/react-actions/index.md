@@ -4,6 +4,7 @@ Scoped sample only; not platform completeness.
 
 - [React UAvatar](react.avatar.md)
 - [React UAvatarGroup](react.avatar-group.md)
+- [React UBadge](react.badge.md)
 - [React UButton](react.button.md)
 - [React UButtonGroup](react.button-group.md)
 - [React UChip](react.chip.md)

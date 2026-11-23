@@ -10,7 +10,7 @@ Compact count or status display with value fallback and caller content.
 
 ## Framework surface
 
-value:string|number|null, severity:string|null, size:string|null props. span default slot falls back to value; styleParams tracks value, slot presence, size and severity. BadgeClassesParams is source-only: small/large/xlarge; secondary/info/success/warn/danger/contrast. Dot class is null value without default slot; one-character values get circle class. Attrs fall through to single root. There is no badge directive export in this family. UBadge and createBaseBadge are named exports from both @ultimate/vue and @ultimate/vue/badge. createBaseBadge is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. BadgeClassesParams, badgeStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS imports the shared token-bearing style string from @ultimate/uix-styles/badge. Aura registry has the badge token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.
+value:string|number|null, severity:string|null, size:string|null props. span default slot falls back to value; styleParams tracks value, slot presence, size and severity. BadgeClassesParams is source-only: small/large/xlarge; secondary/info/success/warn/danger/contrast. Dot class is null value without default slot; one-character values get circle class. inheritAttrs is false and ptmi('root') carries pt and the fall-through attrs onto the single root; unstyled and dt come from the base chain (ADR-088). There is no badge directive export in this family. UBadge and createBaseBadge are named exports from both @ultimate/vue and @ultimate/vue/badge. createBaseBadge is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. BadgeClassesParams, badgeStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS imports the shared token-bearing style string from @ultimate/uix-styles/badge. Aura registry has the badge token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.
 
 ## Public exports
 
@@ -32,6 +32,7 @@ export { createBaseBadge } from "./base-badge";
 packages/vue/src/badge/base-badge.ts: export function createBaseBadge
 packages/vue/src/badge/badge-style.ts: export const badgeStyleModule
 packages/vue/src/badge/Badge.vue: name: "UBadge"
+packages/vue/src/badge/Badge.vue: v-bind="ptmi('root')"
 ```
 
 ## Relationships

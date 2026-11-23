@@ -37,4 +37,24 @@ describe("UOverlayBadge", () => {
     expect(badge.exists()).toBe(true);
     expect(badge.text()).toBe("");
   });
+
+  it("applies pt to the root and forwards pcBadge to the composed badge", () => {
+    const wrapper = mount(UOverlayBadge, {
+      props: {
+        value: "4",
+        pt: { root: { "data-root": "r" }, pcBadge: { root: { "data-badge": "b" } } },
+      },
+      slots: { default: "<span>Icon</span>" },
+    });
+    expect(wrapper.attributes("data-root")).toBe("r");
+    expect(wrapper.find(".u-badge").attributes("data-badge")).toBe("b");
+  });
+
+  it("passes unstyled down to the composed badge", () => {
+    const wrapper = mount(UOverlayBadge, {
+      props: { value: "4", unstyled: true },
+      slots: { default: "<span>Icon</span>" },
+    });
+    expect(wrapper.find(".u-badge").exists()).toBe(false);
+  });
 });

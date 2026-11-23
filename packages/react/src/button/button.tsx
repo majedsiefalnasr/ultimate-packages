@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useComponentBase, USpinnerIcon } from "@ultimate/react-core";
 import { UTooltip } from "../tooltip";
+import { UBadge } from "../badge";
 import { buttonStyleModule } from "./button-style";
 
 export interface UButtonProps extends Omit<
@@ -117,7 +118,7 @@ export const UButton = React.forwardRef<HTMLButtonElement, UButtonProps>(functio
         {renderIcon()}
         {label && <span className={cx("label")}>{label}</span>}
         {children}
-        {badge && <span className={badgeClassName}>{badge}</span>}
+        {badge && <UBadge value={badge} className={badgeClassName} />}
       </button>
       {tooltip && <UTooltip target={internalRef} content={tooltip} {...tooltipOptions} />}
     </>

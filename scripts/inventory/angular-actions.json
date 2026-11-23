@@ -476,7 +476,7 @@
       "framework": "angular",
       "availability": "public",
       "purpose": "Status/count indicator with null-value dot and single-character circle styling.",
-      "surface": "badgeSize and deprecated size: small|large|xlarge|null; severity secondary|info|success|warn|danger|contrast|null; value string|number|null; badgeDisabled boolean false. No outputs or attribute directive exported. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/badge. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. CSS imports @ultimate/uix-styles/badge; local badgeStyleModule supplies css/classes. Theme identity badge matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: BadgeClassesParams, badgeStyleModule. BadgeClassesParams describes value/size/badgeSize/severity for local root classes.",
+      "surface": "badgeSize and deprecated size: small|large|xlarge|null; severity secondary|info|success|warn|danger|contrast|null; value string|number|null; badgeDisabled boolean false. No outputs. UBadge binds pt (root and host sections) through the UBind host directive and provides U_PARENT_INSTANCE (ADR-088). Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. Also exposed via @ultimate/ng/badge. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. CSS imports @ultimate/uix-styles/badge; local badgeStyleModule supplies css/classes. Theme identity badge matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: BadgeClassesParams, badgeStyleModule. BadgeClassesParams describes value/size/badgeSize/severity for local root classes.",
       "files": [
         "packages/ng/src/badge/index.ts",
         "packages/ng/src/badge/badge.ts",
@@ -519,6 +519,10 @@
         {
           "path": "packages/ng/package.json",
           "contains": "\"test\": \"ng test --project=ng\""
+        },
+        {
+          "path": "packages/ng/src/badge/badge.ts",
+          "contains": "this.bindDirective.setAttrs(this.ptms([\"host\", \"root\"]))"
         }
       ],
       "relationships": [
@@ -555,13 +559,14 @@
       "framework": "angular",
       "availability": "public",
       "purpose": "Projects arbitrary content and positions a composed UBadge at its corner; this is not an overlay service.",
-      "surface": "value string|number|null; severity secondary|info|success|warn|danger|contrast|null; badgeSize small|large|xlarge|null; badgeDisabled boolean false; all forwarded to UBadge. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. No dedicated manifest subpath; root entry only. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. Theme identity overlaybadge matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: overlayBadgeStyleModule.",
+      "surface": "value string|number|null; severity secondary|info|success|warn|danger|contrast|null; badgeSize small|large|xlarge|null; badgeDisabled boolean false; all forwarded to UBadge, as are badgeStyle (Record<string, string|number>|null) and badgeStyleClass (string), which stand in for PrimeNG's style and styleClass. pt reaches the host, the root div and the composed badge (pcBadge) through UBind (ADR-088). UBadgeDirective ([uBadge], exportAs uBadge) is also exported: inputs badgeDisabled, badgeSize, severity, value, badgeStyle and badgeStyleClass, plus the inherited pt and unstyled; it creates a real UBadge (u-badge element) inside its host with createComponent, marks the host u-overlaybadge, and forwards pt as pcBadge and unstyled to the badge. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Root @ultimate/ng re-exports this component. No dedicated manifest subpath; root entry only. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components. Structural CSS and classes are local, not imported from a shared style entry. Theme identity overlaybadge matches componentName and Aura components registry; dt() resolves those token references via base registration. No dedicated component-metadata record exists in the current records directory. Owned source-only declarations: overlayBadgeStyleModule.",
       "files": [
         "packages/ng/src/overlay-badge/index.ts",
         "packages/ng/src/overlay-badge/overlay-badge.ts",
+        "packages/ng/src/overlay-badge/badge-directive.ts",
         "packages/ng/src/overlay-badge/overlay-badge-style.ts"
       ],
-      "exports": ["@ultimate/ng#UOverlayBadge"],
+      "exports": ["@ultimate/ng#UOverlayBadge", "@ultimate/ng#UBadgeDirective"],
       "evidence": [
         {
           "path": "packages/ng/src/overlay-badge/index.ts",
@@ -594,6 +599,14 @@
         {
           "path": "packages/ng/package.json",
           "contains": "\"test\": \"ng test --project=ng\""
+        },
+        {
+          "path": "packages/ng/src/overlay-badge/overlay-badge.ts",
+          "contains": "badgeStyleClass = input<string>()"
+        },
+        {
+          "path": "packages/ng/src/overlay-badge/badge-directive.ts",
+          "contains": "export class UBadgeDirective extends UBaseComponent"
         }
       ],
       "relationships": [
@@ -908,6 +921,10 @@
     {
       "path": "packages/ng/src/badge/badge.stories.ts",
       "reason": "Authored documentation/example fixture for UBadge; not a separately exported runtime API."
+    },
+    {
+      "path": "packages/ng/src/overlay-badge/badge-directive.spec.ts",
+      "reason": "Behavioral test source, not an additional public API or executed verification."
     },
     {
       "path": "packages/ng/src/overlay-badge/overlay-badge.spec.ts",

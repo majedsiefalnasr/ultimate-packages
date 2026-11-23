@@ -57,7 +57,7 @@
     "originalPath": "packages/primeng/src/badge/badge.ts",
     "ultimateDestination": "packages/ng/src/badge/badge.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Badge→UBadge, selector p-badge→u-badge, extends UBaseComponent (Task 4). Deliberately excludes upstream's BadgeDirective ([pBadge] attribute form — this Phase 2 proof set only needs the component form), Bind/passthrough hostDirectives wiring, and BADGE_INSTANCE/PARENT_INSTANCE injection-token parent lookup — see UBaseComponent's doc comment for the same Option B architectural exclusion pattern."
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Badge→UBadge, selector p-badge→u-badge, extends UBaseComponent (Task 4). Source class COPY (ADR-064). Side-by-side with PrimeNG badge/badge.ts for #202 (ADR-088): the `Bind` host directive with the `ptms(['host', 'root'])` binding in ngAfterViewChecked and the PARENT_INSTANCE provider (renamed UBind and U_PARENT_INSTANCE) are upstream's. The attribute form `BadgeDirective` (`[pBadge]`) is not in this file; it lives in `overlay-badge/badge-directive.ts` (ADR-088). Not carried: the deprecated `size` setter and its console.log, the directive-only `ptBadgeDirective`, `styleClass`, `data-p`, and the NgModule wrapper."
   },
   {
     "originalPath": "packages/primeng/src/badge/style/badgestyle.ts",
@@ -69,7 +69,7 @@
     "originalPath": "packages/ng/src/badge/badge.spec.ts",
     "ultimateDestination": "packages/ng/src/badge/badge.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Test taken verbatim from this task's brief (Step 9) — not derived from upstream's own badge.spec.ts."
+    "modificationDescription": "Test taken verbatim from this task's brief (Step 9) — not derived from upstream's own badge.spec.ts. Extended for #202 with pass-through, unstyled, per-instance dt and UBadgeDirective cases; those are Ultimate-authored."
   },
   {
     "originalPath": "n/a",
@@ -958,5 +958,17 @@
     "ultimateDestination": "packages/ng/src/card/card.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG 21.1.9 card.ts: the template keeps upstream's section structure and `[pBind]=\"ptm('x')\" [class]=\"cx('x')\"` pairing per section (header, body, title, subtitle, content, footer), renamed to uBind and the u- style module. Subset: the template-override facets (headerTemplate, PrimeTemplate, BlockableUI), the styleClass and style inputs and the ptms(['host', 'root']) host binding are replaced by plain ng-content slots and header/subheader inputs. Ultimate's A0 pilot (#170) wires the sections to ptm, adds hostDirectives UBind, a setAttrs of the root section in ngAfterViewChecked, and provides U_PARENT_INSTANCE for the card. Existing file, entry added in A0 (#170) because the file now carries the passthrough wiring."
+  },
+  {
+    "originalPath": "packages/primeng/src/overlaybadge/overlaybadge.ts",
+    "ultimateDestination": "packages/ng/src/overlay-badge/overlay-badge.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG overlaybadge/overlaybadge.ts: the root div around `<ng-content>` and the composed badge, the `[pBind]=\"ptm('root')\"` pairing on the div (renamed uBind), the `[pt]=\"ptm('pcBadge')\"` forwarding to the badge, the `ptm('host')` binding in ngAfterViewChecked, hostDirectives and the PARENT_INSTANCE provider are upstream's. `badgeStyle` and `badgeStyleClass` are forwarded to the composed badge as upstream forwards `style` and `styleClass` (ADR-088); the deprecated `size`, `styleClass`, the alternate selectors and the NgModule wrapper are not carried. Existing file, entry added in #202 because the file now carries the pass-through wiring."
+  },
+  {
+    "originalPath": "packages/primeng/src/badge/badge.ts",
+    "ultimateDestination": "packages/ng/src/overlay-badge/badge-directive.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG badge/badge.ts `BadgeDirective` (`[pBadge]`): the inputs (badgeDisabled, badgeSize, severity, value, badgeStyle, badgeStyleClass) and the result (a badge inside the host, the host marked as an overlay) are upstream's, with the selector `[uBadge]`. Upstream builds a span by hand and marks the host with `p-overlay-badge`; this file instead creates a real `UBadge` with `createComponent` on a Renderer2-made host element and takes the overlay look from `overlay-badge-style.ts`, so the badge carries `pt`, `unstyled`, `dt` and the shared Badge classes. `pt` is forwarded to the badge as `pcBadge`, replacing `pBadgePT`; `pBadgeUnstyled` is replaced by `unstyled`. Not carried: the deprecated `size` setter and its console.log, the first-child targeting for hosts whose tag has a dash, `styleClass`, `data-p`, and the NgModule wrapper. New in #202."
   }
 ]

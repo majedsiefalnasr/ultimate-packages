@@ -1006,5 +1006,17 @@
     "ultimateDestination": "packages/vue/src/input-text/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UInputText and createBaseInputText; it shares only the exported component with PrimeVue's inputtext module."
+  },
+  {
+    "originalPath": "packages/primevue/src/badge/Badge.vue",
+    "ultimateDestination": "packages/vue/src/badge/Badge.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 Badge.vue: the single root span with `:class=\"cx('root')\"`, `v-bind=\"ptmi('root')\"` and the default slot that falls back to `value` are upstream's. `inheritAttrs: false` is kept because `ptmi('root')` carries the fall-through attributes. The `data-p` attribute and the `$pcBadge`/`$parentInstance` provide pair are not carried: upstream uses them for the deprecated `v-badge` directive, which is a deliberate gap here (ADR-088). Existing file, entry added in #202 because the file now carries the pass-through wiring."
+  },
+  {
+    "originalPath": "packages/primevue/src/overlaybadge/OverlayBadge.vue",
+    "ultimateDestination": "packages/vue/src/overlay-badge/OverlayBadge.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 OverlayBadge.vue: the root div with `:class=\"cx('root')\"` and `v-bind=\"ptmi('root')\"`, the default slot and the composed badge with `v-bind=\"$props\"` and `:pt=\"ptm('pcBadge')\"` are upstream's. `inheritAttrs: false` is kept because `ptmi('root')` carries the fall-through attributes. Existing file, entry added in #202 because the file now carries the pass-through wiring."
   }
 ]
