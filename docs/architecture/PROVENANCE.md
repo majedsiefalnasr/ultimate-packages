@@ -272,6 +272,17 @@ Ticket #188 (spec #167, ADR-086) brings InputText to parity across the three fra
 
 The seven React and Vue InputText files left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json`, `vue.json` and `vue-core.json`.
 
+### L0a Toolbar source disclosure
+
+Ticket #205 (spec #167, ADR-089) brings Toolbar to parity across the three frameworks against the pinned oracles PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5. No Prime package is a dependency (ADR-004); the sources were read from the checksum-verified archives in `.vendor-cache` (ADR-064).
+
+- **Angular `toolbar.ts` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeNG `toolbar/toolbar.ts`. The `[pBind]="ptm('x')"` pairing on each region (renamed `uBind`), `hostDirectives`, the `ptms(['host', 'root'])` root binding in `ngAfterViewChecked` and the `PARENT_INSTANCE` provider (renamed `U_PARENT_INSTANCE`) are upstream's. The `PrimeTemplate` fallbacks, `styleClass`, `getBlockableElement()` and `ToolbarModule` stay out (ADR-089).
+- **React `toolbar.tsx` (re-classified from REFERENCE to COPY, sub-label `adapted`).** The source re-read found upstream statements in the file: the per-region `mergeProps({ className: cx(x) }, ptm(x))` pairing, the root `mergeProps` with the remaining props and `ptm('root')`, and the function form of the regions. The `left` and `right` aliases and the imperative handle stay out; regions render only when provided (ADR-089).
+- **Vue `Toolbar.vue` (source class COPY, sub-label `adapted`).** The root line now carries `v-bind="ptmi('root')"` and each region carries `v-bind="ptm(x)"`, as upstream's template does; regions render conditionally (ADR-089).
+- **Specs.** The Toolbar specs are Ultimate-authored.
+
+Per-file records are in `docs/architecture/provenance/ng.json`, `react.json` and `vue.json`.
+
 ### F13 motion default name source disclosure
 
 `packages/uix-motion/src/config/index.ts` is copied from `@primeuix/motion` (source class COPY, ADR-064). Ticket #177 (spec #167) changes one value in `DEFAULT_MOTION_OPTIONS`: the default `name` is `"u"` instead of upstream's `"p"`, so a `createMotion` call without a name generates `u-enter-*` and `u-leave-*` classes, matching the `u` prefix Ultimate already uses for the theme, the CSS layer and the SSR attribute. Every Dialog and Menu call site in Angular, React and Vue already passes its own `u-dialog` or `u-menu` name, so no component source changed and no new upstream package or version was introduced. The file-level record is `docs/architecture/provenance/uix-motion.json`, with the sub-label moved from `import-path-adapted` to `adapted`.

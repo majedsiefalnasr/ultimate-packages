@@ -1300,3 +1300,43 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 - With the real `UInputText` in Vue, the FloatLabel, IconField, IftaLabel, InputGroup and InputMask style modules still select `.u-input-text` and miss the root class, until tickets #191 to #194 and #190 move them to `.u-inputtext`. This was already true in Angular and React. Their stories hand-write `class="u-input-text"` on raw inputs, so their baselines do not change.
 - The Vue InputText baseline changes visually, because the shared module adds placeholder color, focus outline offset and filled hover and focus backgrounds. Any changed baseline comes with before and after images in the PR.
 - Tests cover size, value-derived filled, `data-p`, `pt`, `unstyled` and per-instance `dt` in the frameworks that support each. The Angular invalid style is asserted on the style module's CSS, not in a browser.
+
+## ADR-089 — Toolbar: regions render only when provided, `pt` reaches every section, and the deprecated and Angular-template surface stays out (L0a, ticket #205)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#205](https://github.com/majedsiefalnasr/ultimate-packages/issues/205)). The user ruled on region rendering, the React function form and the deprecated surface before implementation. This ADR records those rulings and the rows that stay open.
+
+**Context.**
+
+- The Phase 4 Toolbar audit found 14 rows (1 to 12, plus 10a and 11a). The gaps were: no `pt` or `ptOptions` anywhere (rows 11, 11a), `unstyled` and `dt` never read in Angular and absent in React and Vue (rows 10, 10a), a Vue root that swallowed consumer attributes because `inheritAttrs: false` had no `$attrs` binding (row 6), a React root that took only `className` and `style` (row 6), no function form for React `start`, `center` and `end` (row 2), and three rows where Ultimate renders differently from Prime (rows 3, 5, 7).
+- ADR-077, ADR-079 and ADR-080 (A0) give every family the instance-level `pt` and `ptOptions`; ADR-085 gives it `unstyled` and per-instance `dt`.
+
+**Decision.**
+
+1. **Region rendering (row 3).** The start, center and end elements render only when their template, prop or slot is provided, in all three frameworks. Angular already did this, as PrimeNG does. Prime React and Prime Vue always render three divs. Ultimate keeps the conditional form: the DOM has no empty regions, an empty region cannot add a flex `gap` or a spacing artifact, and the three frameworks behave alike. This is intentional (I) in React and Vue.
+2. **React function form (row 2).** `start`, `center` and `end` accept a node or a function that receives the toolbar props and returns a node, as PrimeReact's `getJSXElement(props.start, props)` does.
+3. **Deprecated surface (rows 5, 7).** The deprecated `left` and `right` aliases (Angular templates, React props) and Angular `getBlockableElement()` are not offered, the same position as the deprecated `styleClass`. They are intentional (I).
+4. **Pass-through (rows 11, 11a).** `pt` reaches four sections, `root`, `start`, `center` and `end`. Angular binds `ptms(["host", "root"])` through the `UBind` host directive and `ptm("start" | "center" | "end")` on each region, and provides `U_PARENT_INSTANCE`. React merges `ptm(section)` into each element's props. Vue binds `ptmi("root")` and `ptm(section)`.
+5. **`unstyled` and `dt` (rows 10, 10a).** They come from the base chain, as ADR-085 specifies. React takes `unstyled` as a prop and has no per-instance `dt`, because PrimeReact has none.
+6. **Attributes (row 6).** The Vue root binds `ptmi("root")`, which carries `$attrs`, so `id`, `class`, `style` and native attributes reach the root. The React root takes the other `div` props and merges them with `className`, `style` and `ptm("root")`, as PrimeReact's `getOtherProps` does.
+7. **React ref (row 7).** The ref is the root `div`. PrimeReact's handle is `{ props, getElement() }`. This is a usage difference, recorded as intentional (I).
+8. **Angular template source (row 2).** Content templates are plain `ng-template #start`, `#center` and `#end`. The `PrimeTemplate` and `pTemplate` mechanism is not offered, the same position as `UTimeline`. This is intentional (I) and was not among the three rulings; it is listed here for review.
+
+**Divergences from Prime.**
+
+1. React and Vue render a region only when provided (item 1).
+2. The React ref is the element, not a handle (item 7).
+3. No `left` and `right` aliases, no `getBlockableElement()`, no `pTemplate` (items 3 and 8).
+4. `ptOptions` is accepted everywhere but has no visible effect until the global `pt` source exists (ADR-080), so rows 11a are partial.
+5. React `unstyled` is a prop of `UToolbar` and `dt` is absent, as in PrimeReact.
+
+**Classification after this ticket** (C / P / M / I / N-A / N / U, from a source re-read; the Phase 4 report is not edited).
+
+- Angular 9 / 1 / 0 / 3 / 1 / 0 / 0. Open: row 11a. I: rows 2, 5, 7.
+- React 7 / 1 / 0 / 3 / 3 / 0 / 0. Open: row 11a. I: rows 3, 5, 7.
+- Vue 8 / 1 / 0 / 1 / 4 / 0 / 0. Open: row 11a. I: row 3.
+
+**Consequences.**
+
+- Existing selectors on the three regions keep working. A consumer that expects three divs from React or Vue, as in Prime, gets only the regions it provided.
+- Tests cover the function form, attribute fall-through, `pt` on all four sections, `unstyled` and per-instance `dt` in the frameworks that support each. The effect of `unstyled` is asserted on the classes, not in a browser.
+- No Toolbar visual output changes, so no browser baseline changes.
