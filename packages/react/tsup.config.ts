@@ -39,6 +39,7 @@ export default defineConfig({
     "float-label/index": "src/float-label/index.ts",
     "galleria/index": "src/galleria/index.ts",
     "icon-field/index": "src/icon-field/index.ts",
+    "input-group/index": "src/input-group/index.ts",
     "image/index": "src/image/index.ts",
     "inplace/index": "src/inplace/index.ts",
     "input-chips/index": "src/input-chips/index.ts",

@@ -29,7 +29,7 @@ export const LeadingAddon: Story = {
     template: `
       <UInputGroup>
         <UInputGroupAddon>$</UInputGroupAddon>
-        <input type="text" class="u-input-text" placeholder="Amount" />
+        <input type="text" class="u-inputtext" placeholder="Amount" />
       </UInputGroup>
     `,
   }),
@@ -42,7 +42,7 @@ export const BothSides: Story = {
     template: `
       <UInputGroup>
         <UInputGroupAddon>$</UInputGroupAddon>
-        <input type="text" class="u-input-text" placeholder="Amount" />
+        <input type="text" class="u-inputtext" placeholder="Amount" />
         <UInputGroupAddon>.00</UInputGroupAddon>
       </UInputGroup>
     `,

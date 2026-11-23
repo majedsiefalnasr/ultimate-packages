@@ -1,19 +1,23 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, input } from "@angular/core";
-import { UBaseComponent } from "@ultimate/ng-core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  inject,
+  input,
+} from "@angular/core";
+import { UBaseComponent, UBind } from "@ultimate/ng-core";
 import { inputGroupAddonStyleModule, inputGroupStyleModule } from "./input-group-style";
 
 /**
- * Ultimate-owned adaptation of PrimeNG's `InputGroup` (see
- * `.vendor-extracted/ng/inputgroup/inputgroup.ts`, extracted this session
- * via `scripts/provenance/extract-primeng-source.mjs`). InputGroup displays
- * text, icon, buttons and other content grouped next to an input — a layout
- * wrapper, not a form control itself.
+ * Ultimate-owned adaptation of PrimeNG's `InputGroup` (real source:
+ * `inputgroup/inputgroup.ts`). InputGroup displays text, icon, buttons and
+ * other content grouped next to an input — a layout wrapper, not a form
+ * control itself.
  *
  * Real source extends bare `BaseComponent<InputGroupPassThrough>` — no
- * CVA/controlled-value concept, only `<ng-content>` projection (its only
- * other input, `styleClass`, is the deprecated pre-`class`-binding
- * mechanism already excluded by every other Ultimate component's Option B
- * posture).
+ * CVA/controlled-value concept, only `<ng-content>` projection. `pt`,
+ * `unstyled` and `dt` come from `UBaseComponent`; the root is bound through
+ * the `UBind` host directive, as PrimeNG's `ptms(['host', 'root'])` does.
  */
 @Component({
   standalone: true,
@@ -24,23 +28,28 @@ import { inputGroupAddonStyleModule, inputGroupStyleModule } from "./input-group
   host: {
     "[class]": "cx('root')",
   },
+  hostDirectives: [UBind],
 })
 export class UInputGroup extends UBaseComponent {
   protected override readonly componentName = "inputgroup";
   protected override readonly styleModule = inputGroupStyleModule;
+
+  private readonly bindDirective = inject(UBind, { self: true });
+
+  ngAfterViewChecked(): void {
+    this.bindDirective.setAttrs(this.ptms(["host", "root"]));
+  }
 }
 
 /**
- * Ultimate-owned adaptation of PrimeNG's `InputGroupAddon` (see
- * `.vendor-extracted/ng/inputgroupaddon/inputgroupaddon.ts`).
- * InputGroupAddon displays text, icon, buttons and other content grouped
- * next to an input — typically projected as a `UInputGroup` child.
+ * Ultimate-owned adaptation of PrimeNG's `InputGroupAddon` (real source:
+ * `inputgroupaddon/inputgroupaddon.ts`). InputGroupAddon displays text, icon,
+ * buttons and other content grouped next to an input, typically projected as
+ * a `UInputGroup` child.
  *
- * Real source extends bare `BaseComponent<InputGroupAddonPassThrough>` — no
- * CVA/controlled-value concept. Real source's own `style` input
- * (`@HostBinding('style')`) is ported here as an `inlineStyle` input bound
- * to `[style]` directly (named to avoid colliding with Angular's own
- * `style` host-binding conventions elsewhere in this package).
+ * Real source's own `style` input (`@HostBinding('style')`) is ported here as
+ * an `inlineStyle` input bound to `[style]` directly, so it does not collide
+ * with Angular's own `style` host-binding conventions.
  */
 @Component({
   standalone: true,
@@ -52,11 +61,18 @@ export class UInputGroup extends UBaseComponent {
     "[class]": "cx('root')",
     "[style]": "inlineStyle()",
   },
+  hostDirectives: [UBind],
 })
 export class UInputGroupAddon extends UBaseComponent {
-  protected override readonly componentName = "input-group-addon";
+  protected override readonly componentName = "inputgroupaddon";
   protected override readonly styleModule = inputGroupAddonStyleModule;
 
   /** Inline style of the element. */
   inlineStyle = input<Record<string, unknown> | null | undefined>(undefined);
+
+  private readonly bindDirective = inject(UBind, { self: true });
+
+  ngAfterViewChecked(): void {
+    this.bindDirective.setAttrs(this.ptms(["host", "root"]));
+  }
 }

@@ -15,7 +15,7 @@ import { inputGroupAddonStyleModule } from "./input-group-style";
 export function createBaseInputGroupAddon() {
   return defineComponent({
     extends: createBaseComponent({
-      componentName: "input-group-addon",
+      componentName: "inputgroupaddon",
       styleModule: inputGroupAddonStyleModule,
     }),
   });

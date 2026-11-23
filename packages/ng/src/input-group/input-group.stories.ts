@@ -28,7 +28,7 @@ export const LeadingAddon: Story = {
     template: `
       <u-input-group>
         <u-input-group-addon>$</u-input-group-addon>
-        <input type="text" class="u-input-text" placeholder="Amount" />
+        <input type="text" class="u-inputtext" placeholder="Amount" />
       </u-input-group>
     `,
   }),
@@ -40,7 +40,7 @@ export const BothSides: Story = {
     template: `
       <u-input-group>
         <u-input-group-addon>$</u-input-group-addon>
-        <input type="text" class="u-input-text" placeholder="Amount" />
+        <input type="text" class="u-inputtext" placeholder="Amount" />
         <u-input-group-addon>.00</u-input-group-addon>
       </u-input-group>
     `,

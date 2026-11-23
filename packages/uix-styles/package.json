@@ -59,6 +59,11 @@
       "import": "./dist/iftalabel/index.mjs",
       "default": "./dist/iftalabel/index.mjs"
     },
+    "./inputgroup": {
+      "types": "./dist/inputgroup/index.d.mts",
+      "import": "./dist/inputgroup/index.mjs",
+      "default": "./dist/inputgroup/index.mjs"
+    },
     "./inputnumber": {
       "types": "./dist/inputnumber/index.d.mts",
       "import": "./dist/inputnumber/index.mjs",

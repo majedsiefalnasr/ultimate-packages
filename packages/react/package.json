@@ -149,6 +149,11 @@
       "import": "./dist/icon-field/index.mjs",
       "default": "./dist/icon-field/index.mjs"
     },
+    "./input-group": {
+      "types": "./dist/input-group/index.d.mts",
+      "import": "./dist/input-group/index.mjs",
+      "default": "./dist/input-group/index.mjs"
+    },
     "./input-chips": {
       "types": "./dist/input-chips/index.d.mts",
       "import": "./dist/input-chips/index.mjs",

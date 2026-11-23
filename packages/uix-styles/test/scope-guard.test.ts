@@ -10,6 +10,7 @@ import { style as dialogStyle } from "../src/dialog";
 import { style as floatlabelStyle } from "../src/floatlabel";
 import { style as iftalabelStyle } from "../src/iftalabel";
 import { style as iconfieldStyle } from "../src/iconfield";
+import { style as inputgroupStyle } from "../src/inputgroup";
 import { style as inputnumberStyle } from "../src/inputnumber";
 import { style as inputtextStyle } from "../src/inputtext";
 import { style as menuStyle } from "../src/menu";
@@ -46,8 +47,8 @@ describe("base module scope guard", () => {
   });
 });
 
-describe("component style modules — exactly 15 exist alongside base", () => {
-  it("uix-styles/src/ contains only base + the Phase 2 component modules + virtualscroller + table + inputtext + inputnumber + floatlabel + iconfield + iftalabel", () => {
+describe("component style modules — exactly 16 exist alongside base", () => {
+  it("uix-styles/src/ contains only base + the Phase 2 component modules + virtualscroller + table + inputtext + inputnumber + floatlabel + iconfield + iftalabel + inputgroup", () => {
     const actualModules = readdirSync(join(__dirname, "..", "src"), { withFileTypes: true })
       .filter((e) => e.isDirectory())
       .map((e) => e.name)
@@ -63,6 +64,7 @@ describe("component style modules — exactly 15 exist alongside base", () => {
         "floatlabel",
         "iconfield",
         "iftalabel",
+        "inputgroup",
         "inputnumber",
         "inputtext",
         "menu",
@@ -106,6 +108,10 @@ describe("component style modules — exactly 15 exist alongside base", () => {
   });
   it("iftalabel style uses only .u-ifta-label* selectors", () => {
     expect(iftalabelStyle).not.toMatch(/\.p-iftalabel/);
+  });
+  it("inputgroup style uses only .u-input-group* and emitted state selectors", () => {
+    expect(inputgroupStyle).not.toMatch(/\.p-inputgroup/);
+    expect(inputgroupStyle).not.toMatch(/\.u-inputwrapper/);
   });
   it("menu style uses only .u-menu* selectors", () => {
     expect(menuStyle).not.toMatch(/\.p-menu/);
