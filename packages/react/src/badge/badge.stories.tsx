@@ -41,12 +41,3 @@ export const Sizes: Story = {
 export const Dot: Story = {
   render: () => <UBadge severity="danger" />,
 };
-
-export const Overlay: Story = {
-  render: () => (
-    <span className="u-overlaybadge" style={{ display: "inline-block" }}>
-      <i className="pi pi-bell" style={{ fontSize: "2rem" }} />
-      <UBadge value="2" severity="danger" />
-    </span>
-  ),
-};

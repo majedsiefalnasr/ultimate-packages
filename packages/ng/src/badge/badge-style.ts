@@ -17,26 +17,6 @@ import { style as badgeStyle } from "@ultimate/uix-styles/badge";
  */
 const css = /*css*/ `
     ${badgeStyle}
-
-    .u-overlaybadge {
-        position: relative;
-    }
-
-    .u-overlaybadge .u-badge {
-        position: absolute;
-        inset-block-start: 0;
-        inset-inline-end: 0;
-        transform: translate(50%, -50%);
-        transform-origin: 100% 0;
-        margin: 0;
-        outline-width: dt('overlaybadge.outline.width');
-        outline-style: solid;
-        outline-color: dt('overlaybadge.outline.color');
-    }
-
-    .u-overlaybadge .u-badge:dir(rtl) {
-        transform: translate(-50%, -50%);
-    }
 `;
 
 /** Params `UBadge` passes into `cx('root', params)` — see `UBaseComponent.cx()`. */

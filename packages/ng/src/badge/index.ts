@@ -1,1 +1,1 @@
-export { UBadge, UBadgeDirective } from "./badge";
+export { UBadge } from "./badge";

@@ -4,33 +4,12 @@ import { style as badgeStyle } from "@ultimate/uix-styles/badge";
 /**
  * `useComponentBase`-shaped style module for `UBadge`. The structural CSS is
  * the shared `@ultimate/uix-styles/badge` module (ADR-082), so it reads the
- * Aura `badge` tokens and matches Angular and Vue. The `.u-overlaybadge`
- * rules are the same wrapper CSS Angular and Vue ship for their OverlayBadge:
- * a consumer wraps content and a `UBadge` in an element with that class,
- * which replaces PrimeReact's `.p-overlay-badge` wrapper.
+ * Aura `badge` tokens and matches Angular and Vue. The overlay wrapper CSS
+ * (`.u-overlaybadge`) is not part of this module; React has no OverlayBadge
+ * yet (ADR-088).
  */
 const css = /*css*/ `
     ${badgeStyle}
-
-    .u-overlaybadge {
-        position: relative;
-    }
-
-    .u-overlaybadge .u-badge {
-        position: absolute;
-        inset-block-start: 0;
-        inset-inline-end: 0;
-        transform: translate(50%, -50%);
-        transform-origin: 100% 0;
-        margin: 0;
-        outline-width: dt('overlaybadge.outline.width');
-        outline-style: solid;
-        outline-color: dt('overlaybadge.outline.color');
-    }
-
-    .u-overlaybadge .u-badge:dir(rtl) {
-        transform: translate(-50%, -50%);
-    }
 `;
 
 export type BadgeSeverity =

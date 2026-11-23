@@ -1312,8 +1312,227 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 **Decision.**
 
-1. **React `UBadge` (rows 1 to 4, 7, 8, 10).** React gets a standalone `UBadge` on the shared `@ultimate/uix-styles/badge` module, so it reads the same Aura `badge` tokens as Angular and Vue. `severity` accepts both `warn` and `warning`, which map to the same `u-badge-warn` class, so PrimeReact code and the cross-framework spelling both work. `size` takes `small`, `large` and `xlarge`. `UButton` renders its badge through `UBadge` and keeps `badgeClassName`.
-2. **Angular `[uBadge]` directive (row 11).** `UBadgeDirective` is the equivalent of PrimeNG's `[pBadge]`, with the same inputs (`badgeDisabled`, `badgeSize`, `severity`, `value`, `badgeStyle`, `badgeStyleClass`). It creates a badge span inside the host with `Renderer2` and marks the host with `u-overlaybadge`, so it also works on the server. The selector and class take Ultimate's `u` prefix.
+1. **React `UBadge` (rows 1 to 4, 7, 8).** React gets a standalone `UBadge` on the shared `@ultimate/uix-styles/badge` module, so it reads the same Aura `badge` tokens as Angular and Vue. `severity` accepts both `warn` and `warning`, which map to the same `u-badge-warn` class, so PrimeReact code and the cross-framework spelling both work. `size` takes `small`, `large` and `xlarge`. `UButton` renders its badge through `UBadge` and keeps `badgeClassName`.
+2. **Angular `[uBadge]` directive (row 11).** `UBadgeDirective` is the equivalent of PrimeNG's `[pBadge]`, with the same inputs (`badgeDisabled`, `badgeSize`, `severity`, `value`, `badgeStyle`, `badgeStyleClass`). It lives with `UOverlayBadge` and creates a real `UBadge` inside the host with `createComponent` and a `Renderer2`-made element, so it works on the server. The host takes `u-overlaybadge` from the overlay-badge module, so the placement CSS stays in one Angular place. `pt` on the directive reaches the badge as `pcBadge`, and `unstyled` is forwarded, which replaces PrimeNG's `pBadgePT` and `pBadgeUnstyled`. The selector and class take Ultimate's `u` prefix.
+3. **Vue `v-badge` (row 11).** It stays out. PrimeVue deprecates it in v4 and points to OverlayBadge. This is a deliberate gap (I): a consumer migrating from `v-badge` uses `UOverlayBadge`.
+4. **Angular OverlayBadge forwarding (row 9).** `badgeStyle` and `badgeStyleClass` are forwarded to the composed badge, as PrimeNG forwards `style` and `styleClass`. The deprecated `size` and `styleClass` are not offered. The names differ from PrimeNG's because `style` and `class` are already the host's own attributes in Angular.
+5. **Pass-through, `unstyled` and `dt` (rows 12 to 13a).** Angular `UBadge` binds `ptms(["host", "root"])` through `UBind`. React and Vue apply `ptm("root")` and `ptmi("root")`. Angular and Vue OverlayBadge bind `root` (and `host` in Angular) and forward `pcBadge` to the composed badge. Vue Badge and OverlayBadge keep `inheritAttrs: false` because `ptmi("root")` carries the fall-through attributes, so `id`, `class` and `style` reach the root span (row 7). `unstyled` and `dt` come from the base chain; React takes `unstyled` as a prop and has no per-instance `dt`, because PrimeReact has none.
+6. **React element access (row 8).** The ref is the root span. PrimeReact's handle is `{ props, getElement() }`. This is a usage difference, recorded as intentional (I), as in ADR-089.
+7. **React overlay wrapper (row 10).** The wrapper CSS is not carried. React has no OverlayBadge component, as in PrimeReact, and the `.u-overlaybadge` rules would be a copy of the Angular and Vue ones. They move to a shared `@ultimate/uix-styles` overlaybadge module in a later ticket. This is an intentional gap (I) and differs from the Phase 4 report, which expected the row to close with the component.
+
+**Divergences from Prime.**
+
+1. The `pcN` attribute is set only while `dt` is set. Prime sets it on every root.
+2. Vue has no global `unstyled` fallback, because Ultimate Vue has no config plugin.
+3. React `unstyled` is per-instance only. There is no global or context source yet.
+4. Angular has no `directiveUnstyled` signal.
+5. Scoped `dt` is not written on the server in Angular, and in Vue it is written from `mounted` only.
+6. The `pcN` selector comes from the `uuid("pc")` counter of `@ultimate/uix-utils`, not from `useId`, which restarts in each Vue app.
+7. React re-registers styles when `unstyled` turns false. PrimeReact runs its loader on mount only.
+8. `$attrSelector` is exposed on Angular only. Vue keeps the selector private. Ticket A0 (#170), which builds `ptm` dataset code, must add it if it needs the selector.
+
+**Contract for families.**
+
+- `cx()` returns `undefined` when unstyled. Templates must never concatenate its result with a string. The Angular Tag pilot shows the fix: `cx('icon') + ' ' + icon()` rendered the word `undefined`, so the class list is now built in a computed that filters it.
+- A React family component passes `unstyled` into `useComponentBase` and `useComponentStyle`. Vue and Angular components inherit it from the base class.
+
+**Classification.**
+
+- No row is I (intentionally not built). The only N row, React `dt`, keeps the classification the Phase 4 audit gave it.
+- Re-classification after a source re-read is in the A5 ticket report, not in the Phase 4 reports.
+
+**Consequences.**
+
+- The `ng-core`, `react-core`, `vue-core` and `uix-styled` READMEs document the API.
+- Other families need no per-component code to honor `unstyled` or `dt` in Angular and Vue. React families wire the `unstyled` prop one component at a time.
+- Any later global `unstyled` source for React or Vue needs its own ruling.
+
+## ADR-079 — `pt` functions receive `parent.instance` through host-instance lookup (A0 design decision, amends ADR-077)
+
+Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), ticket [#170](https://github.com/majedsiefalnasr/ultimate-packages/issues/170) A0). Needs the user's approval. ADR-077 left this open on purpose.
+
+**Context.**
+
+- A `pt` value can be a function. In all three pinned oracles it receives `{ instance, parent: { instance }, ... }`. `parent.instance` is the component that renders this one. A sub-component (a tree node inside a tree, a menu item inside a menu) uses it to style itself from its host's state.
+- The oracles find that parent in different ways:
+  - **PrimeNG 21.1.9** injects a `PARENT_INSTANCE` token (`inject(PARENT_INSTANCE, { optional: true, skipSelf: true })`). A component provides itself with `{ provide: PARENT_INSTANCE, useExisting: Self }`. An optional `hostName` input narrows the search, but `_getHostInstance` (`basecomponent.ts`) compares `this.$name` with `hostName` instead of the visited instance's name. For any component whose `hostName` differs from its own name the search therefore ends in `undefined`. This is a reference defect.
+  - **PrimeVue 4.5.5** injects `$parentInstance`. Each component provides itself. A `hostName` option walks `$parentInstance` up to the instance whose component name equals `hostName`. The fallback is `this.$parent`.
+  - **PrimeReact 10.9.9** has no lookup. Each component passes `parent` (the parent's metadata) and `hostName` in the params of its own `ptm(...)` call.
+- Without this, a `pt` function in a sub-component family cannot read its host, so those rows stay M in Track B.
+
+**Options.**
+
+- **A (recommended, implemented): lookup per framework as the oracle does it.** Angular gets the `U_PARENT_INSTANCE` token. Vue gets `$parentInstance` and the `hostName` option. React takes `parent` and `hostName` in the `ptm` params. Choosing it means the family tickets for sub-components only wire names. Ultimate Angular drops `hostName` and does not copy the PrimeNG defect.
+- **B: no lookup now.** `parent.instance` stays `undefined`. Each sub-component family would add its own lookup later, which is the duplication ADR-077 set out to avoid.
+
+**Decision (as implemented, pending approval).** Option A.
+
+- **Angular (`ng-core`).** `UBaseComponent.$parentInstance` is `inject(U_PARENT_INSTANCE, { optional: true, skipSelf: true })`. A component that renders other `UBaseComponent`s provides `{ provide: U_PARENT_INSTANCE, useExisting: Self }`. `$params.parent.instance` is that nearest provider. There is no `hostName`.
+- **Vue (`vue-core`).** The base mixin provides every instance as `$parentInstance` and injects the nearest one. `createBaseComponent({ hostName })` walks up to the instance whose `componentName` equals `hostName`. `parent.instance` is that host, else `$parentInstance`, else `$parent`.
+- **React (`react-core`).** `createPassThrough(name, { props, state, parent, hostName })` spreads the metadata into the `ptm` params. The caller supplies `parent`. React has no automatic lookup, same as PrimeReact. `PassThroughMetadata.hostName` only sets `data-pc-name`.
+
+**Consequences.**
+
+- A Vue component whose `ptm` runs under a parent receives the parent's `$props`, `$data` and `$attrs` in the `parent` params, as PrimeVue does.
+- A Vue component that provides its own `$parentInstance` through a different mechanism would override the base mixin's provider. None exists today.
+- The `hostName` lookup also decides which instance supplies `ptOptions` when a sub-component sets none. That path has no effect until a global `pt` source exists (ADR-080).
+
+## ADR-080 — A0 builds the instance-level `pt` and `ptOptions` only; global `pt`, `usePassThrough`, `pt.hooks` and `$attrSelector` are not built (A0 scope decision, amends ADR-077)
+
+Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), ticket [#170](https://github.com/majedsiefalnasr/ultimate-packages/issues/170) A0). Needs the user's approval, in particular the recommendation on the global source.
+
+**Context.**
+
+- ADR-077 builds `pt` and `ptOptions` once in the cores and keeps the rest of ADR-056: no new `config` surface.
+- In the three oracles `ptOptions` (`mergeSections`, `mergeProps`) decides how the **global/default `pt`** from the config (`PrimeNG.pt`, `app.use(PrimeVue, { pt })`, `PrimeReactProvider value.pt`) is merged with the instance `pt`. The merge formula is `{ ...global, ...self, ...datasets }`, or `mergeProps(global, self, datasets)` when `ptOptions.mergeProps` is set. With no global value, the instance `pt` and the `data-pc-*` datasets share no keys that those options change. So **`ptOptions` has no observable effect on a rendered component until a global source exists.**
+- The oracles carry three more `pt` features beyond the instance prop:
+  - the `_usept` wrapper that `usePassThrough(globalPt, customPt, options)` produces;
+  - `pt.hooks.onMounted` and the other lifecycle hooks;
+  - the per-instance `$attrSelector` attribute that `ptm('root')` emits next to the datasets. It belongs to scoped `dt` (ticket #175), which owns that selector.
+
+**Options for the global source.**
+
+- **A (recommended): do it as its own Track A ticket after A0.** The resolvers already take the global section value as an input (`context.global`), so a later ticket supplies it from the config without touching any family. That ticket needs the config-surface decision ADR-056 deferred: an Angular `UltimateConfig` field, a React provider and a Vue plugin option. Waiting costs nothing in Track B, because families only call `ptm`.
+- **B: build it inside A0.** It adds a config surface in all three frameworks at once and contradicts "no new `config` surface" in ADR-077 without a ruling.
+
+**Decision (as implemented, pending approval).** Option A for the global source. A0 builds, in all three cores:
+
+- the `pt` and `ptOptions` inputs (props), `ptm`, `ptmo`, plus `ptms` (Angular, as PrimeNG) and `ptmi` and `pt:section:attribute` attributes (Vue, as PrimeVue);
+- nested keys (`a.b`), flat-case key matching, function values and function `pt`, string/array to class, the `data-pc-name`, `data-pc-section` and `data-pc-extend` datasets, `searchOut` for keys whose first segment is a param, and the `mergeSections` and `mergeProps` branches of the merge formula;
+- the host-instance lookup of ADR-079.
+
+It does not build the global/default `pt` source, `usePassThrough`, `pt.hooks`, the `$attrSelector` dataset or the `ptmi` `id` fallback (PrimeVue assigns a generated id there). These stay open rows for the global-source ticket or for a ruling that removes them.
+
+**Oracle behavior ported as it is.** The pinned sources govern. Each of these is a reference defect or an oddity the user may want to rule on separately; none is changed here:
+
+- With `mergeSections: false` the merge formula `mergeSections || (!mergeSections && self)` still merges when the instance has the section. It only drops the global value when the instance has none. PrimeVue's `self` is always an object, so there `mergeSections: false` never drops it.
+- PrimeReact turns `{ className: [..], id }` into `{ className }` and loses `id`.
+- PrimeNG derives `data-pc-section` from the last segment of a dotted key, PrimeVue from the whole key, PrimeReact from the second segment when the first names a param.
+- The `searchOut` test is `/./g.test(key) && !!params[key.split('.')[0]]`, so it is true for any non-empty key whose first segment names a param.
+
+**Consequences.**
+
+- `ptOptions` is accepted, typed and tested against the merge formula (with a stand-in global value), but a component cannot observe it until the global source ticket lands. Phase 4 should keep the `ptOptions` rows P, not C, until then.
+- The root `data-pc-name` is the component's `componentName`, flat-cased (`card`, `inputtext`). It equals Prime's value wherever Ultimate's name is Prime's name flat-cased.
+- READMEs of `ng-core`, `react-core` and `vue-core` document the API and these limits.
+
+## ADR-082 — Structural styles live in `@ultimate/uix-styles` by default; staying framework-local needs a recorded reason (foundation F9; amends ADR-017)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F9, ticket [#178](https://github.com/majedsiefalnasr/ultimate-packages/issues/178)). The user chose Option A on 2026-11-21.
+
+**Context.**
+
+- Prime ships its structural style of every component as one module in `@primeuix/styles`, and PrimeNG, PrimeReact and PrimeVue all consume that one module.
+- Ultimate's `@ultimate/uix-styles` holds 12 of Prime's 93 structural style modules (badge, button, checkbox, dialog, inputnumber, inputtext, menu, paginator, table, tooltip, virtualscroller, base). Shared imports are 11 in Angular, 3 in React and 9 in Vue. Most styles are framework-local copies (83 files in Angular, 83 in React, 86 in Vue), so the same CSS is maintained up to three times and can drift (Phase 4 shared-foundation audit, item F9, ruled P in all three frameworks).
+- ADR-017 limited `uix-styles` to the `base` module for Phase 1 and said each per-component module would migrate with its owning component. It set no rule for when a family's style moves, and a scope-guard test enforces the Phase 1 list.
+
+**Decision.**
+
+- **Default.** A family's structural style is one module in `@ultimate/uix-styles`, named after the family, with `u-*` selectors, and all three frameworks consume it. A new or reworked family does not add a style copy inside a framework package.
+- **Exception.** A family keeps a framework-local style only when the three frameworks cannot share one stylesheet, for example because Ultimate's DOM for that family differs by framework on purpose. The family ticket states the reason, and the family's provenance record repeats it. A missing reason is a review finding.
+- **Moves.** The moves happen inside the Track B family tickets, each when it first touches the family. This ADR moves nothing.
+- **Mechanics.** A new module adds a `./<name>` subpath export, a test in `uix-styles`, a provenance record under `docs/architecture/provenance/uix-styles.json`, and an update to the scope-guard list. The tree-shaking check lists the subpath.
+- **ADR-017.** Its Phase 1 limit to `base` no longer binds. Its statement that a per-component module migrates alongside its owning component stands, and this ADR gives the default for it.
+
+**Alternatives not chosen.**
+
+- Option B, a rule of two (share a style only when a second framework needs it): rejected because it leaves the first framework's copy as the one that drifts, and every Track B family would need a judgment call.
+- Option C, keep the current practice: rejected because it keeps up to three copies of each style and gives no rule for new families.
+
+**Consequences.**
+
+- Each Track B family ticket has one more deliverable: the shared module and its three consumers, or a recorded exception.
+- Existing framework-local copies are not rewritten in bulk. They move when their family ticket runs.
+- `PACKAGE_ARCHITECTURE.md` states the rule so that family tickets apply it without reading this ADR.
+
+## ADR-081 — `@ultimate/uix-styles/base` uses `u-*` selectors and the three cores register it through one `uix-styled` helper (foundation F10; amends ADR-017)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F10, ticket [#176](https://github.com/majedsiefalnasr/ultimate-packages/issues/176)). The user chose Option C in the Stage 1 session.
+
+**Context.**
+
+- No package consumed `@ultimate/uix-styles/base`, and its CSS still used Prime's `p-*` selectors and `p-animate-*` keyframes (Phase 4 shared-foundation audit, item C6, ruled P in all three frameworks).
+- The cores registered their own hidden-accessible, icon-spin and box-model rules from `@ultimate/uix-styled`, so the module's disabled, icon, overlay-mask, anchored-overlay and collapsible rules reached no page.
+- ADR-063 scopes `border-box` per component and says Ultimate never applies the page-wide form. The first rule of the base module is the page-wide form.
+
+**Decision.**
+
+- **Rename.** Selectors become `.u-*` and keyframes `u-animate-*`. The `var(--px-mask-background, ...)` wrapper is dropped in favour of `dt('mask.background')`, the same recorded difference as PX-B3 in the component style ports.
+- **Remove two rules.** The page-wide `*, ::before, ::after { box-sizing: border-box }` rule is dropped, and ADR-063 stays as the only `border-box` mechanism. The `.pi` rule is dropped because Ultimate ships no PrimeIcons font.
+- **Wire it once.** `registerSharedBase(sheet)` in `packages/uix-styled/src/stylesheet/base.ts` registers the module under the key `u-base` through `registerComponentCss`, so its `dt()` references resolve and follow theme changes. `@ultimate/uix-styled` gains a dependency on `@ultimate/uix-styles`. Each core calls the helper once, next to `registerThemeVariables`: `ng-core` `basecomponent/base-component.ts`, `react-core` `styling/use-component-style.ts`, `vue-core` `styling/vue-style-sheet.ts`.
+- **Unstyled.** An unstyled instance does not load it, because it skips `registerThemeVariables` too (ADR-085). It keeps only the hidden-accessible and icon-spin rules.
+- **Not renamed here.** Components in `ng` and `vue` that emit the class `p-disabled` are not renamed in this ticket. Each moves with its family ticket (ADR-082). Until then `.u-disabled` styles only what emits `u-disabled`.
+
+**Alternatives not chosen.**
+
+- Remove the module: rejected because the disabled, overlay-mask and collapsible rules need one shared home, and ADR-082 makes `uix-styles` that home.
+- Rename the module but leave it unwired: rejected because a renamed module that no core registers repeats the problem this ticket exists to fix.
+
+**Consequences.**
+
+- Every styled instance now registers one `u-base` element per sheet. The size effect on `@ultimate/uix-styled` and `vue-core` is not measured here; the advisory bundle-size gate was already over its threshold for both on the integration branch before this ticket.
+- Two rules now apply that did not before. `.u-component:disabled` gives a disabled element that carries `u-component` the opacity `dt('disabled.opacity')`, as in Prime. `.u-disabled` does the same and sets `pointer-events: none`; the only emitter of `u-disabled` today is the Vue `input-chips` root, which already resets its inner input to `opacity: 1` and now dims as that reset expects.
+- `.u-icon` now sets `width` and `height` to `dt('icon.size')` (`1rem` in Aura). A `u-icon` element that carries a `width="14" height="14"` attribute, as the `react-core` and `vue-core` SVG icons do (spinner, check, times, window controls), grows from 14px to the token size, because a stylesheet rule overrides a presentation attribute. The baselines that changed for this reason are the Button Loading spinner in React and Vue, the Dialog close icon in React, and in Vue the Drawer close icon, the ConfirmDialog (two pixels taller, because its icon button grows) and the Chip remove icon. A component that needs another size sets it on a more specific class, as `.u-checkbox-icon` does.
+- `.u-overlay-mask` now has CSS: a fixed, full-viewport mask with `dt('mask.background')`. Before, `ng` and `vue` Dialog, Drawer and ConfirmDialog rendered no dimming mask at all. It now appears in those two frameworks. The `ng` Dialog has no centering rule and was already full width at the top of the page before this ticket; the mask makes that visible, and because the mask is a fixed box the dialog now starts at the viewport edge instead of the 16px body margin. React Dialog and Drawer keep their own `u-dialog-mask` and `u-drawer-mask` rules and do not emit `u-overlay-mask`, so React is unchanged and the three frameworks still differ here. The Dialog family tickets in Stage 2 own the centering and the React difference.
+- A disabled Button and the SplitButton in `ng`, and a disabled Button in React, now render dimmed, because `.u-component:disabled` now reaches the page. The Vue Button Disabled baseline did not change, so this ADR makes no claim about Vue Button. In Chromium the React change stays inside the 0.2 per-pixel threshold; it shows in Firefox.
+- The React Checkbox style module is hand-written and does not use `@ultimate/uix-styles/checkbox`, so it had no `.u-checkbox-icon` size and the new `.u-icon` rule would have grown its check mark to 16px. It now sets `.u-checkbox-icon` to `dt('checkbox.icon.size')` (`0.875rem`), which keeps the existing 14px baseline.
+- The intended visual changes above are recorded by updated Playwright baselines in this PR. The baselines were regenerated in the CI Playwright image, and only the listed stories changed.
+- Tests cover the module's selectors, the absence of `box-sizing`, the helper, and registration in each core (present when styled, absent when unstyled).
+
+## ADR-086 — InputText: `size`, value-derived `p-filled`, shared styles, and React `keyfilter`/`tooltip` stay composition (L0a, ticket #188)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#188](https://github.com/majedsiefalnasr/ultimate-packages/issues/188)). The user ruled on rows 5, 6, 9 and 12 to 14 before implementation. This ADR records those rulings and the rows that stay open.
+
+**Context.**
+
+- The Phase 4 InputText audit found 22 rows. The gaps were: no `size` in any framework (row 5), a `p-filled` class driven by the variant in Vue and never set in React (row 9), hard-coded React CSS with the wrong Aura key `input-text` (rows 16, 22), a Vue style copy with its own `.u-input-text` class and no placeholder, size or filled-hover rules (row 16), no `pt` anywhere (row 18), and a Vue base that shadowed `cx` and `mounted` so `unstyled`, per-instance `dt` and `pt` did nothing (rows 19 to 21).
+- ADR-082 puts structural style in `@ultimate/uix-styles` by default. The `inputtext` module already existed and was consumed only by Angular.
+
+**Decision.**
+
+1. **Size (row 5).** All three frameworks take `size: "small" | "large"`, the same convention as Button. It emits `u-inputtext-sm` or `u-inputtext-lg`, which the shared module styles from the Aura `inputtext.sm.*` and `inputtext.lg.*` tokens. Angular names the input `uSize`, so it does not collide with the native `size` attribute. The size is also a token in `data-p` (Angular, Vue), as in PrimeNG and PrimeVue.
+2. **Filled (row 9).** `p-filled` is value-derived: it is set when the value is not empty, like PrimeNG and PrimeVue. React tracks an uncontrolled `defaultValue` with state, so typing updates it. The variant-derived `filled` token stays in `data-p`, as in the oracles. `p-variant-filled` is the only class that follows the variant.
+3. **Shared styles (rows 16, 22).** React and Vue import `style` from `@ultimate/uix-styles/inputtext`, like Angular. Both register under the Aura key `inputtext`. The Vue root class is now `u-inputtext`, the shared module's name.
+4. **Vue base (rows 19 to 21).** `createBaseInput(options)` forwards `componentName` and `styleModule` to the editable holder. `BaseInputText` no longer shadows `cx` and `mounted`, so `unstyled`, per-instance `dt` and `pt` come from `createBaseComponent`. Other Vue families that use the shadow workaround are not touched; their tickets move them over.
+5. **Pass-through (row 18).** Angular binds `ptms(["host", "root"])` through the `UBind` host directive. React and Vue apply `ptm("root")`. `unstyled` drops the Ultimate classes. React `dt` stays N because PrimeReact has no per-instance `dt`.
+6. **Angular-only invalid style (row 8).** The `.ng-invalid.ng-dirty` rules stay in the Angular style module, with their reason documented there. Angular forms set those classes. React and Vue have no counterpart, so the shared module cannot carry them (ADR-082 framework-local exception).
+7. **React `keyfilter`, `tooltip` and `validatePattern` (rows 12 to 14) are I.** They stay separate composition (`useKeyFilter`, `UTooltip`), as in Angular and Vue, instead of props of `UInputText`. This is an intentional difference from PrimeReact. Defects inside the key filter and the tooltip belong to the KeyFilter and Tooltip family tickets.
+8. **Vue Fluid (row 6) stays P.** The explicit `fluid` prop works. Ancestor fluid detection needs a Fluid provider, and Vue has none. The Fluid family ticket is in L0b.
+
+**Divergences from Prime.**
+
+1. React `size` is the visual size, as in PrimeVue. PrimeReact passes the native `size` attribute to the DOM. A native `size` on the React input is now reachable only through `pt.root`.
+2. React `p-filled` is derived from the value. PrimeReact never sets it.
+3. React `keyfilter`, `tooltip` and `validatePattern` are not props (item 7).
+4. Row 4 (variant fallback from global config) stays P in all three frameworks. The config surface has no `inputVariant` or `inputStyle`, and `packages/ng-core/src/base-input/base-input.ts` gates it on config's open decision.
+5. Row 3 (`@primevue/forms`) stays M in Vue. It belongs to the separate Vue Forms spec (R3).
+6. `ptOptions` is accepted everywhere but has no visible effect until the global `pt` source exists (ADR-080), so row 19 is P.
+
+**Classification after this ticket** (C / P / M / I / N-A / N / U, from a source re-read; the Phase 4 report is not edited).
+
+- Angular 15 / 2 / 0 / 0 / 5 / 0 / 0. Open: rows 4 and 19.
+- React 10 / 3 / 0 / 3 / 5 / 1 / 0. Open: rows 4, 11 and 19. Row 11 is P because native `size` moved to `pt.root`. I: rows 12 to 14. N: row 21.
+- Vue 14 / 3 / 1 / 0 / 4 / 0 / 0. Open: rows 4, 6 and 19. M: row 3.
+
+**Consequences.**
+
+- With the real `UInputText` in Vue, the FloatLabel, IconField, IftaLabel, InputGroup and InputMask style modules still select `.u-input-text` and miss the root class, until tickets #191 to #194 and #190 move them to `.u-inputtext`. This was already true in Angular and React. Their stories hand-write `class="u-input-text"` on raw inputs, so their baselines do not change.
+- The Vue InputText baseline changes visually, because the shared module adds placeholder color, focus outline offset and filled hover and focus backgrounds. Any changed baseline comes with before and after images in the PR.
+- Tests cover size, value-derived filled, `data-p`, `pt`, `unstyled` and per-instance `dt` in the frameworks that support each. The Angular invalid style is asserted on the style module's CSS, not in a browser.
+
+## ADR-088 — Badge: React `UBadge`, Angular `[uBadge]`, Vue `v-badge` stays out, and OverlayBadge forwards style and class (L0a, ticket #202)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#202](https://github.com/majedsiefalnasr/ultimate-packages/issues/202)). The user ruled on the four decisions below before implementation. This ADR records those rulings and the rows that stay open.
+
+**Context.**
+
+- The Phase 4 Badge audit found 15 rows per framework. React had no Badge at all (10 rows missing: the component, severity, size, the shape rules, attributes, element access, the overlay wrapper, `pt`, `ptOptions` and `unstyled`). Angular lacked the `[pBadge]` directive, `pt`, `ptOptions` and OverlayBadge's `style` and `styleClass` forwarding. Vue lacked `pt`, `ptOptions`, `unstyled`, per-instance `dt` and the deprecated `v-badge` directive.
+- ADR-077, ADR-079 and ADR-080 (A0) give every family the instance-level `pt` and `ptOptions`; ADR-085 gives it `unstyled` and per-instance `dt`; ADR-082 makes the structural CSS a shared `@ultimate/uix-styles` module.
+
+**Decision.**
+
+1. **React `UBadge` (rows 1 to 4, 7, 8).** React gets a standalone `UBadge` on the shared `@ultimate/uix-styles/badge` module, so it reads the same Aura `badge` tokens as Angular and Vue. `severity` accepts both `warn` and `warning`, which map to the same `u-badge-warn` class, so PrimeReact code and the cross-framework spelling both work. `size` takes `small`, `large` and `xlarge`. `UButton` renders its badge through `UBadge` and keeps `badgeClassName`.
+2. **Angular `[uBadge]` directive (row 11).** `UBadgeDirective` is the equivalent of PrimeNG's `[pBadge]`, with the same inputs (`badgeDisabled`, `badgeSize`, `severity`, `value`, `badgeStyle`, `badgeStyleClass`). It lives with `UOverlayBadge` and creates a real `UBadge` inside the host with `createComponent` and a `Renderer2`-made element, so it works on the server. The host takes `u-overlaybadge` from the overlay-badge module, so the placement CSS stays in one Angular place. `pt` on the directive reaches the badge as `pcBadge`, and `unstyled` is forwarded, which replaces PrimeNG's `pBadgePT` and `pBadgeUnstyled`. The selector and class take Ultimate's `u` prefix.
 3. **Vue `v-badge` (row 11).** It stays out. PrimeVue deprecates it in v4 and points to OverlayBadge. This is a deliberate gap (I): a consumer migrating from `v-badge` uses `UOverlayBadge`.
 4. **Angular OverlayBadge forwarding (row 9).** `badgeStyle` and `badgeStyleClass` are forwarded to the composed badge, as PrimeNG forwards `style` and `styleClass`. The deprecated `size` and `styleClass` are not offered. The names differ from PrimeNG's because `style` and `class` are already the host's own attributes in Angular.
 5. **Pass-through, `unstyled` and `dt` (rows 12 to 13a).** Angular `UBadge` binds `ptms(["host", "root"])` through `UBind`. React and Vue apply `ptm("root")` and `ptmi("root")`. Angular and Vue OverlayBadge bind `root` (and `host` in Angular) and forward `pcBadge` to the composed badge. Vue Badge and OverlayBadge keep `inheritAttrs: false` because `ptmi("root")` carries the fall-through attributes, so `id`, `class` and `style` reach the root span (row 7). `unstyled` and `dt` come from the base chain; React takes `unstyled` as a prop and has no per-instance `dt`, because PrimeReact has none.
@@ -1322,16 +1541,274 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 **Divergences from Prime.**
 
-1. Angular `[uBadge]` and OverlayBadge use `uBadge`, `badgeStyle` and `badgeStyleClass`; the directive does not attach to the first child of a host whose tag has a dash.
-2. The directive's own pass-through channel (`pBadgePT`, `pBadgeUnstyled`) is not carried. Row 11 stays partial for Angular until the pass-through decision for directives is made.
+1. Angular `[uBadge]` and OverlayBadge use `uBadge`, `badgeStyle` and `badgeStyleClass`; the directive does not attach to the first child of a host whose tag has a dash. The badge it creates is a `u-badge` element, where PrimeNG creates a span.
+2. The directive takes `pt` and `unstyled` through the standard inputs and forwards them to the badge, instead of `pBadgePT` and `pBadgeUnstyled`.
+3. Vue `v-badge` is not offered (item 3). The React ref is the element (item 6).
+4. `ptOptions` is accepted everywhere but has no visible effect until the global `pt` source exists (ADR-080), so row 12a stays partial.
+5. The React wrapper CSS is not carried (item 7).
+
+**Classification after this ticket** (C / P / M / I / N-A / N / U, from a source re-read; the Phase 4 report is not edited).
+
+- Angular 15 / 2 / 0 / 0 / 5 / 0 / 0. Open: rows 4 and 19.
+- React 10 / 3 / 0 / 3 / 5 / 1 / 0. Open: rows 4, 11 and 19. Row 11 is P because native `size` moved to `pt.root`. I: rows 12 to 14. N: row 21.
+- Vue 14 / 3 / 1 / 0 / 4 / 0 / 0. Open: rows 4, 6 and 19. M: row 3.
+
+**Consequences.**
+
+- With the real `UInputText` in Vue, the FloatLabel, IconField, IftaLabel, InputGroup and InputMask style modules still select `.u-input-text` and miss the root class, until tickets #191 to #194 and #190 move them to `.u-inputtext`. This was already true in Angular and React. Their stories hand-write `class="u-input-text"` on raw inputs, so their baselines do not change.
+- The Vue InputText baseline changes visually, because the shared module adds placeholder color, focus outline offset and filled hover and focus backgrounds. Any changed baseline comes with before and after images in the PR.
+- Tests cover size, value-derived filled, `data-p`, `pt`, `unstyled` and per-instance `dt` in the frameworks that support each. The Angular invalid style is asserted on the style module's CSS, not in a browser.
+
+## ADR-088 — Badge: React `UBadge`, Angular `[uBadge]`, Vue `v-badge` stays out, and OverlayBadge forwards style and class (L0a, ticket #202)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#202](https://github.com/majedsiefalnasr/ultimate-packages/issues/202)). The user ruled on the four decisions below before implementation. This ADR records those rulings and the rows that stay open.
+
+**Context.**
+
+- The Phase 4 Badge audit found 15 rows per framework. React had no Badge at all (10 rows missing: the component, severity, size, the shape rules, attributes, element access, the overlay wrapper, `pt`, `ptOptions` and `unstyled`). Angular lacked the `[pBadge]` directive, `pt`, `ptOptions` and OverlayBadge's `style` and `styleClass` forwarding. Vue lacked `pt`, `ptOptions`, `unstyled`, per-instance `dt` and the deprecated `v-badge` directive.
+- ADR-077, ADR-079 and ADR-080 (A0) give every family the instance-level `pt` and `ptOptions`; ADR-085 gives it `unstyled` and per-instance `dt`; ADR-082 makes the structural CSS a shared `@ultimate/uix-styles` module.
+
+**Decision.**
+
+1. **React `UBadge` (rows 1 to 4, 7, 8).** React gets a standalone `UBadge` on the shared `@ultimate/uix-styles/badge` module, so it reads the same Aura `badge` tokens as Angular and Vue. `severity` accepts both `warn` and `warning`, which map to the same `u-badge-warn` class, so PrimeReact code and the cross-framework spelling both work. `size` takes `small`, `large` and `xlarge`. `UButton` renders its badge through `UBadge` and keeps `badgeClassName`.
+2. **Angular `[uBadge]` directive (row 11).** `UBadgeDirective` is the equivalent of PrimeNG's `[pBadge]`, with the same inputs (`badgeDisabled`, `badgeSize`, `severity`, `value`, `badgeStyle`, `badgeStyleClass`). It lives with `UOverlayBadge` and creates a real `UBadge` inside the host with `createComponent` and a `Renderer2`-made element, so it works on the server. The host takes `u-overlaybadge` from the overlay-badge module, so the placement CSS stays in one Angular place. `pt` on the directive reaches the badge as `pcBadge`, and `unstyled` is forwarded, which replaces PrimeNG's `pBadgePT` and `pBadgeUnstyled`. The selector and class take Ultimate's `u` prefix.
+3. **Vue `v-badge` (row 11).** It stays out. PrimeVue deprecates it in v4 and points to OverlayBadge. This is a deliberate gap (I): a consumer migrating from `v-badge` uses `UOverlayBadge`.
+4. **Angular OverlayBadge forwarding (row 9).** `badgeStyle` and `badgeStyleClass` are forwarded to the composed badge, as PrimeNG forwards `style` and `styleClass`. The deprecated `size` and `styleClass` are not offered. The names differ from PrimeNG's because `style` and `class` are already the host's own attributes in Angular.
+5. **Pass-through, `unstyled` and `dt` (rows 12 to 13a).** Angular `UBadge` binds `ptms(["host", "root"])` through `UBind`. React and Vue apply `ptm("root")` and `ptmi("root")`. Angular and Vue OverlayBadge bind `root` (and `host` in Angular) and forward `pcBadge` to the composed badge. Vue Badge and OverlayBadge keep `inheritAttrs: false` because `ptmi("root")` carries the fall-through attributes, so `id`, `class` and `style` reach the root span (row 7). `unstyled` and `dt` come from the base chain; React takes `unstyled` as a prop and has no per-instance `dt`, because PrimeReact has none.
+6. **React element access (row 8).** The ref is the root span. PrimeReact's handle is `{ props, getElement() }`. This is a usage difference, recorded as intentional (I), as in ADR-089.
+7. **React overlay wrapper (row 10).** The wrapper CSS is not carried. React has no OverlayBadge component, as in PrimeReact, and the `.u-overlaybadge` rules would be a copy of the Angular and Vue ones. They move to a shared `@ultimate/uix-styles` overlaybadge module in a later ticket. This is an intentional gap (I) and differs from the Phase 4 report, which expected the row to close with the component.
+
+**Divergences from Prime.**
+
+1. The `pcN` attribute is set only while `dt` is set. Prime sets it on every root.
+2. Vue has no global `unstyled` fallback, because Ultimate Vue has no config plugin.
+3. React `unstyled` is per-instance only. There is no global or context source yet.
+4. Angular has no `directiveUnstyled` signal.
+5. Scoped `dt` is not written on the server in Angular, and in Vue it is written from `mounted` only.
+6. The `pcN` selector comes from the `uuid("pc")` counter of `@ultimate/uix-utils`, not from `useId`, which restarts in each Vue app.
+7. React re-registers styles when `unstyled` turns false. PrimeReact runs its loader on mount only.
+8. `$attrSelector` is exposed on Angular only. Vue keeps the selector private. Ticket A0 (#170), which builds `ptm` dataset code, must add it if it needs the selector.
+
+**Contract for families.**
+
+- `cx()` returns `undefined` when unstyled. Templates must never concatenate its result with a string. The Angular Tag pilot shows the fix: `cx('icon') + ' ' + icon()` rendered the word `undefined`, so the class list is now built in a computed that filters it.
+- A React family component passes `unstyled` into `useComponentBase` and `useComponentStyle`. Vue and Angular components inherit it from the base class.
+
+**Classification.**
+
+- No row is I (intentionally not built). The only N row, React `dt`, keeps the classification the Phase 4 audit gave it.
+- Re-classification after a source re-read is in the A5 ticket report, not in the Phase 4 reports.
+
+**Consequences.**
+
+- The `ng-core`, `react-core`, `vue-core` and `uix-styled` READMEs document the API.
+- Other families need no per-component code to honor `unstyled` or `dt` in Angular and Vue. React families wire the `unstyled` prop one component at a time.
+- Any later global `unstyled` source for React or Vue needs its own ruling.
+
+## ADR-079 — `pt` functions receive `parent.instance` through host-instance lookup (A0 design decision, amends ADR-077)
+
+Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), ticket [#170](https://github.com/majedsiefalnasr/ultimate-packages/issues/170) A0). Needs the user's approval. ADR-077 left this open on purpose.
+
+**Context.**
+
+- A `pt` value can be a function. In all three pinned oracles it receives `{ instance, parent: { instance }, ... }`. `parent.instance` is the component that renders this one. A sub-component (a tree node inside a tree, a menu item inside a menu) uses it to style itself from its host's state.
+- The oracles find that parent in different ways:
+  - **PrimeNG 21.1.9** injects a `PARENT_INSTANCE` token (`inject(PARENT_INSTANCE, { optional: true, skipSelf: true })`). A component provides itself with `{ provide: PARENT_INSTANCE, useExisting: Self }`. An optional `hostName` input narrows the search, but `_getHostInstance` (`basecomponent.ts`) compares `this.$name` with `hostName` instead of the visited instance's name. For any component whose `hostName` differs from its own name the search therefore ends in `undefined`. This is a reference defect.
+  - **PrimeVue 4.5.5** injects `$parentInstance`. Each component provides itself. A `hostName` option walks `$parentInstance` up to the instance whose component name equals `hostName`. The fallback is `this.$parent`.
+  - **PrimeReact 10.9.9** has no lookup. Each component passes `parent` (the parent's metadata) and `hostName` in the params of its own `ptm(...)` call.
+- Without this, a `pt` function in a sub-component family cannot read its host, so those rows stay M in Track B.
+
+**Options.**
+
+- **A (recommended, implemented): lookup per framework as the oracle does it.** Angular gets the `U_PARENT_INSTANCE` token. Vue gets `$parentInstance` and the `hostName` option. React takes `parent` and `hostName` in the `ptm` params. Choosing it means the family tickets for sub-components only wire names. Ultimate Angular drops `hostName` and does not copy the PrimeNG defect.
+- **B: no lookup now.** `parent.instance` stays `undefined`. Each sub-component family would add its own lookup later, which is the duplication ADR-077 set out to avoid.
+
+**Decision (as implemented, pending approval).** Option A.
+
+- **Angular (`ng-core`).** `UBaseComponent.$parentInstance` is `inject(U_PARENT_INSTANCE, { optional: true, skipSelf: true })`. A component that renders other `UBaseComponent`s provides `{ provide: U_PARENT_INSTANCE, useExisting: Self }`. `$params.parent.instance` is that nearest provider. There is no `hostName`.
+- **Vue (`vue-core`).** The base mixin provides every instance as `$parentInstance` and injects the nearest one. `createBaseComponent({ hostName })` walks up to the instance whose `componentName` equals `hostName`. `parent.instance` is that host, else `$parentInstance`, else `$parent`.
+- **React (`react-core`).** `createPassThrough(name, { props, state, parent, hostName })` spreads the metadata into the `ptm` params. The caller supplies `parent`. React has no automatic lookup, same as PrimeReact. `PassThroughMetadata.hostName` only sets `data-pc-name`.
+
+**Consequences.**
+
+- A Vue component whose `ptm` runs under a parent receives the parent's `$props`, `$data` and `$attrs` in the `parent` params, as PrimeVue does.
+- A Vue component that provides its own `$parentInstance` through a different mechanism would override the base mixin's provider. None exists today.
+- The `hostName` lookup also decides which instance supplies `ptOptions` when a sub-component sets none. That path has no effect until a global `pt` source exists (ADR-080).
+
+## ADR-080 — A0 builds the instance-level `pt` and `ptOptions` only; global `pt`, `usePassThrough`, `pt.hooks` and `$attrSelector` are not built (A0 scope decision, amends ADR-077)
+
+Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), ticket [#170](https://github.com/majedsiefalnasr/ultimate-packages/issues/170) A0). Needs the user's approval, in particular the recommendation on the global source.
+
+**Context.**
+
+- ADR-077 builds `pt` and `ptOptions` once in the cores and keeps the rest of ADR-056: no new `config` surface.
+- In the three oracles `ptOptions` (`mergeSections`, `mergeProps`) decides how the **global/default `pt`** from the config (`PrimeNG.pt`, `app.use(PrimeVue, { pt })`, `PrimeReactProvider value.pt`) is merged with the instance `pt`. The merge formula is `{ ...global, ...self, ...datasets }`, or `mergeProps(global, self, datasets)` when `ptOptions.mergeProps` is set. With no global value, the instance `pt` and the `data-pc-*` datasets share no keys that those options change. So **`ptOptions` has no observable effect on a rendered component until a global source exists.**
+- The oracles carry three more `pt` features beyond the instance prop:
+  - the `_usept` wrapper that `usePassThrough(globalPt, customPt, options)` produces;
+  - `pt.hooks.onMounted` and the other lifecycle hooks;
+  - the per-instance `$attrSelector` attribute that `ptm('root')` emits next to the datasets. It belongs to scoped `dt` (ticket #175), which owns that selector.
+
+**Options for the global source.**
+
+- **A (recommended): do it as its own Track A ticket after A0.** The resolvers already take the global section value as an input (`context.global`), so a later ticket supplies it from the config without touching any family. That ticket needs the config-surface decision ADR-056 deferred: an Angular `UltimateConfig` field, a React provider and a Vue plugin option. Waiting costs nothing in Track B, because families only call `ptm`.
+- **B: build it inside A0.** It adds a config surface in all three frameworks at once and contradicts "no new `config` surface" in ADR-077 without a ruling.
+
+**Decision (as implemented, pending approval).** Option A for the global source. A0 builds, in all three cores:
+
+- the `pt` and `ptOptions` inputs (props), `ptm`, `ptmo`, plus `ptms` (Angular, as PrimeNG) and `ptmi` and `pt:section:attribute` attributes (Vue, as PrimeVue);
+- nested keys (`a.b`), flat-case key matching, function values and function `pt`, string/array to class, the `data-pc-name`, `data-pc-section` and `data-pc-extend` datasets, `searchOut` for keys whose first segment is a param, and the `mergeSections` and `mergeProps` branches of the merge formula;
+- the host-instance lookup of ADR-079.
+
+It does not build the global/default `pt` source, `usePassThrough`, `pt.hooks`, the `$attrSelector` dataset or the `ptmi` `id` fallback (PrimeVue assigns a generated id there). These stay open rows for the global-source ticket or for a ruling that removes them.
+
+**Oracle behavior ported as it is.** The pinned sources govern. Each of these is a reference defect or an oddity the user may want to rule on separately; none is changed here:
+
+- With `mergeSections: false` the merge formula `mergeSections || (!mergeSections && self)` still merges when the instance has the section. It only drops the global value when the instance has none. PrimeVue's `self` is always an object, so there `mergeSections: false` never drops it.
+- PrimeReact turns `{ className: [..], id }` into `{ className }` and loses `id`.
+- PrimeNG derives `data-pc-section` from the last segment of a dotted key, PrimeVue from the whole key, PrimeReact from the second segment when the first names a param.
+- The `searchOut` test is `/./g.test(key) && !!params[key.split('.')[0]]`, so it is true for any non-empty key whose first segment names a param.
+
+**Consequences.**
+
+- `ptOptions` is accepted, typed and tested against the merge formula (with a stand-in global value), but a component cannot observe it until the global source ticket lands. Phase 4 should keep the `ptOptions` rows P, not C, until then.
+- The root `data-pc-name` is the component's `componentName`, flat-cased (`card`, `inputtext`). It equals Prime's value wherever Ultimate's name is Prime's name flat-cased.
+- READMEs of `ng-core`, `react-core` and `vue-core` document the API and these limits.
+
+## ADR-082 — Structural styles live in `@ultimate/uix-styles` by default; staying framework-local needs a recorded reason (foundation F9; amends ADR-017)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F9, ticket [#178](https://github.com/majedsiefalnasr/ultimate-packages/issues/178)). The user chose Option A on 2026-11-21.
+
+**Context.**
+
+- Prime ships its structural style of every component as one module in `@primeuix/styles`, and PrimeNG, PrimeReact and PrimeVue all consume that one module.
+- Ultimate's `@ultimate/uix-styles` holds 12 of Prime's 93 structural style modules (badge, button, checkbox, dialog, inputnumber, inputtext, menu, paginator, table, tooltip, virtualscroller, base). Shared imports are 11 in Angular, 3 in React and 9 in Vue. Most styles are framework-local copies (83 files in Angular, 83 in React, 86 in Vue), so the same CSS is maintained up to three times and can drift (Phase 4 shared-foundation audit, item F9, ruled P in all three frameworks).
+- ADR-017 limited `uix-styles` to the `base` module for Phase 1 and said each per-component module would migrate with its owning component. It set no rule for when a family's style moves, and a scope-guard test enforces the Phase 1 list.
+
+**Decision.**
+
+- **Default.** A family's structural style is one module in `@ultimate/uix-styles`, named after the family, with `u-*` selectors, and all three frameworks consume it. A new or reworked family does not add a style copy inside a framework package.
+- **Exception.** A family keeps a framework-local style only when the three frameworks cannot share one stylesheet, for example because Ultimate's DOM for that family differs by framework on purpose. The family ticket states the reason, and the family's provenance record repeats it. A missing reason is a review finding.
+- **Moves.** The moves happen inside the Track B family tickets, each when it first touches the family. This ADR moves nothing.
+- **Mechanics.** A new module adds a `./<name>` subpath export, a test in `uix-styles`, a provenance record under `docs/architecture/provenance/uix-styles.json`, and an update to the scope-guard list. The tree-shaking check lists the subpath.
+- **ADR-017.** Its Phase 1 limit to `base` no longer binds. Its statement that a per-component module migrates alongside its owning component stands, and this ADR gives the default for it.
+
+**Alternatives not chosen.**
+
+- Option B, a rule of two (share a style only when a second framework needs it): rejected because it leaves the first framework's copy as the one that drifts, and every Track B family would need a judgment call.
+- Option C, keep the current practice: rejected because it keeps up to three copies of each style and gives no rule for new families.
+
+**Consequences.**
+
+- Each Track B family ticket has one more deliverable: the shared module and its three consumers, or a recorded exception.
+- Existing framework-local copies are not rewritten in bulk. They move when their family ticket runs.
+- `PACKAGE_ARCHITECTURE.md` states the rule so that family tickets apply it without reading this ADR.
+
+## ADR-081 — `@ultimate/uix-styles/base` uses `u-*` selectors and the three cores register it through one `uix-styled` helper (foundation F10; amends ADR-017)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F10, ticket [#176](https://github.com/majedsiefalnasr/ultimate-packages/issues/176)). The user chose Option C in the Stage 1 session.
+
+**Context.**
+
+- No package consumed `@ultimate/uix-styles/base`, and its CSS still used Prime's `p-*` selectors and `p-animate-*` keyframes (Phase 4 shared-foundation audit, item C6, ruled P in all three frameworks).
+- The cores registered their own hidden-accessible, icon-spin and box-model rules from `@ultimate/uix-styled`, so the module's disabled, icon, overlay-mask, anchored-overlay and collapsible rules reached no page.
+- ADR-063 scopes `border-box` per component and says Ultimate never applies the page-wide form. The first rule of the base module is the page-wide form.
+
+**Decision.**
+
+- **Rename.** Selectors become `.u-*` and keyframes `u-animate-*`. The `var(--px-mask-background, ...)` wrapper is dropped in favour of `dt('mask.background')`, the same recorded difference as PX-B3 in the component style ports.
+- **Remove two rules.** The page-wide `*, ::before, ::after { box-sizing: border-box }` rule is dropped, and ADR-063 stays as the only `border-box` mechanism. The `.pi` rule is dropped because Ultimate ships no PrimeIcons font.
+- **Wire it once.** `registerSharedBase(sheet)` in `packages/uix-styled/src/stylesheet/base.ts` registers the module under the key `u-base` through `registerComponentCss`, so its `dt()` references resolve and follow theme changes. `@ultimate/uix-styled` gains a dependency on `@ultimate/uix-styles`. Each core calls the helper once, next to `registerThemeVariables`: `ng-core` `basecomponent/base-component.ts`, `react-core` `styling/use-component-style.ts`, `vue-core` `styling/vue-style-sheet.ts`.
+- **Unstyled.** An unstyled instance does not load it, because it skips `registerThemeVariables` too (ADR-085). It keeps only the hidden-accessible and icon-spin rules.
+- **Not renamed here.** Components in `ng` and `vue` that emit the class `p-disabled` are not renamed in this ticket. Each moves with its family ticket (ADR-082). Until then `.u-disabled` styles only what emits `u-disabled`.
+
+**Alternatives not chosen.**
+
+- Remove the module: rejected because the disabled, overlay-mask and collapsible rules need one shared home, and ADR-082 makes `uix-styles` that home.
+- Rename the module but leave it unwired: rejected because a renamed module that no core registers repeats the problem this ticket exists to fix.
+
+**Consequences.**
+
+- Every styled instance now registers one `u-base` element per sheet. The size effect on `@ultimate/uix-styled` and `vue-core` is not measured here; the advisory bundle-size gate was already over its threshold for both on the integration branch before this ticket.
+- Two rules now apply that did not before. `.u-component:disabled` gives a disabled element that carries `u-component` the opacity `dt('disabled.opacity')`, as in Prime. `.u-disabled` does the same and sets `pointer-events: none`; the only emitter of `u-disabled` today is the Vue `input-chips` root, which already resets its inner input to `opacity: 1` and now dims as that reset expects.
+- `.u-icon` now sets `width` and `height` to `dt('icon.size')` (`1rem` in Aura). A `u-icon` element that carries a `width="14" height="14"` attribute, as the `react-core` and `vue-core` SVG icons do (spinner, check, times, window controls), grows from 14px to the token size, because a stylesheet rule overrides a presentation attribute. The baselines that changed for this reason are the Button Loading spinner in React and Vue, the Dialog close icon in React, and in Vue the Drawer close icon, the ConfirmDialog (two pixels taller, because its icon button grows) and the Chip remove icon. A component that needs another size sets it on a more specific class, as `.u-checkbox-icon` does.
+- `.u-overlay-mask` now has CSS: a fixed, full-viewport mask with `dt('mask.background')`. Before, `ng` and `vue` Dialog, Drawer and ConfirmDialog rendered no dimming mask at all. It now appears in those two frameworks. The `ng` Dialog has no centering rule and was already full width at the top of the page before this ticket; the mask makes that visible, and because the mask is a fixed box the dialog now starts at the viewport edge instead of the 16px body margin. React Dialog and Drawer keep their own `u-dialog-mask` and `u-drawer-mask` rules and do not emit `u-overlay-mask`, so React is unchanged and the three frameworks still differ here. The Dialog family tickets in Stage 2 own the centering and the React difference.
+- A disabled Button and the SplitButton in `ng`, and a disabled Button in React, now render dimmed, because `.u-component:disabled` now reaches the page. The Vue Button Disabled baseline did not change, so this ADR makes no claim about Vue Button. In Chromium the React change stays inside the 0.2 per-pixel threshold; it shows in Firefox.
+- The React Checkbox style module is hand-written and does not use `@ultimate/uix-styles/checkbox`, so it had no `.u-checkbox-icon` size and the new `.u-icon` rule would have grown its check mark to 16px. It now sets `.u-checkbox-icon` to `dt('checkbox.icon.size')` (`0.875rem`), which keeps the existing 14px baseline.
+- The intended visual changes above are recorded by updated Playwright baselines in this PR. The baselines were regenerated in the CI Playwright image, and only the listed stories changed.
+- Tests cover the module's selectors, the absence of `box-sizing`, the helper, and registration in each core (present when styled, absent when unstyled).
+
+## ADR-086 — InputText: `size`, value-derived `p-filled`, shared styles, and React `keyfilter`/`tooltip` stay composition (L0a, ticket #188)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#188](https://github.com/majedsiefalnasr/ultimate-packages/issues/188)). The user ruled on rows 5, 6, 9 and 12 to 14 before implementation. This ADR records those rulings and the rows that stay open.
+
+**Context.**
+
+- The Phase 4 InputText audit found 22 rows. The gaps were: no `size` in any framework (row 5), a `p-filled` class driven by the variant in Vue and never set in React (row 9), hard-coded React CSS with the wrong Aura key `input-text` (rows 16, 22), a Vue style copy with its own `.u-input-text` class and no placeholder, size or filled-hover rules (row 16), no `pt` anywhere (row 18), and a Vue base that shadowed `cx` and `mounted` so `unstyled`, per-instance `dt` and `pt` did nothing (rows 19 to 21).
+- ADR-082 puts structural style in `@ultimate/uix-styles` by default. The `inputtext` module already existed and was consumed only by Angular.
+
+**Decision.**
+
+1. **Size (row 5).** All three frameworks take `size: "small" | "large"`, the same convention as Button. It emits `u-inputtext-sm` or `u-inputtext-lg`, which the shared module styles from the Aura `inputtext.sm.*` and `inputtext.lg.*` tokens. Angular names the input `uSize`, so it does not collide with the native `size` attribute. The size is also a token in `data-p` (Angular, Vue), as in PrimeNG and PrimeVue.
+2. **Filled (row 9).** `p-filled` is value-derived: it is set when the value is not empty, like PrimeNG and PrimeVue. React tracks an uncontrolled `defaultValue` with state, so typing updates it. The variant-derived `filled` token stays in `data-p`, as in the oracles. `p-variant-filled` is the only class that follows the variant.
+3. **Shared styles (rows 16, 22).** React and Vue import `style` from `@ultimate/uix-styles/inputtext`, like Angular. Both register under the Aura key `inputtext`. The Vue root class is now `u-inputtext`, the shared module's name.
+4. **Vue base (rows 19 to 21).** `createBaseInput(options)` forwards `componentName` and `styleModule` to the editable holder. `BaseInputText` no longer shadows `cx` and `mounted`, so `unstyled`, per-instance `dt` and `pt` come from `createBaseComponent`. Other Vue families that use the shadow workaround are not touched; their tickets move them over.
+5. **Pass-through (row 18).** Angular binds `ptms(["host", "root"])` through the `UBind` host directive. React and Vue apply `ptm("root")`. `unstyled` drops the Ultimate classes. React `dt` stays N because PrimeReact has no per-instance `dt`.
+6. **Angular-only invalid style (row 8).** The `.ng-invalid.ng-dirty` rules stay in the Angular style module, with their reason documented there. Angular forms set those classes. React and Vue have no counterpart, so the shared module cannot carry them (ADR-082 framework-local exception).
+7. **React `keyfilter`, `tooltip` and `validatePattern` (rows 12 to 14) are I.** They stay separate composition (`useKeyFilter`, `UTooltip`), as in Angular and Vue, instead of props of `UInputText`. This is an intentional difference from PrimeReact. Defects inside the key filter and the tooltip belong to the KeyFilter and Tooltip family tickets.
+8. **Vue Fluid (row 6) stays P.** The explicit `fluid` prop works. Ancestor fluid detection needs a Fluid provider, and Vue has none. The Fluid family ticket is in L0b.
+
+**Divergences from Prime.**
+
+1. React `size` is the visual size, as in PrimeVue. PrimeReact passes the native `size` attribute to the DOM. A native `size` on the React input is now reachable only through `pt.root`.
+2. React `p-filled` is derived from the value. PrimeReact never sets it.
+3. React `keyfilter`, `tooltip` and `validatePattern` are not props (item 7).
+4. Row 4 (variant fallback from global config) stays P in all three frameworks. The config surface has no `inputVariant` or `inputStyle`, and `packages/ng-core/src/base-input/base-input.ts` gates it on config's open decision.
+5. Row 3 (`@primevue/forms`) stays M in Vue. It belongs to the separate Vue Forms spec (R3).
+6. `ptOptions` is accepted everywhere but has no visible effect until the global `pt` source exists (ADR-080), so row 19 is P.
+
+**Classification after this ticket** (C / P / M / I / N-A / N / U, from a source re-read; the Phase 4 report is not edited).
+
+- Angular 15 / 2 / 0 / 0 / 5 / 0 / 0. Open: rows 4 and 19.
+- React 10 / 3 / 0 / 3 / 5 / 1 / 0. Open: rows 4, 11 and 19. Row 11 is P because native `size` moved to `pt.root`. I: rows 12 to 14. N: row 21.
+- Vue 14 / 3 / 1 / 0 / 4 / 0 / 0. Open: rows 4, 6 and 19. M: row 3.
+
+**Consequences.**
+
+- With the real `UInputText` in Vue, the FloatLabel, IconField, IftaLabel, InputGroup and InputMask style modules still select `.u-input-text` and miss the root class, until tickets #191 to #194 and #190 move them to `.u-inputtext`. This was already true in Angular and React. Their stories hand-write `class="u-input-text"` on raw inputs, so their baselines do not change.
+- The Vue InputText baseline changes visually, because the shared module adds placeholder color, focus outline offset and filled hover and focus backgrounds. Any changed baseline comes with before and after images in the PR.
+- Tests cover size, value-derived filled, `data-p`, `pt`, `unstyled` and per-instance `dt` in the frameworks that support each. The Angular invalid style is asserted on the style module's CSS, not in a browser.
+
+## ADR-088 — Badge: React `UBadge`, Angular `[uBadge]`, Vue `v-badge` stays out, and OverlayBadge forwards style and class (L0a, ticket #202)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#202](https://github.com/majedsiefalnasr/ultimate-packages/issues/202)). The user ruled on the four decisions below before implementation. This ADR records those rulings and the rows that stay open.
+
+**Context.**
+
+- The Phase 4 Badge audit found 15 rows per framework. React had no Badge at all (10 rows missing: the component, severity, size, the shape rules, attributes, element access, the overlay wrapper, `pt`, `ptOptions` and `unstyled`). Angular lacked the `[pBadge]` directive, `pt`, `ptOptions` and OverlayBadge's `style` and `styleClass` forwarding. Vue lacked `pt`, `ptOptions`, `unstyled`, per-instance `dt` and the deprecated `v-badge` directive.
+- ADR-077, ADR-079 and ADR-080 (A0) give every family the instance-level `pt` and `ptOptions`; ADR-085 gives it `unstyled` and per-instance `dt`; ADR-082 makes the structural CSS a shared `@ultimate/uix-styles` module.
+
+**Decision.**
+
+1. **React `UBadge` (rows 1 to 4, 7, 8).** React gets a standalone `UBadge` on the shared `@ultimate/uix-styles/badge` module, so it reads the same Aura `badge` tokens as Angular and Vue. `severity` accepts both `warn` and `warning`, which map to the same `u-badge-warn` class, so PrimeReact code and the cross-framework spelling both work. `size` takes `small`, `large` and `xlarge`. `UButton` renders its badge through `UBadge` and keeps `badgeClassName`.
+2. **Angular `[uBadge]` directive (row 11).** `UBadgeDirective` is the equivalent of PrimeNG's `[pBadge]`, with the same inputs (`badgeDisabled`, `badgeSize`, `severity`, `value`, `badgeStyle`, `badgeStyleClass`). It lives with `UOverlayBadge` and creates a real `UBadge` inside the host with `createComponent` and a `Renderer2`-made element, so it works on the server. The host takes `u-overlaybadge` from the overlay-badge module, so the placement CSS stays in one Angular place. `pt` on the directive reaches the badge as `pcBadge`, and `unstyled` is forwarded, which replaces PrimeNG's `pBadgePT` and `pBadgeUnstyled`. The selector and class take Ultimate's `u` prefix.
+3. **Vue `v-badge` (row 11).** It stays out. PrimeVue deprecates it in v4 and points to OverlayBadge. This is a deliberate gap (I): a consumer migrating from `v-badge` uses `UOverlayBadge`.
+4. **Angular OverlayBadge forwarding (row 9).** `badgeStyle` and `badgeStyleClass` are forwarded to the composed badge, as PrimeNG forwards `style` and `styleClass`. The deprecated `size` and `styleClass` are not offered. The names differ from PrimeNG's because `style` and `class` are already the host's own attributes in Angular.
+5. **Pass-through, `unstyled` and `dt` (rows 12 to 13a).** Angular `UBadge` binds `ptms(["host", "root"])` through `UBind`. React and Vue apply `ptm("root")` and `ptmi("root")`. Angular and Vue OverlayBadge bind `root` (and `host` in Angular) and forward `pcBadge` to the composed badge. Vue Badge and OverlayBadge keep `inheritAttrs: false` because `ptmi("root")` carries the fall-through attributes, so `id`, `class` and `style` reach the root span (row 7). `unstyled` and `dt` come from the base chain; React takes `unstyled` as a prop and has no per-instance `dt`, because PrimeReact has none.
+6. **React element access (row 8).** The ref is the root span. PrimeReact's handle is `{ props, getElement() }`. This is a usage difference, recorded as intentional (I), as in ADR-089.
+7. **React overlay wrapper (row 10).** The wrapper class is `u-overlaybadge`, the one Angular and Vue ship, with logical inset and an RTL transform. PrimeReact's `.p-overlay-badge` is not carried; React has no OverlayBadge component, as in PrimeReact.
+
+**Divergences from Prime.**
+
+1. Angular `[uBadge]` and OverlayBadge use `uBadge`, `badgeStyle` and `badgeStyleClass`; the directive does not attach to the first child of a host whose tag has a dash. The badge it creates is a `u-badge` element, where PrimeNG creates a span.
+2. The directive takes `pt` and `unstyled` through the standard inputs and forwards them to the badge, instead of `pBadgePT` and `pBadgeUnstyled`.
 3. Vue `v-badge` is not offered (item 3). The React ref is the element (item 6).
 4. `ptOptions` is accepted everywhere but has no visible effect until the global `pt` source exists (ADR-080), so row 12a stays partial.
 5. The `.u-overlaybadge` rules exist in three places (Angular badge and overlay-badge modules, Vue overlay-badge module) plus the React badge module. A shared `@ultimate/uix-styles` overlaybadge module would remove the copies; it is a follow-up, not part of this ticket.
 
 **Classification after this ticket** (C / P / M / I / N-A / N / U, from a source re-read; the Phase 4 report is not edited).
 
-- Angular 10 / 2 / 0 / 0 / 3 / 0 / 0. Open: rows 11 (directive pass-through) and 12a.
-- React 8 / 1 / 0 / 1 / 5 / 0 / 0. Open: row 12a. I: row 8.
+- Angular 11 / 1 / 0 / 0 / 3 / 0 / 0. Open: row 12a.
+- React 7 / 1 / 0 / 2 / 5 / 0 / 0. Open: row 12a. I: rows 8 and 10.
 - Vue 10 / 1 / 0 / 1 / 3 / 0 / 0. Open: row 12a. I: row 11.
 
 **Consequences.**

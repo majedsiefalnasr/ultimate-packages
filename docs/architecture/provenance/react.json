@@ -483,7 +483,7 @@
     "originalPath": "components/lib/badge/BadgeBase.js",
     "ultimateDestination": "packages/react/src/badge/badge-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 BadgeBase.js `classes.root`: `p-badge p-component` becomes `u-badge u-component`, and the dot, single-character, large, extra-large and severity modifiers are kept (the single-character class is `u-badge-circle`, as in Angular and Vue, where upstream has `p-badge-no-gutter`). `u-badge-sm` and the `warning` to `warn` mapping are Ultimate's. The CSS is the shared `@ultimate/uix-styles/badge` module (ADR-082), not upstream's inline `@layer primereact` string; the `.u-overlaybadge` rules replace upstream's `.p-overlay-badge` wrapper rules and are the ones Angular and Vue ship for OverlayBadge. New in #202."
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 BadgeBase.js `classes.root`: `p-badge p-component` becomes `u-badge u-component`, and the dot, single-character, large, extra-large and severity modifiers are kept (the single-character class is `u-badge-circle`, as in Angular and Vue, where upstream has `p-badge-no-gutter`). `u-badge-sm` and the `warning` to `warn` mapping are Ultimate's. The CSS is the shared `@ultimate/uix-styles/badge` module (ADR-082), not upstream's inline `@layer primereact` string; upstream's `.p-overlay-badge` wrapper rules are not carried (ADR-088). New in #202."
   },
   {
     "originalPath": "components/lib/badge/package.json",
