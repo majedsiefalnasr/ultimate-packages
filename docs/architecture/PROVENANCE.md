@@ -272,6 +272,21 @@ Ticket #188 (spec #167, ADR-086) brings InputText to parity across the three fra
 
 The seven React and Vue InputText files left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json`, `vue.json` and `vue-core.json`.
 
+### L0a Badge source disclosure
+
+Ticket #202 (spec #167, ADR-088) brings Badge, OverlayBadge and the attribute form to parity across the three frameworks against the pinned oracles PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5. No Prime package is a dependency (ADR-004); the sources were read from the checksum-verified archives in `.vendor-cache` (ADR-064).
+
+- **Angular `badge.ts` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeNG `badge/badge.ts`. The `Bind` host directive, the `ptms(['host', 'root'])` binding and the `PARENT_INSTANCE` provider (renamed `UBind` and `U_PARENT_INSTANCE`) are upstream's. `UBadgeDirective` (`[uBadge]`) keeps upstream's `BadgeDirective` inputs and result, reimplemented with a signal effect and `Renderer2`; its pass-through channel, the deprecated `size` setter and the first-child targeting are not carried (ADR-088).
+- **Angular `overlay-badge.ts` (source class COPY, sub-label `adapted`).** The root div, the `[pBind]` pairing (renamed `uBind`), the `pcBadge` forwarding and the `ptm('host')` binding are upstream's from PrimeNG `overlaybadge/overlaybadge.ts`. `badgeStyle` and `badgeStyleClass` stand in for `style` and `styleClass`.
+- **Angular `badge-style.ts`.** The existing entry notes that the `.u-overlaybadge` rules now also ship with the badge module, for the directive.
+- **React `badge.tsx` and `badge-style.ts` (new, source class COPY, sub-label `adapted`).** Compared side by side with PrimeReact `badge/Badge.js` and `BadgeBase.js`. The root span with `value`, the `mergeProps` of the component's props, the remaining props and `ptm('root')`, and the class modifiers (dot, single character, large, extra large, severity) are upstream's. The inline `@layer primereact` CSS is replaced by the shared `@ultimate/uix-styles/badge` module (ADR-082). The imperative handle is replaced by a ref to the span.
+- **React `index.ts` (new, source class REFERENCE).** A barrel that shares only the exported component with PrimeReact's badge module.
+- **React `button.tsx`.** The existing entry notes that the badge now renders through `UBadge`.
+- **Vue `Badge.vue` and `OverlayBadge.vue` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeVue `badge/Badge.vue` and `overlaybadge/OverlayBadge.vue`. The `v-bind="ptmi('root')"` root, the slot fallback to `value`, and the composed badge with `:pt="ptm('pcBadge')"` are upstream's. The `data-p` attribute and the `v-badge` provide pair are not carried.
+- **Specs and story.** The Badge, OverlayBadge and directive specs and the React story are Ultimate-authored.
+
+The two Vue files and the Angular `overlay-badge.ts` left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json` and `vue.json`.
+
 ### F13 motion default name source disclosure
 
 `packages/uix-motion/src/config/index.ts` is copied from `@primeuix/motion` (source class COPY, ADR-064). Ticket #177 (spec #167) changes one value in `DEFAULT_MOTION_OPTIONS`: the default `name` is `"u"` instead of upstream's `"p"`, so a `createMotion` call without a name generates `u-enter-*` and `u-leave-*` classes, matching the `u` prefix Ultimate already uses for the theme, the CSS layer and the SSR attribute. Every Dialog and Menu call site in Angular, React and Vue already passes its own `u-dialog` or `u-menu` name, so no component source changed and no new upstream package or version was introduced. The file-level record is `docs/architecture/provenance/uix-motion.json`, with the sub-label moved from `import-path-adapted` to `adapted`.

@@ -3,7 +3,7 @@
     "originalPath": "components/lib/button/Button.js",
     "ultimateDestination": "packages/react/src/button/button.tsx",
     "modificationStatus": "adapted",
-    "modificationDescription": "Verified upstream API (Button.js, button.d.ts): label/icon/iconPos/loading/loadingIcon/severity/size/text/raised/rounded/outlined/link/plain/badge/badgeClassName/tooltip/tooltipOptions/disabled/visible, extends native ButtonHTMLAttributes Omit<'disabled'|'ref'>, React.forwardRef with no useImperativeHandle (ref resolves to raw <button>), default aria-label = label + badge. Ultimate decision: preserved verbatim per spec §18's convergent-evidence justification (Angular's already-built UButton independently arrived at the same boolean-modifier prop set, not a variant enum) — no React-native redesign needed. pt/ptm/ptmo excluded per spec §7. Ripple excluded per spec §6 (not a Phase 3 component). tooltip/tooltipOptions props wired to a real `<UTooltip target={internalRef} content={tooltip} {...tooltipOptions}>` render, matching verified Button.js line 136's composition exactly, second confirmation (with Checkbox, Task 16) of the approved ref-target-primitive-plus-prop-sugar Tooltip API decision."
+    "modificationDescription": "Verified upstream API (Button.js, button.d.ts): label/icon/iconPos/loading/loadingIcon/severity/size/text/raised/rounded/outlined/link/plain/badge/badgeClassName/tooltip/tooltipOptions/disabled/visible, extends native ButtonHTMLAttributes Omit<'disabled'|'ref'>, React.forwardRef with no useImperativeHandle (ref resolves to raw <button>), default aria-label = label + badge. Ultimate decision: preserved verbatim per spec §18's convergent-evidence justification (Angular's already-built UButton independently arrived at the same boolean-modifier prop set, not a variant enum) — no React-native redesign needed. pt/ptm/ptmo excluded per spec §7. Ripple excluded per spec §6 (not a Phase 3 component). tooltip/tooltipOptions props wired to a real `<UTooltip target={internalRef} content={tooltip} {...tooltipOptions}>` render, matching verified Button.js line 136's composition exactly, second confirmation (with Checkbox, Task 16) of the approved ref-target-primitive-plus-prop-sugar Tooltip API decision. #202 (ADR-088): the badge now renders through UBadge (`<UBadge value={badge} className={badgeClassName} />`) instead of a bare span, as upstream renders its Badge component."
   },
   {
     "originalPath": "components/lib/button/ButtonBase.js",
@@ -472,5 +472,23 @@
     "ultimateDestination": "packages/react/src/input-text/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UInputText and UInputTextProps; it shares only the exported component with PrimeReact's inputtext module."
+  },
+  {
+    "originalPath": "components/lib/badge/Badge.js",
+    "ultimateDestination": "packages/react/src/badge/badge.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 Badge.js: the single root span showing `value`, and the `mergeProps` of the component's own props (style, className), the remaining props and `ptm('root')`, are upstream's. PrimeReactContext, BadgeBase.getProps, useHandleStyle and the imperative handle `{ props, getElement() }` are replaced by useComponentBase, createPassThrough and a forwarded ref that is the span itself (ADR-088). `size`, `severity` and `value` are typed props, `severity` also accepts `warning` as an alias of `warn`, and `unstyled` and `ptOptions` are Ultimate's. New in #202."
+  },
+  {
+    "originalPath": "components/lib/badge/BadgeBase.js",
+    "ultimateDestination": "packages/react/src/badge/badge-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 BadgeBase.js `classes.root`: `p-badge p-component` becomes `u-badge u-component`, and the dot, single-character, large, extra-large and severity modifiers are kept (the single-character class is `u-badge-circle`, as in Angular and Vue, where upstream has `p-badge-no-gutter`). `u-badge-sm` and the `warning` to `warn` mapping are Ultimate's. The CSS is the shared `@ultimate/uix-styles/badge` module (ADR-082), not upstream's inline `@layer primereact` string; the `.u-overlaybadge` rules replace upstream's `.p-overlay-badge` wrapper rules and are the ones Angular and Vue ship for OverlayBadge. New in #202."
+  },
+  {
+    "originalPath": "components/lib/badge/package.json",
+    "ultimateDestination": "packages/react/src/badge/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UBadge, UBadgeProps and BadgeSeverity; it shares only the exported component with PrimeReact's badge module. New in #202."
   }
 ]
