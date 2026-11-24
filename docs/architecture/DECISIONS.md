@@ -1716,3 +1716,49 @@ Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://git
 - Callers that relied on the old live-region text `true`, `false` or `none` see `True`, `False` or `Not Selected`, or set the three label props.
 - Callers that passed only `event.key` in a test must pass `code` too.
 - Tests assert values, classes, DOM, events and pass-through in jsdom. They do not measure pixels, real pointer hit-testing or screen-reader output.
+
+## ADR-098 — Chip: one shared stylesheet on the Aura chip tokens, `pt`, `unstyled` and `dt` in all three frameworks, remove-icon customization, a visible-state fix in Angular, and four recorded exclusions (L0a, ticket #203)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#203](https://github.com/majedsiefalnasr/ultimate-packages/issues/203)). User rulings (2026-11-24, "all by recommendation"): Q5 A (custom content and remove-icon customization), Q6 B (React keeps the native remove event, no veto), Q7 B (Angular `chipProps` excluded), Q8 A (remove label is a prop with an English default), Q9 B (`UTimesIcon` stays, no TimesCircle icon).
+
+**Context.**
+
+- Chip shows a label, an icon or an image, with an optional remove control. The Phase 4 report (`docs/architecture/research/phase4/batch1/chip.md`) has 27 rows. The three Ultimate Chips matched the pinned oracles (PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5) on label, icon, image, removable and the keyboard, and fell short on pass-through, unstyled, scoped `dt`, root attribute passthrough in React and Vue, remove-icon customization, custom content and `data-p`.
+- React hard-coded its colours and lengths with `--u-chip-*` fallbacks and never read the Aura `chip` tokens, although Aura has a `chip` key and Chip is not an ADR-067(c) exception. Angular and Vue each held a hand-ported copy of the same CSS.
+- Angular emptied the template after a removal, but the `<u-chip>` host kept its class, background and padding, so an empty pill stayed on screen.
+
+**Decision.**
+
+1. **One shared stylesheet (ADR-082).** `@ultimate/uix-styles/chip` is the `@primeuix/styles` 2.0.3 chip CSS under `.u-chip*` selectors, on the Aura `chip.*` tokens, with the `.u-chip-label` rule the earlier copies carried. The three style modules import it. React's literal values are gone (ADR-067).
+2. **`pt`, `ptOptions`, `unstyled` and `dt`.** The pass-through sections are `host` and `root` (Angular), `root` (React and Vue), and `image`, `icon`, `label` and `removeIcon` in all three. The component is registered under `chip`. `unstyled` and `dt` come from the cores (ADR-085). Angular binds the root through the `UBind` host directive and provides itself as `U_PARENT_INSTANCE`.
+3. **Root attribute passthrough in React and Vue.** React spreads the remaining props onto the root and merges `ptm('root')`; the forwarded ref is the root. Vue binds `ptmi('root')` with `inheritAttrs: false`. A consumer `aria-label` replaces the label-derived one.
+4. **Remove-icon customization (ruling Q5 A).** All three take a `removeIcon` font class that replaces the default glyph. Angular also reads an `<ng-template #removeicon>`. React takes a `removeIcon` element and a `template` prop (a node or a function of the props) that replaces the image, icon and label. Vue adds the default slot, the `icon` slot and the `removeicon` slot, which receives `removeCallback` and `keydownCallback` and replaces the whole control, as PrimeVue's does.
+5. **Remove label (ruling Q8 A).** `removeAriaLabel` defaults to the English `Remove` in all three. Ultimate has no translation source (ADR-056), so a locale-driven label is not added.
+6. **State attributes.** The root carries `data-p="removable"` while `removable` is set (Angular, React, Vue) and the `p-disabled` class while disabled, as upstream does. Remove stays blocked while disabled, and the remove control keeps `tabindex="-1"`.
+7. **Angular hidden host.** A removed chip gets `display: none` on the host, as PrimeNG does, so no empty pill stays on screen. The template still empties.
+
+**Divergences from Prime and recorded exclusions.**
+
+1. **Angular `chipProps` is excluded (ruling Q7 B).** PrimeNG's `chipProps` is a bulk setter that its MultiSelect and AutoComplete use for their chip display (reference R:52). Ultimate's Chip takes each prop as its own input, and no Ultimate component needs the bulk form. Row 18 is I.
+2. **React keeps the native remove event and has no veto (ruling Q6 B).** PrimeReact passes `{ originalEvent, value }` and lets `onRemove` return `false` to keep the chip. PrimeNG and PrimeVue have neither, so the three Ultimate frameworks stay closer to each other. Row 7 is I.
+3. **The default glyph stays `UTimesIcon` (ruling Q9 B).** No TimesCircle icon is added to the cores. Row 13 is I.
+4. **React has no `getVisible` and `setVisible`.** The forwarded ref gives the element only. Row 16 stays P.
+5. **Vue `icon` slot sits inside the icon part.** PrimeVue applies the icon class to the slot's own root. A slot renders a fragment, which cannot take a class, so a wrapper `span` carries `u-chip-icon` and the `icon` pass-through section.
+6. **React `icon` is still a class string.** PrimeReact's `IconType` also takes an element or a function (row 2, P). React's `alt` has no default, where PrimeReact's `imageAlt` defaults to `chip` (row 5, P).
+7. **`p-disabled` has no registered CSS rule** in Ultimate, the known gap noted by ADR-081, so a disabled chip changes class only. Remove is blocked and the control leaves the tab order.
+8. **PrimeNG's `close()` ignores `disabled`** (reference defect 2). Ultimate blocks it and does not copy the defect.
+9. `ptOptions` has no visible effect until the global `pt` source exists (ADR-080), so row 23a stays P.
+
+**Classification after this ticket** (C complete, P partial, M missing, I intentional, N/A not applicable; from a source re-read of the 27 rows; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+- **Angular:** C 20, P 2, I 2, N/A 3. Open: row 10 (P, English default but no locale source) and row 23a (P, ADR-080). I: rows 13 and 18.
+- **React:** C 13, P 4, I 2, N/A 8. Open: rows 2, 5, 16 (P) and 23a (P). I: rows 7 and 13.
+- **Vue:** C 18, P 1, I 1, N/A 7. Open: row 23a (P). I: row 13.
+
+**Consequences.**
+
+- Chip colours, sizes, the image margin and the remove-icon focus ring now follow the Aura `chip` tokens in all three frameworks, so a preset change reaches React too.
+- A consumer can pass `class`, `style` and `aria-*` to the React and Vue root, and can restyle each part through `pt` or `unstyled`.
+- Callers that relied on a remove control with no accessible name now get `Remove` unless they set `removeAriaLabel`.
+- A removed Angular chip no longer leaves an empty pill.
+- Tests assert values, classes, DOM, events and pass-through in jsdom. They do not measure pixels, focus-ring rendering or screen-reader output.
