@@ -112,5 +112,11 @@
     "ultimateDestination": "packages/uix-styles/src/inputgroup/index.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/inputgroup/index.ts, recovered from dist/inputgroup/index.mjs (ADR-082, #194). The `.p-inputgroup*` selectors are renamed to `.u-input-group*`, and the `.p-iconfield`, `.p-floatlabel` and `.p-iftalabel` wrappers to `.u-icon-field`, `.u-float-label` and `.u-ifta-label`. The sibling-field selectors follow the classes the Ultimate siblings emit: `.p-inputtext` becomes `.u-inputtext`, and the focus rule keys on the `.p-focus` state class the Select family emits (upstream's `.u-focus` is not rendered by any component). Upstream's `.p-inputwrapper` and `.p-inputwrapper-focus` state classes are kept, because the siblings emit them unrenamed. Shared by the Angular and Vue input group style modules."
+  },
+  {
+    "originalPath": "src/textarea/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/textarea/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/textarea/index.ts, recovered from dist/textarea/index.mjs (ADR-082, #189). The `.p-textarea*` selectors are renamed to `.u-textarea*`, the names Ultimate emits. The state classes `p-invalid` and `p-variant-filled` are kept, because the siblings emit them unrenamed. The rules read the Aura `textarea` tokens, including the `sm` and `lg` sizes. Shared by the Angular, React and Vue textarea style modules."
   }
 ]

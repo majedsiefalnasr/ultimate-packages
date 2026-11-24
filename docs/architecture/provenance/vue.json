@@ -1204,5 +1204,29 @@
     "ultimateDestination": "packages/vue/src/input-mask/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064). Barrel re-export shaped like PrimeVue's `inputmask` entry point, with no shared implementation."
+  },
+  {
+    "originalPath": "packages/primevue/src/textarea/Textarea.vue",
+    "ultimateDestination": "packages/vue/src/textarea/Textarea.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 Textarea.vue for #189 (ADR-097): the single native textarea with the `cx('root')` class, `ptmi('root')` bound on it with `inheritAttrs: false`, the `ResizeObserver` and `updated()` resize, and the `data-p` token are upstream's. `p-filled` follows the value and `size` reaches the style. PrimeVue's `formField` merge belongs to the separate Vue Forms spec and is not carried. Existing file, entry added in #189."
+  },
+  {
+    "originalPath": "packages/primevue/src/textarea/BaseTextarea.vue",
+    "ultimateDestination": "packages/vue/src/textarea/BaseTextarea.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate base factory that shares only interface facts with PrimeVue 4.5.5 BaseTextarea.vue (the `autoResize` prop on top of BaseInput). It passes `componentName` and `styleModule` to `createBaseInput`, so `unstyled`, per-instance `dt` and `pt` come from the base chain, and no longer shadows `cx` and `mounted`. Changed for #189."
+  },
+  {
+    "originalPath": "packages/primevue/src/textarea/style/TextareaStyle.js",
+    "ultimateDestination": "packages/vue/src/textarea/textarea-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeVue 4.5.5 TextareaStyle.js `classes.root`: `p-textarea` with the filled, resizable, invalid, fluid, variant and size modifiers becomes `u-textarea*`. The hand-ported CSS copy, which lacked the filled hover and focus backgrounds, the invalid placeholder and the sizes, is replaced by the shared `@ultimate/uix-styles/textarea` module (ADR-082). Changed for #189."
+  },
+  {
+    "originalPath": "packages/primevue/src/textarea/Textarea.vue",
+    "ultimateDestination": "packages/vue/src/textarea/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate barrel that re-exports `UTextarea`. It shares only the exported component name with the compared upstream entry point. Entry added in #189."
   }
 ]
