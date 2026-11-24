@@ -390,3 +390,16 @@ Ticket #209 (spec #167, ADR-096) brings the React TriStateCheckbox to parity aga
 - **Spec and stories.** Ultimate-authored.
 
 The three TriStateCheckbox source files left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/react.json`.
+
+### L0a Textarea source disclosure
+
+Ticket #189 (spec #167, ADR-097) brings Textarea to parity across the three frameworks against the pinned oracles PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5. No Prime package is a dependency (ADR-004); the sources were read from the checksum-verified archives in `.vendor-cache` (ADR-064).
+
+- **`packages/uix-styles/src/textarea/index.ts` (source class COPY, sub-label `adapted`).** Recovered from `@primeuix/styles` 2.0.3 `textarea`. The `.p-textarea*` selectors are renamed to `.u-textarea*`; `p-invalid` and `p-variant-filled` are kept.
+- **Angular `textarea.ts` and `textarea-style.ts` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeNG `textarea/textarea.ts` and `textareastyle.ts`. The directive shape, the inputs, the `onResize` output, the NgControl sync, the Fluid lookup, the `Bind` binding and the class resolver are upstream's. `resize()` treats a missing `max-height` as no cap, and the `ngAfterViewChecked` trigger is replaced by `NgControl.valueChanges`. `pSize` is `uSize`. The `config.inputStyle()` and `config.inputVariant()` fallback is not carried.
+- **React `input-textarea.tsx` and `input-textarea-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeReact `InputTextarea.js` and `InputTextareaBase.js`. The root element, the resize routine and its triggers, the prop merge with `ptm('root')` and the root class key are upstream's. `p-filled` is derived from the value, `size` is an Ultimate addition, and `keyfilter` and `tooltip` are not carried. The hand-written CSS is replaced by the shared module.
+- **Vue `Textarea.vue` and `textarea-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeVue `Textarea.vue` and `TextareaStyle.js`. The root element, `ptmi('root')`, the `ResizeObserver` resize and the class keys are upstream's. `formField` is not carried. The hand-ported CSS copy is replaced by the shared module.
+- **Vue `BaseTextarea.ts` and `index.ts` and the Angular and React barrels (source class REFERENCE).** They share only interface facts or exported names with the compared upstream files.
+- **Specs and stories.** Ultimate-authored.
+
+The eleven Textarea source files left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json`, `vue.json` and `uix-styles.json`.

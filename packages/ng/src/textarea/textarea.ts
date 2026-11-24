@@ -10,7 +10,8 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NgControl } from "@angular/forms";
-import { UModelHolder } from "@ultimate/ng-core";
+import { UBind, UModelHolder } from "@ultimate/ng-core";
+import { cn } from "@ultimate/uix-utils/classnames";
 import { UFluid } from "@ultimate/ng/fluid";
 import { textareaStyleModule } from "./textarea-style";
 
@@ -40,11 +41,28 @@ import { textareaStyleModule } from "./textarea-style";
  * `ngAfterViewInit` when `autoResize` is set, and again on every `input`
  * event via `updateState()`).
  *
- * Deliberately excludes real source's passthrough (`pTextareaPT`/
- * `pTextareaUnstyled`) system and `pSize`/`NgModule` re-export wrapper — none
- * of these appear in this task's scope, and new `NgModule` authorship is
- * forbidden platform-wide, matching `UInputText`'s own established
- * exclusions.
+ * Two deliberate differences from real `resize()`. PrimeNG compares the new
+ * height with `parseFloat(style.maxHeight)`, which is `NaN` when no
+ * `max-height` is set, so the comparison is false and the textarea only
+ * grows. The earlier port used `parseFloat(maxHeight || "0")`, which turned
+ * that into `height >= 0` and reset the height; a missing `max-height` is
+ * now an explicit "no cap" branch. And PrimeNG re-runs `resize()` from
+ * `ngAfterViewChecked`, firing `onResize` on every change-detection pass;
+ * here it runs on `ngAfterViewInit`, on every `input` event and on every
+ * `NgControl.valueChanges` emission, so a programmatic `setValue()` also
+ * resizes.
+ *
+ * Passthrough (`pt`, `ptOptions`), `unstyled` and `dt` come from
+ * `UBaseComponent` (ADR-077); the root section is bound through the `UBind`
+ * host directive. `uSize` ("small" | "large") replaces PrimeNG's `pSize`; it
+ * is named `uSize` so it does not collide with native attributes.
+ *
+ * Deliberately excludes the `NgModule` re-export wrapper — new `NgModule`
+ * authorship is forbidden platform-wide.
+ *
+ * `$variant`'s upstream `config.inputStyle()`/`config.inputVariant()`
+ * fallback is omitted for the same reason as `UInputText`: the config
+ * surface has neither field.
  */
 @Directive({
   standalone: true,
@@ -52,7 +70,9 @@ import { textareaStyleModule } from "./textarea-style";
   exportAs: "uTextarea",
   host: {
     "[class]": "cx('root', classesParams())",
+    "[attr.data-p]": "dataP",
   },
+  hostDirectives: [UBind],
 })
 export class UTextarea extends UModelHolder {
   protected override readonly componentName = "textarea";
@@ -65,11 +85,14 @@ export class UTextarea extends UModelHolder {
     skipSelf: true,
   });
   private readonly destroyRef = inject(DestroyRef);
+  private readonly bindDirective = inject(UBind, { self: true });
 
   /** When present, textarea size changes as being typed. */
   autoResize = input<boolean | undefined>(undefined, { transform: booleanAttribute });
   /** Specifies the input variant of the component. */
   variant = input<"filled" | "outlined" | undefined>();
+  /** Defines the size of the component. */
+  uSize = input<"small" | "large" | undefined>();
   /** Spans 100% width of the container when enabled. */
   fluid = input<boolean | undefined>(undefined, { transform: booleanAttribute });
   /** When present, specifies the component should have invalid state style. */
@@ -87,11 +110,31 @@ export class UTextarea extends UModelHolder {
 
   protected classesParams() {
     return {
+      filled: this.$filled(),
       invalid: this.invalid(),
       fluid: this.hasFluid,
       variantFilled: this.$variant() === "filled",
       autoResize: this.autoResize(),
+      size: this.uSize(),
     };
+  }
+
+  /**
+   * A separate, smaller token string than `[class]`, like PrimeNG's
+   * `Textarea.dataP`; `filled` is variant-derived here, while the `p-filled`
+   * class follows the value.
+   */
+  protected get dataP(): string | undefined {
+    return cn({
+      invalid: this.invalid(),
+      fluid: this.hasFluid,
+      filled: this.$variant() === "filled",
+      [this.uSize() ?? ""]: !!this.uSize(),
+    });
+  }
+
+  ngAfterViewChecked(): void {
+    this.bindDirective.setAttrs(this.ptms(["host", "root"]));
   }
 
   ngAfterViewInit(): void {
@@ -101,6 +144,9 @@ export class UTextarea extends UModelHolder {
     this.syncModelValue();
     this.ngControl?.valueChanges?.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.syncModelValue();
+      if (this.autoResize()) {
+        this.resize();
+      }
     });
   }
 
@@ -116,18 +162,13 @@ export class UTextarea extends UModelHolder {
     }
   }
 
-  /**
-   * Scoped-down port of real `Textarea.resize()` — real source's own
-   * `overflow`/`overflow-y` branch depends on whether a CSS `max-height` is
-   * set on the element (an author-controlled stylesheet concern, not a
-   * component input), so both branches are preserved here exactly.
-   */
   private resize(event?: Event): void {
     const el = this.el.nativeElement as HTMLTextAreaElement;
     el.style.height = "auto";
     el.style.height = `${el.scrollHeight}px`;
 
-    if (parseFloat(el.style.height) >= parseFloat(el.style.maxHeight || "0")) {
+    const maxHeight = parseFloat(el.style.maxHeight);
+    if (!Number.isNaN(maxHeight) && parseFloat(el.style.height) >= maxHeight) {
       el.style.overflowY = "scroll";
       el.style.height = el.style.maxHeight;
     } else {

@@ -1,34 +1,23 @@
 import { defineComponent } from "vue";
-import { createBaseInput, registerComponentStyle } from "@ultimate/vue-core";
+import { createBaseInput } from "@ultimate/vue-core";
 import { textareaStyleModule } from "./textarea-style";
-import type { ClassValue } from "@ultimate/vue-core";
 
-// extends: createBaseInput(), matching verified BaseTextarea.vue's real
+// extends: createBaseInput(...), matching verified BaseTextarea.vue's real
 // chain exactly: Textarea extends BaseTextarea extends BaseInput extends
-// BaseEditableHolder extends BaseComponent — same createBaseInput()-tier
-// chain already established for RadioButton/InputText. `autoResize` is real
-// BaseTextarea.vue's own single local prop addition on top of BaseInput
-// (confirmed: BaseTextarea.vue declares `props: { autoResize: Boolean }`
-// and nothing else of its own).
+// BaseEditableHolder extends BaseComponent. `componentName` and
+// `styleModule` go through createBaseInput, so `cx`, style registration,
+// `unstyled`, per-instance `dt` and `pt` all come from the shared base
+// chain. `autoResize` is real BaseTextarea.vue's own single local prop
+// addition on top of BaseInput.
 export function createBaseTextarea() {
   return defineComponent({
-    extends: createBaseInput(),
+    extends: createBaseInput({ componentName: "textarea", styleModule: textareaStyleModule }),
     props: {
       autoResize: { type: Boolean, default: false },
       disabled: { type: Boolean, default: false },
       invalid: { type: Boolean, default: false },
       name: { type: String, default: null },
       placeholder: { type: String, default: null },
-    },
-    methods: {
-      cx(key: string, params?: Record<string, unknown>): ClassValue | undefined {
-        const resolver = textareaStyleModule.classes[key];
-        if (resolver === undefined) return undefined;
-        return typeof resolver === "function" ? resolver(params) : resolver;
-      },
-    },
-    mounted() {
-      registerComponentStyle("textarea", textareaStyleModule);
     },
   });
 }
