@@ -107,10 +107,10 @@ test("props, refs, state, composition, styles and source-only quirks are recorde
     ],
     "multi-state-checkbox": [
       "empty",
-      'role="button"',
+      'role="checkbox"',
       "aria-label",
-      "disabled class",
-      "icon key",
+      "nullLabel",
+      "live-region",
       "optionIcon",
     ],
     "tri-state-checkbox": [

@@ -15,6 +15,13 @@ export const Default: Story = {
 
 export const WithIcon: Story = {
   args: { label: "Apple", icon: "pi pi-apple" },
+  render: (args) => ({
+    components: { UChip },
+    setup() {
+      return { args };
+    },
+    template: `<UChip v-bind="args" />`,
+  }),
 };
 
 export const Removable: Story = {

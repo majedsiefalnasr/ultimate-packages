@@ -403,3 +403,27 @@ Ticket #189 (spec #167, ADR-097) brings Textarea to parity across the three fram
 - **Specs and stories.** Ultimate-authored.
 
 The eleven Textarea source files left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json`, `vue.json` and `uix-styles.json`.
+
+### L0a MultiStateCheckbox source disclosure
+
+Ticket #208 (spec #167, ADR-099) brings the React MultiStateCheckbox to parity against the pinned oracle PrimeReact 10.9.9. PrimeNG 21.1.9 and PrimeVue 4.5.5 ship no such control, so Angular and Vue have no component and no entry. No Prime package is a dependency (ADR-004). The sources were read from the pinned PrimeReact archive in `.vendor-cache` (ADR-064).
+
+- **React `multi-state-checkbox.tsx` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeReact `MultiStateCheckbox.js`. The cycle, the `empty` wrap, the option resolution, the change event shape, the Space handling, the live region, the forwarded ARIA, autoFocus, the focus callbacks and the ref handle are upstream's. PrimeReact's context, base props and nested `<Checkbox>` are replaced by `useComponentBase`, `createPassThrough`, `useMergeProps` and a self-contained `role="checkbox"` box. The differences are listed in ADR-099.
+- **React `multi-state-checkbox-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeReact `MultiStateCheckboxBase.js`. The root class and its modifiers follow upstream's; the CSS stays hand-authored (ADR-067(c)).
+- **React `index.ts` (source class REFERENCE).** It shares only the exported names with the compared upstream entry point.
+- **Spec and stories.** Ultimate-authored.
+
+The three MultiStateCheckbox source files left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/react.json`.
+
+### L0a Chip source disclosure
+
+Ticket #203 (spec #167, ADR-098) brings Chip to parity across the three frameworks against the pinned oracles PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5. No Prime package is a dependency (ADR-004); the sources were read from the checksum-verified archives in `.vendor-cache` (ADR-064).
+
+- **`packages/uix-styles/src/chip/index.ts` (source class COPY, sub-label `adapted`).** Recovered from `@primeuix/styles` 2.0.3 `chip`. The `.p-chip*` selectors are renamed to `.u-chip*`. Every declaration and token is upstream's. The `.u-chip-label` rule is the one the earlier local copies carried and `@primeuix/styles` lacks.
+- **Angular `chip.ts` and `chip-style.ts` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeNG `chip.ts` and `chipstyle.ts`. The `Bind` binding, the parent-instance provider, the `data-p` getter, the `p-disabled` class, the `removeIcon` input, the `removeicon` template and the host `display: none` are upstream's. `chipProps`, `styleClass`, the instance token and `TimesCircleIcon` are not carried.
+- **React `chip.tsx` and `chip-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeReact `Chip.js` and `ChipBase.js`. The `template` prop, the `removeIcon` prop, the root prop merge with `ptm('root')` and the class keys are upstream's. The hand-written CSS is replaced by the shared module. The remove payload and veto, and the imperative API, are not carried.
+- **Vue `Chip.vue`, `BaseChip.ts` and `chip-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeVue `Chip.vue`, `BaseChip.vue` and `ChipStyle.js`. The slots, `ptmi('root')`, the `removeIcon` prop, `data-p` and the class keys are upstream's. The `icon` slot sits in a wrapper span, and the hand-ported CSS copy is replaced by the shared module.
+- **Barrels (source class REFERENCE).** They share only the exported names with the compared upstream entry points.
+- **Specs and stories.** The Chip specs and stories are Ultimate-authored.
+
+No Chip source file was in `known-missing.json`. The existing manifest entries for the Chip files are updated, and one entry is added for the shared module. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json`, `vue.json` and `uix-styles.json`.

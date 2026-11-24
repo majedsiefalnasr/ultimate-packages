@@ -6,11 +6,11 @@ Framework: vue; availability: public
 
 ## Authored interpretation
 
-Labeled identity/item token with optional image/icon and removable control.
+Labeled identity/item token with optional image/icon, slots for custom content and a removable control.
 
 ## Framework surface
 
-label:string|number|null, icon/image/alt, disabled(false), removable(false), removeAriaLabel props; emits remove/imageError. visible initially true; close hides and emits remove unless disabled. onKeydown invokes close for Enter or Backspace (not Delete); onImageError forwards imageError. Image precedes icon, label is rendered unless null. Remove span role=button has tabindex -1 when disabled, otherwise 0, and TimesIcon. No default slot. inheritAttrs:false; visible and handlers are owned internal helpers. UChip and createBaseChip are named exports from both @ultimate/vue and @ultimate/vue/chip. createBaseChip is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. chipStyleModule and local css/classes resolvers are owned source-only style/helper/type declarations; no style subpath is advertised. CSS is authored locally; historical comments about missing shared styles are not treated as current availability evidence. Aura registry has the chip token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.
+label:string|number|null, icon, image, alt, disabled(false), removable(false), removeAriaLabel (default the English "Remove") and removeIcon (a font class) props; pt and ptOptions come from the base chain. Emits remove and imageError. Slots: default (replaces the image, icon and label), icon (rendered inside the icon part) and removeicon (replaces the whole remove control and receives removeCallback and keydownCallback). inheritAttrs is false and the root binds ptmi(root), so consumer class, style and aria-* reach it. Pass-through sections root, image, icon, label and removeIcon. The root carries data-p=removable while removable and the p-disabled class while disabled. visible initially true; close hides and emits remove unless disabled. onKeydown invokes close for Enter or Backspace (not Delete); onImageError forwards imageError. Image precedes icon, label is rendered unless null. The remove span is role=button with tabindex -1 when disabled, otherwise 0, and renders TimesIcon unless removeIcon is set. UChip and createBaseChip are named exports from both @ultimate/vue and @ultimate/vue/chip. createBaseChip is a public zero-argument Options-API base factory, extending createBaseComponent({componentName,styleModule}), not a Composition API hook. cx class resolution and mounted registerComponentStyle belong to vue-core, not this record. chipStyleModule's css is the shared @ultimate/uix-styles/chip module (ADR-082, ADR-098) on the Aura chip tokens; no style subpath of the Vue package is advertised. The Aura registry has the chip token namespace. No dedicated metadata record for this family exists in the current metadata registry. Declared manifest dist entry/type paths establish intended consumer availability, not built artifacts or publication. No standalone scoped composable or directive implementation is exported.
 
 ## Public exports
 
@@ -32,6 +32,8 @@ export { createBaseChip } from "./BaseChip";
 packages/vue/src/chip/BaseChip.ts: export function createBaseChip
 packages/vue/src/chip/chip-style.ts: export const chipStyleModule
 packages/vue/src/chip/Chip.vue: name: "UChip"
+packages/vue/src/chip/Chip.vue: ptmi('root')
+packages/vue/src/chip/chip-style.ts: @ultimate/uix-styles/chip
 ```
 
 ## Relationships

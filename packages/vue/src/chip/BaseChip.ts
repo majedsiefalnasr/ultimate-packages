@@ -16,7 +16,8 @@ export function createBaseChip() {
       alt: { type: String, default: null },
       disabled: { type: Boolean, default: false },
       removable: { type: Boolean, default: false },
-      removeAriaLabel: { type: String, default: null },
+      removeAriaLabel: { type: String, default: "Remove" },
+      removeIcon: { type: String, default: null },
     },
   });
 }

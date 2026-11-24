@@ -446,8 +446,8 @@
   {
     "originalPath": "src/chip/index.ts",
     "ultimateDestination": "packages/ng/src/chip/chip-style.ts",
-    "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 chip, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A5."
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). The resolver keys (`image`, `icon`, `label` and `removeIcon`) are PrimeNG 21.1.9 chipstyle.ts `classes` with `p-chip` renamed to `u-chip`, and the root adds `p-disabled` from the `disabled` param as upstream does. The CSS is the shared `@ultimate/uix-styles/chip` module (ADR-082, ADR-098); this file holds none of its own. Changed for #203."
   },
   {
     "originalPath": "src/tag/index.ts",
@@ -909,7 +909,7 @@
     "originalPath": "packages/primeng/src/chip/chip.ts",
     "ultimateDestination": "packages/ng/src/chip/chip.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2). Keeps PrimeNG 21.1.9 Chip's template structure (ng-content, image else icon, label, removable span with role=button, tabindex disabled ? -1 : 0, aria-label, click/keydown) and its close()/onKeydown() statements (Enter or Backspace). Rewritten as signal inputs/outputs on UBaseComponent; drops chipProps, styleClass, the removeIcon input and removeicon template, pt/Bind, dataP, ChipModule and TimesCircleIcon (UTimesIcon instead); removeAriaLabel becomes an input instead of a translation getter; close() ignores clicks when disabled. Added in c42f709d (Phase C Batch 1, Chip row); ecdbf793 only reformatted it."
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2). Keeps PrimeNG 21.1.9 Chip's template structure (ng-content, image else icon, label, removable span with role=button, tabindex disabled ? -1 : 0, aria-label, click/keydown) and its close()/onKeydown() statements (Enter or Backspace). Rewritten as signal inputs/outputs on UBaseComponent; drops chipProps, styleClass, the removeIcon input and removeicon template, pt/Bind, dataP, ChipModule and TimesCircleIcon (UTimesIcon instead); removeAriaLabel becomes an input instead of a translation getter; close() ignores clicks when disabled. Added in c42f709d (Phase C Batch 1, Chip row); ecdbf793 only reformatted it. Changed for #203 (ADR-098): adds the `Bind` host directive and the parent-instance provider, a `pt` section per part (`image`, `icon`, `label`, `removeIcon`), the `removeIcon` font-class input, the `removeicon` template, `dataP` as `data-p`, the `p-disabled` root class and the host `display: none` after removal, all as upstream does. `removeAriaLabel` defaults to the English \"Remove\" (user ruling). `chipProps`, `styleClass`, the instance token and `TimesCircleIcon` are still not carried."
   },
   {
     "originalPath": "packages/primeng/src/chip/public_api.ts",

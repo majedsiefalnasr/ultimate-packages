@@ -48,8 +48,8 @@ describe("base module scope guard", () => {
   });
 });
 
-describe("component style modules — exactly 17 exist alongside base", () => {
-  it("uix-styles/src/ contains only base + the Phase 2 component modules + virtualscroller + table + inputtext + inputnumber + floatlabel + iconfield + iftalabel + inputgroup + textarea", () => {
+describe("component style modules — exactly 18 exist alongside base", () => {
+  it("uix-styles/src/ contains only base + the Phase 2 component modules + virtualscroller + table + inputtext + inputnumber + floatlabel + iconfield + iftalabel + inputgroup + textarea + chip", () => {
     const actualModules = readdirSync(join(__dirname, "..", "src"), { withFileTypes: true })
       .filter((e) => e.isDirectory())
       .map((e) => e.name)
@@ -61,6 +61,7 @@ describe("component style modules — exactly 17 exist alongside base", () => {
         "badge",
         "button",
         "checkbox",
+        "chip",
         "dialog",
         "floatlabel",
         "iconfield",

@@ -1,26 +1,55 @@
 import * as React from "react";
-import { useComponentBase } from "@ultimate/react-core";
+import {
+  createPassThrough,
+  useComponentBase,
+  useMergeProps,
+  type PassThrough,
+  type PassThroughOptions,
+} from "@ultimate/react-core";
 import { multiStateCheckboxStyleModule } from "./multi-state-checkbox-style";
 
 export interface UMultiStateCheckboxChangeEvent<V = unknown> {
   originalEvent: React.SyntheticEvent;
   value: V | null;
+  stopPropagation: () => void;
+  preventDefault: () => void;
+  target: { name?: string; id?: string; value: V | null };
 }
 
-export interface UMultiStateCheckboxProps<T = unknown, V = T> {
+export interface UMultiStateCheckboxHandle {
+  /** Moves focus to the focusable checkbox element. */
+  focus: () => void;
+  /** Returns the root element. */
+  getElement: () => HTMLDivElement | null;
+}
+
+export interface UMultiStateCheckboxProps<T = unknown, V = T> extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "onChange" | "onFocus" | "onBlur" | "children"
+> {
   value: V | null;
   options: T[];
-  onChange: (event: UMultiStateCheckboxChangeEvent<V>) => void;
+  onChange?: (event: UMultiStateCheckboxChangeEvent<V>) => void;
+  onFocus?: (event: React.FocusEvent<HTMLDivElement>) => void;
+  onBlur?: (event: React.FocusEvent<HTMLDivElement>) => void;
   optionValue?: string;
   optionLabel?: string;
   optionIcon?: (option: T) => React.ReactNode;
   empty?: boolean;
   disabled?: boolean;
   readOnly?: boolean;
-  tabIndex?: number;
-  id?: string;
-  className?: string;
-  "aria-label"?: string;
+  invalid?: boolean;
+  variant?: "filled" | "outlined";
+  /** Form field name, reported in `event.target.name`. */
+  name?: string;
+  autoFocus?: boolean;
+  /** Text announced and used as the accessible name when nothing is selected. Defaults to `Not Selected`. */
+  nullLabel?: string;
+  /** Renders the component with no Ultimate classes or styles. */
+  unstyled?: boolean;
+  /** Attributes for `root`, `box`, `icon` and `srOnlyAria`. */
+  pt?: PassThrough;
+  ptOptions?: PassThroughOptions;
 }
 
 function getOptionValue<T>(option: T, optionValue?: string): unknown {
@@ -47,43 +76,68 @@ function getOptionLabel<T>(option: T, optionLabel?: string): string {
  * last option; wrapping straight back to the first option when `empty` is
  * false).
  *
- * Fully-controlled (`value`/`onChange`), matching React's established
- * no-shared-form-state-base-class convention — same shape every sibling
- * React component in this batch follows. Real source additionally renders a
- * nested real `<Checkbox>` sub-component and a `useMountEffect` that
- * force-advances `value` once on mount when `!empty && value === null`; this
- * port renders its own self-contained checkbox-shaped box/icon markup
- * directly (no dependency on `UCheckbox`, matching `TriStateCheckbox`'s own
- * same-batch precedent below) and leaves the "un-emptiable initial value"
- * responsibility to the consumer (setting a non-null initial `value`) rather
- * than silently emitting a synthetic `onChange` on mount, which would
- * surprise a fully-controlled consumer expecting `onChange` to only fire in
- * response to real user interaction.
+ * Fully-controlled (`value`/`onChange`). Real source renders a nested
+ * `<Checkbox>` and force-advances `value` once on mount when
+ * `!empty && value === null`. This port renders its own `role="checkbox"`
+ * box (no `UCheckbox` dependency, like `UTriStateCheckbox`) and does not emit
+ * a synthetic `onChange` on mount: the consumer sets a non-null initial
+ * `value` instead (ADR-099). Click and Space both honour `disabled` and
+ * `readOnly`; real source's Space handler ignores `readOnly`. `tooltip` is
+ * composition (`UTooltip`), not a prop.
  */
-export function UMultiStateCheckbox<T = unknown, V = T>({
-  value,
-  options,
-  onChange,
-  optionValue,
-  optionLabel,
-  optionIcon,
-  empty = true,
-  disabled = false,
-  readOnly = false,
-  tabIndex = 0,
-  id,
-  className,
-  "aria-label": ariaLabel,
-}: UMultiStateCheckboxProps<T, V>): React.ReactElement {
+function UMultiStateCheckboxInner<T = unknown, V = T>(
+  props: UMultiStateCheckboxProps<T, V>,
+  ref: React.ForwardedRef<UMultiStateCheckboxHandle>
+): React.ReactElement {
+  const {
+    value,
+    options,
+    onChange,
+    onFocus,
+    onBlur,
+    optionValue,
+    optionLabel,
+    optionIcon,
+    empty = true,
+    disabled = false,
+    readOnly = false,
+    invalid = false,
+    variant,
+    name,
+    id,
+    tabIndex = 0,
+    autoFocus = false,
+    nullLabel = "Not Selected",
+    className,
+    unstyled,
+    pt,
+    ptOptions,
+    ...rest
+  } = props;
   const { cx } = useComponentBase({
-    componentName: "multi-state-checkbox",
+    componentName: "multistatecheckbox",
     styleModule: multiStateCheckboxStyleModule,
+    unstyled,
   });
+  const { ptm } = createPassThrough("multistatecheckbox", { props: { pt, ptOptions } });
+  const mergeProps = useMergeProps();
+  const rootRef = React.useRef<HTMLDivElement | null>(null);
+  const boxRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useImperativeHandle(ref, () => ({
+    focus: () => boxRef.current?.focus(),
+    getElement: () => rootRef.current,
+  }));
+
+  React.useEffect(() => {
+    if (autoFocus) boxRef.current?.focus();
+  }, []);
 
   const selectedIndex = options.findIndex(
     (option) => getOptionValue(option, optionValue) === value
   );
   const selectedOption = selectedIndex !== -1 ? options[selectedIndex] : undefined;
+  const selectedLabel = selectedOption ? getOptionLabel(selectedOption, optionLabel) : nullLabel;
 
   const findNextOption = (): T | null => {
     if (selectedIndex === options.length - 1) {
@@ -96,31 +150,90 @@ export function UMultiStateCheckbox<T = unknown, V = T>({
     if (disabled || readOnly) return;
     const next = findNextOption();
     const nextValue = next === null ? null : (getOptionValue(next, optionValue) as V);
-    onChange({ originalEvent: event, value: nextValue });
+    onChange?.({
+      originalEvent: event,
+      value: nextValue,
+      stopPropagation: () => event.stopPropagation(),
+      preventDefault: () => event.preventDefault(),
+      target: { name, id, value: nextValue },
+    });
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.code === "Space" || event.key === " ") {
       toggle(event);
       event.preventDefault();
     }
   };
 
+  const ariaProps: Record<string, unknown> = {};
+  const rootRest: Record<string, unknown> = {};
+  for (const [key, entry] of Object.entries(rest)) {
+    if (key.startsWith("aria-")) ariaProps[key] = entry;
+    else rootRest[key] = entry;
+  }
+
   return (
     <div
+      ref={rootRef}
       id={id}
-      className={[cx("root", { disabled }), className].filter(Boolean).join(" ")}
-      onClick={toggle}
-      role="button"
-      tabIndex={disabled ? -1 : tabIndex}
-      onKeyDown={handleKeyDown}
-      aria-label={
-        ariaLabel ?? (selectedOption ? getOptionLabel(selectedOption, optionLabel) : "none")
-      }
+      {...mergeProps(
+        rootRest,
+        {
+          className: [
+            cx("root", { disabled, invalid, variantFilled: variant === "filled" }),
+            className,
+          ]
+            .filter(Boolean)
+            .join(" "),
+          "data-p-disabled": disabled || undefined,
+        },
+        ptm("root")
+      )}
     >
-      <div className={cx("box")}>
-        {selectedOption && optionIcon ? optionIcon(selectedOption) : null}
+      <div
+        ref={boxRef}
+        {...mergeProps(
+          {
+            id: id ? `${id}_box` : undefined,
+            className: cx("box"),
+            role: "checkbox",
+            "aria-checked": selectedOption ? "true" : "false",
+            "aria-label": selectedLabel,
+            "aria-invalid": invalid || undefined,
+            "aria-disabled": disabled || undefined,
+            "aria-readonly": readOnly || undefined,
+            tabIndex: disabled ? -1 : tabIndex,
+            onClick: toggle,
+            onKeyDown: handleKeyDown,
+            onFocus,
+            onBlur,
+          },
+          ariaProps,
+          ptm("box")
+        )}
+      >
+        {selectedOption && optionIcon ? (
+          <span {...mergeProps({ className: cx("icon") }, ptm("icon"))}>
+            {optionIcon(selectedOption)}
+          </span>
+        ) : null}
       </div>
+      <span
+        {...mergeProps(
+          { className: "u-hidden-accessible", "aria-live": "polite" },
+          ptm("srOnlyAria")
+        )}
+      >
+        {selectedLabel}
+      </span>
     </div>
   );
 }
+
+export const UMultiStateCheckbox = React.forwardRef(UMultiStateCheckboxInner) as <
+  T = unknown,
+  V = T,
+>(
+  props: UMultiStateCheckboxProps<T, V> & React.RefAttributes<UMultiStateCheckboxHandle>
+) => React.ReactElement;

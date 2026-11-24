@@ -118,5 +118,11 @@
     "ultimateDestination": "packages/uix-styles/src/textarea/index.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/textarea/index.ts, recovered from dist/textarea/index.mjs (ADR-082, #189). The `.p-textarea*` selectors are renamed to `.u-textarea*`, the names Ultimate emits. The state classes `p-invalid` and `p-variant-filled` are kept, because the siblings emit them unrenamed. The rules read the Aura `textarea` tokens, including the `sm` and `lg` sizes. Shared by the Angular, React and Vue textarea style modules."
+  },
+  {
+    "originalPath": "src/chip/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/chip/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/chip/index.ts, recovered from dist/chip/index.mjs (ADR-082, #203). The `.p-chip*` selectors are renamed to `.u-chip*`, the names Ultimate emits. Every declaration and token is upstream's. One rule is added: `.u-chip-label` keeps its `line-height: 1.5` and `0.25rem` block padding, which the earlier local copies of all three frameworks carried and @primeuix/styles does not have (PrimeReact's ChipBase has an equivalent). Shared by the Angular, React and Vue chip style modules."
   }
 ]
