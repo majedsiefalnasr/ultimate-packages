@@ -39,6 +39,11 @@
       "import": "./dist/checkbox/index.mjs",
       "default": "./dist/checkbox/index.mjs"
     },
+    "./chip": {
+      "types": "./dist/chip/index.d.mts",
+      "import": "./dist/chip/index.mjs",
+      "default": "./dist/chip/index.mjs"
+    },
     "./dialog": {
       "types": "./dist/dialog/index.d.mts",
       "import": "./dist/dialog/index.mjs",

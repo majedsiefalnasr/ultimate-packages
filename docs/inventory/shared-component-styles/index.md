@@ -7,6 +7,7 @@ Scoped sample only; not platform completeness.
 - [Base styles](uixstyles.base.md)
 - [Button styles](uixstyles.button.md)
 - [Checkbox styles](uixstyles.checkbox.md)
+- [Chip styles](uixstyles.chip.md)
 - [Dialog styles](uixstyles.dialog.md)
 - [FloatLabel styles](uixstyles.floatlabel.md)
 - [IconField styles](uixstyles.iconfield.md)

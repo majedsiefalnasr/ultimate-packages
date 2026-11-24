@@ -151,4 +151,143 @@ describe("UChip", () => {
     fixture.detectChanges();
     expect(fixture.componentInstance.errored).toBe(true);
   });
+
+  it("hides the host after removal so no empty pill stays on screen", () => {
+    @Component({
+      standalone: true,
+      imports: [UChip],
+      template: `<u-chip [label]="'Apple'" [removable]="true"></u-chip>`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const host = fixture.nativeElement.querySelector("u-chip") as HTMLElement;
+    expect(host.style.display).toBe("");
+    (fixture.nativeElement.querySelector(".u-chip-remove-icon") as HTMLElement).click();
+    fixture.detectChanges();
+    expect(host.style.display).toBe("none");
+  });
+
+  it("gives the remove control an English default accessible label that can be replaced", () => {
+    @Component({
+      standalone: true,
+      imports: [UChip],
+      template: `
+        <u-chip id="a" [label]="'Apple'" [removable]="true"></u-chip>
+        <u-chip id="b" [label]="'Pear'" [removable]="true" [removeAriaLabel]="'Delete'"></u-chip>
+      `,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const label = (id: string) =>
+      fixture.nativeElement.querySelector(`#${id} .u-chip-remove-icon`).getAttribute("aria-label");
+    expect(label("a")).toBe("Remove");
+    expect(label("b")).toBe("Delete");
+  });
+
+  it("replaces the remove glyph with a font class", () => {
+    @Component({
+      standalone: true,
+      imports: [UChip],
+      template: `<u-chip
+        [label]="'Apple'"
+        [removable]="true"
+        [removeIcon]="'pi pi-times-circle'"
+      ></u-chip>`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const removeEl = fixture.nativeElement.querySelector(".u-chip-remove-icon") as HTMLElement;
+    expect(removeEl.classList.contains("pi-times-circle")).toBe(true);
+    expect(removeEl.querySelector("svg")).toBeNull();
+  });
+
+  it("replaces the remove glyph with a removeicon template", () => {
+    @Component({
+      standalone: true,
+      imports: [UChip],
+      template: `<u-chip [label]="'Apple'" [removable]="true">
+        <ng-template #removeicon><b class="glyph">x</b></ng-template>
+      </u-chip>`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const removeEl = fixture.nativeElement.querySelector(".u-chip-remove-icon") as HTMLElement;
+    expect(removeEl.querySelector(".glyph")).toBeTruthy();
+    expect(removeEl.querySelector("svg")).toBeNull();
+  });
+
+  it("sets data-p to removable only when removable", () => {
+    @Component({
+      standalone: true,
+      imports: [UChip],
+      template: `
+        <u-chip id="a" [label]="'Apple'"></u-chip>
+        <u-chip id="b" [label]="'Pear'" [removable]="true"></u-chip>
+      `,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("#a").hasAttribute("data-p")).toBe(false);
+    expect(fixture.nativeElement.querySelector("#b").getAttribute("data-p")).toBe("removable");
+  });
+
+  it("adds p-disabled to the host when disabled", () => {
+    @Component({
+      standalone: true,
+      imports: [UChip],
+      template: `<u-chip [label]="'Apple'" [disabled]="true"></u-chip>`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("u-chip").classList.contains("p-disabled")).toBe(
+      true
+    );
+  });
+
+  it("applies pt sections to the host and each part", () => {
+    @Component({
+      standalone: true,
+      imports: [UChip],
+      template: `<u-chip
+        [label]="'Apple'"
+        [icon]="'pi pi-apple'"
+        [removable]="true"
+        [pt]="pt"
+      ></u-chip>`,
+    })
+    class HostComponent {
+      pt = {
+        root: { "data-pt": "root" },
+        icon: { "data-pt": "icon" },
+        label: { "data-pt": "label" },
+        removeIcon: { "data-pt": "remove" },
+      };
+    }
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelector("u-chip")?.getAttribute("data-pt")).toBe("root");
+    expect(root.querySelector(".u-chip-icon")?.getAttribute("data-pt")).toBe("icon");
+    expect(root.querySelector(".u-chip-label")?.getAttribute("data-pt")).toBe("label");
+    expect(root.querySelector(".u-chip-remove-icon")?.getAttribute("data-pt")).toBe("remove");
+  });
+
+  it("emits no Ultimate classes when unstyled", () => {
+    @Component({
+      standalone: true,
+      imports: [UChip],
+      template: `<u-chip [label]="'Apple'" [removable]="true" [unstyled]="true"></u-chip>`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector(".u-chip")).toBeNull();
+    expect(fixture.nativeElement.querySelector(".u-chip-label")).toBeNull();
+  });
 });
