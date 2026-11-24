@@ -99,6 +99,11 @@
       "import": "./dist/tooltip/index.mjs",
       "default": "./dist/tooltip/index.mjs"
     },
+    "./textarea": {
+      "types": "./dist/textarea/index.d.mts",
+      "import": "./dist/textarea/index.mjs",
+      "default": "./dist/textarea/index.mjs"
+    },
     "./virtualscroller": {
       "types": "./dist/virtualscroller/index.d.mts",
       "import": "./dist/virtualscroller/index.mjs",

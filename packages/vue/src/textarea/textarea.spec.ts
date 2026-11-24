@@ -108,3 +108,39 @@ describe("UTextarea — autoResize", () => {
     expect(resizeSpy).toHaveBeenCalled();
   });
 });
+
+describe("UTextarea — size, filled state, pass-through", () => {
+  it("size small/large emit the shared sm/lg classes and the data-p size token", () => {
+    const small = mount(UTextarea, { props: { modelValue: "", size: "small" } });
+    expect(small.find("textarea").classes()).toContain("u-textarea-sm");
+    expect(small.find("textarea").attributes("data-p")).toContain("small");
+    const large = mount(UTextarea, { props: { modelValue: "", size: "large" } });
+    expect(large.find("textarea").classes()).toContain("u-textarea-lg");
+  });
+
+  it("p-filled follows the value, not the variant", async () => {
+    const wrapper = mount(UTextarea, { props: { modelValue: "", variant: "filled" } });
+    const textarea = wrapper.find("textarea");
+    expect(textarea.classes()).not.toContain("p-filled");
+    expect(textarea.classes()).toContain("p-variant-filled");
+    await wrapper.setProps({ modelValue: "abc" });
+    expect(wrapper.find("textarea").classes()).toContain("p-filled");
+  });
+
+  it("pt root attributes reach the textarea", () => {
+    const wrapper = mount(UTextarea, {
+      props: { modelValue: "", pt: { root: { "data-test": "x" } } },
+    });
+    expect(wrapper.find("textarea").attributes("data-test")).toBe("x");
+  });
+
+  it("unstyled drops the Ultimate classes", () => {
+    const wrapper = mount(UTextarea, { props: { modelValue: "", unstyled: true } });
+    expect(wrapper.find("textarea").classes()).not.toContain("u-textarea");
+  });
+
+  it("passes non-prop attributes such as rows to the textarea", () => {
+    const wrapper = mount(UTextarea, { props: { modelValue: "" }, attrs: { rows: "4" } });
+    expect(wrapper.find("textarea").attributes("rows")).toBe("4");
+  });
+});

@@ -1108,5 +1108,23 @@
     "ultimateDestination": "packages/ng/src/input-mask/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export of `UInputMask` and `UInputMaskDirective`, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/textarea/textarea.ts",
+    "ultimateDestination": "packages/ng/src/textarea/textarea.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG 21.1.9 textarea/textarea.ts for #189 (ADR-097): the attribute directive on a native textarea, the `autoResize`, `variant`, `fluid` and `invalid` inputs, the `onResize` output, the read-only NgControl sync, the `Fluid` ancestor lookup and the `Bind` host directive with the `ptms(['host', 'root'])` binding are upstream's (renamed UBind, UFluid). `pSize` becomes `uSize`, as for InputText. `resize()` guards a missing `max-height` with an explicit no-cap branch, where PrimeNG compares against NaN and the earlier port compared against 0 and reset the height. PrimeNG's `ngAfterViewChecked` resize trigger is replaced by one on `NgControl.valueChanges`, so `onResize` does not fire on every change-detection pass. PrimeNG's `BaseComponent`, the injected style services, the `pTextareaPT` and `pTextareaUnstyled` directive inputs and the NgModule wrapper are not carried. The `config.inputStyle()` and `config.inputVariant()` variant fallback is not carried, because the config surface has neither field. Existing file, entry added in #189."
+  },
+  {
+    "originalPath": "packages/primeng/src/textarea/style/textareastyle.ts",
+    "ultimateDestination": "packages/ng/src/textarea/textarea-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver and the Angular-only invalid rules (ADR-064). Side-by-side with PrimeNG 21.1.9 textareastyle.ts: `classes.root` with the invalid, fluid, filled, variant and resizable modifiers and the `.ng-invalid.ng-dirty` rules are upstream's. `p-textarea*` becomes `u-textarea*`, and `p-filled` follows the value. The structural CSS comes from `@ultimate/uix-styles/textarea` (ADR-082); this file holds only the Angular-only rules. Changed for #189."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/textarea/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel that re-exports `UTextarea`. No upstream source. Entry added in #189."
   }
 ]

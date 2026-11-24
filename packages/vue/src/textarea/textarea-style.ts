@@ -1,72 +1,16 @@
 import type { StyleModule } from "@ultimate/vue-core";
+import { style as textareaStyle } from "@ultimate/uix-styles/textarea";
 
 /**
- * Ultimate-owned adaptation of PrimeVue's `TextareaStyle` (sourced from
- * `@primeuix/styles/textarea`), hand-ported directly (not re-exported from
- * `@ultimate/uix-styles`) — same reason already documented across
- * `input-text-style.ts`/`checkbox-style.ts`. `.p-textarea*` selectors
- * renamed to `.u-textarea*`; `p-disabled`/`p-invalid` kept unrenamed,
- * matching the established `p-` -> `u-` translation.
+ * `createBaseComponent`-shaped style module for `UTextarea`. The structural
+ * CSS is the shared `@ultimate/uix-styles/textarea` module (ADR-082), the
+ * same module Angular and React consume, so it reads the Aura `textarea`
+ * tokens and carries the filled hover and focus backgrounds, the invalid
+ * placeholder colour and the sm/lg sizes. The modifier classes below are the
+ * ones that module's selectors reference.
  */
 const css = /*css*/ `
-    .u-textarea {
-        font-family: inherit;
-        font-feature-settings: inherit;
-        font-size: 1rem;
-        color: dt('textarea.color');
-        background: dt('textarea.background');
-        padding-block: dt('textarea.padding.y');
-        padding-inline: dt('textarea.padding.x');
-        border: 1px solid dt('textarea.border.color');
-        transition:
-            background dt('textarea.transition.duration'),
-            color dt('textarea.transition.duration'),
-            border-color dt('textarea.transition.duration'),
-            outline-color dt('textarea.transition.duration'),
-            box-shadow dt('textarea.transition.duration');
-        appearance: none;
-        border-radius: dt('textarea.border.radius');
-        outline-color: transparent;
-        box-shadow: dt('textarea.shadow');
-    }
-
-    .u-textarea:enabled:hover {
-        border-color: dt('textarea.hover.border.color');
-    }
-
-    .u-textarea:enabled:focus {
-        border-color: dt('textarea.focus.border.color');
-        box-shadow: dt('textarea.focus.ring.shadow');
-        outline: dt('textarea.focus.ring.width') dt('textarea.focus.ring.style') dt('textarea.focus.ring.color');
-        outline-offset: dt('textarea.focus.ring.offset');
-    }
-
-    .u-textarea.p-invalid {
-        border-color: dt('textarea.invalid.border.color');
-    }
-
-    .u-textarea.p-variant-filled {
-        background: dt('textarea.filled.background');
-    }
-
-    .u-textarea:disabled {
-        opacity: 1;
-        background: dt('textarea.disabled.background');
-        color: dt('textarea.disabled.color');
-    }
-
-    .u-textarea::placeholder {
-        color: dt('textarea.placeholder.color');
-    }
-
-    .u-textarea-fluid {
-        width: 100%;
-    }
-
-    .u-textarea-resizable {
-        overflow: hidden;
-        resize: none;
-    }
+    ${textareaStyle}
 `;
 
 /** Params `UTextarea` passes into `cx('root', params)`. */
@@ -76,20 +20,23 @@ export interface TextareaClassesParams {
   invalid?: boolean;
   fluid?: boolean;
   variantFilled?: boolean;
+  size?: string | null;
 }
 
 const classes = {
   root: (params: TextareaClassesParams = {}) => {
-    const { filled, autoResize, invalid, fluid, variantFilled } = params;
+    const { filled, autoResize, invalid, fluid, variantFilled, size } = params;
 
     return [
-      "u-textarea",
+      "u-textarea u-component",
       {
         "p-filled": Boolean(filled),
         "u-textarea-resizable": Boolean(autoResize),
         "p-invalid": Boolean(invalid),
         "u-textarea-fluid": Boolean(fluid),
         "p-variant-filled": Boolean(variantFilled),
+        "u-textarea-sm": size === "small",
+        "u-textarea-lg": size === "large",
       },
     ];
   },

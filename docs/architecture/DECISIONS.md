@@ -1717,6 +1717,48 @@ Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://git
 - Callers that passed only `event.key` in a test must pass `code` too.
 - Tests assert values, classes, DOM, events and pass-through in jsdom. They do not measure pixels, real pointer hit-testing or screen-reader output.
 
+## ADR-097 — Textarea: one shared stylesheet on the Aura `textarea` tokens, `autoResize` without a `max-height`, `size` and value-derived `p-filled`, `pt` and `unstyled`, and React `keyfilter`/`tooltip` and Vue `formField` stay out (L0a, ticket #189)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#189](https://github.com/majedsiefalnasr/ultimate-packages/issues/189)). User rulings recorded before implementation: Q1 A (fix Angular `autoResize` and match Prime's triggers), Q2 A (`size` and value-derived `p-filled` on the shared module), Q3 A (React `keyfilter` and `tooltip` are composition, Vue `formField` belongs to the Vue Forms spec), Q4 A (Angular `.ng-invalid.ng-dirty` and the missing Vue CSS).
+
+**Context.**
+
+- The Phase 4 Textarea audit found 18 rows per framework. The gaps were: Angular `autoResize` reset the height when no `max-height` was set, because `parseFloat(maxHeight || "0")` compared against 0, and it did not resize on a programmatic value change (row 2); no `size` in Angular or Vue (row 7); no `p-filled` in Angular, and a React and Vue class that was defined but never passed (row 8); hard-coded React CSS reading `--u-inputtext-*` variables with hex fallbacks (row 16); a Vue style copy without the filled hover and focus backgrounds or the invalid placeholder (row 16); no Angular `.ng-invalid.ng-dirty` rules (row 6); no `pt` or `unstyled` in React and Vue, and no `pt` in Angular (rows 14, 15, 17); and a Vue base that shadowed `cx` and `mounted`.
+- ADR-082 puts structural style in `@ultimate/uix-styles` by default. No `textarea` module existed.
+
+**Decision.**
+
+1. **Shared stylesheet (row 16).** A new `@ultimate/uix-styles/textarea` module is recovered from `@primeuix/styles` 2.0.3 `textarea`, with `.p-textarea*` renamed to `.u-textarea*`. It reads the Aura `textarea` tokens, not the `inputtext` ones, and includes the `sm` and `lg` sizes. Angular, React and Vue consume it, so the three frameworks render the same rules and React no longer hard-codes colours (ADR-067). The React component name, style key and pass-through key are `textarea`, the Aura key; the root class is `u-textarea`, where it was `u-inputtextarea`.
+2. **`autoResize` (row 2).** Angular treats a missing `max-height` as no cap, so the textarea grows to its `scrollHeight` like PrimeNG, instead of resetting. Angular also resizes on every `NgControl.valueChanges` emission, so a programmatic `setValue()` grows the textarea. React gains the focus, blur and keyup triggers that PrimeReact has. Vue is unchanged.
+3. **`size` and `p-filled` (rows 7, 8).** Angular (`uSize`), React and Vue take `size: "small" | "large"`, which emits `u-textarea-sm` or `u-textarea-lg` and a `data-p` token (Angular, Vue). `p-filled` follows the value in all three, as in PrimeNG and PrimeVue. React tracks an uncontrolled `defaultValue` with state.
+4. **Angular invalid style (row 6).** The `.ng-invalid.ng-dirty` rules (border and placeholder colours) stay in the Angular style module, as for InputText (ADR-086): React and Vue have no counterpart, so the shared module cannot carry them.
+5. **Pass-through (rows 14, 15, 17, 18).** Angular binds `ptms(["host", "root"])` through the `UBind` host directive. React and Vue apply `ptm("root")` and merge the remaining props, so native attributes such as `rows` and `placeholder` reach the textarea. `unstyled` drops the Ultimate classes. Vue now passes `componentName` and `styleModule` to `createBaseInput`, so `unstyled`, per-instance `dt` and `pt` come from the base chain.
+6. **React `keyfilter` and `tooltip` (rows 11, 12) are I.** They stay separate composition (`useKeyFilter`, `UTooltip`), as for InputText (ADR-086) and InputMask (ADR-095). This is an intentional difference from PrimeReact.
+7. **Vue `formField` (row 10) stays P.** `v-model` works. PrimeVue's `@primevue/forms` merge belongs to the separate Vue Forms spec.
+
+**Divergences from Prime.**
+
+1. PrimeNG re-runs `resize()` from `ngAfterViewChecked`, which fires `onResize` on every change-detection pass. Here it runs on `ngAfterViewInit`, on `input` and on `NgControl.valueChanges`.
+2. PrimeReact has no `size`. React `size` is an addition so the three frameworks share the visual sizes. Row 7 stays N/A for React against the oracle.
+3. React `p-filled` is derived from the value and tracked by state, where PrimeReact toggles the class on the DOM node in `onInput`.
+4. React `keyfilter`, `validateOnly` and `tooltip` are not props (decision 6).
+5. Row 4 (variant fallback from global config) stays P in all three frameworks, because the config surface has no `inputVariant` or `inputStyle`.
+6. `ptOptions` is accepted everywhere but has no visible effect until the global `pt` source exists (ADR-080), so row 17 stays P.
+7. PrimeNG and PrimeVue write the style key `'p-textarea-resizable '` with a trailing space. The space is cosmetic and is not carried.
+
+**Classification after this ticket** (C complete, P partial, M missing, I intentional, N/A not applicable; from a source re-read of the 18 rows; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+- **Angular:** C 13, P 2, N/A 3. Open: rows 4 and 17.
+- **React:** C 11, P 2, I 2, N/A 3. Open: rows 4 and 17. Rows 11 and 12 are I. Row 7 is N/A against PrimeReact.
+- **Vue:** C 11, P 3, N/A 4. Open: rows 4, 10 and 17.
+
+**Consequences.**
+
+- Callers of the React component see the root class `u-textarea` instead of `u-inputtextarea`, and the component reads the Aura `textarea` tokens, so a theme that customised only `inputtext` no longer changes it.
+- The Vue and React Textarea baselines can change visually, because the shared module adds the filled hover and focus backgrounds, the invalid placeholder colour and the sizes. They are not verified in a browser here.
+- FloatLabel, IftaLabel and InputGroup style modules that key on `.u-input-text` or `.u-inputtext` do not select the textarea. That is unchanged by this ticket and belongs to those tickets.
+- Tests assert values, classes, DOM, emitted events, pass-through and the heights set from mocked `scrollHeight` in jsdom. They do not measure pixels or real layout.
+
 ## ADR-098 — Chip: one shared stylesheet on the Aura chip tokens, `pt`, `unstyled` and `dt` in all three frameworks, remove-icon customization, a visible-state fix in Angular, and four recorded exclusions (L0a, ticket #203)
 
 Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#203](https://github.com/majedsiefalnasr/ultimate-packages/issues/203)). User rulings (2026-11-24, "all by recommendation"): Q5 A (custom content and remove-icon customization), Q6 B (React keeps the native remove event, no veto), Q7 B (Angular `chipProps` excluded), Q8 A (remove label is a prop with an English default), Q9 B (`UTimesIcon` stays, no TimesCircle icon).

@@ -616,5 +616,23 @@
     "ultimateDestination": "packages/react/src/tri-state-checkbox/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UTriStateCheckbox and its prop, change-event and handle types; it shares only the exported component name with PrimeReact's tristatecheckbox entry point."
+  },
+  {
+    "originalPath": "components/lib/inputtextarea/InputTextarea.js",
+    "ultimateDestination": "packages/react/src/input-textarea/input-textarea.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 InputTextarea.js for #189 (ADR-097): the single native textarea, the `resize()` routine with its cached scroll height, its triggers (mount, `value`, input, focus, blur, keyup), the prop merge with `ptm('root')` and the forwarded ref are upstream's. PrimeReactContext, the base `getProps`, useHandleStyle and the combined-ref effect are replaced by useComponentBase, createPassThrough, useMergeProps and a plain forwarded ref. `p-filled` is value-derived and tracked by state for an uncontrolled textarea, where PrimeReact toggles the class on the DOM node. `size` has no PrimeReact counterpart and is added so the three frameworks share the visual sizes. `keyfilter`, `validateOnly` and `tooltip` are not carried (composition, ADR-086 and ADR-095). Existing file, entry added in #189."
+  },
+  {
+    "originalPath": "components/lib/inputtextarea/InputTextareaBase.js",
+    "ultimateDestination": "packages/react/src/input-textarea/input-textarea-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 InputTextareaBase.js `classes.root`: `p-inputtextarea` with the filled, invalid, variant, fluid and resizable modifiers becomes `u-textarea*`. The hand-written literal-colour CSS and the `u-inputtext-*` token reads are replaced by the shared `@ultimate/uix-styles/textarea` module (ADR-082), which reads the Aura `textarea` tokens (ADR-067). Changed for #189."
+  },
+  {
+    "originalPath": "components/lib/inputtextarea/InputTextarea.js",
+    "ultimateDestination": "packages/react/src/input-textarea/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate barrel that re-exports `UInputTextarea` and its props. It shares only the exported component name with the compared upstream entry point. Entry added in #189."
   }
 ]

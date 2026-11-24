@@ -327,6 +327,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 - package.ultimate.uix-styles.paginator: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.paginator
 - package.ultimate.uix-styles.root: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.root
 - package.ultimate.uix-styles.table: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.table
+- package.ultimate.uix-styles.textarea: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.textarea
 - package.ultimate.uix-styles.tooltip: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.tooltip
 - package.ultimate.uix-styles.virtualscroller: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.virtualscroller
 - package.ultimate.uix-utils: #143, #144 -> aggregate of 10 resolved families (#143, #144)

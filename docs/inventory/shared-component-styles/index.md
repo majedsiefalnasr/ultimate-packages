@@ -19,5 +19,6 @@ Scoped sample only; not platform completeness.
 - [Paginator styles](uixstyles.paginator.md)
 - [Shared styles package entry and type](uixstyles.root.md)
 - [Table styles](uixstyles.table.md)
+- [Textarea styles](uixstyles.textarea.md)
 - [Tooltip styles](uixstyles.tooltip.md)
 - [Virtual scroller styles](uixstyles.virtualscroller.md)
