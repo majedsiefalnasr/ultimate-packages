@@ -10,29 +10,34 @@ Native text input that formats typed and pasted characters against a mask patter
 
 ## Framework surface
 
-Component selector u-input-mask; standalone, OnPush, ViewEncapsulation.None; extends UBaseInput and provides NG_VALUE_ACCESSOR (useExisting UInputMask, multi). Template is one native <input type=text> (ViewChild inputEl) with keypress, keydown, input, paste, focus and blur handlers and disabled/readonly/placeholder/maxlength/minlength/size attributes. Signal inputs: mask, slotChar ('_'), autoClear (true), characterPattern ('[A-Za-z]'), unmask, readonly, placeholder, invalid. Outputs: onCompleteEvent: output<void>() and onUnmaskedChange: output<string>(). onFocus/onBlur are protected handlers, not outputs. writeControlValue override reformats a written string through the mask buffer; the model value is the unmasked or the formatted buffer string according to unmask(). From UBaseInput it inherits signal inputs fluid, variant, size, inputSize, pattern, min, max, step, minlength and maxlength; from UBaseEditableHolder disabled, the ControlValueAccessor methods writeValue/registerOnChange/registerOnTouched/setDisabledState, and from UModelHolder the modelValue/$filled signals. hasFluid is true when fluid() is set or an ancestor UFluid provides U_FLUID_ANCESTOR. componentName input-mask; ngOnInit builds the mask definitions. Public API: UInputMask (class). Host class cx('root', {invalid, fluid}); inner input uses cx('pcInputText') = 'u-inputtext', so its look relies on the inputtext class name coupling rather than an import. No dedicated Aura registry key (aura/index.ts records that inputmask has no upstream module and reuses InputText tokens). Owned source-only declarations: InputMaskClassesParams, inputMaskStyleModule (root 'u-inputmask u-component' with p-invalid and u-inputmask-fluid). No dedicated component-metadata record exists in the current records directory. Inherits dt: Record<string, unknown>|undefined and unstyled: boolean|undefined from UBaseComponent; these declared inputs are not evidence that unstyled suppresses registration. Also exposed via @ultimate/ng/input-mask. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.
+Two public classes. UInputMask (selector u-input-mask; standalone, OnPush, ViewEncapsulation.None) extends UBaseInput, provides NG_VALUE_ACCESSOR (useExisting UInputMask, multi) and renders one native <input> (ViewChild) plus an optional clear icon (a #clearicon template or UTimesIcon). UInputMaskDirective (selector [uInputMask], exportAs uInputMask) extends UBaseComponent and masks a host input. Both delegate the DOM listeners and the buffer algorithm to InputMaskEngine (input-mask-engine.ts): focus, blur, keydown, keypress, input, paste, compositionstart and compositionend; Backspace, Delete, Escape (restores the value held at focus) and Enter (blurs); keepBuffer; an Android Chrome branch; a deferred paste reformat that runs after the browser applies the paste; and a re-entrancy flag for the engine's own synthetic input event. Component signal inputs: mask, slotChar ('_'), autoClear (true), characterPattern, keepBuffer, unmask, readonly, placeholder, invalid, showClear, type, inputId, name, title, autocomplete, tabindex, ariaLabel, ariaLabelledBy, ariaRequired, required and autofocus. Outputs: onCompleteEvent, onUnmaskedChange, onFocus, onBlur, onKeydown, onInput and onClear; methods focus() and clear(). A value written before the view exists is applied in ngAfterViewInit, and a changed mask re-initializes and reformats. aria-invalid is set on the input. The directive has outputs onComplete and onUnmaskedChange and uses the unprefixed pt, ptOptions, unstyled and dt of the base (ADR-095). From UBaseInput the component inherits fluid, variant, size, inputSize and the min/max attributes; hasFluid is true when fluid() is set or an ancestor UFluid provides U_FLUID_ANCESTOR. componentName is inputmask (component) and inputmaskdirective (directive). The component binds UBind with ptms(['host','root']) and provides U_PARENT_INSTANCE (ADR-079, ADR-080); ptOptions has no visible effect until the global pt source exists. Host class cx('root', ...) is u-inputmask u-component p-inputwrapper with p-invalid, p-variant-filled and u-inputmask-fluid; the inner input uses cx('pcInputText') to produce the InputText classes. The style module includes the shared @ultimate/uix-styles/inputtext CSS (ADR-082) and the clear icon, fluid and .ng-invalid.ng-dirty rules. Owned source-only declarations: InputMaskClassesParams, InputMaskInputClassesParams, inputMaskStyleModule and inputMaskDirectiveStyleModule. The Aura registry has no inputmask key. Mobile and IME paths are tested with simulated events only. No dedicated component-metadata record exists in the current records directory. Also exposed via @ultimate/ng/input-mask. Style module exports and class-parameter interfaces are source-only internals, not barrel exports or independent rendered components.
 
 ## Public exports
 
 @ultimate/ng#UInputMask
 @ultimate/ng/input-mask#UInputMask
+@ultimate/ng#UInputMaskDirective
+@ultimate/ng/input-mask#UInputMaskDirective
 
 ## Owned source and evidence
 
 packages/ng/src/input-mask/index.ts
+packages/ng/src/input-mask/input-mask-engine.ts
 packages/ng/src/input-mask/input-mask.ts
 packages/ng/src/input-mask/input-mask-style.ts
 
 ```text
-packages/ng/src/input-mask/index.ts: export { UInputMask }
+packages/ng/src/input-mask/index.ts: export { UInputMask, UInputMaskDirective }
 packages/ng/src/input-mask/input-mask.ts: export class UInputMask extends UBaseInput
 packages/ng/src/input-mask/input-mask.ts: selector: "u-input-mask"
 packages/ng/src/input-mask/input-mask.ts: onCompleteEvent = output<void>();
 packages/ng/src/input-mask/input-mask.ts: onUnmaskedChange = output<string>();
 packages/ng/src/input-mask/input-mask.ts: override writeControlValue
+packages/ng/src/input-mask/input-mask.ts: selector: "[uInputMask]"
+packages/ng/src/input-mask/input-mask.ts: export class UInputMaskDirective extends UBaseComponent
+packages/ng/src/input-mask/input-mask-engine.ts: export class InputMaskEngine
 packages/ng/src/input-mask/input-mask-style.ts: export interface InputMaskClassesParams
 packages/ng/src/input-mask/input-mask-style.ts: export const inputMaskStyleModule
-packages/ng/src/input-mask/input-mask-style.ts: pcInputText: "u-inputtext"
 packages/themes/src/presets/aura/index.ts: `inputmask` has no upstream module
 .github/workflows/ci.yml: run: pnpm run test
 packages/ng/package.json: "test": "ng test --project=ng"
