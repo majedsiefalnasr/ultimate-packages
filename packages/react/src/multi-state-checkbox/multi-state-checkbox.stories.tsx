@@ -14,9 +14,10 @@ import { UMultiStateCheckbox } from "./multi-state-checkbox";
  * comment) is the accessibility-info source instead of an invented metadata
  * record.
  *
- * Accessibility notes: renders `role="button"` with an `aria-label`
- * reflecting the currently-selected option's label (or "none" when empty).
- * Keyboard support: Space cycles to the next state.
+ * Accessibility notes: renders `role="checkbox"` with `aria-checked`, an
+ * `aria-label` reflecting the currently-selected option's label (or
+ * `nullLabel`, "Not Selected", when empty), and a polite live region that
+ * announces the same text. Keyboard support: Space cycles to the next state.
  */
 const meta: Meta<typeof UMultiStateCheckbox> = {
   title: "React/MultiStateCheckbox",
@@ -50,5 +51,17 @@ export const NoEmptyState: Story = {
 /** Disabled state. */
 export const Disabled: Story = {
   args: { value: "done", options: STATES, disabled: true },
+  render: (args) => <MultiStateCheckboxHarness {...args} />,
+};
+
+/** readOnly — focusable but never cycles, by click or Space. */
+export const ReadOnly: Story = {
+  args: { value: "in-progress", options: STATES, readOnly: true },
+  render: (args) => <MultiStateCheckboxHarness {...args} />,
+};
+
+/** invalid and variant="filled". */
+export const InvalidFilled: Story = {
+  args: { value: "todo", options: STATES, invalid: true, variant: "filled" },
   render: (args) => <MultiStateCheckboxHarness {...args} />,
 };
