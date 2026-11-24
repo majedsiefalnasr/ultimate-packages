@@ -1,5 +1,11 @@
 <template>
-  <div :class="cx('root', styleParams)">
+  <div
+    :class="cx('root', styleParams)"
+    :data-p-checked="checked"
+    :data-p-disabled="disabled"
+    :data-p="dataP"
+    v-bind="ptmi('root')"
+  >
     <input
       ref="input"
       :id="inputId"
@@ -15,27 +21,32 @@
       :aria-labelledby="ariaLabelledby"
       :aria-label="ariaLabel"
       :aria-invalid="invalid || undefined"
+      v-bind="ptm('input')"
       @focus="onFocus"
       @blur="onBlur"
       @change="onChange"
     />
-    <div :class="cx('slider')">
-      <div :class="cx('handle')" />
+    <div :class="cx('slider')" :data-p="dataP" v-bind="ptm('slider')">
+      <div :class="cx('handle')" :data-p="dataP" v-bind="ptm('handle')">
+        <slot name="handle" :checked="checked" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { cn } from "@ultimate/uix-utils/classnames";
 import { createBaseToggleSwitch } from "./BaseToggleSwitch";
 
 // Real rendered DOM verified against .vendor-extracted/vue/toggleswitch/
 // ToggleSwitch.vue: a real native input[type=checkbox][role=switch]
 // carrying checked/disabled/readonly/tabindex/aria-checked/aria-labelledby/
-// aria-label/aria-invalid, plus a div.slider > div.handle decorative pair —
-// same dual-element shape already established by URadioButton/UCheckbox.
-// Upstream's `slot name="handle"` and `getPTOptions`/passthrough plumbing
-// are not ported — same no-passthrough boundary cut already documented
-// across checkbox/radio-button/toggle-button.
+// aria-label/aria-invalid, plus a div.slider > div.handle pair. The handle
+// renders the `handle` slot (scoped with `checked`), as PrimeVue's does. The
+// root carries `data-p-checked`, `data-p-disabled` and `data-p`; the slider
+// and handle carry `data-p`. `pt`, `unstyled` and `dt` come from the base
+// chain, and `inheritAttrs` is off because `ptmi('root')` places the
+// attributes on the root.
 //
 // $pcToggleSwitch ambient-context `provide()` is NOT ported — no consumer
 // of that injection exists in Batch 1's own scope, same boundary-cut
@@ -44,6 +55,7 @@ import { createBaseToggleSwitch } from "./BaseToggleSwitch";
 export default {
   name: "UToggleSwitch",
   extends: createBaseToggleSwitch(),
+  inheritAttrs: false,
   emits: ["change", "focus", "blur"],
   computed: {
     checked() {
@@ -55,6 +67,13 @@ export default {
         disabled: this.disabled,
         invalid: this.invalid,
       };
+    },
+    dataP() {
+      return cn({
+        checked: this.checked,
+        disabled: this.disabled,
+        invalid: this.invalid,
+      });
     },
   },
   methods: {
