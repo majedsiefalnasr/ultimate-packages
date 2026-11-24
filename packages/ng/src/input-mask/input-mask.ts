@@ -1,98 +1,116 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ViewChild,
+  Directive,
+  ElementRef,
+  OnDestroy,
+  TemplateRef,
   ViewEncapsulation,
   booleanAttribute,
-  ElementRef,
+  contentChild,
+  effect,
+  inject,
   input,
   output,
+  untracked,
+  viewChild,
 } from "@angular/core";
+import { NgTemplateOutlet } from "@angular/common";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
-import { UBaseInput } from "@ultimate/ng-core";
-import { inputMaskStyleModule } from "./input-mask-style";
+import {
+  UBaseComponent,
+  UBaseInput,
+  UBind,
+  UTimesIcon,
+  U_PARENT_INSTANCE,
+} from "@ultimate/ng-core";
+import { InputMaskEngine, type InputMaskEngineHost } from "./input-mask-engine";
+import { inputMaskDirectiveStyleModule, inputMaskStyleModule } from "./input-mask-style";
 
 /**
- * Ultimate-owned adaptation of PrimeNG's `InputMask` component (extracted
- * this session from `packages/primeng/src/inputmask/inputmask.ts` via
- * `scripts/provenance/extract-primeng-source.mjs`). Real source declares
- * TWO classes in the same file: `InputMaskDirective extends BaseComponent`
- * (an internal `[pInputMask]` helper directive with no CVA of its own) and
- * the actual end-user-facing `InputMask extends BaseInput` component
- * (selector `p-inputmask`, `providers: [INPUTMASK_VALUE_ACCESSOR]`) — only
- * the latter is a Batch 1 canonical capability; only it is ported here.
- * `UInputMask` extends `UBaseInput` directly, matching real `InputMask
- * extends BaseInput` and mirroring `UInputNumber`'s own tier
- * (`packages/ng/src/input-number/input-number.ts`, this component's primary
- * pattern reference for a `UBaseInput`-tier CVA component with its own
- * local signal state).
+ * Ultimate-owned adaptation of PrimeNG's `InputMask` component
+ * (`primeng/src/inputmask/inputmask.ts`). It extends `UBaseInput` and renders
+ * a native `<input>` styled as an InputText. The masking itself lives in the
+ * shared {@link InputMaskEngine}, which `UInputMaskDirective` uses as well, so
+ * the two cannot drift (ADR-095).
  *
- * The masking algorithm below is a scoped, faithful port of real source's
- * own jQuery-MaskedInput-derived buffer/tests/caret machinery
- * (`initMask`/`checkVal`/`caret`/`shiftL`/`shiftR`/`clearBuffer`/
- * `writeBuffer`/`isCompleted`/`getUnmaskedValue`) — the CORE fixed-pattern
- * masking (digit `9`/alpha `a`/alphanumeric `*` slots, `?` optional-suffix
- * marker, static separator characters, `slotChar` placeholder, `autoClear`
- * on blur, backspace/delete re-inserting the placeholder and left-shifting
- * the buffer, `unmask`) is ported real and tested, not stubbed. Deliberately
- * EXCLUDED as documented platform-quirk scope cuts, matching
- * `UInputNumber`'s own doc-comment precedent for cutting real source's
- * platform-specific branches:
- * - Android Chrome's separate `handleAndroidInput` input-event branch
- *   (real source's own `androidChrome` UA-sniffing fork) — this port always
- *   takes real source's `handleInputChange` branch.
- * - iPhone's `keyCode === 127` backspace alias and the legacy
- *   `createTextRange`/`document.selection` IE input-selection fallback —
- *   `setSelectionRange` (supported by every browser this platform targets)
- *   is the only caret mechanism ported.
- * - The 10ms `caretTimeoutId` focus-caret-positioning choreography and the
- *   Escape-key revert-to-`focusText` behavior — UX affordances layered on
- *   top of the core masking algorithm, not masking behavior itself.
+ * Pass-through: `pt`, `ptOptions`, `unstyled` and `dt` come from
+ * `UBaseComponent`. The root section is bound through the `UBind` host
+ * directive, `pcInputText` goes to the inner input and `clearIcon` to the
+ * clear icon. The component provides itself as `U_PARENT_INSTANCE`.
  *
- * These cuts are algorithmically independent of the ported core: every
- * excluded branch is a wrapper/UA-detection/caret-timing concern around the
- * same `buffer`/`tests`/`checkVal` state this port already implements in
- * full, not a different masking strategy — porting them adds platform-quirk
- * surface area without changing mask-formatting behavior for the target
- * environment.
+ * Forms: the value accessor writes through the native input. A value written
+ * before the view exists is applied in `ngAfterViewInit`, and a value written
+ * while no mask is set is shown as it is.
+ *
+ * Not ported: the `NgModule` wrapper (ADR-019), `INPUTMASK_INSTANCE` (no
+ * consumer), `styleClass`/`style` (the host takes `class`/`style` directly),
+ * and the `autofocus` directive (`autofocus` is the native attribute).
  */
 @Component({
   standalone: true,
   selector: "u-input-mask",
-  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: UInputMask, multi: true }],
+  imports: [UBind, UTimesIcon, NgTemplateOutlet],
+  providers: [
+    { provide: NG_VALUE_ACCESSOR, useExisting: UInputMask, multi: true },
+    { provide: U_PARENT_INSTANCE, useExisting: UInputMask },
+  ],
   template: `
     <input
       #inputEl
-      type="text"
-      [class]="cx('pcInputText')"
-      [value]="displayValue()"
-      [attr.disabled]="$disabled() ? '' : undefined"
-      [attr.readonly]="readonly() ? '' : undefined"
+      [uBind]="ptm('pcInputText')"
+      [class]="cx('pcInputText', inputClassesParams())"
+      [attr.type]="type()"
+      [attr.id]="inputId()"
+      [attr.name]="name()"
       [attr.placeholder]="placeholder()"
+      [attr.title]="title()"
+      [attr.size]="inputSize()"
+      [attr.autocomplete]="autocomplete()"
       [attr.maxlength]="maxlength()"
       [attr.minlength]="minlength()"
-      [attr.size]="inputSize()"
-      (keypress)="onKeyPress($event)"
-      (keydown)="onKeyDown($event)"
-      (input)="onInputChange($event)"
-      (paste)="onPaste($event)"
-      (focus)="onFocus()"
-      (blur)="onBlur()"
+      [attr.tabindex]="tabindex()"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-labelledby]="ariaLabelledBy()"
+      [attr.aria-required]="ariaRequired()"
+      [attr.aria-invalid]="invalid() ? 'true' : undefined"
+      [attr.required]="required() ? '' : undefined"
+      [attr.autofocus]="autofocus() ? '' : undefined"
+      [attr.readonly]="readonly() ? '' : undefined"
+      [attr.disabled]="$disabled() ? '' : undefined"
+      (focus)="onFocus.emit($event)"
+      (keydown)="onKeydown.emit($event)"
+      (input)="onInput.emit($event)"
     />
+    @if (showClear() && $filled() && !$disabled()) {
+      @if (clearIconTemplate(); as clearTemplate) {
+        <span [uBind]="ptm('clearIcon')" [class]="cx('clearIcon')" (click)="clear()">
+          <ng-container *ngTemplateOutlet="clearTemplate" />
+        </span>
+      } @else {
+        <u-times-icon [uBind]="ptm('clearIcon')" [class]="cx('clearIcon')" (click)="clear()" />
+      }
+    }
   `,
   host: {
     "[class]": "cx('root', classesParams())",
   },
+  hostDirectives: [UBind],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class UInputMask extends UBaseInput {
-  protected override readonly componentName = "input-mask";
+export class UInputMask extends UBaseInput implements AfterViewInit, OnDestroy {
+  protected override readonly componentName = "inputmask";
   protected override readonly styleModule = inputMaskStyleModule;
 
-  @ViewChild("inputEl") private readonly inputEl!: ElementRef<HTMLInputElement>;
+  private readonly inputEl = viewChild<ElementRef<HTMLInputElement>>("inputEl");
+  private readonly bindDirective = inject(UBind, { self: true });
 
-  /** Mask pattern — e.g. `"99-999999"`, `"(999) 999-9999"`, `"a*-999"`. */
+  /** Custom clear icon, projected as `<ng-template #clearicon>`. */
+  readonly clearIconTemplate = contentChild<TemplateRef<unknown>>("clearicon");
+
+  /** Mask pattern, e.g. `"99-999999"`, `"(999) 999-9999"`, `"a*-999"`. */
   mask = input<string | undefined>(undefined);
   /** Placeholder character in mask, default is underscore. */
   slotChar = input<string>("_");
@@ -100,6 +118,8 @@ export class UInputMask extends UBaseInput {
   autoClear = input<boolean, boolean>(true, { transform: booleanAttribute });
   /** Regex pattern for alpha (`a`) mask characters. */
   characterPattern = input<string>("[A-Za-z]");
+  /** When present, the value is not reformatted or cleared on focus and blur. */
+  keepBuffer = input<boolean, boolean>(false, { transform: booleanAttribute });
   /** Defines if the bound value is the raw unmasked value or the formatted mask value. */
   unmask = input<boolean | undefined>(undefined, { transform: booleanAttribute });
   /** When present, it specifies that an input field is read-only. */
@@ -108,337 +128,253 @@ export class UInputMask extends UBaseInput {
   placeholder = input<string | undefined>(undefined);
   /** When present, specifies the component should have invalid state style. */
   invalid = input<boolean | undefined>(undefined, { transform: booleanAttribute });
+  /** Displays a clear icon while the input has a value. */
+  showClear = input<boolean, boolean>(false, { transform: booleanAttribute });
+  /** Type of the native input. */
+  type = input<string>("text");
+  /** Identifier of the native input. */
+  inputId = input<string | undefined>(undefined);
+  /** Name of the native input. */
+  name = input<string | undefined>(undefined);
+  /** Title of the native input. */
+  title = input<string | undefined>(undefined);
+  /** Autocomplete hint of the native input. */
+  autocomplete = input<string | undefined>(undefined);
+  /** Tab index of the native input. */
+  tabindex = input<number | undefined>(undefined);
+  /** Accessible name of the native input. */
+  ariaLabel = input<string | undefined>(undefined);
+  /** Id of the element that labels the native input. */
+  ariaLabelledBy = input<string | undefined>(undefined);
+  /** Marks the native input as required for assistive technology. */
+  ariaRequired = input<boolean | undefined>(undefined);
+  /** Marks the native input as required. */
+  required = input<boolean, boolean>(false, { transform: booleanAttribute });
+  /** Focuses the native input when it is first rendered. */
+  autofocus = input<boolean, boolean>(false, { transform: booleanAttribute });
 
   /** Callback to invoke when the mask is completed. */
   onCompleteEvent = output<void>();
   /** Callback to invoke when value changes, emits unmasked value. */
   onUnmaskedChange = output<string>();
+  /** Callback to invoke when the input receives focus. */
+  onFocus = output<Event>();
+  /** Callback to invoke when the input loses focus. */
+  onBlur = output<Event>();
+  /** Callback to invoke on a key down. */
+  onKeydown = output<KeyboardEvent>();
+  /** Callback to invoke on an input event. */
+  onInput = output<Event>();
+  /** Callback to invoke when the clear icon is used. */
+  onClear = output<void>();
 
-  private defs: Record<string, string> | null = null;
-  private tests: (RegExp | null)[] = [];
-  private partialPosition = 0;
-  private firstNonMaskPos: number | null = null;
-  private lastRequiredNonMaskPos = -1;
-  private len = 0;
-  private buffer: string[] = [];
-  private defaultBuffer = "";
+  private pendingValue: { value: unknown } | null = null;
 
-  /** Real, formatted-with-mask buffer value shown in the native input. */
-  protected readonly displayValue = () => (this.buffer.length ? this.buffer.join("") : "");
+  private readonly host: InputMaskEngineHost = {
+    input: () => this.inputEl()?.nativeElement ?? null,
+    mask: () => this.mask(),
+    slotChar: () => this.slotChar(),
+    autoClear: () => this.autoClear(),
+    characterPattern: () => this.characterPattern(),
+    keepBuffer: () => this.keepBuffer(),
+    changed: () => this.syncModel(),
+    completed: () => this.onCompleteEvent.emit(),
+    unmasked: (value) => this.onUnmaskedChange.emit(value),
+    blurred: (event) => {
+      this.syncModelIfChanged();
+      this.onModelTouched();
+      this.onBlur.emit(event);
+    },
+  };
+  private readonly engine = new InputMaskEngine(this.host);
+
+  constructor() {
+    super();
+    effect(() => {
+      this.mask();
+      this.slotChar();
+      this.characterPattern();
+      untracked(() => {
+        this.engine.init();
+        this.engine.reformat();
+      });
+    });
+  }
 
   protected classesParams() {
     return {
       invalid: this.invalid(),
       fluid: this.hasFluid,
+      variantFilled: this.$variant() === "filled",
     };
   }
 
-  override ngOnInit(): void {
-    super.ngOnInit();
-    this.initMask();
+  protected inputClassesParams() {
+    return {
+      filled: this.$filled(),
+      invalid: this.invalid(),
+      fluid: this.hasFluid,
+      variantFilled: this.$variant() === "filled",
+      size: this.size() === "small" || this.size() === "large" ? this.size() : undefined,
+    };
   }
 
-  protected onFocus(): void {
-    if (this.readonly() || !this.mask()) return;
-    this.checkVal();
-    this.writeBuffer();
+  ngAfterViewChecked(): void {
+    this.bindDirective.setAttrs(this.ptms(["host", "root"]));
   }
 
-  protected onBlur(): void {
-    if (!this.mask()) return;
-    if (!this.autoClear() || this.buffer.join("") !== this.defaultBuffer) {
-      this.checkVal();
-      this.writeBuffer();
-    }
-    this.emitModel();
-  }
-
-  protected onKeyDown(event: KeyboardEvent): void {
-    if (this.readonly() || !this.mask()) return;
-    const input = this.inputEl.nativeElement;
-
-    if (event.key === "Backspace" || event.key === "Delete") {
-      const { begin: rawBegin, end: rawEnd } = this.getCaret(input);
-      let begin = rawBegin;
-      let end = rawEnd;
-      if (end - begin === 0) {
-        if (event.key === "Delete") {
-          end = this.seekNext(begin - 1);
-        } else {
-          begin = this.seekPrev(begin);
-        }
-      }
-      this.clearBuffer(begin, end);
-      this.shiftL(begin, end - 1);
-      this.writeBuffer();
-      this.setCaret(input, Math.max(this.firstNonMaskPos ?? 0, begin));
-      this.emitModel();
-      event.preventDefault();
+  ngAfterViewInit(): void {
+    const input = this.inputEl()?.nativeElement;
+    if (!input) return;
+    this.engine.attach(input);
+    this.engine.init();
+    if (this.pendingValue) {
+      const { value } = this.pendingValue;
+      this.pendingValue = null;
+      this.applyValue(value);
     }
   }
 
-  protected onKeyPress(event: KeyboardEvent): void {
-    if (this.readonly() || !this.mask()) return;
-    if (event.ctrlKey || event.altKey || event.metaKey) return;
-
-    const input = this.inputEl.nativeElement;
-    const { begin, end } = this.getCaret(input);
-    if (end - begin !== 0) {
-      this.clearBuffer(begin, end);
-      this.shiftL(begin, end - 1);
-    }
-
-    const p = this.seekNext(begin - 1);
-    if (p < this.len) {
-      const c = event.key;
-      const test = this.tests[p];
-      if (c.length === 1 && test?.test(c)) {
-        this.shiftR(p);
-        this.buffer[p] = c;
-        this.writeBuffer();
-        const next = this.seekNext(p);
-        this.setCaret(input, next);
-        this.emitModel();
-        if (begin <= this.lastRequiredNonMaskPos && this.isCompleted()) {
-          this.onCompleteEvent.emit();
-        }
-      }
-    }
-    event.preventDefault();
+  ngOnDestroy(): void {
+    this.engine.detach();
   }
 
-  protected onInputChange(event: Event): void {
-    // Native `input` fires after keypress-driven writeBuffer() already ran;
-    // real source guards this same re-entrancy via `event.isTrusted` +
-    // synthetic-dispatch skipping. Here, onKeyPress/onKeyDown already own
-    // buffer mutation, so plain typed input is a no-op; only IME/composition
-    // or programmatic value assignment (not exercised by this port's scope)
-    // would reach here without a buffer already matching.
-    event.preventDefault();
+  /** Moves keyboard focus to the native input. */
+  focus(): void {
+    this.engine.focus();
   }
 
-  protected onPaste(event: ClipboardEvent): void {
-    if (this.readonly() || !this.mask()) return;
-    const pasted = event.clipboardData?.getData("text") ?? "";
-    if (!pasted.length) return;
-    event.preventDefault();
-
-    const input = this.inputEl.nativeElement;
-    input.value = pasted;
-    this.checkVal(true);
-    this.writeBuffer();
-    this.emitModel();
-    if (this.isCompleted()) {
-      this.onCompleteEvent.emit();
-    }
+  /** Clears the value, the bound model and the native input. */
+  clear(): void {
+    const input = this.inputEl()?.nativeElement;
+    if (input) input.value = "";
+    this.writeModelValue(null);
+    this.onModelChange(null);
+    this.onClear.emit();
   }
 
   override writeControlValue(value: unknown, setModelValue: (value: unknown) => void): void {
-    if (!this.mask()) {
-      setModelValue(value);
+    setModelValue(value);
+    if (!this.inputEl()) {
+      this.pendingValue = { value };
       return;
     }
-    const input = this.inputEl?.nativeElement;
-    if (input) {
-      input.value = typeof value === "string" ? value : "";
-    }
-    this.checkVal(!!input?.value);
-    this.writeBuffer();
-    setModelValue(this.currentModelValue());
+    this.applyValue(value);
   }
 
-  private emitModel(): void {
-    const value = this.currentModelValue();
-    this.writeModelValue(value);
-    this.onModelChange(value);
-    this.onUnmaskedChange.emit(this.getUnmaskedValue());
+  private applyValue(value: unknown): void {
+    const input = this.inputEl()?.nativeElement;
+    if (!input) return;
+    input.value = value === undefined || value === null ? "" : String(value);
+    if (this.mask()) {
+      this.engine.reformat();
+      this.writeModelValue(this.currentModelValue());
+    }
   }
 
   private currentModelValue(): string {
-    return this.unmask() ? this.getUnmaskedValue() : this.buffer.join("");
+    const input = this.inputEl()?.nativeElement;
+    return this.unmask() ? this.engine.getUnmaskedValue() : (input?.value ?? "");
   }
 
-  /** Real, faithful port of `InputMask.initMask()`. */
-  private initMask(): void {
-    const maskValue = this.mask();
-    if (!maskValue) return;
-
-    this.tests = [];
-    this.partialPosition = maskValue.length;
-    this.len = maskValue.length;
-    this.firstNonMaskPos = null;
-    this.defs = {
-      "9": "[0-9]",
-      a: this.characterPattern(),
-      "*": `${this.characterPattern()}|[0-9]`,
-    };
-
-    const maskTokens = maskValue.split("");
-    for (let i = 0; i < maskTokens.length; i++) {
-      const c = maskTokens[i];
-      if (c === "?") {
-        this.len--;
-        this.partialPosition = i;
-      } else if (this.defs[c]) {
-        this.tests.push(new RegExp(this.defs[c]));
-        if (this.firstNonMaskPos === null) {
-          this.firstNonMaskPos = this.tests.length - 1;
-        }
-        if (i < this.partialPosition) {
-          this.lastRequiredNonMaskPos = this.tests.length - 1;
-        }
-      } else {
-        this.tests.push(null);
-      }
-    }
-
-    this.buffer = [];
-    for (let i = 0; i < maskTokens.length; i++) {
-      const c = maskTokens[i];
-      if (c !== "?") {
-        this.buffer.push(this.defs[c] ? this.getPlaceholder(i) : c);
-      }
-    }
-    this.defaultBuffer = this.buffer.join("");
+  private syncModel(): void {
+    const value = this.currentModelValue();
+    this.writeModelValue(value);
+    this.onModelChange(value);
   }
 
-  private getPlaceholder(i: number): string {
-    const slotCharValue = this.slotChar();
-    return i < slotCharValue.length ? slotCharValue.charAt(i) : slotCharValue.charAt(0);
+  private syncModelIfChanged(): void {
+    if (this.modelValue() !== this.currentModelValue()) this.syncModel();
+  }
+}
+
+/**
+ * Ultimate-owned adaptation of PrimeNG's `InputMaskDirective`
+ * (`[pInputMask]`). Applies a mask to any native `<input>`, so the host
+ * keeps its own value accessor (`ngModel`, `formControl`, `uInputText`). The
+ * engine dispatches an `input` event after each edit, which is how the host
+ * accessor learns the formatted value.
+ *
+ * Pass-through (`pt`, `ptOptions`), `unstyled` and `dt` are inherited from
+ * `UBaseComponent` unprefixed, as on `UInputText`. PrimeNG renames them
+ * (`pInputMaskPT`, `pInputMaskUnstyled`) to avoid a clash with another
+ * directive on the same element, but Angular binds an input name to every
+ * directive that declares it, so on `<input uInputText uInputMask>` one
+ * `pt` reaches both (ADR-095).
+ */
+@Directive({
+  standalone: true,
+  selector: "[uInputMask]",
+  exportAs: "uInputMask",
+  providers: [{ provide: U_PARENT_INSTANCE, useExisting: UInputMaskDirective }],
+  host: {
+    "[class]": "cx('root')",
+  },
+  hostDirectives: [UBind],
+})
+export class UInputMaskDirective extends UBaseComponent implements AfterViewInit, OnDestroy {
+  protected override readonly componentName = "inputmaskdirective";
+  protected override readonly styleModule = inputMaskDirectiveStyleModule;
+
+  private readonly element = inject<ElementRef<HTMLInputElement>>(ElementRef);
+  private readonly bindDirective = inject(UBind, { self: true });
+
+  /** Mask pattern. */
+  uInputMask = input<string | undefined>(undefined);
+  /** Placeholder character in mask, default is underscore. */
+  slotChar = input<string>("_");
+  /** Clears the incomplete value on blur. */
+  autoClear = input<boolean, boolean>(true, { transform: booleanAttribute });
+  /** Regex pattern for alpha (`a`) mask characters. */
+  characterPattern = input<string>("[A-Za-z]");
+  /** When present, the value is not reformatted or cleared on focus and blur. */
+  keepBuffer = input<boolean, boolean>(false, { transform: booleanAttribute });
+
+  /** Callback to invoke when the mask is completed. */
+  onComplete = output<void>();
+  /** Callback to invoke when value changes, emits unmasked value. */
+  onUnmaskedChange = output<string>();
+
+  private readonly engine = new InputMaskEngine({
+    input: () => this.element.nativeElement,
+    mask: () => this.uInputMask(),
+    slotChar: () => this.slotChar(),
+    autoClear: () => this.autoClear(),
+    characterPattern: () => this.characterPattern(),
+    keepBuffer: () => this.keepBuffer(),
+    changed: () => {},
+    completed: () => this.onComplete.emit(),
+    unmasked: (value) => this.onUnmaskedChange.emit(value),
+  });
+
+  constructor() {
+    super();
+    effect(() => {
+      this.uInputMask();
+      this.slotChar();
+      this.characterPattern();
+      untracked(() => {
+        this.engine.init();
+        this.engine.reformat();
+      });
+    });
   }
 
-  private seekNext(pos: number): number {
-    let next = pos;
-    while (++next < this.len && !this.tests[next]);
-    return next;
+  ngAfterViewChecked(): void {
+    this.bindDirective.setAttrs(this.ptms(["host", "root"]));
   }
 
-  private seekPrev(pos: number): number {
-    let prev = pos;
-    while (--prev >= 0 && !this.tests[prev]);
-    return prev;
+  ngAfterViewInit(): void {
+    this.engine.attach(this.element.nativeElement);
+    this.engine.init();
   }
 
-  private shiftL(begin: number, end: number): void {
-    if (begin < 0) return;
-    let j = this.seekNext(end);
-    for (let i = begin; i < this.len; i++) {
-      const test = this.tests[i];
-      if (test) {
-        if (j < this.len && test.test(this.buffer[j])) {
-          this.buffer[i] = this.buffer[j];
-          this.buffer[j] = this.getPlaceholder(j);
-        } else {
-          break;
-        }
-        j = this.seekNext(j);
-      }
-    }
+  ngOnDestroy(): void {
+    this.engine.detach();
   }
 
-  private shiftR(pos: number): void {
-    let c = this.getPlaceholder(pos);
-    for (let i = pos; i < this.len; i++) {
-      const test = this.tests[i];
-      if (test) {
-        const j = this.seekNext(i);
-        const t = this.buffer[i];
-        this.buffer[i] = c;
-        if (j < this.len && this.tests[j]?.test(t)) {
-          c = t;
-        } else {
-          break;
-        }
-      }
-    }
-  }
-
-  private clearBuffer(start: number, end: number): void {
-    for (let i = start; i < end && i < this.len; i++) {
-      if (this.tests[i]) {
-        this.buffer[i] = this.getPlaceholder(i);
-      }
-    }
-  }
-
-  private writeBuffer(): void {
-    const input = this.inputEl?.nativeElement;
-    if (input && this.buffer.length) {
-      input.value = this.buffer.join("");
-    }
-  }
-
-  private isCompleted(): boolean {
-    for (let i = this.firstNonMaskPos ?? 0; i <= this.lastRequiredNonMaskPos; i++) {
-      if (this.tests[i] && this.buffer[i] === this.getPlaceholder(i)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  private getUnmaskedValue(): string {
-    const unmasked: string[] = [];
-    for (let i = 0; i < this.buffer.length; i++) {
-      const c = this.buffer[i];
-      if (this.tests[i] && c !== this.getPlaceholder(i)) {
-        unmasked.push(c);
-      }
-    }
-    return unmasked.join("");
-  }
-
-  /** Faithful port of real `InputMask.checkVal()` — reconciles the raw input value against the mask. */
-  private checkVal(allow = false): number {
-    const input = this.inputEl?.nativeElement;
-    const test = input?.value ?? "";
-    let lastMatch = -1;
-    let i = 0;
-    let pos = 0;
-
-    for (i = 0, pos = 0; i < this.len; i++) {
-      if (this.tests[i]) {
-        this.buffer[i] = this.getPlaceholder(i);
-        while (pos++ < test.length) {
-          const c = test.charAt(pos - 1);
-          if (this.tests[i]?.test(c)) {
-            this.buffer[i] = c;
-            lastMatch = i;
-            break;
-          }
-        }
-        if (pos > test.length) {
-          this.clearBuffer(i + 1, this.len);
-          break;
-        }
-      } else {
-        if (this.buffer[i] === test.charAt(pos)) {
-          pos++;
-        }
-        if (i < this.partialPosition) {
-          lastMatch = i;
-        }
-      }
-    }
-
-    if (!allow) {
-      if (lastMatch + 1 < this.partialPosition) {
-        if (this.autoClear() || this.buffer.join("") === this.defaultBuffer) {
-          if (input) input.value = "";
-          this.clearBuffer(0, this.len);
-        }
-      } else if (input) {
-        input.value = input.value.substring(0, lastMatch + 1);
-      }
-    }
-    return this.partialPosition ? i : (this.firstNonMaskPos ?? 0);
-  }
-
-  private getCaret(input: HTMLInputElement): { begin: number; end: number } {
-    return { begin: input.selectionStart ?? 0, end: input.selectionEnd ?? 0 };
-  }
-
-  private setCaret(input: HTMLInputElement, pos: number): void {
-    input.setSelectionRange(pos, pos);
+  /** Moves keyboard focus to the masked input. */
+  focus(): void {
+    this.engine.focus();
   }
 }

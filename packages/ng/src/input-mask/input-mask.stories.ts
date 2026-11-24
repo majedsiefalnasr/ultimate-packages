@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/angular";
-import { UInputMask } from "./input-mask";
+import { moduleMetadata } from "@storybook/angular";
+import { UInputMask, UInputMaskDirective } from "./input-mask";
 
 /**
  * State coverage below is sourced from
@@ -9,6 +10,7 @@ import { UInputMask } from "./input-mask";
 const meta: Meta<UInputMask> = {
   title: "Ng/InputMask",
   component: UInputMask,
+  decorators: [moduleMetadata({ imports: [UInputMaskDirective] })],
 };
 
 export default meta;
@@ -35,4 +37,27 @@ export const Invalid: Story = {
     mask: "9999",
     invalid: true,
   },
+};
+
+/** A clear icon that resets the field. */
+export const ShowClear: Story = {
+  args: {
+    mask: "(999) 999-9999",
+    showClear: true,
+  },
+};
+
+/** The partially typed buffer stays visible after blur instead of being cleared. */
+export const KeepBuffer: Story = {
+  args: {
+    mask: "(999) 999-9999",
+    keepBuffer: true,
+  },
+};
+
+/** The `[uInputMask]` directive masks a native input without the component wrapper. */
+export const Directive: Story = {
+  render: () => ({
+    template: `<input uInputMask mask="(999) 999-9999" placeholder="(___) ___-____" />`,
+  }),
 };

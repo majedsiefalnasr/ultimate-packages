@@ -55,3 +55,21 @@ export const Invalid: Story = {
   },
   render: PhoneNumber.render,
 };
+
+export const Small: Story = {
+  args: {
+    modelValue: "",
+    mask: "999-999",
+    size: "small",
+  },
+  render: PhoneNumber.render,
+};
+
+export const Filled: Story = {
+  args: {
+    modelValue: "",
+    mask: "999-999",
+    variant: "filled",
+  },
+  render: PhoneNumber.render,
+};

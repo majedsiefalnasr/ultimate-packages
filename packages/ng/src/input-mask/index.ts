@@ -1,1 +1,1 @@
-export { UInputMask } from "./input-mask";
+export { UInputMask, UInputMaskDirective } from "./input-mask";

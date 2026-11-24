@@ -1,250 +1,624 @@
 <template>
-  <input
-    ref="input"
-    type="text"
+  <UInputText
+    :id="id"
+    :value="currentVal"
     :class="cx('root')"
-    :value="displayValue"
-    :name="name"
-    :placeholder="placeholder ?? defaultBuffer"
     :readonly="readonly"
     :disabled="disabled"
-    :aria-invalid="invalid || undefined"
+    :invalid="invalid"
+    :size="size"
+    :name="name"
+    :variant="variant"
+    :placeholder="placeholder"
+    :fluid="resolvedFluid"
+    :unstyled="unstyled"
+    :pt="rootPTOptions"
     @input="onInput"
-    @keydown="onKeyDown"
+    @compositionend="onInput"
     @focus="onFocus"
     @blur="onBlur"
+    @keydown="onKeyDown"
+    @keypress="onKeyPress"
     @paste="onPaste"
   />
 </template>
 
 <script>
+import { mergeProps } from "vue";
+import { UInputText } from "../input-text";
 import { createBaseInputMask } from "./BaseInputMask";
 
-// Ultimate-owned adaptation of PrimeVue's `InputMask` — a real, working
-// masking-buffer engine ported from real source's own jQuery-maskedinput-
-// derived algorithm (verified against .vendor-extracted InputMask.vue,
-// `initMask`/`checkVal`/`defs` table), scoped down on ONE axis only: this
-// port re-derives the buffer from the raw input value on every keystroke
-// via `selectionStart`-based cursor tracking rather than real source's own
-// much larger caret-preserving `insertText`/`deleteRange`/`initCursor`
-// machinery (~300 lines of IE/Android-era cursor-position arithmetic this
-// port does not need — modern browsers report `selectionStart`/
-// `selectionEnd` reliably on `input` events). The MASKING BEHAVIOR ITSELF
-// is fully real and not cut: same token vocabulary (`9`=digit, `a`=alpha,
-// `*`=alphanumeric, `?`=marks everything after it optional, any other
-// character = static/literal, inserted automatically and skipped over on
-// typing/backspacing), same `slotChar` placeholder, same `autoClear`
-// (blanks an incomplete value on blur), same `unmask` (emits the raw
-// unmasked characters instead of the formatted buffer).
+// Ultimate-owned port of PrimeVue 4.5.5 `InputMask.vue`, which is itself the
+// jQuery-maskedinput algorithm (`initMask`/`checkVal`/`shiftL`/`shiftR`).
+// The component renders a nested `UInputText`, so its `$el` is the native
+// input and the InputText styling and pass-through apply unchanged.
+//
+// Token vocabulary: `9` digit, `a` alpha, `*` alphanumeric, `?` marks the
+// rest of the mask optional, any other character is a literal.
+//
+// Differences from PrimeVue (recorded in ADR-095):
+//   - keys are read from `event.key`, not `event.code`;
+//   - `caret()` only writes a selection while the input is focused and has no
+//     `offsetParent` guard, so the read side works in jsdom;
+//   - keypress ignores ctrl/alt/meta chords and non-character keys, but lets
+//     shift through, so capitals are masked like any other character;
+//   - `onInput` returns while an IME composition is active, and the
+//     `compositionend` event finalizes it;
+//   - paste only emits `paste`; the browser's own `input` event reformats;
+//   - `complete` carries `{ originalEvent, value }`, the earlier Ultimate
+//     contract, not the bare event;
+//   - without a `mask` the component behaves as a plain text input;
+//   - `@primevue/forms` (`formField.onBlur`) is out of scope.
 export default {
   name: "UInputMask",
   extends: createBaseInputMask(),
-  emits: ["focus", "blur", "keydown", "complete", "paste"],
+  inheritAttrs: false,
+  emits: ["focus", "blur", "keydown", "keypress", "complete", "paste"],
+  components: { UInputText },
   data() {
     return {
-      buffer: [],
-      tests: [],
-      len: 0,
-      firstNonMaskPos: null,
-      lastRequiredNonMaskPos: null,
-      defaultBuffer: "",
-      focused: false,
-      selfDriven: false,
+      currentVal: "",
     };
   },
   computed: {
-    displayValue() {
-      if (
-        this.focused ||
-        (this.dValue !== undefined && this.dValue !== null && this.dValue !== "")
-      ) {
-        return this.bufferToString();
-      }
-      return "";
+    rootPTOptions() {
+      return {
+        root: mergeProps(
+          this.ptm("pcInputText", this.ptmParams)?.root,
+          this.ptmi("root", this.ptmParams)
+        ),
+      };
+    },
+    ptmParams() {
+      return {
+        context: {
+          filled: this.filled,
+        },
+      };
     },
   },
   watch: {
-    mask() {
-      this.initMask();
-    },
-    dValue() {
-      // Skipped when this write originated from our own writeValue() call
-      // (onInput/onKeyDown/onPaste/onBlur already mutated `buffer` directly,
-      // char-by-char or slot-by-slot) — re-deriving it here via checkVal()
-      // would re-pack digits left-to-right from scratch and silently
-      // discard the caret-position-aware edit that was just made (e.g. a
-      // single Backspace at position N would incorrectly shift every digit
-      // after N left by one instead of just clearing slot N). Only an
-      // externally-driven modelValue change (a fresh v-model assignment
-      // from the consumer) should trigger a full re-sync.
-      if (!this.focused && !this.selfDriven) {
-        this.syncFromModel();
+    mask(newMask, oldMask) {
+      if (oldMask !== newMask) {
+        this.initMask();
       }
-      this.selfDriven = false;
+    },
+    slotChar(newChar, oldChar) {
+      if (oldChar !== newChar) {
+        this.initMask();
+      }
+    },
+    disabled(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        this.updateValue();
+      }
+    },
+    dValue(newValue) {
+      if (!this.mask) {
+        this.currentVal = newValue === undefined || newValue === null ? "" : String(newValue);
+      }
     },
   },
   created() {
-    // Both run in created() (before the initial render), not mounted():
-    // mutating `buffer` in mounted() would still be correct data-wise, but
-    // Vue 3 batches the resulting re-render as a microtask, so a caller
-    // reading the rendered DOM synchronously right after `mount()` (with no
-    // awaited tick) would see the placeholder buffer, not the synced one.
-    // Syncing before the first render avoids that extra tick entirely.
+    this.tests = [];
+    this.buffer = [];
+    this.len = 0;
+    this.partialPosition = 0;
+    this.firstNonMaskPos = null;
+    this.lastRequiredNonMaskPos = -1;
+    this.defaultBuffer = "";
+    this.focusText = "";
+    this.oldVal = "";
+    this.androidChrome = false;
+    this.caretTimeoutId = null;
+    this.updateTimeoutId = null;
+  },
+  mounted() {
     this.initMask();
-    this.syncFromModel();
+  },
+  updated() {
+    if (this.mask && this.isValueUpdated()) {
+      this.updateValue();
+    }
+  },
+  beforeUnmount() {
+    clearTimeout(this.caretTimeoutId);
+    clearTimeout(this.updateTimeoutId);
   },
   methods: {
-    // 9 = digit, a = alpha, * = alphanumeric, ? = rest-of-mask-is-optional,
-    // anything else = static/literal character (auto-inserted, not user-editable).
-    initMask() {
-      this.tests = [];
-      this.buffer = [];
-      this.firstNonMaskPos = null;
-      this.lastRequiredNonMaskPos = null;
+    inputEl() {
+      const el = this.$el;
+      return el && el.tagName === "INPUT" ? el : null;
+    },
+    modelOut(value) {
+      const val = this.unmask ? this.getUnmaskedValue() : value;
+      return this.defaultBuffer !== val ? val : "";
+    },
+    emitComplete(event) {
+      const el = this.inputEl();
+      this.$emit("complete", { originalEvent: event, value: this.modelOut(el ? el.value : "") });
+    },
+    onInput(event) {
+      // `isComposing` is true while an IME composition is still open; the
+      // `compositionend` event finalizes it.
+      if (event.isComposing) return;
 
-      const defs = { 9: /[0-9]/, a: /[A-Za-z]/, "*": /[A-Za-z0-9]/ };
-      const mask = this.mask || "";
-      let partialPosition = mask.length;
-      const maskTokens = mask.split("");
+      if (!this.mask) {
+        this.updateModelValue(event.target.value);
+        return;
+      }
+
+      if (this.androidChrome) this.handleAndroidInput(event);
+      else this.handleInputChange(event);
+
+      this.updateModelValue(event.target.value);
+    },
+    onFocus(event) {
+      const el = this.inputEl();
+
+      if (this.mask && !this.readonly && el) {
+        this.focusText = el.value;
+
+        if (!el.value || el.value === this.defaultBuffer) {
+          clearTimeout(this.caretTimeoutId);
+          this.caretTimeoutId = setTimeout(() => {
+            if (this.inputEl() === document.activeElement) {
+              this.caret(0, 0);
+            }
+          }, 0);
+        } else {
+          const pos = this.checkVal();
+
+          clearTimeout(this.caretTimeoutId);
+          this.caretTimeoutId = setTimeout(() => {
+            const input = this.inputEl();
+
+            if (!input || input !== document.activeElement) {
+              return;
+            }
+
+            this.writeBuffer();
+
+            if (pos === this.mask.replace("?", "").length) {
+              this.caret(0, pos);
+            } else {
+              this.caret(pos);
+            }
+          }, 10);
+        }
+      }
+
+      this.$emit("focus", event);
+    },
+    onBlur(event) {
+      const el = this.inputEl();
+
+      if (this.mask && el) {
+        this.checkVal();
+        this.updateModelValue(el.value);
+
+        if (el.value !== this.focusText) {
+          el.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      }
+
+      this.$emit("blur", event);
+    },
+    onKeyDown(event) {
+      const el = this.inputEl();
+
+      if (this.mask && !this.readonly && el) {
+        const key = event.key;
+        const iPhone = /iphone/i.test(navigator.userAgent);
+
+        this.oldVal = el.value;
+
+        // Backspace, Delete (and Escape on iPhone) get special treatment.
+        if (key === "Backspace" || key === "Delete" || (iPhone && key === "Escape")) {
+          const pos = this.caret();
+          let begin = pos.begin;
+          let end = pos.end;
+
+          if (end - begin === 0) {
+            begin = key !== "Delete" ? this.seekPrev(begin) : (end = this.seekNext(begin - 1));
+            end = key === "Delete" ? this.seekNext(end) : end;
+          }
+
+          this.clearBuffer(begin, end);
+          this.shiftL(begin, end - 1);
+          this.updateModelValue(el.value);
+
+          event.preventDefault();
+        } else if (key === "Enter") {
+          el.blur();
+          this.updateModelValue(el.value);
+        } else if (key === "Escape") {
+          el.value = this.focusText;
+          this.caret(0, this.checkVal());
+          this.updateModelValue(el.value);
+
+          event.preventDefault();
+        }
+      }
+
+      this.$emit("keydown", event);
+    },
+    onKeyPress(event) {
+      const el = this.inputEl();
+
+      if (
+        this.mask &&
+        !this.readonly &&
+        el &&
+        !event.ctrlKey &&
+        !event.altKey &&
+        !event.metaKey &&
+        typeof event.key === "string" &&
+        event.key.length === 1
+      ) {
+        const pos = this.caret();
+        let completed = false;
+
+        if (pos.end - pos.begin !== 0) {
+          this.clearBuffer(pos.begin, pos.end);
+          this.shiftL(pos.begin, pos.end - 1);
+        }
+
+        const p = this.seekNext(pos.begin - 1);
+
+        if (p < this.len) {
+          const c = event.key;
+
+          if (this.tests[p].test(c)) {
+            this.shiftR(p);
+
+            this.buffer[p] = c;
+            this.writeBuffer();
+
+            const next = this.seekNext(p);
+
+            if (/android/i.test(navigator.userAgent)) {
+              clearTimeout(this.caretTimeoutId);
+              this.caretTimeoutId = setTimeout(() => this.caret(next), 0);
+            } else {
+              this.caret(next);
+            }
+
+            if (pos.begin <= this.lastRequiredNonMaskPos) {
+              completed = this.isCompleted();
+            }
+          }
+        }
+
+        event.preventDefault();
+        this.updateModelValue(el.value);
+
+        if (completed) {
+          this.emitComplete(event);
+        }
+      }
+
+      this.$emit("keypress", event);
+    },
+    onPaste(event) {
+      this.$emit("paste", event);
+    },
+    caret(first, last) {
+      const el = this.inputEl();
+
+      if (!el) {
+        return undefined;
+      }
+
+      if (typeof first === "number") {
+        if (el !== document.activeElement) {
+          return undefined;
+        }
+
+        const begin = first;
+        const end = typeof last === "number" ? last : begin;
+
+        el.setSelectionRange(begin, end);
+        return undefined;
+      }
+
+      return { begin: el.selectionStart ?? 0, end: el.selectionEnd ?? 0 };
+    },
+    isCompleted() {
+      for (let i = this.firstNonMaskPos; i <= this.lastRequiredNonMaskPos; i++) {
+        if (this.tests[i] && this.buffer[i] === this.getPlaceholder(i)) {
+          return false;
+        }
+      }
+
+      return true;
+    },
+    getPlaceholder(i) {
+      if (i < this.slotChar.length) {
+        return this.slotChar.charAt(i);
+      }
+
+      return this.slotChar.charAt(0);
+    },
+    seekNext(pos) {
+      while (++pos < this.len && !this.tests[pos]);
+
+      return pos;
+    },
+    seekPrev(pos) {
+      while (--pos >= 0 && !this.tests[pos]);
+
+      return pos;
+    },
+    shiftL(begin, end) {
+      if (begin < 0) {
+        return;
+      }
+
+      for (let i = begin, j = this.seekNext(end); i < this.len; i++) {
+        if (this.tests[i]) {
+          if (j < this.len && this.tests[i].test(this.buffer[j])) {
+            this.buffer[i] = this.buffer[j];
+            this.buffer[j] = this.getPlaceholder(j);
+          } else {
+            break;
+          }
+
+          j = this.seekNext(j);
+        }
+      }
+
+      this.writeBuffer();
+      this.caret(Math.max(this.firstNonMaskPos, begin));
+    },
+    shiftR(pos) {
+      for (let i = pos, c = this.getPlaceholder(pos); i < this.len; i++) {
+        if (this.tests[i]) {
+          const j = this.seekNext(i);
+          const t = this.buffer[i];
+
+          this.buffer[i] = c;
+
+          if (j < this.len && this.tests[j].test(t)) {
+            c = t;
+          } else {
+            break;
+          }
+        }
+      }
+    },
+    handleAndroidInput(event) {
+      const el = this.inputEl();
+      const curVal = el.value;
+      const pos = this.caret();
+
+      if (this.oldVal && this.oldVal.length && this.oldVal.length > curVal.length) {
+        // A deletion or backspace happened.
+        this.checkVal(true);
+        while (pos.begin > 0 && !this.tests[pos.begin - 1]) pos.begin--;
+
+        if (pos.begin === 0) {
+          while (pos.begin < this.firstNonMaskPos && !this.tests[pos.begin]) pos.begin++;
+        }
+
+        this.caret(pos.begin, pos.begin);
+      } else {
+        this.checkVal(true);
+        while (pos.begin < this.len && !this.tests[pos.begin]) pos.begin++;
+
+        this.caret(pos.begin, pos.begin);
+      }
+
+      if (this.isCompleted() && el.value !== this.defaultBuffer) {
+        this.emitComplete(event);
+      }
+    },
+    clearBuffer(start, end) {
+      for (let i = start; i < end && i < this.len; i++) {
+        if (this.tests[i]) {
+          this.buffer[i] = this.getPlaceholder(i);
+        }
+      }
+    },
+    writeBuffer() {
+      const el = this.inputEl();
+
+      if (el) {
+        el.value = this.buffer.join("");
+      }
+    },
+    checkVal(allow) {
+      const el = this.inputEl();
+      // Try to place characters where they belong.
+      const test = el.value;
+      let lastMatch = -1;
+      let i;
+      let pos;
+
+      for (i = 0, pos = 0; i < this.len; i++) {
+        if (this.tests[i]) {
+          this.buffer[i] = this.getPlaceholder(i);
+
+          while (pos++ < test.length) {
+            const c = test.charAt(pos - 1);
+
+            if (this.tests[i].test(c)) {
+              this.buffer[i] = c;
+              lastMatch = i;
+              break;
+            }
+          }
+
+          if (pos > test.length) {
+            this.clearBuffer(i + 1, this.len);
+            break;
+          }
+        } else {
+          if (this.buffer[i] === test.charAt(pos)) {
+            pos++;
+          }
+
+          if (i < this.partialPosition) {
+            lastMatch = i;
+          }
+        }
+      }
+
+      if (allow) {
+        this.writeBuffer();
+      } else if (lastMatch + 1 < this.partialPosition) {
+        if (this.autoClear || this.buffer.join("") === this.defaultBuffer) {
+          // Invalid value: remove it and replace it with the mask.
+          if (el.value) el.value = "";
+          this.clearBuffer(0, this.len);
+        } else {
+          // Invalid value, but show it so the user can correct the mistake.
+          this.writeBuffer();
+        }
+      } else {
+        this.writeBuffer();
+        el.value = el.value.substring(0, lastMatch + 1);
+      }
+
+      return this.partialPosition ? i : this.firstNonMaskPos;
+    },
+    handleInputChange(event) {
+      if (this.readonly) {
+        return;
+      }
+
+      const el = this.inputEl();
+      const pos = this.checkVal(true);
+
+      this.caret(pos);
+      this.updateModelValue(el.value);
+
+      if (this.isCompleted() && el.value !== this.defaultBuffer) {
+        this.emitComplete(event);
+      }
+    },
+    getUnmaskedValue() {
+      const unmaskedBuffer = [];
+
+      for (let i = 0; i < this.buffer.length; i++) {
+        const c = this.buffer[i];
+
+        if (this.tests[i] && c !== this.getPlaceholder(i)) {
+          unmaskedBuffer.push(c);
+        }
+      }
+
+      return unmaskedBuffer.join("");
+    },
+    updateModelValue(value) {
+      if (this.currentVal === value) return;
+
+      const out = this.modelOut(value);
+
+      this.currentVal = value;
+      // An uncontrolled instance keeps its own value, so the next render does
+      // not re-apply a stale one.
+      this.dValue = out;
+      this.writeValue(out);
+    },
+    updateValue(updateModel = true) {
+      const el = this.inputEl();
+
+      if (!el) {
+        return;
+      }
+
+      if (!this.mask) {
+        el.value = this.dValue === undefined || this.dValue === null ? "" : String(this.dValue);
+        this.currentVal = el.value;
+        return;
+      }
+
+      if (this.dValue === undefined || this.dValue === null) {
+        el.value = "";
+        this.currentVal = "";
+        if (updateModel) this.updateModelValue("");
+      } else {
+        el.value = this.dValue;
+        this.checkVal();
+        this.currentVal = el.value;
+
+        clearTimeout(this.updateTimeoutId);
+        this.updateTimeoutId = setTimeout(() => {
+          const input = this.inputEl();
+
+          if (input) {
+            this.writeBuffer();
+            this.checkVal();
+            this.currentVal = input.value;
+
+            if (updateModel) this.updateModelValue(input.value);
+          }
+        }, 10);
+      }
+
+      this.focusText = el.value;
+    },
+    initMask() {
+      const defs = {
+        9: /[0-9]/,
+        a: /[A-Za-z]/,
+        "*": /[A-Za-z0-9]/,
+      };
+      const maskTokens = this.mask ? this.mask.split("") : [];
+
+      this.tests = [];
+      this.partialPosition = this.mask ? this.mask.length : 0;
+      this.len = this.mask ? this.mask.length : 0;
+      this.firstNonMaskPos = null;
+      this.lastRequiredNonMaskPos = -1;
+      this.androidChrome =
+        /chrome/i.test(navigator.userAgent) && /android/i.test(navigator.userAgent);
 
       for (let i = 0; i < maskTokens.length; i++) {
         const c = maskTokens[i];
+
         if (c === "?") {
-          partialPosition = i;
+          this.len--;
+          this.partialPosition = i;
         } else if (defs[c]) {
           this.tests.push(defs[c]);
-          if (this.firstNonMaskPos === null) this.firstNonMaskPos = this.tests.length - 1;
-          if (i < partialPosition) this.lastRequiredNonMaskPos = this.tests.length - 1;
+
+          if (this.firstNonMaskPos === null) {
+            this.firstNonMaskPos = this.tests.length - 1;
+          }
+
+          if (i < this.partialPosition) {
+            this.lastRequiredNonMaskPos = this.tests.length - 1;
+          }
         } else {
           this.tests.push(null);
         }
       }
 
-      this.partialPosition = partialPosition;
-      this.len = this.tests.length;
-      this.buffer = this.tests.map((test, i) => (test ? this.slotChar : maskTokens[i]));
+      this.buffer = [];
+
+      for (let i = 0; i < maskTokens.length; i++) {
+        const c = maskTokens[i];
+
+        if (c !== "?") {
+          this.buffer.push(defs[c] ? this.getPlaceholder(i) : c);
+        }
+      }
+
       this.defaultBuffer = this.buffer.join("");
+      this.updateValue(false);
     },
-    bufferToString() {
-      return this.buffer.join("");
-    },
-    /** Rebuilds `buffer` from an arbitrary raw string, testing each char against `tests`. */
-    checkVal(rawValue) {
-      const raw = (rawValue ?? "").split("");
-      this.buffer = this.tests.map((test, i) => (test ? this.slotChar : this.maskLiteralAt(i)));
+    isValueUpdated() {
+      const el = this.inputEl();
 
-      let bufferPos = 0;
-      for (let i = 0; i < raw.length; i++) {
-        const ch = raw[i];
-        while (bufferPos < this.len && this.tests[bufferPos] === null) {
-          bufferPos++;
-        }
-        if (bufferPos >= this.len) break;
-        const test = this.tests[bufferPos];
-        if (test && test.test(ch)) {
-          this.buffer[bufferPos] = ch;
-          bufferPos++;
-        }
+      if (!el) {
+        return false;
       }
-      return bufferPos;
-    },
-    maskLiteralAt(i) {
-      const maskTokens = (this.mask || "").split("");
-      return maskTokens[i];
-    },
-    isCompleted() {
-      if (this.lastRequiredNonMaskPos === null) return true;
-      for (let i = this.firstNonMaskPos; i <= this.lastRequiredNonMaskPos; i++) {
-        if (this.tests[i] && this.buffer[i] === this.slotChar) return false;
-      }
-      return true;
-    },
-    unmaskedValue() {
-      return this.buffer.filter((ch, i) => this.tests[i] && ch !== this.slotChar).join("");
-    },
-    syncFromModel() {
-      if (!this.mask) return;
-      const value = this.dValue;
-      if (value === undefined || value === null || value === "") {
-        this.buffer = this.tests.map((test, i) => (test ? this.slotChar : this.maskLiteralAt(i)));
-        return;
-      }
-      this.checkVal(String(value));
-    },
-    emitModel(event) {
-      const formatted = this.bufferToString();
-      const isBlank = formatted === this.defaultBuffer;
-      const outValue = isBlank ? "" : this.unmask ? this.unmaskedValue() : formatted;
-      this.selfDriven = true;
-      this.writeValue(outValue, event);
-      if (this.isCompleted() && !isBlank) {
-        this.$emit("complete", { originalEvent: event, value: outValue });
-      }
-    },
-    onInput(event) {
-      if (!this.mask) {
-        this.writeValue(event.target.value, event);
-        return;
-      }
-      this.checkVal(event.target.value);
-      event.target.value = this.bufferToString();
-      const caret = this.firstEditablePos();
-      event.target.setSelectionRange(caret, caret);
-      this.emitModel(event);
-    },
-    firstEditablePos() {
-      for (let i = 0; i < this.len; i++) {
-        if (this.tests[i] && this.buffer[i] === this.slotChar) return i;
-      }
-      return this.len;
-    },
-    onKeyDown(event) {
-      this.$emit("keydown", event);
-      if (!this.mask || this.readonly) return;
 
-      if (event.key === "Backspace" || event.key === "Delete") {
-        const el = event.target;
-        const pos = el.selectionStart;
-        if (pos !== null && el.selectionStart === el.selectionEnd) {
-          const removeAt = event.key === "Backspace" ? pos - 1 : pos;
-          if (removeAt >= 0 && removeAt < this.len && this.tests[removeAt]) {
-            this.buffer[removeAt] = this.slotChar;
-            event.preventDefault();
-            el.value = this.bufferToString();
-            const caret = event.key === "Backspace" ? removeAt : pos;
-            el.setSelectionRange(caret, caret);
-            this.emitModel(event);
-          }
-        }
-      }
-    },
-    onFocus(event) {
-      this.focused = true;
-      this.$nextTick(() => {
-        if (event.target === document.activeElement) {
-          const pos = this.firstEditablePos();
-          event.target.setSelectionRange(pos, pos);
-        }
-      });
-      this.$emit("focus", event);
-    },
-    onBlur(event) {
-      this.focused = false;
-      if (this.autoClear && !this.isCompleted()) {
-        this.buffer = this.tests.map((test, i) => (test ? this.slotChar : this.maskLiteralAt(i)));
-        this.writeValue("", event);
-      }
-      this.$emit("blur", event);
-    },
-    onPaste(event) {
-      if (this.readonly || this.disabled || !this.mask) return;
-      const paste = event.clipboardData.getData("text");
-      if (paste.length) {
-        this.checkVal(paste);
-        this.emitModel(event);
-      }
-      event.preventDefault();
-      this.$emit("paste", event);
+      return this.unmask
+        ? this.dValue != this.getUnmaskedValue()
+        : this.defaultBuffer !== el.value && el.value !== this.dValue;
     },
   },
 };

@@ -1084,5 +1084,29 @@
     "ultimateDestination": "packages/ng/src/input-group/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export, no upstream equivalent file."
+  },
+  {
+    "originalPath": "packages/primeng/src/inputmask/inputmask.ts",
+    "ultimateDestination": "packages/ng/src/input-mask/input-mask.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG 21.1.9 inputmask/inputmask.ts for #190 (ADR-095): the component and the `[pInputMask]` directive, the `mask`, `slotChar`, `autoClear`, `unmask`, `characterPattern`, `keepBuffer` and `showClear` inputs, the `onComplete`, `onFocus`, `onBlur`, `onInput`, `onKeydown` and `onClear` outputs, the clear icon with its `#clearicon` template, the public `focus()` and `clear()` methods and the control value accessor wiring are upstream's. The directive is `UInputMaskDirective` on `[uInputMask]`, and it uses the unprefixed `pt`, `ptOptions`, `unstyled` and `dt` inherited from the base instead of PrimeNG's prefixed names (ADR-095). The DOM listeners and the buffer algorithm move to a shared engine so the component and the directive cannot drift. PrimeNG's `BaseComponent`, the injected style services and the NgModule wrapper are not carried (ADR-019). Existing file, rewritten in #190."
+  },
+  {
+    "originalPath": "packages/primeng/src/inputmask/inputmask.ts",
+    "ultimateDestination": "packages/ng/src/input-mask/input-mask-engine.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the buffer algorithm (ADR-064). The mask tokens, `seekNext`, `seekPrev`, `shiftL`, `shiftR`, `checkVal`, `writeBuffer`, the Backspace, Delete, Escape and Enter handling, the Android Chrome branch and the `keepBuffer` rule are PrimeNG 21.1.9's, moved out of the component into one engine that both `UInputMask` and `UInputMaskDirective` call (ADR-095). Added by Ultimate: the composition guards (`compositionstart` and `compositionend`), the deferred paste reformat that runs after the browser applies the paste, and a re-entrancy flag for the engine's own synthetic `input` event. The mobile and IME paths are tested with simulated events only and are not device-verified. New file in #190."
+  },
+  {
+    "originalPath": "packages/primeng/src/inputmask/style/inputmaskstyle.ts",
+    "ultimateDestination": "packages/ng/src/input-mask/input-mask-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver and the Angular-only rules (ADR-064). Side-by-side with PrimeNG 21.1.9 inputmask/style/inputmaskstyle.ts for #190 (ADR-095): the root class resolver (`p-inputmask`, `p-inputwrapper`, `p-invalid`, `p-variant-filled`, `p-inputmask-fluid` renamed to the `u-` prefix), the clear icon rules and the `.ng-invalid.ng-dirty` rule are upstream's. The InputText structural CSS comes from `@ultimate/uix-styles/inputtext` (ADR-082), and the `pcInputText` class function produces the InputText classes for the input. Existing file, rewritten in #190."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/input-mask/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel re-export of `UInputMask` and `UInputMaskDirective`, no upstream equivalent file."
   }
 ]
