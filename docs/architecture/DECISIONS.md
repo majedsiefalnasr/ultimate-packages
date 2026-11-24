@@ -1855,7 +1855,7 @@ Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://git
 
 ## ADR-100 — ToggleSwitch: one shared stylesheet on the Aura toggleswitch tokens, `pt`, `unstyled` and `dt` in all three frameworks, the missing form and accessibility surface, a React ref handle, and recorded exclusions (L0a, ticket #197)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#197](https://github.com/majedsiefalnasr/ultimate-packages/issues/197)). User rulings: the React root `role="checkbox"` wrapper is not added and is recorded as I (Q2); React gets a ref handle with `focus()`, `getElement()` and `getInput()` (Q3). Standing rulings applied: `tooltip` stays composition (I), Vue forms registration is out of scope, N rows get no work.
+Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#197](https://github.com/majedsiefalnasr/ultimate-packages/issues/197)). User rulings: the React root `role="checkbox"` wrapper is not added and is recorded as I (Q2); React gets a ref handle with `focus()`, `getElement()` and `getInput()` (Q3). Standing rulings applied: `tooltip` stays composition (I), Vue forms registration is out of scope, N rows get no work.
 
 **Context.**
 
