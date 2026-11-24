@@ -315,6 +315,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 - package.ultimate.uix-styles.base: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.base
 - package.ultimate.uix-styles.button: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.button
 - package.ultimate.uix-styles.checkbox: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.checkbox
+- package.ultimate.uix-styles.chip: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.chip
 - package.ultimate.uix-styles.dialog: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.dialog
 - package.ultimate.uix-styles.floatlabel: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.floatlabel
 - package.ultimate.uix-styles.iconfield: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.iconfield
@@ -327,6 +328,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 - package.ultimate.uix-styles.root: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.root
 - package.ultimate.uix-styles.table: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.table
 - package.ultimate.uix-styles.textarea: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.textarea
+- package.ultimate.uix-styles.toggleswitch: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.toggleswitch
 - package.ultimate.uix-styles.tooltip: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.tooltip
 - package.ultimate.uix-styles.virtualscroller: #146 -> scripts/inventory/shared-component-styles.json#uixstyles.virtualscroller
 - package.ultimate.uix-utils: #143, #144 -> aggregate of 10 resolved families (#143, #144)
@@ -452,7 +454,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 
 ## References
 
-1895 references; 0 unresolved.
+1901 references; 0 unresolved.
 
 - scripts/inventory/ai.json: 18 references, 0 unresolved
 - scripts/inventory/angular-actions.json: 47 references, 0 unresolved
@@ -487,7 +489,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 - scripts/inventory/react-table-viewport.json: 34 references, 0 unresolved
 - scripts/inventory/react-text-entry.json: 43 references, 0 unresolved
 - scripts/inventory/root-files.json: 0 references, 0 unresolved
-- scripts/inventory/shared-component-styles.json: 55 references, 0 unresolved
+- scripts/inventory/shared-component-styles.json: 61 references, 0 unresolved
 - scripts/inventory/styled-runtime.json: 33 references, 0 unresolved
 - scripts/inventory/theme-contract.json: 20 references, 0 unresolved
 - scripts/inventory/uix-utils-dom.json: 9 references, 0 unresolved

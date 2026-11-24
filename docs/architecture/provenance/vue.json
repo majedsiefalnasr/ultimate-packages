@@ -452,8 +452,8 @@
   {
     "originalPath": "src/chip/index.ts",
     "ultimateDestination": "packages/vue/src/chip/chip-style.ts",
-    "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 chip, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions PX-A5."
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). The resolver keys (`image`, `icon`, `label` and `removeIcon`) are PrimeVue 4.5.5 ChipStyle.js `classes` with `p-chip` renamed to `u-chip`, and the root adds `p-disabled` from the `disabled` param as upstream does. The CSS is the shared `@ultimate/uix-styles/chip` module (ADR-082, ADR-098); this file holds none of its own. Changed for #203."
   },
   {
     "originalPath": "src/tag/index.ts",
@@ -903,7 +903,7 @@
     "originalPath": "packages/primevue/src/chip/Chip.vue",
     "ultimateDestination": "packages/vue/src/chip/Chip.vue",
     "modificationStatus": "adapted",
-    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2). Keeps PrimeVue 4.5.5 Chip.vue's template structure (v-if visible root with cx('root') and aria-label, image v-if, icon v-else-if with [cx('icon'), icon], label v-if label !== null, now a span instead of a div) and its component options (extends base, inheritAttrs: false, data visible: true, onKeydown Enter/Backspace, close emitting remove). Adds alt, disabled, removeAriaLabel and the imageError emit; the remove control's role, tabindex and aria-label come from PrimeNG (second entry). Drops the default/removeicon slots, the icon slot, dataP and pt; uses UTimesIcon. Added in c42f709d (Phase C Batch 1, Chip row)."
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2). Keeps PrimeVue 4.5.5 Chip.vue's template structure (v-if visible root with cx('root') and aria-label, image v-if, icon v-else-if with [cx('icon'), icon], label v-if label !== null, now a span instead of a div) and its component options (extends base, inheritAttrs: false, data visible: true, onKeydown Enter/Backspace, close emitting remove). Adds alt, disabled, removeAriaLabel and the imageError emit; the remove control's role, tabindex and aria-label come from PrimeNG (second entry). Drops the default/removeicon slots, the icon slot, dataP and pt; uses UTimesIcon. Added in c42f709d (Phase C Batch 1, Chip row). Changed for #203 (ADR-098): adds the default slot, the `icon` slot (rendered inside the icon part, because a fragment cannot take the icon class), the `removeicon` slot with `removeCallback` and `keydownCallback`, the `removeIcon` font class, `ptmi('root')` with `inheritAttrs: false`, `ptm` on each part, `data-p` and the `p-disabled` root class. `TimesCircleIcon` is still not carried."
   },
   {
     "originalPath": "packages/primeng/src/chip/chip.ts",
@@ -915,7 +915,7 @@
     "originalPath": "packages/primevue/src/chip/BaseChip.vue",
     "ultimateDestination": "packages/vue/src/chip/BaseChip.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2). Keeps PrimeVue 4.5.5 BaseChip.vue's prop definitions (label [String, Number] default null, icon, image, removable) in a defineComponent factory extending createBaseComponent; adds alt, disabled and removeAriaLabel, drops removeIcon and provide. Added in c42f709d; f146ea8c and ec3112f3 (GAP-082) only added Vue typing."
+    "modificationDescription": "COPY (ADR-064; GAP-094 backfill batch 2). Keeps PrimeVue 4.5.5 BaseChip.vue's prop definitions (label [String, Number] default null, icon, image, removable) in a defineComponent factory extending createBaseComponent; adds alt, disabled and removeAriaLabel, drops removeIcon and provide. Added in c42f709d; f146ea8c and ec3112f3 (GAP-082) only added Vue typing. Changed for #203 (ADR-098): adds the `removeIcon` prop as upstream has it, and gives `removeAriaLabel` the English default \"Remove\" (user ruling)."
   },
   {
     "originalPath": "packages/primevue/src/chip/package.json",
@@ -1228,5 +1228,29 @@
     "ultimateDestination": "packages/vue/src/textarea/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "Ultimate barrel that re-exports `UTextarea`. It shares only the exported component name with the compared upstream entry point. Entry added in #189."
+  },
+  {
+    "originalPath": "packages/primevue/src/toggleswitch/ToggleSwitch.vue",
+    "ultimateDestination": "packages/vue/src/toggle-switch/ToggleSwitch.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 ToggleSwitch.vue for #197 (ADR-100): the native input with role=switch, checked from `dValue === trueValue`, the readonly, tabindex, inputId, aria label, aria labelledby and invalid wiring, the focus and blur emits, the slider and handle pair, the `handle` slot scoped with `checked`, and the data-p-checked, data-p-disabled and data-p hooks are upstream's. `ptmi('root')`, `ptm('input')`, `ptm('slider')` and `ptm('handle')` place pass-through on each part and `inheritAttrs` is off. Dropped: `$pcToggleSwitch` (no consumer). Changed for #197."
+  },
+  {
+    "originalPath": "packages/primevue/src/toggleswitch/BaseToggleSwitch.vue",
+    "ultimateDestination": "packages/vue/src/toggle-switch/BaseToggleSwitch.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate base factory that shares only interface facts with PrimeVue 4.5.5 BaseToggleSwitch.vue (the trueValue, falseValue, readonly, tabindex, inputId, inputClass, inputStyle, aria and invalid props on top of BaseEditableHolder). It passes `componentName` and `styleModule` to `createBaseEditableHolder`, so `unstyled`, per-instance `dt` and `pt` come from the base chain, and no longer shadows `cx` and `mounted`. Changed for #197."
+  },
+  {
+    "originalPath": "packages/primevue/src/toggleswitch/style/ToggleSwitchStyle.js",
+    "ultimateDestination": "packages/vue/src/toggle-switch/toggle-switch-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeVue 4.5.5 ToggleSwitchStyle.js `classes.root`: `p-toggleswitch` with the checked, disabled and invalid modifiers becomes `u-toggle-switch*`. The hand-ported CSS copy is replaced by the shared `@ultimate/uix-styles/toggleswitch` module (ADR-082). Changed for #197."
+  },
+  {
+    "originalPath": "packages/primevue/src/toggleswitch/ToggleSwitch.vue",
+    "ultimateDestination": "packages/vue/src/toggle-switch/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate barrel that re-exports `UToggleSwitch` and `createBaseToggleSwitch`. It shares only the exported component name with the compared upstream entry point. Entry added in #197."
   }
 ]

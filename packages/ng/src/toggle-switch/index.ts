@@ -1,1 +1,5 @@
-export { UToggleSwitch } from "./toggle-switch";
+export {
+  UToggleSwitch,
+  type UToggleSwitchChangeEvent,
+  type UToggleSwitchHandleContext,
+} from "./toggle-switch";

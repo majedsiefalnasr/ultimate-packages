@@ -135,10 +135,7 @@
     "packages/ng/src/toast/toast.ts",
     "packages/ng/src/toggle-button/index.ts",
     "packages/ng/src/toggle-button/toggle-button-style.ts",
-    "packages/ng/src/toggle-button/toggle-button.ts",
-    "packages/ng/src/toggle-switch/index.ts",
-    "packages/ng/src/toggle-switch/toggle-switch-style.ts",
-    "packages/ng/src/toggle-switch/toggle-switch.ts"
+    "packages/ng/src/toggle-button/toggle-button.ts"
   ],
   "react": [
     "packages/react/src/accordion/accordion-style.ts",
@@ -214,9 +211,6 @@
     "packages/react/src/input-otp/index.ts",
     "packages/react/src/input-otp/input-otp-style.ts",
     "packages/react/src/input-otp/input-otp.tsx",
-    "packages/react/src/input-switch/index.ts",
-    "packages/react/src/input-switch/input-switch-style.ts",
-    "packages/react/src/input-switch/input-switch.tsx",
     "packages/react/src/key-filter/index.ts",
     "packages/react/src/key-filter/key-filter.ts",
     "packages/react/src/knob/index.ts",
@@ -246,9 +240,6 @@
     "packages/react/src/multi-select/index.ts",
     "packages/react/src/multi-select/multi-select-style.ts",
     "packages/react/src/multi-select/multi-select.tsx",
-    "packages/react/src/multi-state-checkbox/index.ts",
-    "packages/react/src/multi-state-checkbox/multi-state-checkbox-style.ts",
-    "packages/react/src/multi-state-checkbox/multi-state-checkbox.tsx",
     "packages/react/src/panel-menu/index.ts",
     "packages/react/src/panel-menu/panel-menu-list.tsx",
     "packages/react/src/panel-menu/panel-menu-style.ts",
@@ -552,10 +543,6 @@
     "packages/vue/src/toggle-button/BaseToggleButton.ts",
     "packages/vue/src/toggle-button/ToggleButton.vue",
     "packages/vue/src/toggle-button/index.ts",
-    "packages/vue/src/toggle-button/toggle-button-style.ts",
-    "packages/vue/src/toggle-switch/BaseToggleSwitch.ts",
-    "packages/vue/src/toggle-switch/ToggleSwitch.vue",
-    "packages/vue/src/toggle-switch/index.ts",
-    "packages/vue/src/toggle-switch/toggle-switch-style.ts"
+    "packages/vue/src/toggle-button/toggle-button-style.ts"
   ]
 }

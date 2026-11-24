@@ -36,6 +36,7 @@ uixstyles.avatar
 uixstyles.badge
 uixstyles.button
 uixstyles.checkbox
+uixstyles.chip
 uixstyles.dialog
 uixstyles.floatlabel
 uixstyles.iconfield
@@ -46,6 +47,7 @@ uixstyles.inputtext
 uixstyles.menu
 uixstyles.paginator
 uixstyles.textarea
+uixstyles.toggleswitch
 uixstyles.table
 uixstyles.tooltip
 uixstyles.virtualscroller

@@ -339,7 +339,7 @@
     "originalPath": "components/lib/chip/Chip.js",
     "ultimateDestination": "packages/react/src/chip/chip.tsx",
     "modificationStatus": "reimplemented-with-reference",
-    "modificationDescription": "Corrected under GAP-132 (2026-10-16): REFERENCE (ADR-064; was adapted). Compared with PrimeReact 10.9.9 Chip.js on its own: no statement, wording or PrimeReact-specific structure is retained. What is shared is the rendering order (image else icon, label, removable control), root aria-label={label} and internal visible state, which are equivalent behavior common to all three upstreams. Chip.js's keydown (event.code incl. NumpadEnter), fixed tabIndex 0 and veto-returning onRemove are not kept. Added in c42f709d; ecdbf793 only reformatted it."
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): REFERENCE (ADR-064; was adapted). Compared with PrimeReact 10.9.9 Chip.js on its own: no statement, wording or PrimeReact-specific structure is retained. What is shared is the rendering order (image else icon, label, removable control), root aria-label={label} and internal visible state, which are equivalent behavior common to all three upstreams. Chip.js's keydown (event.code incl. NumpadEnter), fixed tabIndex 0 and veto-returning onRemove are not kept. Added in c42f709d; ecdbf793 only reformatted it. Changed for #203 (ADR-098): adds the `template` prop, the `removeIcon` prop, root rest props with the `ptm('root')` merge, a `pt` section per part, `unstyled`, `data-p` and the `p-disabled` root class, which are PrimeReact's. The remove event keeps the native event with no veto, `getVisible`/`setVisible` are not carried, and `removeAriaLabel` defaults to the English \"Remove\" (user ruling)."
   },
   {
     "originalPath": "packages/primeng/src/chip/chip.ts",
@@ -351,19 +351,19 @@
     "originalPath": "components/lib/chip/ChipBase.js",
     "ultimateDestination": "packages/react/src/chip/chip-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Corrected under GAP-132 (2026-10-16): COPY confirmed under ADR-064's ambiguity rule. Compared with PrimeReact 10.9.9 ChipBase.js on its own: nearly its whole styles block is kept rule by rule under renamed selectors (root display: inline-flex and align-items: center, label line-height: 1.5, remove icon cursor: pointer, image border-radius: 50%), with the same class-map keys (root, icon, label, removeIcon; image added). Each declaration is generic; the rule-by-rule retention of the small block is the evidence, and the uncertainty is stated. Added in c42f709d."
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): COPY confirmed under ADR-064's ambiguity rule. Compared with PrimeReact 10.9.9 ChipBase.js on its own: nearly its whole styles block is kept rule by rule under renamed selectors (root display: inline-flex and align-items: center, label line-height: 1.5, remove icon cursor: pointer, image border-radius: 50%), with the same class-map keys (root, icon, label, removeIcon; image added). Each declaration is generic; the rule-by-rule retention of the small block is the evidence, and the uncertainty is stated. Added in c42f709d. Changed for #203 (ADR-098): the file no longer holds its own CSS. The hand-written rules and their literal values are replaced by the shared `@ultimate/uix-styles/chip` module (ADR-082), which reads the Aura chip tokens (ADR-067). The class map keeps upstream's keys and adds `p-disabled`."
   },
   {
     "originalPath": "@primeuix/styles@2.0.3 chip",
     "ultimateDestination": "packages/react/src/chip/chip-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Corrected under GAP-132 (2026-10-16): COPY confirmed under ADR-064's ambiguity rule. Compared with @primeuix/styles 2.0.3 chip on its own: identical declarations (root display: inline-flex and align-items: center, remove icon cursor: pointer, image border-radius: 50%) and the same property set per rule (root gap, background, color, border-radius, padding; image width, height, radius, negative inline-start margin; icon font-size; remove icon :focus-visible outline and outline-offset), with literal values in place of dt() tokens. The uncertainty is stated: the selectors follow public class names."
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): COPY confirmed under ADR-064's ambiguity rule. Compared with @primeuix/styles 2.0.3 chip on its own: identical declarations (root display: inline-flex and align-items: center, remove icon cursor: pointer, image border-radius: 50%) and the same property set per rule (root gap, background, color, border-radius, padding; image width, height, radius, negative inline-start margin; icon font-size; remove icon :focus-visible outline and outline-offset), with literal values in place of dt() tokens. The uncertainty is stated: the selectors follow public class names. Changed for #203 (ADR-098): the file no longer holds its own CSS. The hand-written rules and their literal values are replaced by the shared `@ultimate/uix-styles/chip` module (ADR-082), which reads the Aura chip tokens (ADR-067). The class map keeps upstream's keys and adds `p-disabled`."
   },
   {
     "originalPath": "public/themes/saga-blue/theme.css",
     "ultimateDestination": "packages/react/src/chip/chip-style.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Corrected under GAP-132 (2026-10-16): COPY, added as a source missing from batch 2 (ADR-064). The file retains declaration values from the pinned PrimeReact 10.9.9 saga-blue theme's .p-chip rules (theme.css lines 6724-6743; identical in saga-green, saga-orange and saga-purple): background #dee2e6, color #495057, border-radius 16px, image width 2rem, height 2rem and margin-left -0.5rem, and label line-height 1.5 with 0.25rem vertical spacing (margins upstream, padding here). The root padding (0.75rem vs 0.5rem), gap, icon and remove-icon sizes and the focus ring are Ultimate values. Uncertainty stated: the two colors are also Bootstrap gray-300 and gray-700; the saga-only combination of retained values is the evidence."
+    "modificationDescription": "Corrected under GAP-132 (2026-10-16): COPY, added as a source missing from batch 2 (ADR-064). The file retains declaration values from the pinned PrimeReact 10.9.9 saga-blue theme's .p-chip rules (theme.css lines 6724-6743; identical in saga-green, saga-orange and saga-purple): background #dee2e6, color #495057, border-radius 16px, image width 2rem, height 2rem and margin-left -0.5rem, and label line-height 1.5 with 0.25rem vertical spacing (margins upstream, padding here). The root padding (0.75rem vs 0.5rem), gap, icon and remove-icon sizes and the focus ring are Ultimate values. Uncertainty stated: the two colors are also Bootstrap gray-300 and gray-700; the saga-only combination of retained values is the evidence. Changed for #203 (ADR-098): the file no longer holds its own CSS. The hand-written rules and their literal values are replaced by the shared `@ultimate/uix-styles/chip` module (ADR-082), which reads the Aura chip tokens (ADR-067). The class map keeps upstream's keys and adds `p-disabled`."
   },
   {
     "originalPath": "components/lib/chip/package.json",
@@ -634,5 +634,41 @@
     "ultimateDestination": "packages/react/src/input-textarea/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "Ultimate barrel that re-exports `UInputTextarea` and its props. It shares only the exported component name with the compared upstream entry point. Entry added in #189."
+  },
+  {
+    "originalPath": "components/lib/multistatecheckbox/MultiStateCheckbox.js",
+    "ultimateDestination": "packages/react/src/multi-state-checkbox/multi-state-checkbox.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 MultiStateCheckbox.js for #208 (ADR-099): the cycle through `options` with `empty` wrapping to null, the optionValue and optionLabel resolution, the change event shape with `stopPropagation`, `preventDefault` and `target {name, id, value}`, the Space handling, the polite live region announcing the selected label or the null label, the ARIA props forwarded to the focusable box, autoFocus, the focus and blur callbacks, invalid, the filled variant and the `focus`/`getElement` ref handle follow upstream. PrimeReactContext, the base `getProps`, useHandleStyle and the nested `<Checkbox>` are replaced by useComponentBase, createPassThrough, useMergeProps and a self-contained `role=\"checkbox\"` box. Differences recorded in ADR-099: no synthetic onChange on mount when `empty=false` and the value is null (intentional), readOnly also blocks the Space key (upstream's Space handler ignores it), `optionIcon` stays a function rather than a field name, the live region is always rendered rather than only while focused, `nullLabel` is a prop with the English default `Not Selected`, and `tooltip`, `tooltipOptions`, `dataKey`, dotted-path field resolution, `inputId` and per-option `style` are not carried. Existing file, rewritten in #208."
+  },
+  {
+    "originalPath": "components/lib/multistatecheckbox/MultiStateCheckboxBase.js",
+    "ultimateDestination": "packages/react/src/multi-state-checkbox/multi-state-checkbox-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 MultiStateCheckboxBase.js `classes.root`: `p-multistatecheckbox p-checkbox p-component` with the `p-variant-filled` modifier becomes `u-multi-state-checkbox u-component` with disabled, invalid and `p-variant-filled` modifiers, and `p-variant-filled` is kept so it matches the shared checkbox selectors. The CSS stays hand-authored (ADR-067(c)) and reads `checkbox.filled.background` for the filled variant. The cursor moved from the root to the box. Existing file, changed in #208."
+  },
+  {
+    "originalPath": "components/lib/multistatecheckbox/MultiStateCheckbox.js",
+    "ultimateDestination": "packages/react/src/multi-state-checkbox/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UMultiStateCheckbox and its prop, change-event and handle types; it shares only the exported component name with PrimeReact's multistatecheckbox entry point."
+  },
+  {
+    "originalPath": "components/lib/inputswitch/InputSwitch.js",
+    "ultimateDestination": "packages/react/src/input-switch/input-switch.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 InputSwitch.js for #197 (ADR-100): the controlled `checked` compared with `trueValue`, the native input with role=switch, the change event with `stopPropagation`, `preventDefault` and `target {name, id, value}`, the focus and blur callbacks, the aria props forwarded to the input, tabIndex on the input, `inputRef`, autoFocus, and the imperative handle with `focus()`, `getElement()` and `getInput()` are upstream's. `createPassThrough`, `useMergeProps`, `pt`, `ptOptions` and `unstyled` are added through react-core. Not ported (recorded as I): the root `role=checkbox` wrapper and its `aria-checked`, and the `tooltip` and `tooltipOptions` props, which stay composition through `UTooltip`. The component registers under the Aura `toggleswitch` key (ADR-067). Changed for #197."
+  },
+  {
+    "originalPath": "components/lib/inputswitch/InputSwitchBase.js",
+    "ultimateDestination": "packages/react/src/input-switch/input-switch-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 InputSwitchBase.js `classes`: `p-inputswitch` with the highlight, disabled and invalid modifiers becomes `u-toggle-switch u-component` with checked, disabled and invalid modifiers, and the input, slider and handle parts. The hand-written CSS, which had no Aura values, is replaced by the shared `@ultimate/uix-styles/toggleswitch` module (ADR-082, ADR-067). Changed for #197."
+  },
+  {
+    "originalPath": "components/lib/inputswitch/InputSwitch.js",
+    "ultimateDestination": "packages/react/src/input-switch/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UInputSwitch and its prop, change-event and handle types; it shares only the exported component name with PrimeReact's inputswitch entry point."
   }
 ]

@@ -62,8 +62,9 @@ The root `test:scripts` glob does not include inventory tests.
   Space but not Enter.
 - select-button hard-codes `fluid: false` and never passes `invalid`, so the
   invalid and fluid classes defined for `SelectButtonClassesParams` are never emitted.
-- multi-state-checkbox `classes.root` is a plain string so the disabled class is
-  never emitted, and its `icon` key is unused. tri-state-checkbox used to have an
+- multi-state-checkbox used to have a plain-string `classes.root` and an unused
+  `icon` key. Its root now resolves the disabled, invalid and filled classes and
+  its `icon` key wraps the option icon (#208). tri-state-checkbox used to have an
   unused `icon` key too; it is now applied to the default icons (#209).
 - tri-state-checkbox keeps an aria-hidden native input beside a sibling
   `role="checkbox"` box. The input ignores pointer events and cycles the value

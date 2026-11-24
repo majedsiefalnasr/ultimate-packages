@@ -1243,6 +1243,10 @@
       "tickets": [146]
     },
     {
+      "id": "package.ultimate.uix-styles.chip",
+      "tickets": [146]
+    },
+    {
       "id": "package.ultimate.uix-styles.dialog",
       "tickets": [146]
     },
@@ -1268,6 +1272,10 @@
     },
     {
       "id": "package.ultimate.uix-styles.textarea",
+      "tickets": [146]
+    },
+    {
+      "id": "package.ultimate.uix-styles.toggleswitch",
       "tickets": [146]
     },
     {

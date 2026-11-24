@@ -1719,7 +1719,7 @@ Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://git
 
 ## ADR-097 — Textarea: one shared stylesheet on the Aura `textarea` tokens, `autoResize` without a `max-height`, `size` and value-derived `p-filled`, `pt` and `unstyled`, and React `keyfilter`/`tooltip` and Vue `formField` stay out (L0a, ticket #189)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#189](https://github.com/majedsiefalnasr/ultimate-packages/issues/189)). User rulings recorded before implementation: Q1 A (fix Angular `autoResize` and match Prime's triggers), Q2 A (`size` and value-derived `p-filled` on the shared module), Q3 A (React `keyfilter` and `tooltip` are composition, Vue `formField` belongs to the Vue Forms spec), Q4 A (Angular `.ng-invalid.ng-dirty` and the missing Vue CSS).
+Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#189](https://github.com/majedsiefalnasr/ultimate-packages/issues/189)). User rulings recorded before implementation: Q1 A (fix Angular `autoResize` and match Prime's triggers), Q2 A (`size` and value-derived `p-filled` on the shared module), Q3 A (React `keyfilter` and `tooltip` are composition, Vue `formField` belongs to the Vue Forms spec), Q4 A (Angular `.ng-invalid.ng-dirty` and the missing Vue CSS).
 
 **Context.**
 
@@ -1758,3 +1758,138 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 - The Vue and React Textarea baselines can change visually, because the shared module adds the filled hover and focus backgrounds, the invalid placeholder colour and the sizes. They are not verified in a browser here.
 - FloatLabel, IftaLabel and InputGroup style modules that key on `.u-input-text` or `.u-inputtext` do not select the textarea. That is unchanged by this ticket and belongs to those tickets.
 - Tests assert values, classes, DOM, emitted events, pass-through and the heights set from mocked `scrollHeight` in jsdom. They do not measure pixels or real layout.
+
+## ADR-098 — Chip: one shared stylesheet on the Aura chip tokens, `pt`, `unstyled` and `dt` in all three frameworks, remove-icon customization, a visible-state fix in Angular, and four recorded exclusions (L0a, ticket #203)
+
+Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#203](https://github.com/majedsiefalnasr/ultimate-packages/issues/203)). User rulings (2026-11-24, "all by recommendation"): Q5 A (custom content and remove-icon customization), Q6 B (React keeps the native remove event, no veto), Q7 B (Angular `chipProps` excluded), Q8 A (remove label is a prop with an English default), Q9 B (`UTimesIcon` stays, no TimesCircle icon).
+
+**Context.**
+
+- Chip shows a label, an icon or an image, with an optional remove control. The Phase 4 report (`docs/architecture/research/phase4/batch1/chip.md`) has 27 rows. The three Ultimate Chips matched the pinned oracles (PrimeNG 21.1.9, PrimeReact 10.9.9, PrimeVue 4.5.5) on label, icon, image, removable and the keyboard, and fell short on pass-through, unstyled, scoped `dt`, root attribute passthrough in React and Vue, remove-icon customization, custom content and `data-p`.
+- React hard-coded its colours and lengths with `--u-chip-*` fallbacks and never read the Aura `chip` tokens, although Aura has a `chip` key and Chip is not an ADR-067(c) exception. Angular and Vue each held a hand-ported copy of the same CSS.
+- Angular emptied the template after a removal, but the `<u-chip>` host kept its class, background and padding, so an empty pill stayed on screen.
+
+**Decision.**
+
+1. **One shared stylesheet (ADR-082).** `@ultimate/uix-styles/chip` is the `@primeuix/styles` 2.0.3 chip CSS under `.u-chip*` selectors, on the Aura `chip.*` tokens, with the `.u-chip-label` rule the earlier copies carried. The three style modules import it. React's literal values are gone (ADR-067).
+2. **`pt`, `ptOptions`, `unstyled` and `dt`.** The pass-through sections are `host` and `root` (Angular), `root` (React and Vue), and `image`, `icon`, `label` and `removeIcon` in all three. The component is registered under `chip`. `unstyled` and `dt` come from the cores (ADR-085). Angular binds the root through the `UBind` host directive and provides itself as `U_PARENT_INSTANCE`.
+3. **Root attribute passthrough in React and Vue.** React spreads the remaining props onto the root and merges `ptm('root')`; the forwarded ref is the root. Vue binds `ptmi('root')` with `inheritAttrs: false`. A consumer `aria-label` replaces the label-derived one.
+4. **Remove-icon customization (ruling Q5 A).** All three take a `removeIcon` font class that replaces the default glyph. Angular also reads an `<ng-template #removeicon>`. React takes a `removeIcon` element and a `template` prop (a node or a function of the props) that replaces the image, icon and label. Vue adds the default slot, the `icon` slot and the `removeicon` slot, which receives `removeCallback` and `keydownCallback` and replaces the whole control, as PrimeVue's does.
+5. **Remove label (ruling Q8 A).** `removeAriaLabel` defaults to the English `Remove` in all three. Ultimate has no translation source (ADR-056), so a locale-driven label is not added.
+6. **State attributes.** The root carries `data-p="removable"` while `removable` is set (Angular, React, Vue) and the `p-disabled` class while disabled, as upstream does. Remove stays blocked while disabled, and the remove control keeps `tabindex="-1"`.
+7. **Angular hidden host.** A removed chip gets `display: none` on the host, as PrimeNG does, so no empty pill stays on screen. The template still empties.
+
+**Divergences from Prime and recorded exclusions.**
+
+1. **Angular `chipProps` is excluded (ruling Q7 B).** PrimeNG's `chipProps` is a bulk setter that its MultiSelect and AutoComplete use for their chip display (reference R:52). Ultimate's Chip takes each prop as its own input, and no Ultimate component needs the bulk form. Row 18 is I.
+2. **React keeps the native remove event and has no veto (ruling Q6 B).** PrimeReact passes `{ originalEvent, value }` and lets `onRemove` return `false` to keep the chip. PrimeNG and PrimeVue have neither, so the three Ultimate frameworks stay closer to each other. Row 7 is I.
+3. **The default glyph stays `UTimesIcon` (ruling Q9 B).** No TimesCircle icon is added to the cores. Row 13 is I.
+4. **React has no `getVisible` and `setVisible`.** The forwarded ref gives the element only. Row 16 stays P.
+5. **Vue `icon` slot sits inside the icon part.** PrimeVue applies the icon class to the slot's own root. A slot renders a fragment, which cannot take a class, so a wrapper `span` carries `u-chip-icon` and the `icon` pass-through section.
+6. **React `icon` is still a class string.** PrimeReact's `IconType` also takes an element or a function (row 2, P). React's `alt` has no default, where PrimeReact's `imageAlt` defaults to `chip` (row 5, P).
+7. **`p-disabled` has no registered CSS rule** in Ultimate, the known gap noted by ADR-081, so a disabled chip changes class only. Remove is blocked and the control leaves the tab order.
+8. **PrimeNG's `close()` ignores `disabled`** (reference defect 2). Ultimate blocks it and does not copy the defect.
+9. `ptOptions` has no visible effect until the global `pt` source exists (ADR-080), so row 23a stays P.
+
+**Classification after this ticket** (C complete, P partial, M missing, I intentional, N/A not applicable; from a source re-read of the 27 rows; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+- **Angular:** C 20, P 2, I 2, N/A 3. Open: row 10 (P, English default but no locale source) and row 23a (P, ADR-080). I: rows 13 and 18.
+- **React:** C 13, P 4, I 2, N/A 8. Open: rows 2, 5, 16 (P) and 23a (P). I: rows 7 and 13.
+- **Vue:** C 18, P 1, I 1, N/A 7. Open: row 23a (P). I: row 13.
+
+**Consequences.**
+
+- Chip colours, sizes, the image margin and the remove-icon focus ring now follow the Aura `chip` tokens in all three frameworks, so a preset change reaches React too.
+- A consumer can pass `class`, `style` and `aria-*` to the React and Vue root, and can restyle each part through `pt` or `unstyled`.
+- Callers that relied on a remove control with no accessible name now get `Remove` unless they set `removeAriaLabel`.
+- A removed Angular chip no longer leaves an empty pill.
+- Tests assert values, classes, DOM, events and pass-through in jsdom. They do not measure pixels, focus-ring rendering or screen-reader output.
+
+## ADR-099 — MultiStateCheckbox: React only, a `role="checkbox"` box with a live region, no synthetic change on mount, upstream's event shape, and `pt` and `unstyled` (L0a, ticket #208)
+
+Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#208](https://github.com/majedsiefalnasr/ultimate-packages/issues/208)). User rulings: Angular and Vue stay n/a, and the work is React only (Q10 A); the mount behaviour stays as it is and is recorded as intentional (Q11 B); the control exposes `role="checkbox"` with a live region and an accessible name (Q12 A); the surface adds `autoFocus`, a ref with `focus()` and `getElement()`, `invalid`, `variant`, `style`, `unstyled`, `pt` and `ptOptions`, and `tooltip` stays composition (Q13 A).
+
+**Context.**
+
+- MultiStateCheckbox cycles a value through a list of `options`. Only PrimeReact 10.9.9 ships it. PrimeNG 21.1.9 and PrimeVue 4.5.5 do not, so Angular and Vue have no component and no entry.
+- The Phase 4 report found `UMultiStateCheckbox` complete on the cycle, the `empty` wrap, the guards and Space, and found 26 rows. The control was a plain function with `role="button"`, no checked state, no live region, no ref, no `pt`, no `unstyled`, no `invalid` or `variant`, and a hard-coded `none` label.
+
+**Decision.**
+
+1. **Angular and Vue stay n/a (Q10 A).** Prime ships no such control there, and this ticket adds none. The PR body states it.
+2. **`role="checkbox"` box (Q12 A).** The focusable box carries `role="checkbox"`, `aria-checked` (`true` when an option is selected, `false` otherwise), `aria-invalid`, `aria-disabled` and `aria-readonly` where they apply. Its accessible name is the selected option's label, or `nullLabel` when nothing is selected. A caller's `aria-*` props go on the box and replace those defaults, as PrimeReact forwards them.
+3. **Live region.** A polite span announces the same text. PrimeReact renders it only while the control has focus. Here it is always rendered, as in TriStateCheckbox (ADR-096).
+4. **`nullLabel` is a prop** with the English default `Not Selected`, PrimeReact's locale string. It replaces the hard-coded `none`.
+5. **No synthetic change on mount (Q11 B).** PrimeReact calls `onChange` once on mount when `empty` is false and the value is null. The control stays fully controlled and does not. The caller sets a non-null initial `value`. Row 3 is I.
+6. **Event shape.** The change event carries `stopPropagation`, `preventDefault` and `target {name, id, value}`, as PrimeReact does.
+7. **Guards.** `disabled` and `readOnly` block both click and Space. PrimeReact's Space handler ignores `readOnly`, which is recorded as a reference defect and not carried.
+8. **Surface added (Q13 A).** `onFocus`, `onBlur`, `name`, `autoFocus`, `invalid`, `variant` (`filled` adds `p-variant-filled`, and a rule reads the Aura `checkbox.filled.background` token), `style` and native attributes on the root, and a ref with `focus()` and `getElement()`.
+9. **`pt`, `ptOptions` and `unstyled`.** The sections are `root`, `box`, `icon` and `srOnlyAria`. The component is registered under `multistatecheckbox` (it was `multi-state-checkbox`), matching the pass-through name. The icon wrapper span is rendered only when an option icon is shown.
+10. **`tooltip` is composition.** Callers wrap the control in `UTooltip`, as for InputText (ADR-086), InputMask (ADR-095) and TriStateCheckbox (ADR-096). Row 20 is I.
+11. **Colours stay hand-authored** (ADR-067(c)), with the filled background read from the Aura token. The cursor moved from the root to the box.
+
+**Divergences from Prime.**
+
+1. No synthetic `onChange` on mount (decision 5), so row 3 is I.
+2. `tooltip` and `tooltipOptions` are not props (decision 10), so row 20 is I.
+3. PrimeReact nests a real `<Checkbox>` with a native input. Here the box is the only focusable element and there is no hidden input, so `inputId` is not carried.
+4. `optionIcon` stays a function `(option) => ReactNode`. PrimeReact's `optionIcon` is a field name and `iconTemplate` is a separate prop. The function receives only the option.
+5. `optionValue` and `optionLabel` resolve top-level properties only. PrimeReact resolves dotted paths. Equality is strict `===`, and PrimeReact's `dataKey` deep comparison is not carried. Rows 4 and 5 stay P.
+6. A per-option `style` is not applied to the box (row 8 stays M). `style` is the root's, as PrimeReact's `style` is.
+7. The live region is always rendered (decision 3).
+8. `ptOptions` has no visible effect until the global `pt` source exists (ADR-080), so row 22a stays P.
+9. The CSS adds invalid and filled rules but still has no hover, focus-visible or checked rules, so row 24 stays P.
+
+**Classification after this ticket** (C complete, P partial, M missing, I intentional, N/A not applicable; from a source re-read of the 26 rows; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+- **React:** C 17, P 5, M 1, I 2, N/A 1. Open: rows 4 and 5 (P), 8 (M), 21 (P, no `inputId`), 22a (P, ADR-080) and 24 (P). Rows 3 and 20 are I. Row 23a is N/A (PrimeReact has no scoped `dt`).
+- **Angular:** N/A 26.
+- **Vue:** N/A 26.
+
+**Consequences.**
+
+- Assistive technology sees a checkbox with a checked state, a name and a live announcement, instead of a button with a fixed label.
+- Callers that queried `getByRole("button")` use `getByRole("checkbox")`, and callers that read the `none` label see `Not Selected` or set `nullLabel`.
+- `onChange` is now optional, and callers can read `event.target.name` and `event.target.id`.
+- Tests assert values, classes, DOM, events and pass-through in jsdom. They do not measure pixels, focus rings or screen-reader output.
+
+## ADR-100 — ToggleSwitch: one shared stylesheet on the Aura toggleswitch tokens, `pt`, `unstyled` and `dt` in all three frameworks, the missing form and accessibility surface, a React ref handle, and recorded exclusions (L0a, ticket #197)
+
+Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#197](https://github.com/majedsiefalnasr/ultimate-packages/issues/197)). User rulings: the React root `role="checkbox"` wrapper is not added and is recorded as I (Q2); React gets a ref handle with `focus()`, `getElement()` and `getInput()` (Q3). Standing rulings applied: `tooltip` stays composition (I), Vue forms registration is out of scope, N rows get no work.
+
+**Context.**
+
+- ToggleSwitch is a native `input[role=switch]` with a slider and a handle. PrimeNG 21.1.9 and PrimeVue 4.5.5 call it `ToggleSwitch`. PrimeReact 10.9.9 calls it `InputSwitch`, and Ultimate keeps that name in React (`UInputSwitch`).
+- The Phase 4 report (`docs/architecture/research/phase4/batch6/toggleswitch.md`) found 30 rows. Angular lacked readonly, required, name, `inputId`, the aria and tabindex wiring, autofocus, invalid, the change event, the handle template, the data hooks and touched on blur. React lacked the Aura-token CSS (it registered under `input-switch`, which has no Aura values), the aria and tabindex wiring, invalid, the focus and blur callbacks, the event methods and the ref handle. Vue lacked the handle slot and the data hooks. None of the three had `pt`, `unstyled` or per-instance `dt`.
+
+**Decision.**
+
+1. **One shared stylesheet (ADR-082).** `@ultimate/uix-styles/toggleswitch` holds the structural CSS on the Aura `toggleswitch` tokens, with `position: relative` on the root. Angular, React and Vue import it. Angular keeps only its `.ng-invalid.ng-dirty` rule.
+2. **React registers under `toggleswitch` (ADR-067).** It was `input-switch`, so the Aura tokens never applied. The component keeps the name `UInputSwitch`.
+3. **Angular surface.** `UToggleSwitch` extends `UBaseEditableHolder` and adds `readonly`, `invalid`, `required`, `name`, `inputId`, `tabindex`, `ariaLabel`, `ariaLabelledBy` and `autofocus`. The `onChange` output emits `{originalEvent, checked}`. The control is marked touched on blur instead of on change. A `#handle` template replaces the handle content. The root carries `data-p-checked`, `data-p-disabled` and `data-p`, and the slider and handle carry `data-p`.
+4. **React surface.** The input receives `aria-*` props and `tabIndex`. `onFocus` and `onBlur` are the input's. `invalid` adds `p-invalid` and `aria-invalid`. The change event carries `stopPropagation`, `preventDefault` and `target {name, id, value}`, as PrimeReact does.
+5. **React ref handle (Q3).** The ref exposes `focus()`, `getElement()` and `getInput()`.
+6. **No root `role="checkbox"` (Q2).** PrimeReact adds a wrapper checkbox role and `aria-checked` on the root in addition to the inner switch. Ultimate keeps only the inner `role="switch"`, which avoids a duplicate announcement. Row 2 is I.
+7. **Vue surface.** The `handle` slot is scoped with `checked`. The root carries `data-p-checked`, `data-p-disabled` and `data-p`, and the slider and handle carry `data-p`. `ptmi('root')` places attributes on the root with `inheritAttrs` off.
+8. **`pt`, `ptOptions`, `unstyled` and `dt`.** The sections are `root`, `input`, `slider` and `handle`. Angular binds them through `UBind`, React through `createPassThrough` and `useMergeProps`, and Vue through the base chain. The component name is `toggleswitch` in all three.
+9. **`tooltip` is composition.** Callers wrap the control in `UTooltip`, as for InputText (ADR-086), InputMask (ADR-095), TriStateCheckbox (ADR-096) and MultiStateCheckbox (ADR-099). Row 20 is I.
+
+**Divergences from Prime.**
+
+1. React has no root `role="checkbox"` wrapper (decision 6), so row 2 is I.
+2. `tooltip` and `tooltipOptions` are not props (decision 9), so row 20 is I.
+3. Dropped, not carried: `styleClass` (deprecated) in Angular, the `size` input in Angular (declared upstream, consumed by neither the template nor the style), and the `$pcToggleSwitch` and `TOGGLESWITCH_INSTANCE` instance tokens in Angular and Vue (no consumer).
+4. Vue forms registration (row 18) stays M. It belongs to the separate Vue Forms spec.
+5. `ptOptions` has no visible effect until the global `pt` source exists (ADR-080), so row 28 stays P in all three.
+
+**Classification after this ticket** (C complete, P partial, M missing, I intentional, N absent from the corresponding Prime; from the Phase 4 report's source citations and the specs in this ticket; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+- **Angular:** C 21, P 1, M 0, I 0, N 8. Open: row 28 (P, ADR-080). N rows: 2, 15, 17, 18, 20, 21, 22, 23.
+- **React:** C 19, P 1, M 0, I 2, N 8. Open: row 28 (P, ADR-080). Rows 2 and 20 are I. N rows: 6, 7, 8, 15, 18, 19, 23, 30.
+- **Vue:** C 19, P 1, M 1, I 0, N 9. Open: row 18 (M, Vue Forms spec) and row 28 (P, ADR-080). N rows: 2, 6, 8, 9, 13, 20, 21, 22, 23.
+
+**Consequences.**
+
+- React and Angular switches now read the Aura `toggleswitch` tokens, so their colours, hover, focus ring and handle movement match Vue and the preset. The React handle no longer shifts vertically when checked. Browser baselines for the React ToggleSwitch may change and are reviewed before any regeneration.
+- Assistive technology sees one switch with a name, a required state and an invalid state in Angular, and the input in React carries the caller's aria props. Callers that relied on Angular marking the control touched on change now get touched on blur.
+- Tests assert values, classes, DOM, events and pass-through in jsdom. They do not measure pixels, focus rings or screen-reader output.

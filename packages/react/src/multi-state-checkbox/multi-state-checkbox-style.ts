@@ -12,7 +12,7 @@ import type { StyleModule } from "@ultimate/react-core";
  * structure.
  */
 const css = /*css*/ `
-.u-multi-state-checkbox { position: relative; display: inline-flex; user-select: none; vertical-align: bottom; cursor: pointer; }
+.u-multi-state-checkbox { position: relative; display: inline-flex; user-select: none; vertical-align: bottom; }
 .u-multi-state-checkbox-box {
   display: flex;
   align-items: center;
@@ -22,12 +22,23 @@ const css = /*css*/ `
   border: 1px solid #ced4da;
   border-radius: 6px;
   background: #ffffff;
+  cursor: pointer;
 }
-.u-multi-state-checkbox-disabled { cursor: default; opacity: 0.6; }
+.u-multi-state-checkbox-icon { display: inline-flex; }
+.u-multi-state-checkbox.p-variant-filled .u-multi-state-checkbox-box { background: dt('checkbox.filled.background'); }
+.u-multi-state-checkbox-invalid .u-multi-state-checkbox-box { border-color: #e24c4c; }
+.u-multi-state-checkbox-disabled .u-multi-state-checkbox-box { cursor: default; opacity: 0.6; }
 `;
 
 const classes = {
-  root: "u-multi-state-checkbox u-component",
+  root: (params: { disabled?: boolean; invalid?: boolean; variantFilled?: boolean } = {}) => [
+    "u-multi-state-checkbox u-component",
+    {
+      "u-multi-state-checkbox-disabled": params.disabled,
+      "u-multi-state-checkbox-invalid": params.invalid,
+      "p-variant-filled": params.variantFilled,
+    },
+  ],
   box: "u-multi-state-checkbox-box",
   icon: "u-multi-state-checkbox-icon",
 };

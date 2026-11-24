@@ -310,8 +310,8 @@
       "scope": "shared-component-styles-146",
       "ticket": 146,
       "revision": "b9051a6668bf08b91654c23925a41cdcd9b84119",
-      "records": 19,
-      "aliases": 20,
+      "records": 21,
+      "aliases": 22,
       "pending": 1
     },
     {
@@ -1745,6 +1745,11 @@
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.checkbox"
     },
     {
+      "id": "package.ultimate.uix-styles.chip",
+      "owner": "#146",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.chip"
+    },
+    {
       "id": "package.ultimate.uix-styles.dialog",
       "owner": "#146",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.dialog"
@@ -1803,6 +1808,11 @@
       "id": "package.ultimate.uix-styles.textarea",
       "owner": "#146",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.textarea"
+    },
+    {
+      "id": "package.ultimate.uix-styles.toggleswitch",
+      "owner": "#146",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.toggleswitch"
     },
     {
       "id": "package.ultimate.uix-styles.tooltip",
@@ -12163,6 +12173,22 @@
     {
       "from": "scripts/inventory/shared-component-styles.json",
       "origin": "relationship",
+      "source": "uixstyles.chip",
+      "target": "package.ultimate.uix-styled.root",
+      "resolution": "scripts/inventory/styled-runtime.json#uixstyled.root",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.chip",
+      "target": "uixstyles.root",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.root",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
       "source": "uixstyles.dialog",
       "target": "package.ultimate.uix-styled.root",
       "resolution": "scripts/inventory/styled-runtime.json#uixstyled.root",
@@ -12348,6 +12374,14 @@
       "from": "scripts/inventory/shared-component-styles.json",
       "origin": "relationship",
       "source": "uixstyles.root",
+      "target": "uixstyles.chip",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.chip",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.root",
       "target": "uixstyles.dialog",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.dialog",
       "via": "record"
@@ -12436,6 +12470,14 @@
       "from": "scripts/inventory/shared-component-styles.json",
       "origin": "relationship",
       "source": "uixstyles.root",
+      "target": "uixstyles.toggleswitch",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.toggleswitch",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.root",
       "target": "uixstyles.tooltip",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.tooltip",
       "via": "record"
@@ -12476,6 +12518,22 @@
       "from": "scripts/inventory/shared-component-styles.json",
       "origin": "relationship",
       "source": "uixstyles.textarea",
+      "target": "uixstyles.root",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.root",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.toggleswitch",
+      "target": "package.ultimate.uix-styled.root",
+      "resolution": "scripts/inventory/styled-runtime.json#uixstyled.root",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.toggleswitch",
       "target": "uixstyles.root",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.root",
       "via": "record"
