@@ -63,10 +63,11 @@ The root `test:scripts` glob does not include inventory tests.
 - select-button hard-codes `fluid: false` and never passes `invalid`, so the
   invalid and fluid classes defined for `SelectButtonClassesParams` are never emitted.
 - multi-state-checkbox `classes.root` is a plain string so the disabled class is
-  never emitted, and its `icon` key is unused; tri-state-checkbox also has an
-  unused `icon` key.
-- tri-state-checkbox keeps an inert, aria-hidden native input beside a sibling
-  `role="checkbox"` box.
+  never emitted, and its `icon` key is unused. tri-state-checkbox used to have an
+  unused `icon` key too; it is now applied to the default icons (#209).
+- tri-state-checkbox keeps an aria-hidden native input beside a sibling
+  `role="checkbox"` box. The input ignores pointer events and cycles the value
+  when a label activates it, then hands focus to the box (#209).
 - rating ships `data-testid` attributes in markup, every star is tabbable, and
   arrow keys change the value; clicking the active star clears it.
 - slider and knob remove document listeners only on mouseup (no unmount cleanup),

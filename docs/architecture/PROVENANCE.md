@@ -379,3 +379,14 @@ Ticket #190 (spec #167, ADR-095) brings InputMask to parity in Angular, React an
 - **Specs and stories.** Ultimate-authored.
 
 The ten InputMask source files left `known-missing.json` because they now have manifest entries (three Angular, three React, four Vue). The new Angular engine file has its own entry. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json` and `vue.json`.
+
+### L0a TriStateCheckbox source disclosure
+
+Ticket #209 (spec #167, ADR-096) brings the React TriStateCheckbox to parity against the pinned oracle PrimeReact 10.9.9. PrimeNG 21.1.9 and PrimeVue 4.5.5 ship no such control, so Angular and Vue have no component and no entry. No Prime package is a dependency (ADR-004). The sources were read from the pinned PrimeReact archive in `.vendor-cache` (ADR-064).
+
+- **React `tri-state-checkbox.tsx` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeReact `TriStateCheckbox.js`. The cycle, the guards, the key handling, the markup, the change event shape, the forwarded ARIA, the icons, the focus callbacks, autoFocus and the ref handle are upstream's. PrimeReact's context, base props and internal value state are replaced by `useComponentBase`, `createPassThrough`, `useMergeProps` and a value derived from the prop. The differences are listed in ADR-096.
+- **React `tri-state-checkbox-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeReact `TriStateCheckboxBase.js`. The root class and its modifiers follow upstream's; the CSS stays hand-authored (ADR-067(c)).
+- **React `index.ts` (source class REFERENCE).** It shares only the exported names with the compared upstream entry point.
+- **Spec and stories.** Ultimate-authored.
+
+The three TriStateCheckbox source files left `known-missing.json` because they now have manifest entries. Per-file records are in `docs/architecture/provenance/react.json`.

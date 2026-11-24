@@ -6,11 +6,11 @@ Framework: react; availability: public
 
 ## Authored interpretation
 
-Controlled true/false/null checkbox that cycles states on click, Space or Enter.
+Controlled true/false/null checkbox that cycles states on click, label activation, Space, Enter or NumpadEnter.
 
 ## Framework surface
 
-UTriStateCheckbox is a plain function component, not a forwardRef. UTriStateCheckboxProps requires value:boolean|null and adds onChange, disabled, readOnly, invalid, id, inputId, tabIndex (default 0), className and aria-label; there is no name, inputRef or autoFocus prop. State is fully controlled and has no internal state: cycle (skipped when disabled or readOnly) emits UTriStateCheckboxChangeEvent {originalEvent, value} following null -> true -> false -> null, calling onChange optionally. Click, Enter, Space (key " " or code Space) all cycle; keydown calls preventDefault. Markup inside the root div (cx root with disabled and invalid): a hidden native input type=checkbox (id=inputId, checked={value === true}, readOnly, disabled, aria-invalid={invalid || undefined}, aria-hidden="true", tabIndex=-1) with no onChange so it is inert; a span with className u-hidden-accessible and aria-live="polite" whose text is "true", "false" or "none" (the class is registered by useComponentStyle via the shared hidden-accessible rule); and a sibling box div with role="checkbox", aria-checked "true"/"false"/"mixed", aria-label, tabIndex and the click and key handlers, showing UCheckIcon for true and UTimesIcon for false from @ultimate/react-core. triStateCheckboxStyleModule defines classes root (disabled, invalid), box, input and icon; the icon key is unused because the icon elements carry no className; there is no ClassesParams interface. Aura components registry has no key for tri-state-checkbox (componentName tri-state-checkbox), so no theme link is recorded. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/tri-state-checkbox; the root barrel line and manifest subpath are both present. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.
+UTriStateCheckbox is a forwardRef component whose ref is a UTriStateCheckboxHandle {focus, getElement}. UTriStateCheckboxProps extends the div HTML attributes (minus onChange, onFocus, onBlur and children) and requires value:boolean|null; it adds onChange, onFocus, onBlur, disabled, readOnly, invalid, variant (filled or outlined), name, inputId, autoFocus, checkIcon, uncheckIcon, trueLabel, falseLabel, nullLabel, unstyled, pt and ptOptions; tabIndex defaults to 0. State is fully controlled and has no internal state: any value other than true or false is treated as null, and cycle (skipped when disabled or readOnly) emits UTriStateCheckboxChangeEvent {originalEvent, value, stopPropagation, preventDefault, target:{name, id, value}} following null -> true -> false -> null. Box click, label activation of the hidden input, and Enter, NumpadEnter and Space (read from event.code, with preventDefault) all cycle. Markup inside the root div (cx root with disabled, invalid and variantFilled, plus data-p-disabled while disabled): a hidden native input type=checkbox (id=inputId, name, checked={value === true}, readOnly, disabled, aria-hidden, tabIndex=-1, onChange cycles, onFocus moves focus to the box, pointer-events none in CSS); a span with className u-hidden-accessible and aria-live="polite" whose text is trueLabel, falseLabel or nullLabel (defaults True, False and Not Selected); and a box div with role="checkbox", aria-checked "true"/"false"/"mixed", aria-invalid, tabIndex, the click, key, focus and blur handlers and every forwarded aria-* prop, showing checkIcon or UCheckIcon for true and uncheckIcon or UTimesIcon for false. Remaining props go on the root. The pass-through name is tristatecheckbox with sections root, box, input, srOnlyAria, checkIcon and uncheckIcon. triStateCheckboxStyleModule defines classes root (disabled, invalid, variantFilled), box, input and icon; the icon key is now used on the default icons. tooltip is not a prop (composition, ADR-096). Aura components registry has no key for tristatecheckbox, so no theme link is recorded. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/tri-state-checkbox; the root barrel line and manifest subpath are both present. useComponentBase, createPassThrough and useMergeProps from @ultimate/react-core are external foundation records, not duplicated here. Local style CSS is hand-authored and registered, and reads the checkbox.filled.background token for the filled variant; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.
 
 ## Public exports
 
@@ -20,6 +20,8 @@ UTriStateCheckbox is a plain function component, not a forwardRef. UTriStateChec
 @ultimate/react/tri-state-checkbox#UTriStateCheckboxProps
 @ultimate/react#UTriStateCheckboxChangeEvent
 @ultimate/react/tri-state-checkbox#UTriStateCheckboxChangeEvent
+@ultimate/react#UTriStateCheckboxHandle
+@ultimate/react/tri-state-checkbox#UTriStateCheckboxHandle
 
 ## Owned source and evidence
 
@@ -29,17 +31,20 @@ packages/react/src/tri-state-checkbox/tri-state-checkbox-style.ts
 
 ```text
 packages/react/src/tri-state-checkbox/index.ts: export { UTriStateCheckbox } from
-packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx: export function UTriStateCheckbox({
-packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx: if (value === null) next = true;
-packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx: className="u-hidden-accessible" aria-live="polite"
-packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx: role="checkbox"
+packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx: React.forwardRef<UTriStateCheckboxHandle, UTriStateCheckboxProps>(
+packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx: const next: boolean | null = value === null ? true : value === true ? false : null;
+packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx: { className: "u-hidden-accessible", "aria-live": "polite" }
+packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx: role: "checkbox"
 packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx: "mixed"
-packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx: <UTimesIcon />
+packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx: <UTimesIcon className=
 packages/react/src/tri-state-checkbox/tri-state-checkbox-style.ts: export const triStateCheckboxStyleModule
 packages/react/src/index.ts: export * from "./tri-state-checkbox";
 packages/react/package.json: "./tri-state-checkbox": {
 .github/workflows/ci.yml: run: pnpm run test
 packages/react/package.json: "test": "vitest run"
+packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx: onChange: cycle,
+packages/react/src/tri-state-checkbox/tri-state-checkbox-style.ts: pointer-events: none;
+packages/react/src/tri-state-checkbox/index.ts: UTriStateCheckboxHandle
 ```
 
 ## Relationships

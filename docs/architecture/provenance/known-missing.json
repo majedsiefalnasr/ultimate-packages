@@ -337,10 +337,7 @@
     "packages/react/src/toast/toast.tsx",
     "packages/react/src/toggle-button/index.ts",
     "packages/react/src/toggle-button/toggle-button-style.ts",
-    "packages/react/src/toggle-button/toggle-button.tsx",
-    "packages/react/src/tri-state-checkbox/index.ts",
-    "packages/react/src/tri-state-checkbox/tri-state-checkbox-style.ts",
-    "packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx"
+    "packages/react/src/toggle-button/toggle-button.tsx"
   ],
   "vue": [
     "packages/vue/src/accordion-content/AccordionContent.vue",

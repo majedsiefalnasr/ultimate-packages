@@ -19,17 +19,20 @@ const css = /*css*/ `
   background: #ffffff;
   cursor: pointer;
 }
-.u-tri-state-checkbox-input { cursor: pointer; position: absolute; opacity: 0; inset: 0; margin: 0; }
+.u-tri-state-checkbox-input { position: absolute; opacity: 0; inset: 0; margin: 0; pointer-events: none; }
+.u-tri-state-checkbox-icon { display: inline-flex; }
+.u-tri-state-checkbox.p-variant-filled .u-tri-state-checkbox-box { background: dt('checkbox.filled.background'); }
 .u-tri-state-checkbox-invalid .u-tri-state-checkbox-box { border-color: #e24c4c; }
 .u-tri-state-checkbox-disabled .u-tri-state-checkbox-box { cursor: default; opacity: 0.6; }
 `;
 
 const classes = {
-  root: (params: { disabled?: boolean; invalid?: boolean } = {}) => [
+  root: (params: { disabled?: boolean; invalid?: boolean; variantFilled?: boolean } = {}) => [
     "u-tri-state-checkbox u-component",
     {
       "u-tri-state-checkbox-disabled": params.disabled,
       "u-tri-state-checkbox-invalid": params.invalid,
+      "p-variant-filled": params.variantFilled,
     },
   ],
   box: "u-tri-state-checkbox-box",
