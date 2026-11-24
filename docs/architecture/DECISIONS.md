@@ -1617,7 +1617,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-095 — InputMask: one shared mask engine and an attachable directive in Angular, composition and mobile guards in all three frameworks, InputText styling through the shared stylesheet, and `pt` and `unstyled` everywhere (L0a, ticket #190)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#190](https://github.com/majedsiefalnasr/ultimate-packages/issues/190)). User rulings: Angular gets an attachable directive (1A); composition guards and the Android branch go into all three frameworks, tested with simulated events (2A).
+Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#190](https://github.com/majedsiefalnasr/ultimate-packages/issues/190)). User rulings: Angular gets an attachable directive (1A); composition guards and the Android branch go into all three frameworks, tested with simulated events (2A).
 
 **Context.**
 
@@ -1672,7 +1672,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-096 — TriStateCheckbox: React only, label-driven cycling, forwarded ARIA on the focusable box, localizable live-region labels, `pt` and `unstyled`, and `tooltip` stays composition (L0a, ticket #209)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#209](https://github.com/majedsiefalnasr/ultimate-packages/issues/209)). User rulings: Angular and Vue stay n/a, and the work is React only (1A); the live-region labels are props with English defaults (2A); `unstyled`, `variant` and `pt`/`ptOptions` are added in the same shape as the other L0a ports (3A); `tooltip` stays composition and is recorded as I (A).
+Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#209](https://github.com/majedsiefalnasr/ultimate-packages/issues/209)). User rulings: Angular and Vue stay n/a, and the work is React only (1A); the live-region labels are props with English defaults (2A); `unstyled`, `variant` and `pt`/`ptOptions` are added in the same shape as the other L0a ports (3A); `tooltip` stays composition and is recorded as I (A).
 
 **Context.**
 
