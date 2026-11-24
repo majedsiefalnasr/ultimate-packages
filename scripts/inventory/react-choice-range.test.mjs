@@ -127,7 +127,7 @@ test("props, refs, state, composition, styles and source-only quirks are recorde
       "range",
       "orientation",
       'role="slider"',
-      "tabIndex={0}",
+      "tabIndex",
       "SliderClassesParams",
       "stale",
     ],

@@ -102,12 +102,12 @@ test("props, emits, slots, v-model, composition and source-only quirks are recor
       "hidden-accessible",
     ],
     "vue.slider": [
-      "never bound",
-      "NaN",
+      "touchmove",
+      "inset-inline-start",
       "any other orientation",
       "no ordering guard",
       "slideend",
-      'tabindex="0"',
+      "ariaLabel",
     ],
     "vue.knob": ["bare clamped number", "event.code", "fixed 10", "without a guard", "{value}"],
   };

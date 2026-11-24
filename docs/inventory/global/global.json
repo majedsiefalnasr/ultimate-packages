@@ -310,8 +310,8 @@
       "scope": "shared-component-styles-146",
       "ticket": 146,
       "revision": "b9051a6668bf08b91654c23925a41cdcd9b84119",
-      "records": 21,
-      "aliases": 22,
+      "records": 22,
+      "aliases": 23,
       "pending": 1
     },
     {
@@ -1798,6 +1798,11 @@
       "id": "package.ultimate.uix-styles.root",
       "owner": "#146",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.root"
+    },
+    {
+      "id": "package.ultimate.uix-styles.slider",
+      "owner": "#146",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.slider"
     },
     {
       "id": "package.ultimate.uix-styles.table",
@@ -12454,6 +12459,14 @@
       "from": "scripts/inventory/shared-component-styles.json",
       "origin": "relationship",
       "source": "uixstyles.root",
+      "target": "uixstyles.slider",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.slider",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.root",
       "target": "uixstyles.table",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.table",
       "via": "record"
@@ -12488,6 +12501,22 @@
       "source": "uixstyles.root",
       "target": "uixstyles.virtualscroller",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.virtualscroller",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.slider",
+      "target": "package.ultimate.uix-styled.root",
+      "resolution": "scripts/inventory/styled-runtime.json#uixstyled.root",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.slider",
+      "target": "uixstyles.root",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.root",
       "via": "record"
     },
     {

@@ -18,6 +18,7 @@ Scoped sample only; not platform completeness.
 - [Menu styles](uixstyles.menu.md)
 - [Paginator styles](uixstyles.paginator.md)
 - [Shared styles package entry and type](uixstyles.root.md)
+- [Slider styles](uixstyles.slider.md)
 - [Table styles](uixstyles.table.md)
 - [Textarea styles](uixstyles.textarea.md)
 - [ToggleSwitch styles](uixstyles.toggleswitch.md)

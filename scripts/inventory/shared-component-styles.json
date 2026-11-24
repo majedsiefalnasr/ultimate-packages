@@ -94,6 +94,10 @@
     {
       "id": "package.ultimate.uix-styles.toggleswitch",
       "record": "uixstyles.toggleswitch"
+    },
+    {
+      "id": "package.ultimate.uix-styles.slider",
+      "record": "uixstyles.slider"
     }
   ],
   "packages": [
@@ -156,6 +160,10 @@
         {
           "subpath": "./toggleswitch",
           "source": "packages/uix-styles/src/toggleswitch/index.ts"
+        },
+        {
+          "subpath": "./slider",
+          "source": "packages/uix-styles/src/slider/index.ts"
         },
         {
           "subpath": "./inputnumber",
@@ -357,6 +365,41 @@
         {
           "state": "implemented",
           "behavior": "Source implementation for ToggleSwitch styles is present and is consumed by the Angular, React and Vue toggle-switch style modules; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "This inventory update ran no browser checks. The module has a unit test under packages/uix-styles/test that checks the style string and the token names; it does not render the CSS."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.slider",
+      "name": "Slider styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the slider component.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/slider only (it is not re-exported from the package root). Selectors: .u-slider (position: relative) with the .u-slider-horizontal and .u-slider-vertical modifiers, .u-slider-range, .u-slider-handle (position: absolute, with a ::before inner circle and hover and focus-visible rules) and the p-disabled modifier. Tokens use the slider.* names, including the track, range, handle, handle content, focus ring and transition tokens. It is the @primeuix/styles 2.0.3 slider module with the root renamed to u-slider and position: absolute added on the handle and the range (ADR-101).",
+      "files": ["packages/uix-styles/src/slider/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/slider#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/slider/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/slider/index.ts",
+          "contains": ".u-slider {"
+        },
+        {
+          "path": "packages/uix-styles/src/slider/index.ts",
+          "contains": ".u-slider-handle {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Slider styles is present and is consumed by the Angular, React and Vue slider style modules; this record describes the current source without asserting framework parity."
         },
         {
           "state": "not-run",
@@ -1066,6 +1109,7 @@
         "uixstyles.paginator",
         "uixstyles.textarea",
         "uixstyles.toggleswitch",
+        "uixstyles.slider",
         "uixstyles.table",
         "uixstyles.tooltip",
         "uixstyles.virtualscroller"
