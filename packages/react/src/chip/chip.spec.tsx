@@ -65,4 +65,97 @@ describe("UChip", () => {
     fireEvent.error(screen.getByAltText("broken"));
     expect(onImageError).toHaveBeenCalledOnce();
   });
+
+  it("gives the remove control an English default accessible label that can be replaced", () => {
+    const { container, rerender } = render(<UChip label="Apple" removable />);
+    expect(container.querySelector(".u-chip-remove-icon")?.getAttribute("aria-label")).toBe(
+      "Remove"
+    );
+    rerender(<UChip label="Apple" removable removeAriaLabel="Delete" />);
+    expect(container.querySelector(".u-chip-remove-icon")?.getAttribute("aria-label")).toBe(
+      "Delete"
+    );
+  });
+
+  it("replaces the remove glyph with a font class or an element", () => {
+    const { container, rerender } = render(
+      <UChip label="Apple" removable removeIcon="pi pi-times-circle" />
+    );
+    const removeEl = container.querySelector(".u-chip-remove-icon") as HTMLElement;
+    expect(removeEl.classList.contains("pi-times-circle")).toBe(true);
+    expect(removeEl.querySelector("svg")).toBeNull();
+    rerender(<UChip label="Apple" removable removeIcon={<b data-testid="glyph">x</b>} />);
+    expect(screen.getByTestId("glyph")).toBeInTheDocument();
+  });
+
+  it("renders the template instead of the image, icon and label", () => {
+    const { container } = render(
+      <UChip label="Apple" template={<span data-testid="custom">Custom</span>} />
+    );
+    expect(screen.getByTestId("custom")).toBeInTheDocument();
+    expect(container.querySelector(".u-chip-label")).toBeNull();
+  });
+
+  it("calls a template function with the props", () => {
+    render(
+      <UChip label="Apple" template={(props) => <span data-testid="fn">{props.label}</span>} />
+    );
+    expect(screen.getByTestId("fn").textContent).toBe("Apple");
+  });
+
+  it("forwards the ref and rest props to the root, and lets a consumer aria-label win", () => {
+    const ref = React.createRef<HTMLDivElement>();
+    const { container } = render(
+      <UChip ref={ref} label="Apple" data-testid="root" aria-label="Fruit" style={{ margin: 1 }} />
+    );
+    const root = container.querySelector(".u-chip") as HTMLElement;
+    expect(ref.current).toBe(root);
+    expect(root.getAttribute("data-testid")).toBe("root");
+    expect(root.getAttribute("aria-label")).toBe("Fruit");
+    expect(root.style.margin).toBe("1px");
+  });
+
+  it("sets data-p to removable only when removable", () => {
+    const { container, rerender } = render(<UChip label="Apple" />);
+    expect(container.querySelector(".u-chip")?.hasAttribute("data-p")).toBe(false);
+    rerender(<UChip label="Apple" removable />);
+    expect(container.querySelector(".u-chip")?.getAttribute("data-p")).toBe("removable");
+  });
+
+  it("adds p-disabled to the root when disabled", () => {
+    const { container } = render(<UChip label="Apple" disabled />);
+    expect(container.querySelector(".u-chip")?.classList.contains("p-disabled")).toBe(true);
+  });
+
+  it("applies pt sections to the root and each part", () => {
+    const { container } = render(
+      <UChip
+        label="Apple"
+        icon="pi pi-apple"
+        removable
+        pt={{
+          root: { "data-pt": "root" },
+          icon: { "data-pt": "icon" },
+          label: { "data-pt": "label" },
+          removeIcon: { "data-pt": "remove" },
+        }}
+      />
+    );
+    expect(container.querySelector(".u-chip")?.getAttribute("data-pt")).toBe("root");
+    expect(container.querySelector(".u-chip-icon")?.getAttribute("data-pt")).toBe("icon");
+    expect(container.querySelector(".u-chip-label")?.getAttribute("data-pt")).toBe("label");
+    expect(container.querySelector(".u-chip-remove-icon")?.getAttribute("data-pt")).toBe("remove");
+  });
+
+  it("applies the image pt section", () => {
+    render(<UChip image="a.png" alt="fruit" pt={{ image: { "data-pt": "image" } }} />);
+    expect(screen.getByAltText("fruit").getAttribute("data-pt")).toBe("image");
+  });
+
+  it("emits no Ultimate classes when unstyled", () => {
+    const { container } = render(<UChip label="Apple" removable unstyled />);
+    expect(container.querySelector(".u-chip")).toBeNull();
+    expect(container.querySelector(".u-chip-label")).toBeNull();
+    expect(container.querySelector("[role='button']")?.className ?? "").toBe("");
+  });
 });
