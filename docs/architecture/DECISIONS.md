@@ -1057,7 +1057,7 @@ Status: Accepted (user ruling R4, 2026-11-21, gap-closing spec [#167](https://gi
 
 ## ADR-078 — `registerThemeVariables` reads the preset under the hyphen-free registration name (amends ADR-051 and ADR-067)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F7, ticket [#174](https://github.com/majedsiefalnasr/ultimate-packages/issues/174)). The spec names this approach; the ADR records that it reverses a rejected option.
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F7, ticket [#174](https://github.com/majedsiefalnasr/ultimate-packages/issues/174)). The spec names this approach; the ADR records that it reverses a rejected option.
 
 **Context.**
 
@@ -1086,7 +1086,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-085 — Per-instance `unstyled` and `dt` are built once in the three cores (foundation F15; contract and divergences from Prime)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F15, ticket [#175](https://github.com/majedsiefalnasr/ultimate-packages/issues/175)). This is the first ADR of ticket A5. Numbering starts at 085 to avoid a collision with ADRs added by ticket A0 (#170) from 079 up.
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F15, ticket [#175](https://github.com/majedsiefalnasr/ultimate-packages/issues/175)). This is the first ADR of ticket A5. Numbering starts at 085 to avoid a collision with ADRs added by ticket A0 (#170) from 079 up.
 
 **Context.**
 
@@ -1130,7 +1130,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-079 — `pt` functions receive `parent.instance` through host-instance lookup (A0 design decision, amends ADR-077)
 
-Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), ticket [#170](https://github.com/majedsiefalnasr/ultimate-packages/issues/170) A0). Needs the user's approval. ADR-077 left this open on purpose.
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), ticket [#170](https://github.com/majedsiefalnasr/ultimate-packages/issues/170) A0). ADR-077 left this open on purpose.
 
 **Context.**
 
@@ -1160,7 +1160,7 @@ Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ult
 
 ## ADR-080 — A0 builds the instance-level `pt` and `ptOptions` only; global `pt`, `usePassThrough`, `pt.hooks` and `$attrSelector` are not built (A0 scope decision, amends ADR-077)
 
-Status: Proposed (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), ticket [#170](https://github.com/majedsiefalnasr/ultimate-packages/issues/170) A0). Needs the user's approval, in particular the recommendation on the global source.
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), ticket [#170](https://github.com/majedsiefalnasr/ultimate-packages/issues/170) A0).
 
 **Context.**
 
@@ -1199,7 +1199,7 @@ It does not build the global/default `pt` source, `usePassThrough`, `pt.hooks`, 
 
 ## ADR-082 — Structural styles live in `@ultimate/uix-styles` by default; staying framework-local needs a recorded reason (foundation F9; amends ADR-017)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F9, ticket [#178](https://github.com/majedsiefalnasr/ultimate-packages/issues/178)). The user chose Option A on 2026-11-21.
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F9, ticket [#178](https://github.com/majedsiefalnasr/ultimate-packages/issues/178)). The user chose Option A on 2026-11-21.
 
 **Context.**
 
@@ -1228,7 +1228,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-081 — `@ultimate/uix-styles/base` uses `u-*` selectors and the three cores register it through one `uix-styled` helper (foundation F10; amends ADR-017)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F10, ticket [#176](https://github.com/majedsiefalnasr/ultimate-packages/issues/176)). The user chose Option C in the Stage 1 session.
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), foundation item F10, ticket [#176](https://github.com/majedsiefalnasr/ultimate-packages/issues/176)). The user chose Option C in the Stage 1 session.
 
 **Context.**
 
@@ -1262,7 +1262,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-086 — InputText: `size`, value-derived `p-filled`, shared styles, and React `keyfilter`/`tooltip` stay composition (L0a, ticket #188)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#188](https://github.com/majedsiefalnasr/ultimate-packages/issues/188)). The user ruled on rows 5, 6, 9 and 12 to 14 before implementation. This ADR records those rulings and the rows that stay open.
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#188](https://github.com/majedsiefalnasr/ultimate-packages/issues/188)). The user ruled on rows 5, 6, 9 and 12 to 14 before implementation. This ADR records those rulings and the rows that stay open.
 
 **Context.**
 
@@ -1303,7 +1303,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-087 — Avatar and AvatarGroup: Prime content and error contracts, pass-through, shared styles, and logical size-specific group offsets (L0a, ticket #201)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#201](https://github.com/majedsiefalnasr/ultimate-packages/issues/201)). The user ruled on the three decisions of the Phase 4 report before implementation (all option A). This ADR records those rulings, the divergences and the rows that stay open.
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#201](https://github.com/majedsiefalnasr/ultimate-packages/issues/201)). The user ruled on the three decisions of the Phase 4 report before implementation (all option A). This ADR records those rulings, the divergences and the rows that stay open.
 
 **Context.**
 
@@ -1340,7 +1340,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-088 — Badge: React `UBadge`, Angular `[uBadge]`, Vue `v-badge` stays out, and OverlayBadge forwards style and class (L0a, ticket #202)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#202](https://github.com/majedsiefalnasr/ultimate-packages/issues/202)). The user ruled on the four decisions below before implementation. This ADR records those rulings and the rows that stay open.
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#202](https://github.com/majedsiefalnasr/ultimate-packages/issues/202)). The user ruled on the four decisions below before implementation. This ADR records those rulings and the rows that stay open.
 
 **Context.**
 
@@ -1379,7 +1379,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-089 — Toolbar: regions render only when provided, `pt` reaches every section, and the deprecated and Angular-template surface stays out (L0a, ticket #205)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#205](https://github.com/majedsiefalnasr/ultimate-packages/issues/205)). The user ruled on region rendering, the React function form and the deprecated surface before implementation. This ADR records those rulings and the rows that stay open.
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#205](https://github.com/majedsiefalnasr/ultimate-packages/issues/205)). The user ruled on region rendering, the React function form and the deprecated surface before implementation. This ADR records those rulings and the rows that stay open.
 
 **Context.**
 
@@ -1419,7 +1419,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-090 — FloatLabel: one shared stylesheet keyed on the classes the sibling fields emit, `pt` and parent instance, and the unused nested instance token stays out (L0a, ticket #191)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#191](https://github.com/majedsiefalnasr/ultimate-packages/issues/191)). No ruling was needed before implementation; this ADR records the decisions the ticket made and the rows that stay open.
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#191](https://github.com/majedsiefalnasr/ultimate-packages/issues/191)). No ruling was needed before implementation; this ADR records the decisions the ticket made and the rows that stay open.
 
 **Context.**
 
@@ -1458,7 +1458,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-091 — IconField: one shared stylesheet keyed on the classes the sibling fields emit, `pt` and parent instance, React `iconPosition` defaults to `left`, and InputIcon is `aria-hidden` by default (L0a, ticket #192)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#192](https://github.com/majedsiefalnasr/ultimate-packages/issues/192)). Two rulings were taken before implementation (items 3 and 4); the rest records decisions the ticket made and the rows that stay open.
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#192](https://github.com/majedsiefalnasr/ultimate-packages/issues/192)). Two rulings were taken before implementation (items 3 and 4); the rest records decisions the ticket made and the rows that stay open.
 
 **Context.**
 
@@ -1501,7 +1501,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-092 — IftaLabel: one shared stylesheet keyed on the classes the sibling fields emit, `pt` and parent instance, the Angular-only invalid rule, and no React component (L0a, ticket #193)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#193](https://github.com/majedsiefalnasr/ultimate-packages/issues/193)). No ruling was needed before implementation; this ADR records the decisions the ticket made and the rows that stay open.
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#193](https://github.com/majedsiefalnasr/ultimate-packages/issues/193)). No ruling was needed before implementation; this ADR records the decisions the ticket made and the rows that stay open.
 
 **Context.**
 
@@ -1543,7 +1543,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-093 — InputGroup: one shared stylesheet keyed on the classes the sibling fields emit, `pt` and unstyled on Angular and Vue, and React delivery left open (L0a, ticket #194)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#194](https://github.com/majedsiefalnasr/ultimate-packages/issues/194)). The React delivery is recorded separately in ADR-094.
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#194](https://github.com/majedsiefalnasr/ultimate-packages/issues/194)). The React delivery is recorded separately in ADR-094.
 
 **Context.**
 
@@ -1585,7 +1585,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-094 — InputGroup in React: `UInputGroup` and `UInputGroupAddon` over the shared stylesheet (L0a, ticket #194)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#194](https://github.com/majedsiefalnasr/ultimate-packages/issues/194)). User ruling: option A, React ships components.
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#194](https://github.com/majedsiefalnasr/ultimate-packages/issues/194)). User ruling: option A, React ships components.
 
 **Context.**
 
@@ -1617,7 +1617,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-095 — InputMask: one shared mask engine and an attachable directive in Angular, composition and mobile guards in all three frameworks, InputText styling through the shared stylesheet, and `pt` and `unstyled` everywhere (L0a, ticket #190)
 
-Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#190](https://github.com/majedsiefalnasr/ultimate-packages/issues/190)). User rulings: Angular gets an attachable directive (1A); composition guards and the Android branch go into all three frameworks, tested with simulated events (2A).
+Status: Accepted (user approval confirmed 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#190](https://github.com/majedsiefalnasr/ultimate-packages/issues/190)). User rulings: Angular gets an attachable directive (1A); composition guards and the Android branch go into all three frameworks, tested with simulated events (2A).
 
 **Context.**
 
