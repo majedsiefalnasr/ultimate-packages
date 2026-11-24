@@ -634,5 +634,23 @@
     "ultimateDestination": "packages/react/src/input-textarea/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "Ultimate barrel that re-exports `UInputTextarea` and its props. It shares only the exported component name with the compared upstream entry point. Entry added in #189."
+  },
+  {
+    "originalPath": "components/lib/multistatecheckbox/MultiStateCheckbox.js",
+    "ultimateDestination": "packages/react/src/multi-state-checkbox/multi-state-checkbox.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 MultiStateCheckbox.js for #208 (ADR-099): the cycle through `options` with `empty` wrapping to null, the optionValue and optionLabel resolution, the change event shape with `stopPropagation`, `preventDefault` and `target {name, id, value}`, the Space handling, the polite live region announcing the selected label or the null label, the ARIA props forwarded to the focusable box, autoFocus, the focus and blur callbacks, invalid, the filled variant and the `focus`/`getElement` ref handle follow upstream. PrimeReactContext, the base `getProps`, useHandleStyle and the nested `<Checkbox>` are replaced by useComponentBase, createPassThrough, useMergeProps and a self-contained `role=\"checkbox\"` box. Differences recorded in ADR-099: no synthetic onChange on mount when `empty=false` and the value is null (intentional), readOnly also blocks the Space key (upstream's Space handler ignores it), `optionIcon` stays a function rather than a field name, the live region is always rendered rather than only while focused, `nullLabel` is a prop with the English default `Not Selected`, and `tooltip`, `tooltipOptions`, `dataKey`, dotted-path field resolution, `inputId` and per-option `style` are not carried. Existing file, rewritten in #208."
+  },
+  {
+    "originalPath": "components/lib/multistatecheckbox/MultiStateCheckboxBase.js",
+    "ultimateDestination": "packages/react/src/multi-state-checkbox/multi-state-checkbox-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 MultiStateCheckboxBase.js `classes.root`: `p-multistatecheckbox p-checkbox p-component` with the `p-variant-filled` modifier becomes `u-multi-state-checkbox u-component` with disabled, invalid and `p-variant-filled` modifiers, and `p-variant-filled` is kept so it matches the shared checkbox selectors. The CSS stays hand-authored (ADR-067(c)) and reads `checkbox.filled.background` for the filled variant. The cursor moved from the root to the box. Existing file, changed in #208."
+  },
+  {
+    "originalPath": "components/lib/multistatecheckbox/MultiStateCheckbox.js",
+    "ultimateDestination": "packages/react/src/multi-state-checkbox/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UMultiStateCheckbox and its prop, change-event and handle types; it shares only the exported component name with PrimeReact's multistatecheckbox entry point."
   }
 ]
