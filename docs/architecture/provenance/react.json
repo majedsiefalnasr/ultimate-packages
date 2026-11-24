@@ -580,5 +580,23 @@
     "ultimateDestination": "packages/react/src/input-group/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel re-export of UInputGroup, UInputGroupAddon and their prop types, with no upstream equivalent file."
+  },
+  {
+    "originalPath": "components/lib/inputmask/InputMask.js",
+    "ultimateDestination": "packages/react/src/input-mask/input-mask.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 InputMask.js for #190 (ADR-095): the buffer algorithm (`seekNext`, `seekPrev`, `shiftL`, `shiftR`, `checkVal`, `writeBuffer`), the Backspace, Delete, Escape and Enter handling, the Android Chrome branch, the echo check that skips re-applying a value the input already holds, and the single native input are upstream's. PrimeReactContext, the base `getProps`, useHandleStyle and the combined-ref effect are replaced by useComponentBase, createPassThrough, useMergeProps and a plain forwarded ref. The caller's `onFocus`, `onBlur`, `onKeyDown`, `onKeyPress`, `onInput`, `onPaste`, `onCompositionStart` and `onCompositionEnd` are chained, and `size`, `keepBuffer`, `characterPattern`, `pt`, `ptOptions` and `unstyled` are added. Two upstream defects are corrected: Delete removed nothing at a collapsed caret, and a controlled parent echoing an incomplete value let `autoClear` wipe it while typing. PrimeReact's `keyfilter`, `tooltip` and `validateOnly` props are composition and are not carried (ADR-086). Existing file, rewritten in #190."
+  },
+  {
+    "originalPath": "components/lib/inputmask/InputMaskBase.js",
+    "ultimateDestination": "packages/react/src/input-mask/input-mask-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver (ADR-064). PrimeReact 10.9.9 InputMaskBase.js declares the props and the root class; here the root renders as an InputText, so the module registers the shared `@ultimate/uix-styles/inputtext` CSS under the `inputtext` key (ADR-095). react-core has no additional-keys support (ADR-078), and the root element is an InputText, so the output is the same. The modifier classes are the ones the shared module's selectors reference. Existing file, rewritten in #190."
+  },
+  {
+    "originalPath": "components/lib/inputmask/InputMask.js",
+    "ultimateDestination": "packages/react/src/input-mask/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064). Barrel re-export shaped like PrimeReact's `inputmask` entry point, with no shared implementation."
   }
 ]

@@ -1614,3 +1614,58 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 - React users get the same grouped-field layout as Angular and Vue, from the same CSS, without writing `p-inputgroup` rules.
 - The new React export is public API with no Prime counterpart, so it needs maintenance that PrimeReact users do not expect.
 - Tests assert classes, DOM, `pt`, `unstyled` and the registered CSS, not pixels. The React stories are not browser-verified here.
+
+## ADR-095 — InputMask: one shared mask engine and an attachable directive in Angular, composition and mobile guards in all three frameworks, InputText styling through the shared stylesheet, and `pt` and `unstyled` everywhere (L0a, ticket #190)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#190](https://github.com/majedsiefalnasr/ultimate-packages/issues/190)). User rulings: Angular gets an attachable directive (1A); composition guards and the Android branch go into all three frameworks, tested with simulated events (2A).
+
+**Context.**
+
+- InputMask renders a masked text input. Prime's three implementations share one algorithm (jQuery maskedinput: `checkVal`, `shiftL`, `shiftR`, `seekNext`, `seekPrev`) and differ in what surrounds it.
+- The Phase 4 report found the Ultimate ports far from Prime. Angular had no Escape, Enter, composition or mobile handling, no focus, blur or keydown outputs, no clear icon, no `keepBuffer`, and no directive form. React had no callbacks, no `pt`, no `unstyled` and no `size`. Vue repacked the whole input on every keystroke, so Backspace never shifted characters across a separator, and it did not render as an InputText.
+- Two upstream React defects showed in the port: Delete removed nothing at a collapsed caret, and a controlled parent echoing an incomplete value let `autoClear` wipe the field while the user was still typing.
+- The InputText stylesheet is shared (ADR-082, ADR-086). Each InputMask root is an InputText input, so the three frameworks should read the same Aura `inputtext` tokens.
+
+**Decision.**
+
+1. **Angular directive (ruling 1A).** `UInputMaskDirective` on `[uInputMask]` masks a native input without the component wrapper. The component and the directive both call one `InputMaskEngine`, which owns the DOM listeners and the buffer algorithm, so the two cannot drift. PrimeNG's directive selector is `[pInputMask]`; Ultimate's is `[uInputMask]` with `exportAs uInputMask`.
+2. **Unprefixed pass-through names on the directive.** The directive uses `pt`, `ptOptions`, `unstyled` and `dt` inherited from the base, not PrimeNG's prefixed `pInputMaskPT` and `pInputMaskUnstyled` inputs. A directive that re-declared them as aliases failed typecheck against the base, and one set of names across the three frameworks is the goal.
+3. **Composition and mobile guards in all three (ruling 2A).** Each port ignores `input` events while an IME composition is open and finalizes on `compositionend`, and each carries PrimeNG's Android Chrome branch. These paths are tested with simulated events in jsdom only. Real devices and real IME software are not verified, and the pull request says so.
+4. **Paste is reformatted after the browser applies it.** Paste emits `paste` and the following `input` event reformats the value, instead of replacing the buffer from the clipboard text. This keeps the user's selection context.
+5. **Escape and Enter.** Escape restores the value held at focus and Enter blurs, in all three, as upstream does.
+6. **Angular surface added.** Inputs `keepBuffer`, `characterPattern`, `showClear`, `type`, `inputId`, `name`, `title`, `autocomplete`, `tabindex`, `ariaLabel`, `ariaLabelledBy`, `ariaRequired`, `required` and `autofocus`; outputs `onFocus`, `onBlur`, `onKeydown`, `onInput` and `onClear`; methods `focus()` and `clear()`; a `#clearicon` template with `UTimesIcon` as the default; `aria-invalid` on the input. A value written before the view exists is applied in `ngAfterViewInit`, and a changed `mask` re-initializes and reformats.
+7. **React.**
+   - **Surface:** `pt`, `ptOptions`, `unstyled`, `size`, `characterPattern` and `keepBuffer` are added, and native attributes spread onto the input. The caller's `onFocus`, `onBlur`, `onKeyDown`, `onKeyPress`, `onInput`, `onPaste`, `onCompositionStart` and `onCompositionEnd` are chained, not replaced.
+   - **Style key:** the style registers under `inputtext`, with the shared module. ADR-067 says to keep `input-mask` and add `inputtext`, but react-core has no additional-keys support (ADR-078 left that to the family tickets). The root element is an InputText, so one registration under `inputtext` gives the same output without touching react-core. The pass-through name stays `inputmask`.
+   - **Defects fixed:** Delete now removes the character at the caret, and the effect no longer re-applies a `value` that only echoes what the input already holds.
+8. **Vue.** `InputMask.vue` renders a nested `UInputText`, as PrimeVue does, so the InputText classes, `size`, `variant`, `fluid`, `invalid` and `pt` apply, and `pt.pcInputText.root` reaches the input. The mask logic is a straight port of PrimeVue 4.5.5 with the changes listed under Divergences. `complete` keeps the earlier Ultimate payload `{ originalEvent, value }`.
+9. **Names and classes.** The component name is `inputmask`, and the directive's is `inputmaskdirective`. The root class is `u-inputmask`. Ultimate keeps `u-input-mask` as the Angular component selector.
+10. **Angular styles.** The Angular style module includes `@ultimate/uix-styles/inputtext` and the PrimeNG clear icon, fluid and `.ng-invalid.ng-dirty` rules, renamed to `u-input-mask`. `pcInputText` is a function that produces the InputText classes for the input.
+
+**Divergences from Prime.**
+
+1. The Angular directive is `[uInputMask]` and uses unprefixed pass-through names (decision 2).
+2. Vue reads keys from `event.key`, not `event.code`, and ignores keypress for ctrl, alt and meta chords and non-character keys but lets shift through, so capitals are masked like other characters (PrimeVue ignores shift too).
+3. Vue `caret()` writes a selection only while the input is focused and has no `offsetParent` guard on the read side, so the component can be tested in jsdom.
+4. Vue and React paste handling follows decision 4. Vue `complete` carries `{ originalEvent, value }` where PrimeVue emits the bare event.
+5. Vue without a `mask` behaves as a plain text input. An uncontrolled Vue instance also stores its own value so the next render does not re-apply a stale one.
+6. Vue does not read `formField.onBlur`. Vue Forms is a separate spec, so row 23 stays M (R3).
+7. React registers its style under `inputtext` (decision 7), and does not carry PrimeReact's `keyfilter`, `tooltip` and `validateOnly` props. They are composition (`useKeyFilter`, `UTooltip`) and are recorded as I, as in ADR-086.
+8. The Angular NgModule wrapper is not carried, because ADR-019 is still Accepted, so row 25 is I.
+9. Vue's `placeholder` is passed as given. The earlier Ultimate port defaulted it to the empty buffer, which PrimeVue does not do.
+10. `ptOptions` has no visible effect until the global `pt` source exists (ADR-080), so row 27 stays P.
+
+**Classification after this ticket** (C complete, P partial, M missing, I intentional, N/A not applicable; from a source re-read of the 27 rows; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+- **Angular:** C 21, P 3, I 1, N/A 2. Open: rows 19 and 20 (size, fluid, variant and visuals are tested as classes only) and row 27. Row 25 is I. Rows 23 and 24 are N/A.
+- **React:** C 19, P 1, I 1, N/A 6. Open: row 27. Row 24 is I (composition, ADR-086). Rows 15 to 17, 23, 25 and 26 are N/A.
+- **Vue:** C 20, P 1, M 1, N/A 5. Open: row 27 (P) and row 23 (M, Vue Forms). Rows 15 to 17, 24 and 25 are N/A.
+- Rows 8 and 9 for Angular, React and Vue are C on simulated events only. They are not device-verified.
+
+**Consequences.**
+
+- Angular users can mask a native input with `[uInputMask]`, get the clear icon, `keepBuffer`, focus and blur outputs, and attach `pt`.
+- Like PrimeNG, the Angular input stays empty until focus, so the earlier test that read the buffer before focus now focuses first, and the autoClear-on-blur assertion expects an empty string.
+- Vue Backspace now shifts the remaining characters left across a separator, as PrimeVue does (`123-456` with the caret at 3 gives `124-56_`), where the earlier port cleared one slot.
+- React and Vue render with the InputText classes, so the InputMask stories can change their browser baselines. They are not verified in a browser here.
+- Tests assert values, classes, DOM, emitted events and pass-through. They do not measure pixels, real caret movement in a browser, or real IME and Android input.

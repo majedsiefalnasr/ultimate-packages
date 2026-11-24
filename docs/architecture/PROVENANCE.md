@@ -366,3 +366,16 @@ Ticket #194 (spec #167, ADR-093 and ADR-094) brings InputGroup to parity in Angu
 - **Specs and stories.** Ultimate-authored.
 
 The nine InputGroup source files left `known-missing.json` because they now have manifest entries (three Angular, six Vue). Per-file records are in `docs/architecture/provenance/ng.json`, `vue.json` and `uix-styles.json`.
+
+### L0a InputMask source disclosure
+
+Ticket #190 (spec #167, ADR-095) brings InputMask to parity in Angular, React and Vue against the pinned oracles PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5. No Prime package is a dependency (ADR-004). The sources were read from the installed `primeng` 21.1.9 and `primevue` 4.5.5 packages in `node_modules` and the pinned PrimeReact source in `.vendor-cache` (ADR-064).
+
+- **Angular `input-mask.ts` and `input-mask-style.ts` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeNG `inputmask.ts` and its style module. The component and directive surface, the clear icon and the control value accessor wiring are upstream's. The directive is `[uInputMask]`, and the pass-through names are unprefixed (ADR-095). PrimeNG's `BaseComponent`, injected style services and NgModule wrapper are not carried.
+- **Angular `input-mask-engine.ts` (source class COPY, sub-label `adapted`).** The buffer algorithm moved out of the component into one engine shared by the component and the directive. Composition guards, the deferred paste reformat and the re-entrancy flag are Ultimate additions.
+- **React `input-mask.tsx` and `input-mask-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeReact `InputMask.js` and `InputMaskBase.js`. The algorithm is upstream's. Two upstream defects are corrected (Delete at a collapsed caret, and the controlled-echo wipe). The style registers the shared `@ultimate/uix-styles/inputtext` CSS under the `inputtext` key (ADR-095).
+- **Vue `InputMask.vue` and `input-mask-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeVue `InputMask.vue` and `InputMaskStyle.js`. The nested `InputText` render and the algorithm are upstream's; the differences are listed in ADR-095.
+- **Vue `BaseInputMask.ts` and the barrels (source class REFERENCE).** They share only interface facts with the compared upstream files. The Angular barrel is authored.
+- **Specs and stories.** Ultimate-authored.
+
+The ten InputMask source files left `known-missing.json` because they now have manifest entries (three Angular, three React, four Vue). The new Angular engine file has its own entry. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json` and `vue.json`.

@@ -1180,5 +1180,29 @@
     "ultimateDestination": "packages/vue/src/input-group/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UInputGroup and UInputGroupAddon; it shares only the exported component names with PrimeVue's inputgroup module."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputmask/InputMask.vue",
+    "ultimateDestination": "packages/vue/src/input-mask/InputMask.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 InputMask.vue for #190 (ADR-095): the nested `InputText` render with its bindings, the pass-through merge of `pcInputText` and root, the buffer algorithm (`initMask`, `checkVal`, `shiftL`, `shiftR`, `seekNext`, `seekPrev`), `updateValue`, `isValueUpdated`, the emitted events and the Android Chrome branch are upstream's. Differences: keys are read from `event.key`; `caret()` writes only while the input is focused and has no `offsetParent` guard; keypress ignores ctrl, alt and meta chords and non-character keys but lets shift through; `onInput` returns while a composition is open; paste only emits `paste` and the browser's `input` event reformats; `complete` carries `{ originalEvent, value }`; an uncontrolled instance also stores its own value; a `slotChar` watcher re-initializes the mask; timers are cleared on unmount; without a mask the component is a plain input. `formField.onBlur` is not carried (Vue Forms is out of scope). Existing file, rewritten in #190."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputmask/BaseInputMask.vue",
+    "ultimateDestination": "packages/vue/src/input-mask/BaseInputMask.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064). Shares the props (`slotChar`, `id`, `mask`, `placeholder`, `autoClear`, `unmask`, `readonly`, `disabled`, `invalid`, `name`) and the `extends: BaseInput` chain with PrimeVue 4.5.5 BaseInputMask.vue, here `createBaseInput` with the component name `inputmask`. No local `cx` or `mounted` shadows the base. Existing file, rewritten in #190."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputmask/style/InputMaskStyle.js",
+    "ultimateDestination": "packages/vue/src/input-mask/input-mask-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). PrimeVue 4.5.5 InputMaskStyle.js carries no CSS of its own, only the root class resolver, because the component renders a nested InputText. Here the root class is `u-inputmask` and the CSS is empty (ADR-095). Existing file, rewritten in #190."
+  },
+  {
+    "originalPath": "packages/primevue/src/inputmask/index.js",
+    "ultimateDestination": "packages/vue/src/input-mask/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064). Barrel re-export shaped like PrimeVue's `inputmask` entry point, with no shared implementation."
   }
 ]
