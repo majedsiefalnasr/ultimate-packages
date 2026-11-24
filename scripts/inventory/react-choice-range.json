@@ -573,8 +573,8 @@
       "name": "React UInputSwitch",
       "framework": "react",
       "availability": "public",
-      "purpose": "Controlled on/off switch rendered as a native checkbox input with role=switch and a slider element.",
-      "surface": "UInputSwitch is a plain function component, not a forwardRef. UInputSwitchProps requires checked:unknown and adds trueValue (default true), falseValue (default false), onChange, disabled, invalid, name, id, inputId, inputRef:React.Ref<HTMLInputElement>, autoFocus and className; it has no readOnly prop. Refs: inputRef (function or object) is merged by setInputRef, which also writes an internalInputRef that is never read. State is fully controlled: isChecked = checked === trueValue; handleChange returns when disabled or onChange is absent, else emits UInputSwitchChangeEvent {originalEvent, value (falseValue when checked, otherwise trueValue), target {name, id, value}}. Markup: a root div with data-p-highlight and data-p-disabled around a native input type=checkbox role=\"switch\" (id=inputId, name, checked, disabled, autoFocus, aria-invalid={invalid}, aria-checked={isChecked}) and an empty span for the slider; there is no label, aria-label or aria-labelledby prop. inputSwitchStyleModule defines classes root (checked, disabled), input and slider; there is no ClassesParams interface. Aura components registry has no key for input-switch (componentName input-switch), so no theme link is recorded. The component is React-native naming and is separate from the Angular and Vue toggle-switch records. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/input-switch; the root barrel line and manifest subpath are both present. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
+      "purpose": "Controlled on/off switch rendered as a native checkbox input with role=switch, a slider and a handle element, with an imperative handle and pass-through.",
+      "surface": "UInputSwitch is a React.forwardRef component (componentName toggleswitch) whose ref exposes UInputSwitchHandle {focus(), getElement(), getInput()}. UInputSwitchProps requires checked:unknown and adds trueValue (default true), falseValue (default false), onChange, onFocus, onBlur, disabled, invalid, name, id, inputId, inputRef, tabIndex, autoFocus, unstyled, pt and ptOptions; it has no readOnly prop. aria-* props go on the input and every other prop goes on the root. State is fully controlled: isChecked = checked === trueValue; handleChange returns when disabled or onChange is absent, else emits UInputSwitchChangeEvent {originalEvent, value (falseValue when checked, otherwise trueValue), stopPropagation, preventDefault, target {name, id, value}}. Markup: a root div with data-p-highlight and data-p-disabled around a native input type=checkbox role=switch (id=inputId, name, checked, disabled, tabIndex, autoFocus, aria-invalid, aria-checked) and a slider span containing a handle span, each part merged with its pass-through section (root, input, slider, handle) through createPassThrough and useMergeProps. There is no root role=checkbox wrapper and no tooltip prop. inputSwitchStyleModule imports the shared @ultimate/uix-styles/toggleswitch module and defines classes root (checked, disabled, invalid), input, slider and handle. The component registers under the Aura components registry key toggleswitch. The component is React-native naming and is separate from the Angular and Vue toggle-switch records. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/input-switch. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. The manifest advertises dist entry/type paths; this does not prove a built or published package.",
       "files": [
         "packages/react/src/input-switch/index.ts",
         "packages/react/src/input-switch/input-switch.tsx",
@@ -586,7 +586,9 @@
         "@ultimate/react#UInputSwitchProps",
         "@ultimate/react/input-switch#UInputSwitchProps",
         "@ultimate/react#UInputSwitchChangeEvent",
-        "@ultimate/react/input-switch#UInputSwitchChangeEvent"
+        "@ultimate/react/input-switch#UInputSwitchChangeEvent",
+        "@ultimate/react#UInputSwitchHandle",
+        "@ultimate/react/input-switch#UInputSwitchHandle"
       ],
       "evidence": [
         {
@@ -595,7 +597,7 @@
         },
         {
           "path": "packages/react/src/input-switch/input-switch.tsx",
-          "contains": "export function UInputSwitch({"
+          "contains": "export const UInputSwitch = React.forwardRef<UInputSwitchHandle, UInputSwitchProps>("
         },
         {
           "path": "packages/react/src/input-switch/input-switch.tsx",
@@ -607,15 +609,27 @@
         },
         {
           "path": "packages/react/src/input-switch/input-switch.tsx",
-          "contains": "role=\"switch\""
+          "contains": "role: \"switch\","
         },
         {
           "path": "packages/react/src/input-switch/input-switch.tsx",
-          "contains": "aria-checked={isChecked}"
+          "contains": "\"aria-checked\": isChecked,"
         },
         {
           "path": "packages/react/src/input-switch/input-switch.tsx",
           "contains": "internalInputRef.current = node;"
+        },
+        {
+          "path": "packages/react/src/input-switch/input-switch.tsx",
+          "contains": "React.useImperativeHandle(ref, () => ({"
+        },
+        {
+          "path": "packages/react/src/input-switch/input-switch.tsx",
+          "contains": "componentName: \"toggleswitch\","
+        },
+        {
+          "path": "packages/react/src/input-switch/input-switch-style.ts",
+          "contains": "@ultimate/uix-styles/toggleswitch"
         },
         {
           "path": "packages/react/src/input-switch/input-switch-style.ts",
