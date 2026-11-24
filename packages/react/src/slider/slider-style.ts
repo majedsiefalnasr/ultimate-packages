@@ -1,25 +1,19 @@
 import type { StyleModule } from "@ultimate/react-core";
+import { style as sliderStyle } from "@ultimate/uix-styles/slider";
 
 /**
- * Hand-authored CSS matching `select-button-style.ts`'s established React
- * convention (no `dt()` tokens).
+ * `useComponentBase`-shaped style module for `USlider`. The structural CSS is
+ * the shared `@ultimate/uix-styles/slider` module (ADR-082), so it reads the
+ * Aura `slider` tokens (ADR-067) and matches Angular and Vue.
  */
 const css = /*css*/ `
-.u-slider { position: relative; background: #e5e7eb; border-radius: 6px; }
-.u-slider-horizontal { height: 6px; width: 100%; }
-.u-slider-vertical { width: 6px; height: 100%; }
-.u-slider-range { position: absolute; display: block; background: #3b82f6; border-radius: 6px; }
-.u-slider-horizontal .u-slider-range { top: 0; left: 0; height: 100%; }
-.u-slider-vertical .u-slider-range { bottom: 0; left: 0; width: 100%; }
-.u-slider-handle { position: absolute; display: block; touch-action: none; cursor: grab; height: 18px; width: 18px; background: #3b82f6; border-radius: 50%; }
-.u-slider-horizontal .u-slider-handle { top: 50%; margin-top: -9px; margin-left: -9px; }
-.u-slider-vertical .u-slider-handle { left: 50%; margin-left: -9px; margin-bottom: -9px; }
-.u-slider-disabled .u-slider-handle { cursor: default; }
+    ${sliderStyle}
 `;
 
 export interface SliderClassesParams {
   orientation?: "horizontal" | "vertical";
   disabled?: boolean;
+  invalid?: boolean;
 }
 
 const classes = {
@@ -28,7 +22,8 @@ const classes = {
     {
       "u-slider-horizontal": params.orientation !== "vertical",
       "u-slider-vertical": params.orientation === "vertical",
-      "u-slider-disabled": Boolean(params.disabled),
+      "p-disabled": Boolean(params.disabled),
+      "p-invalid": Boolean(params.invalid),
     },
   ],
   range: "u-slider-range",

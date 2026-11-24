@@ -1,85 +1,31 @@
+import { style as sliderStyle } from "@ultimate/uix-styles/slider";
+
 /**
  * Ultimate-owned adaptation of PrimeNG's `SliderStyle` (see
- * `.vendor-extracted/ng/slider/style/sliderstyle.ts`, sourced from
- * `@primeuix/styles/slider`), shaped to match `UBaseComponent`'s
- * `styleModule: {css, classes}` contract. Hand-ported directly, same reason
- * documented in `password-style.ts`: no `@ultimate/uix-styles/slider`
- * subpath exists yet and this task may not add one.
- *
- * `.p-slider*` selectors renamed to `.u-slider*`; `p-disabled` kept
- * unrenamed, matching established precedent.
+ * `.vendor-extracted/ng/slider/style/sliderstyle.ts`), shaped to match
+ * `UBaseComponent`'s `styleModule: {css, classes}` contract. The structural
+ * CSS is the shared `@ultimate/uix-styles/slider` module (ADR-082), so it
+ * reads the Aura `slider` tokens and matches React and Vue.
  */
 const css = /*css*/ `
-    .u-slider {
-        position: relative;
-        background: dt('slider.track.background');
-        border-radius: dt('slider.track.border.radius');
-    }
-
-    .u-slider.u-slider-horizontal {
-        height: dt('slider.track.size');
-        width: 100%;
-    }
-
-    .u-slider.u-slider-vertical {
-        width: dt('slider.track.size');
-        height: 100%;
-    }
-
-    .u-slider-range {
-        position: absolute;
-        display: block;
-        background: dt('slider.range.background');
-        border-radius: dt('slider.track.border.radius');
-    }
-
-    .u-slider.u-slider-horizontal .u-slider-range {
-        top: 0;
-        inset-inline-start: 0;
-        height: 100%;
-    }
-
-    .u-slider.u-slider-vertical .u-slider-range {
-        bottom: 0;
-        inset-inline-start: 0;
-        width: 100%;
-    }
-
-    .u-slider-handle {
-        position: absolute;
-        display: block;
-        touch-action: none;
-        cursor: grab;
-        height: dt('slider.handle.height');
-        width: dt('slider.handle.width');
-        background: dt('slider.handle.background');
-        border-radius: dt('slider.handle.border.radius');
-    }
-
-    .u-slider.u-slider-horizontal .u-slider-handle {
-        top: 50%;
-        margin-block-start: calc(-1 * calc(dt('slider.handle.height') / 2));
-        margin-inline-start: calc(-1 * calc(dt('slider.handle.width') / 2));
-    }
-
-    .u-slider.u-slider-vertical .u-slider-handle {
-        inset-inline-start: 50%;
-        margin-inline-start: calc(-1 * calc(dt('slider.handle.width') / 2));
-        margin-block-end: calc(-1 * calc(dt('slider.handle.height') / 2));
-    }
-
-    .u-slider.p-disabled .u-slider-handle {
-        cursor: default;
-    }
+    ${sliderStyle}
 `;
 
+/** Params `USlider` passes into `cx('root', params)` — see `UBaseComponent.cx()`. */
+export interface SliderClassesParams {
+  orientation?: "horizontal" | "vertical";
+  disabled?: boolean;
+  invalid?: boolean;
+}
+
 const classes = {
-  root: (params: { orientation?: "horizontal" | "vertical"; disabled?: boolean } = {}) => [
+  root: (params: SliderClassesParams = {}) => [
     "u-slider u-component",
     {
       "u-slider-horizontal": params.orientation !== "vertical",
       "u-slider-vertical": params.orientation === "vertical",
       "p-disabled": params.disabled,
+      "p-invalid": params.invalid,
     },
   ],
   range: "u-slider-range",
