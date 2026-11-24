@@ -427,3 +427,16 @@ Ticket #203 (spec #167, ADR-098) brings Chip to parity across the three framewor
 - **Specs and stories.** The Chip specs and stories are Ultimate-authored.
 
 No Chip source file was in `known-missing.json`. The existing manifest entries for the Chip files are updated, and one entry is added for the shared module. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json`, `vue.json` and `uix-styles.json`.
+
+### L0a ToggleSwitch source disclosure
+
+Ticket #197 (spec #167, ADR-100) brings ToggleSwitch, and React's InputSwitch, to parity across the three frameworks against the pinned oracles PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5. No Prime package is a dependency (ADR-004); the sources were read from the checksum-verified archives in `.vendor-cache` (ADR-064).
+
+- **`packages/uix-styles/src/toggleswitch/index.ts` (source class COPY, sub-label `adapted`).** Recovered from `@primeuix/styles` 2.0.3 `toggleswitch`. The `.p-toggleswitch*` selectors are renamed to `.u-toggle-switch*`. Every declaration and token is upstream's, with `position: relative` on the root. `p-disabled` and `p-invalid` are kept unrenamed.
+- **Angular `toggle-switch.ts` and `toggle-switch-style.ts` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeNG `toggleswitch.ts` and `toggleswitchstyle.ts`. The native input, the value pair, the input surface, the handle template, the data hooks, touched on blur, the change output and the `Bind` binding are upstream's. `styleClass`, the `size` input and the instance token are not carried.
+- **React `input-switch.tsx` and `input-switch-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeReact `InputSwitch.js` and `InputSwitchBase.js`. The controlled `checked`, the change event shape, the focus and blur callbacks, the aria and tabIndex wiring, `inputRef` and the imperative handle are upstream's. The root `role="checkbox"` wrapper and the tooltip props are not carried. The hand-written CSS is replaced by the shared module.
+- **Vue `ToggleSwitch.vue`, `BaseToggleSwitch.ts` and `toggle-switch-style.ts` (source class COPY, sub-label `adapted`; the base factory is `reimplemented-with-reference`).** Compared with PrimeVue `ToggleSwitch.vue`, `BaseToggleSwitch.vue` and `ToggleSwitchStyle.js`. The input wiring, the slider and handle pair, the `handle` slot, the data hooks and the class keys are upstream's. The hand-ported CSS copy is replaced by the shared module, and `$pcToggleSwitch` is not carried.
+- **Barrels (source class REFERENCE; the Angular barrel is `authored`).** They share only the exported names with the compared upstream entry points.
+- **Specs and stories.** The ToggleSwitch and InputSwitch specs and stories are Ultimate-authored.
+
+The ten ToggleSwitch and InputSwitch source files that were in `known-missing.json` (Angular 3, React 3, Vue 4) now have manifest entries and are removed from it, and one entry is added for the shared module. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json`, `vue.json` and `uix-styles.json`.
