@@ -124,5 +124,11 @@
     "ultimateDestination": "packages/uix-styles/src/chip/index.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/chip/index.ts, recovered from dist/chip/index.mjs (ADR-082, #203). The `.p-chip*` selectors are renamed to `.u-chip*`, the names Ultimate emits. Every declaration and token is upstream's. One rule is added: `.u-chip-label` keeps its `line-height: 1.5` and `0.25rem` block padding, which the earlier local copies of all three frameworks carried and @primeuix/styles does not have (PrimeReact's ChipBase has an equivalent). Shared by the Angular, React and Vue chip style modules."
+  },
+  {
+    "originalPath": "src/toggleswitch/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/toggleswitch/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/toggleswitch/index.ts, recovered from dist/toggleswitch/index.mjs (ADR-082, #197). The `.p-toggleswitch*` selectors are renamed to `.u-toggle-switch*`, the names Ultimate emits. The state classes `p-disabled` and `p-invalid` are kept, because the siblings emit them unrenamed. The rules read the Aura `toggleswitch` tokens, with `position: relative` on the root. Shared by the Angular, React and Vue toggle-switch style modules."
   }
 ]

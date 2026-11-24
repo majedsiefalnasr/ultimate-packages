@@ -6,11 +6,11 @@ Framework: vue; availability: public
 
 ## Authored interpretation
 
-Checkbox-based switch with a decorative slider and handle, toggling between configurable true and false values.
+Checkbox-based switch with a slider and handle, a handle slot and pass-through, toggling between configurable true and false values.
 
 ## Framework surface
 
-UToggleSwitch (Options API SFC ToggleSwitch.vue, name "UToggleSwitch") and createBaseToggleSwitch (BaseToggleSwitch.ts) plus toggleSwitchStyleModule and ToggleSwitchClassesParams (toggle-switch-style.ts; not re-exported from index.ts). Base factory chain: createBaseX extends createBaseEditableHolder directly (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue), not createBaseInput, so there is no pcFluid injection or inherited variant prop; because the holder is created with its empty default style module, the factory shadows cx() and mounted() locally over its own style module. Declared props: trueValue (true), falseValue (false), readonly, tabindex, inputId, inputClass, inputStyle, ariaLabelledby, ariaLabel, disabled, invalid plus modelValue and defaultValue; it declares no name, value or fluid prop. Emits change (native event), focus and blur (native events). Template: root div with one native input type="checkbox" role="switch" (id, checked, tabindex, disabled, readonly, aria-checked, aria-labelledby, aria-label, aria-invalid set from invalid) with @focus, @blur and @change bound, and a slider div containing a handle div; no slots. checked is dValue === trueValue. onChange returns before writing when disabled or readonly; it writes falseValue when checked and trueValue otherwise, then emits change. styleParams passes checked, disabled and invalid; the root renders u-toggle-switch with u-toggle-switch-checked, p-disabled and p-invalid. writeValue sets dValue and emits update:modelValue only when the component is controlled (modelValue passed, or neither modelValue nor defaultValue passed); value-change is always emitted. The css is hand-ported rather than imported from uix-styles. Style module registered as toggleswitch.
+UToggleSwitch (Options API SFC ToggleSwitch.vue, name "UToggleSwitch", inheritAttrs off) and createBaseToggleSwitch (BaseToggleSwitch.ts) plus toggleSwitchStyleModule and ToggleSwitchClassesParams (toggle-switch-style.ts; not re-exported from index.ts). Base factory chain: createBaseX extends createBaseEditableHolder({componentName: "toggleswitch", styleModule}) directly (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue), not createBaseInput, so there is no pcFluid injection or inherited variant prop; cx, style registration, unstyled, per-instance dt and pt come from the base chain. Declared props: trueValue (true), falseValue (false), readonly, tabindex, inputId, inputClass, inputStyle, ariaLabelledby, ariaLabel, disabled, invalid plus modelValue and defaultValue; it declares no name, value or fluid prop. Emits change (native event), focus and blur (native events). Template: root div with data-p-checked, data-p-disabled and data-p, placed through ptmi('root'), around one native input type="checkbox" role="switch" (id, checked, tabindex, disabled, readonly, aria-checked, aria-labelledby, aria-label, aria-invalid set from invalid, ptm('input')) with @focus, @blur and @change bound, and a slider div (ptm('slider')) containing a handle div (ptm('handle')) that renders the handle slot scoped with checked. checked is dValue === trueValue. onChange returns before writing when disabled or readonly; it writes falseValue when checked and trueValue otherwise, then emits change. styleParams passes checked, disabled and invalid; the root renders u-toggle-switch with u-toggle-switch-checked, p-disabled and p-invalid. writeValue sets dValue and emits update:modelValue only when the component is controlled (modelValue passed, or neither modelValue nor defaultValue passed); value-change is always emitted. The css is the shared @ultimate/uix-styles/toggleswitch module. Style module registered as toggleswitch.
 
 ## Public exports
 
@@ -31,7 +31,10 @@ packages/vue/src/toggle-switch/ToggleSwitch.vue: name: "UToggleSwitch"
 packages/vue/src/toggle-switch/ToggleSwitch.vue: emits: ["change", "focus", "blur"]
 packages/vue/src/toggle-switch/ToggleSwitch.vue: role="switch"
 packages/vue/src/toggle-switch/ToggleSwitch.vue: return this.dValue === this.trueValue;
-packages/vue/src/toggle-switch/BaseToggleSwitch.ts: extends: createBaseEditableHolder(),
+packages/vue/src/toggle-switch/BaseToggleSwitch.ts: extends: createBaseEditableHolder({
+packages/vue/src/toggle-switch/ToggleSwitch.vue: <slot name="handle" :checked="checked" />
+packages/vue/src/toggle-switch/ToggleSwitch.vue: v-bind="ptmi('root')"
+packages/vue/src/toggle-switch/toggle-switch-style.ts: @ultimate/uix-styles/toggleswitch
 packages/vue/src/toggle-switch/toggle-switch-style.ts: export const toggleSwitchStyleModule
 packages/vue/src/toggle-switch/index.ts: createBaseToggleSwitch
 packages/vue/src/index.ts: export * from "./toggle-switch";

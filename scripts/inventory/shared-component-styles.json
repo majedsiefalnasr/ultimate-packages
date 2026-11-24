@@ -90,6 +90,10 @@
     {
       "id": "package.ultimate.uix-styles.textarea",
       "record": "uixstyles.textarea"
+    },
+    {
+      "id": "package.ultimate.uix-styles.toggleswitch",
+      "record": "uixstyles.toggleswitch"
     }
   ],
   "packages": [
@@ -148,6 +152,10 @@
         {
           "subpath": "./textarea",
           "source": "packages/uix-styles/src/textarea/index.ts"
+        },
+        {
+          "subpath": "./toggleswitch",
+          "source": "packages/uix-styles/src/toggleswitch/index.ts"
         },
         {
           "subpath": "./inputnumber",
@@ -318,6 +326,41 @@
         {
           "state": "not-run",
           "behavior": "This inventory update ran no browser checks. The module has a unit test under packages/uix-styles/test that checks the style string, the Aura textarea tokens and the selector names; it does not render the CSS."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.toggleswitch",
+      "name": "ToggleSwitch styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the toggleswitch component.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/toggleswitch only (it is not re-exported from the package root). Selectors: .u-toggle-switch (position: relative), .u-toggle-switch-input, .u-toggle-switch-slider and .u-toggle-switch-handle, the u-toggle-switch-checked modifier, hover and focus-visible rules keyed on :has() over the input, and the p-invalid and p-disabled modifiers. Tokens use the toggleswitch.* names, including the handle, checked, hover, focus ring, invalid and disabled tokens. It is the @primeuix/styles 2.0.3 toggleswitch module with the root renamed to u-toggle-switch (ADR-100).",
+      "files": ["packages/uix-styles/src/toggleswitch/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/toggleswitch#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/toggleswitch/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/toggleswitch/index.ts",
+          "contains": ".u-toggle-switch {"
+        },
+        {
+          "path": "packages/uix-styles/src/toggleswitch/index.ts",
+          "contains": ".u-toggle-switch-handle {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for ToggleSwitch styles is present and is consumed by the Angular, React and Vue toggle-switch style modules; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "This inventory update ran no browser checks. The module has a unit test under packages/uix-styles/test that checks the style string and the token names; it does not render the CSS."
         }
       ]
     },
@@ -1022,6 +1065,7 @@
         "uixstyles.menu",
         "uixstyles.paginator",
         "uixstyles.textarea",
+        "uixstyles.toggleswitch",
         "uixstyles.table",
         "uixstyles.tooltip",
         "uixstyles.virtualscroller"

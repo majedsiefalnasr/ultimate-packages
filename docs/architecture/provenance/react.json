@@ -652,5 +652,23 @@
     "ultimateDestination": "packages/react/src/multi-state-checkbox/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UMultiStateCheckbox and its prop, change-event and handle types; it shares only the exported component name with PrimeReact's multistatecheckbox entry point."
+  },
+  {
+    "originalPath": "components/lib/inputswitch/InputSwitch.js",
+    "ultimateDestination": "packages/react/src/input-switch/input-switch.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 InputSwitch.js for #197 (ADR-100): the controlled `checked` compared with `trueValue`, the native input with role=switch, the change event with `stopPropagation`, `preventDefault` and `target {name, id, value}`, the focus and blur callbacks, the aria props forwarded to the input, tabIndex on the input, `inputRef`, autoFocus, and the imperative handle with `focus()`, `getElement()` and `getInput()` are upstream's. `createPassThrough`, `useMergeProps`, `pt`, `ptOptions` and `unstyled` are added through react-core. Not ported (recorded as I): the root `role=checkbox` wrapper and its `aria-checked`, and the `tooltip` and `tooltipOptions` props, which stay composition through `UTooltip`. The component registers under the Aura `toggleswitch` key (ADR-067). Changed for #197."
+  },
+  {
+    "originalPath": "components/lib/inputswitch/InputSwitchBase.js",
+    "ultimateDestination": "packages/react/src/input-switch/input-switch-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 InputSwitchBase.js `classes`: `p-inputswitch` with the highlight, disabled and invalid modifiers becomes `u-toggle-switch u-component` with checked, disabled and invalid modifiers, and the input, slider and handle parts. The hand-written CSS, which had no Aura values, is replaced by the shared `@ultimate/uix-styles/toggleswitch` module (ADR-082, ADR-067). Changed for #197."
+  },
+  {
+    "originalPath": "components/lib/inputswitch/InputSwitch.js",
+    "ultimateDestination": "packages/react/src/input-switch/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UInputSwitch and its prop, change-event and handle types; it shares only the exported component name with PrimeReact's inputswitch entry point."
   }
 ]

@@ -16,6 +16,7 @@ import { style as inputtextStyle } from "../src/inputtext";
 import { style as menuStyle } from "../src/menu";
 import { style as paginatorStyle } from "../src/paginator";
 import { style as tableStyle } from "../src/table";
+import { style as toggleswitchStyle } from "../src/toggleswitch";
 import { style as tooltipStyle } from "../src/tooltip";
 import { style as virtualscrollerStyle } from "../src/virtualscroller";
 
@@ -72,6 +73,7 @@ describe("component style modules — exactly 18 exist alongside base", () => {
         "paginator",
         "table",
         "textarea",
+        "toggleswitch",
         "tooltip",
         "virtualscroller",
       ].sort()
@@ -127,6 +129,9 @@ describe("component style modules — exactly 18 exist alongside base", () => {
   });
   it("tooltip style uses only .u-tooltip* selectors", () => {
     expect(tooltipStyle).not.toMatch(/\.p-tooltip/);
+  });
+  it("toggleswitch style uses only .u-toggle-switch* selectors", () => {
+    expect(toggleswitchStyle).not.toMatch(/\.p-toggleswitch/);
   });
 
   it("virtualscroller style uses only .u-scroller* selectors", () => {

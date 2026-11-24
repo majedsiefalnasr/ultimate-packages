@@ -1852,3 +1852,44 @@ Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://git
 - Callers that queried `getByRole("button")` use `getByRole("checkbox")`, and callers that read the `none` label see `Not Selected` or set `nullLabel`.
 - `onChange` is now optional, and callers can read `event.target.name` and `event.target.id`.
 - Tests assert values, classes, DOM, events and pass-through in jsdom. They do not measure pixels, focus rings or screen-reader output.
+
+## ADR-100 — ToggleSwitch: one shared stylesheet on the Aura toggleswitch tokens, `pt`, `unstyled` and `dt` in all three frameworks, the missing form and accessibility surface, a React ref handle, and recorded exclusions (L0a, ticket #197)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#197](https://github.com/majedsiefalnasr/ultimate-packages/issues/197)). User rulings: the React root `role="checkbox"` wrapper is not added and is recorded as I (Q2); React gets a ref handle with `focus()`, `getElement()` and `getInput()` (Q3). Standing rulings applied: `tooltip` stays composition (I), Vue forms registration is out of scope, N rows get no work.
+
+**Context.**
+
+- ToggleSwitch is a native `input[role=switch]` with a slider and a handle. PrimeNG 21.1.9 and PrimeVue 4.5.5 call it `ToggleSwitch`. PrimeReact 10.9.9 calls it `InputSwitch`, and Ultimate keeps that name in React (`UInputSwitch`).
+- The Phase 4 report (`docs/architecture/research/phase4/batch6/toggleswitch.md`) found 30 rows. Angular lacked readonly, required, name, `inputId`, the aria and tabindex wiring, autofocus, invalid, the change event, the handle template, the data hooks and touched on blur. React lacked the Aura-token CSS (it registered under `input-switch`, which has no Aura values), the aria and tabindex wiring, invalid, the focus and blur callbacks, the event methods and the ref handle. Vue lacked the handle slot and the data hooks. None of the three had `pt`, `unstyled` or per-instance `dt`.
+
+**Decision.**
+
+1. **One shared stylesheet (ADR-082).** `@ultimate/uix-styles/toggleswitch` holds the structural CSS on the Aura `toggleswitch` tokens, with `position: relative` on the root. Angular, React and Vue import it. Angular keeps only its `.ng-invalid.ng-dirty` rule.
+2. **React registers under `toggleswitch` (ADR-067).** It was `input-switch`, so the Aura tokens never applied. The component keeps the name `UInputSwitch`.
+3. **Angular surface.** `UToggleSwitch` extends `UBaseEditableHolder` and adds `readonly`, `invalid`, `required`, `name`, `inputId`, `tabindex`, `ariaLabel`, `ariaLabelledBy` and `autofocus`. The `onChange` output emits `{originalEvent, checked}`. The control is marked touched on blur instead of on change. A `#handle` template replaces the handle content. The root carries `data-p-checked`, `data-p-disabled` and `data-p`, and the slider and handle carry `data-p`.
+4. **React surface.** The input receives `aria-*` props and `tabIndex`. `onFocus` and `onBlur` are the input's. `invalid` adds `p-invalid` and `aria-invalid`. The change event carries `stopPropagation`, `preventDefault` and `target {name, id, value}`, as PrimeReact does.
+5. **React ref handle (Q3).** The ref exposes `focus()`, `getElement()` and `getInput()`.
+6. **No root `role="checkbox"` (Q2).** PrimeReact adds a wrapper checkbox role and `aria-checked` on the root in addition to the inner switch. Ultimate keeps only the inner `role="switch"`, which avoids a duplicate announcement. Row 2 is I.
+7. **Vue surface.** The `handle` slot is scoped with `checked`. The root carries `data-p-checked`, `data-p-disabled` and `data-p`, and the slider and handle carry `data-p`. `ptmi('root')` places attributes on the root with `inheritAttrs` off.
+8. **`pt`, `ptOptions`, `unstyled` and `dt`.** The sections are `root`, `input`, `slider` and `handle`. Angular binds them through `UBind`, React through `createPassThrough` and `useMergeProps`, and Vue through the base chain. The component name is `toggleswitch` in all three.
+9. **`tooltip` is composition.** Callers wrap the control in `UTooltip`, as for InputText (ADR-086), InputMask (ADR-095), TriStateCheckbox (ADR-096) and MultiStateCheckbox (ADR-099). Row 20 is I.
+
+**Divergences from Prime.**
+
+1. React has no root `role="checkbox"` wrapper (decision 6), so row 2 is I.
+2. `tooltip` and `tooltipOptions` are not props (decision 9), so row 20 is I.
+3. Dropped, not carried: `styleClass` (deprecated) in Angular, the `size` input in Angular (declared upstream, consumed by neither the template nor the style), and the `$pcToggleSwitch` and `TOGGLESWITCH_INSTANCE` instance tokens in Angular and Vue (no consumer).
+4. Vue forms registration (row 18) stays M. It belongs to the separate Vue Forms spec.
+5. `ptOptions` has no visible effect until the global `pt` source exists (ADR-080), so row 28 stays P in all three.
+
+**Classification after this ticket** (C complete, P partial, M missing, I intentional, N absent from the corresponding Prime; from the Phase 4 report's source citations and the specs in this ticket; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+- **Angular:** C 21, P 1, M 0, I 0, N 8. Open: row 28 (P, ADR-080). N rows: 2, 15, 17, 18, 20, 21, 22, 23.
+- **React:** C 19, P 1, M 0, I 2, N 8. Open: row 28 (P, ADR-080). Rows 2 and 20 are I. N rows: 6, 7, 8, 15, 18, 19, 23, 30.
+- **Vue:** C 19, P 1, M 1, I 0, N 9. Open: row 18 (M, Vue Forms spec) and row 28 (P, ADR-080). N rows: 2, 6, 8, 9, 13, 20, 21, 22, 23.
+
+**Consequences.**
+
+- React and Angular switches now read the Aura `toggleswitch` tokens, so their colours, hover, focus ring and handle movement match Vue and the preset. The React handle no longer shifts vertically when checked. Browser baselines for the React ToggleSwitch may change and are reviewed before any regeneration.
+- Assistive technology sees one switch with a name, a required state and an invalid state in Angular, and the input in React carries the caller's aria props. Callers that relied on Angular marking the control touched on change now get touched on blur.
+- Tests assert values, classes, DOM, events and pass-through in jsdom. They do not measure pixels, focus rings or screen-reader output.

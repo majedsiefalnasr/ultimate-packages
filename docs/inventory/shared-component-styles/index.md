@@ -20,5 +20,6 @@ Scoped sample only; not platform completeness.
 - [Shared styles package entry and type](uixstyles.root.md)
 - [Table styles](uixstyles.table.md)
 - [Textarea styles](uixstyles.textarea.md)
+- [ToggleSwitch styles](uixstyles.toggleswitch.md)
 - [Tooltip styles](uixstyles.tooltip.md)
 - [Virtual scroller styles](uixstyles.virtualscroller.md)
