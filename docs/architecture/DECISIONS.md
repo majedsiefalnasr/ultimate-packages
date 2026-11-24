@@ -1893,3 +1893,63 @@ Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://git
 - React and Angular switches now read the Aura `toggleswitch` tokens, so their colours, hover, focus ring and handle movement match Vue and the preset. The React handle no longer shifts vertically when checked. Browser baselines for the React ToggleSwitch may change and are reviewed before any regeneration.
 - Assistive technology sees one switch with a name, a required state and an invalid state in Angular, and the input in React carries the caller's aria props. Callers that relied on Angular marking the control touched on change now get touched on blur.
 - Tests assert values, classes, DOM, events and pass-through in jsdom. They do not measure pixels, focus rings or screen-reader output.
+
+## ADR-101 — Slider: one shared stylesheet on the Aura slider tokens, logical RTL placement, touch dragging, Prime's step rule, a configurable tab stop, accessible names, `invalid`, `pt`, `unstyled` and `dt` in all three frameworks, and recorded exclusions (L0a, ticket #198)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#198](https://github.com/majedsiefalnasr/ultimate-packages/issues/198)). User rulings for this ticket, all option A: logical placement and RTL mirroring in all three frameworks; a configurable tab stop that is removed when the slider is disabled; touch dragging with separate touch handlers; Prime's relative step-snapping rule. Standing rulings applied: PageUp and PageDown move ten steps, the change payload stays `{originalEvent, value}`, Vue keeps emitting `slideend` on a track click, and N rows get no work.
+
+**Context.**
+
+- Slider is a track with a range bar and one handle, or two handles in range mode. PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5 all call it `Slider`.
+- The Phase 4 report (`docs/architecture/research/phase4/batch6/slider.md`) found 18 rows per framework: Angular C 2, P 11, M 4, N 1; React C 3, P 7, M 4, N 4; Vue C 2, P 8, M 7, N 1. None of the three had touch dragging, an accessible name on the handle, a configurable tab stop or `pt`, `unstyled` and per-instance `dt`. Angular and Vue had no invalid state. React's stylesheet was hand-written and consumed no Aura token. The document listeners were not removed when the component went away mid-drag, the React drag callbacks closed over a stale value, and `max` equal to `min` produced NaN.
+- Reading the pinned sources again showed that PrimeNG and PrimeVue already place the handle and range with `inset-inline-start`, so the Phase 4 note about physical `left` described Ultimate's own code. Only PrimeReact uses `left`.
+
+**Decision.**
+
+1. **One shared stylesheet (ADR-082).** `@ultimate/uix-styles/slider` holds the structural CSS on the Aura `slider` tokens with `.u-slider*` selectors. `p-disabled` and `p-invalid` are kept unrenamed. Prime sets `position: absolute` on the handle and the range inline, so the module adds it. The vertical `min-height: 100px` is Prime's and replaces Ultimate's old `height: 100%`. Angular, React and Vue import the module. React no longer hard-codes colours (ADR-067).
+2. **Logical placement and RTL (ruling 1).** The handle and range use `inset-inline-start` in all three frameworks. A horizontal pointer position is mirrored when `getComputedStyle(element).direction` is `rtl`.
+3. **Tab stop (ruling 2).** `tabindex` is an input or prop in all three, default 0, and is removed from every handle when the slider is disabled.
+4. **Touch (ruling 3).** `touchstart`, `touchmove` and `touchend` handlers sit beside the mouse handlers and use the same absolute-coordinate math as the mouse. The drag follows the touch that started it and ends on `touchend` or `touchcancel`. No Pointer Events.
+5. **Step snapping (ruling 4).** The pointer value is computed relative to the current value, as in Prime: `ceil` toward the old value when the difference is negative, `floor` when it is positive, and `Math.floor(raw)` when there is no step. A non-zero `min` therefore keeps its own step grid.
+6. **Listener lifetime.** Document listeners are removed when the drag ends and when the component is destroyed or unmounted mid-drag. The React drag callbacks read the latest props through a ref, so they no longer close over a stale value.
+7. **Accessible name.** `aria-label` and `aria-labelledby` are forwarded to every handle. The two range handles carry the same name, as they do in Prime.
+8. **`invalid`.** The root gets `p-invalid` in all three frameworks.
+9. **`pt`, `ptOptions`, `unstyled` and `dt`.** The sections are `root`, `range`, `handle`, `startHandler` and `endHandler`. Angular binds them through `UBind`, provides itself as `U_PARENT_INSTANCE` and sets the root attributes in `ngAfterViewChecked`. React uses `createPassThrough` and `useMergeProps`. Vue builds the base with `createBaseEditableHolder({componentName: "slider", styleModule})`, uses `ptmi('root')` with `inheritAttrs` off and `ptm` for the other sections. The component name is `slider` in all three, which is the Aura key.
+10. **Standing rulings.** PageUp and PageDown move ten steps and Home and End jump to `min` and `max`. The change payload stays `{originalEvent, value}`. Vue keeps emitting `slideend` on a track click.
+
+**Choices made while implementing (not separately ruled; they stay as written unless this ADR is amended).**
+
+1. The range model is not sorted, so the two handles may cross, as in PrimeReact and PrimeVue. PrimeNG emits a sorted `[min, max]`.
+2. React range handles accept `startHandler` and `endHandler` and also PrimeReact's `handle` section. Angular and Vue accept only `startHandler` and `endHandler`.
+3. The pointer value is rounded with `parseFloat(raw.toFixed(10))`. Vue rounded to two decimals before.
+4. `slideend` reports the latest value and does not recompute it on mouse up, unlike PrimeReact.
+5. After a drag the follow-up click is ignored, so it is not read as a track click. The flag is cleared with `setTimeout(0)`.
+6. `touchend` calls `preventDefault` to suppress the emulated mouse events.
+7. A zero-size track is ignored instead of producing NaN, and `max` less than or equal to `min` gives 0 per cent.
+8. In Angular, Ultimate's touch handler uses the absolute position, as its mouse handler and PrimeReact and PrimeVue do. PrimeNG's touch handler adds a floored delta from the touch start to the start value.
+
+**Divergences from Prime.**
+
+1. React places the handle with `inset-inline-start` where PrimeReact uses `left` (decision 2), so React row 3 is I.
+2. React and Vue remove the tab stop when disabled, where PrimeReact and PrimeVue keep it (decision 3), so row 8 is I in both. Angular matches PrimeNG.
+3. Page keys move ten steps where Prime source moves one step in single mode, and Home and End target `min` and `max` where PrimeReact's spin calculation can leave the range (decision 10), so row 6 is I in all three.
+4. The change payload is an object where PrimeVue emits the raw value and PrimeNG emits `values` for a range (decision 10), so row 9 is I in Angular and Vue.
+5. Vue emits `slideend` on a track click where PrimeVue emits it only on drag end (decision 10), so row 10 is I in Vue.
+6. The range model is unsorted (choice 1), so Angular row 1 stays P. If this ADR is approved as written, that row becomes I.
+7. Dropped, not carried: `animate` in Angular (the pinned stylesheet has no rule for `p-slider-animate`), `styleClass` (deprecated), `autofocus`, and the `$pcSlider` and `SLIDER_INSTANCE` instance tokens (no consumer).
+8. Vue forms registration (row 13) stays M. It belongs to the separate Vue Forms spec. Angular row 13 stays P because touched and validation fidelity were not re-assessed here.
+9. `ptOptions` has no visible effect until the global `pt` source exists (ADR-080), so row 15 stays P in all three.
+
+**Classification after this ticket** (C complete, P partial, M missing, I intentional, N absent from the corresponding Prime; rows in the Phase 4 matrix order, 1 to 18; from a re-read of the pinned sources and the specs in this ticket; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+- **Angular:** C 12, P 3, M 0, I 2, N 1. Open: row 1 (P, choice 1), row 13 (P, not re-assessed) and row 15 (P, ADR-080). Rows 6 and 9 are I. Row 12 is N.
+- **React:** C 10, P 1, M 0, I 3, N 4. Open: row 15 (P, ADR-080). Rows 3, 6 and 8 are I. N rows: 11, 12, 13, 17. Row 7 is C with a recorded reference defect: PrimeReact supplies a percentage as `aria-valuenow`, and Ultimate supplies the actual value.
+- **Vue:** C 11, P 1, M 1, I 4, N 1. Open: row 13 (M, Vue Forms spec) and row 15 (P, ADR-080). Rows 6, 8, 9 and 10 are I. Row 12 is N.
+
+**Consequences.**
+
+- The three sliders read the Aura `slider` tokens, so colour, handle size, focus ring and the vertical size match across frameworks and the preset. Browser baselines for Slider may change: the vertical track gains `min-height: 100px`, the handle gains an inner circle from the content tokens, and React's colours now come from tokens. They are reviewed before any regeneration.
+- Assistive technology gets a named handle, a real value in `aria-valuenow`, and no tab stop on a disabled slider. Callers that relied on a focusable disabled slider in React or Vue no longer get one.
+- A touch drag works on touch screens, a drag no longer leaves listeners on the document, and a right-to-left page drags in the right direction.
+- A disabled slider has only the `cursor: default` rule from the shared module. No registered rule gives `p-disabled` an opacity, so a disabled slider is not dimmed. That gap is shared by every component that emits `p-disabled` and belongs to the family tickets.
+- Tests assert values, classes, attributes, events, pass-through and listener removal in jsdom (Angular 35, React 33, Vue 34, and the shared module in `uix-styles`). They do not measure pixels, run on a real touch device, or read screen-reader output.
