@@ -453,7 +453,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 
 ## References
 
-1895 references; 0 unresolved.
+1898 references; 0 unresolved.
 
 - scripts/inventory/ai.json: 18 references, 0 unresolved
 - scripts/inventory/angular-actions.json: 47 references, 0 unresolved
@@ -488,7 +488,7 @@ Coverage input: scripts/inventory/package-coverage.json; revision 81ed699f
 - scripts/inventory/react-table-viewport.json: 34 references, 0 unresolved
 - scripts/inventory/react-text-entry.json: 43 references, 0 unresolved
 - scripts/inventory/root-files.json: 0 references, 0 unresolved
-- scripts/inventory/shared-component-styles.json: 55 references, 0 unresolved
+- scripts/inventory/shared-component-styles.json: 58 references, 0 unresolved
 - scripts/inventory/styled-runtime.json: 33 references, 0 unresolved
 - scripts/inventory/theme-contract.json: 20 references, 0 unresolved
 - scripts/inventory/uix-utils-dom.json: 9 references, 0 unresolved
