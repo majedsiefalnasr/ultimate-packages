@@ -310,8 +310,8 @@
       "scope": "shared-component-styles-146",
       "ticket": 146,
       "revision": "b9051a6668bf08b91654c23925a41cdcd9b84119",
-      "records": 18,
-      "aliases": 19,
+      "records": 19,
+      "aliases": 20,
       "pending": 1
     },
     {
@@ -1798,6 +1798,11 @@
       "id": "package.ultimate.uix-styles.table",
       "owner": "#146",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.table"
+    },
+    {
+      "id": "package.ultimate.uix-styles.textarea",
+      "owner": "#146",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.textarea"
     },
     {
       "id": "package.ultimate.uix-styles.tooltip",
@@ -12423,6 +12428,14 @@
       "from": "scripts/inventory/shared-component-styles.json",
       "origin": "relationship",
       "source": "uixstyles.root",
+      "target": "uixstyles.textarea",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.textarea",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.root",
       "target": "uixstyles.tooltip",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.tooltip",
       "via": "record"
@@ -12447,6 +12460,22 @@
       "from": "scripts/inventory/shared-component-styles.json",
       "origin": "relationship",
       "source": "uixstyles.table",
+      "target": "uixstyles.root",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.root",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.textarea",
+      "target": "package.ultimate.uix-styled.root",
+      "resolution": "scripts/inventory/styled-runtime.json#uixstyled.root",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.textarea",
       "target": "uixstyles.root",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.root",
       "via": "record"
