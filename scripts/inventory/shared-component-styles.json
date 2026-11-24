@@ -32,6 +32,10 @@
       "record": "uixstyles.checkbox"
     },
     {
+      "id": "package.ultimate.uix-styles.chip",
+      "record": "uixstyles.chip"
+    },
+    {
       "id": "package.ultimate.uix-styles.dialog",
       "record": "uixstyles.dialog"
     },
@@ -112,6 +116,10 @@
         {
           "subpath": "./checkbox",
           "source": "packages/uix-styles/src/checkbox/index.ts"
+        },
+        {
+          "subpath": "./chip",
+          "source": "packages/uix-styles/src/chip/index.ts"
         },
         {
           "subpath": "./dialog",
@@ -475,6 +483,41 @@
           "limitations": "Scoped source, export, ownership, evidence and in-scope reference reconciliation only; cross-scope relationships remain pending, and global completeness, installed package resolution and product behavior are not asserted.",
           "run": "docs/inventory/shared-component-styles/pilot-run.json",
           "behavior": "The scoped inventory reconciles owned source files, named exports, source evidence, ownership, aliases and in-scope references; repeated generation is stable and preserves the authored README hash."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.chip",
+      "name": "Chip styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the chip component.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/chip only (it is not re-exported from the package root). Selectors: .u-chip, .u-chip-icon, .u-chip-image, .u-chip-label and .u-chip-remove-icon with its :focus-visible ring, and the :has() rules that adjust the root padding when a remove icon or an image is present. Tokens use the chip.* names (background, color, border radius, padding, gap, icon, image, remove icon and transition). It is the @primeuix/styles 2.0.3 chip module with the root renamed to u-chip, plus a u-chip-label rule that upstream lacks (ADR-098).",
+      "files": ["packages/uix-styles/src/chip/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/chip#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/chip/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/chip/index.ts",
+          "contains": ".u-chip {"
+        },
+        {
+          "path": "packages/uix-styles/src/chip/index.ts",
+          "contains": ".u-chip-remove-icon:focus-visible {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Chip styles is present and is consumed by the Angular, React and Vue chip style modules; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "This inventory update ran no browser checks. The module has a unit test under packages/uix-styles/test that checks the style string and the token names; it does not render the CSS."
         }
       ]
     },
@@ -925,6 +968,7 @@
         "uixstyles.badge",
         "uixstyles.button",
         "uixstyles.checkbox",
+        "uixstyles.chip",
         "uixstyles.dialog",
         "uixstyles.floatlabel",
         "uixstyles.iconfield",

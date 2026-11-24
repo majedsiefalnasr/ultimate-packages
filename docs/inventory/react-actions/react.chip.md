@@ -6,11 +6,11 @@ Framework: react; availability: public
 
 ## Authored interpretation
 
-Compact item/person label with optional image or icon and uncontrolled removable visibility.
+Compact item/person label with optional image or icon, custom content, a removable control and uncontrolled removable visibility.
 
 ## Framework surface
 
-UChip and UChipProps forward HTMLDivElement ref. Props: label, icon:string (CSS classes, not ReactNode), image, alt, disabled, removable, removeAriaLabel, onRemove:(MouseEvent|KeyboardEvent)=>void, onImageError:(SyntheticEvent<HTMLImageElement>)=>void, className. No native div attributes or children spread. Image takes priority over icon; label renders independently. Internal close/onKeyDown and visible state own removal; click, Enter or Backspace hides the chip before onRemove unless disabled. Remove span role=button has tabIndex -1 when disabled, otherwise 0; removeAriaLabel supplies its accessible label. UTimesIcon is external foundation content. chipStyleModule owns classes and --u-chip-* fallbacks, not a separately exported API. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/chip. The manifest advertises dist entry/type paths; this does not prove a built or published package. useComponentBase from @ultimate/react-core owns cx class resolution and delegates mounting/style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is registered; no scoped style module imports @ultimate/uix-styles. Comments claiming missing shared modules are historical, not availability evidence. Aura key chip exists; local CSS uses custom-property fallbacks rather than dt(). No dedicated record for this family is present in the current metadata registry; no metadata association is inferred from its name.
+UChip and UChipProps forward an HTMLDivElement ref. UChipProps extends the div attributes (without children). Props: label, icon (CSS classes), image, alt, disabled, removable, removeAriaLabel (default the English "Remove"), removeIcon (a font class string or an element), template (a node, or a function of the props, replacing the image, icon and label), onRemove, onImageError, className, unstyled, pt and ptOptions. The remaining props and ptm(root) are merged onto the root, so a consumer aria-label replaces the label-derived one. Pass-through sections root, image, icon, label and removeIcon, registered under chip. The root carries data-p=removable while removable and the p-disabled class while disabled. Image takes priority over icon; label renders independently. Internal close/onKeyDown and visible state own removal; click, Enter or Backspace hides the chip before onRemove unless disabled, with the native event and no veto. The remove span is role=button with tabIndex -1 when disabled, otherwise 0. The default glyph is UTimesIcon. chipStyleModule's css is the shared @ultimate/uix-styles/chip module (ADR-082, ADR-098) on the Aura chip tokens (ADR-067); the hand-written CSS and the --u-chip-* fallbacks are gone. useComponentBase from @ultimate/react-core owns cx class resolution and the unstyled and per-instance style handling; those hooks are external foundation records, not duplicated here. Public runtime and props type are named exports from both @ultimate/react and @ultimate/react/chip. The manifest advertises dist entry/type paths; this does not prove a built or published package. No dedicated record for this family is present in the current metadata registry; no metadata association is inferred from its name.
 
 ## Public exports
 
@@ -29,6 +29,8 @@ packages/react/src/chip/chip-style.ts
 packages/react/src/chip/chip.tsx: export interface UChipProps
 packages/react/src/chip/chip-style.ts: export const chipStyleModule
 packages/react/src/index.ts: export * from "./chip";
+packages/react/src/chip/chip.tsx: createPassThrough("chip"
+packages/react/src/chip/chip-style.ts: @ultimate/uix-styles/chip
 ```
 
 ## Relationships

@@ -36,6 +36,7 @@ uixstyles.avatar
 uixstyles.badge
 uixstyles.button
 uixstyles.checkbox
+uixstyles.chip
 uixstyles.dialog
 uixstyles.floatlabel
 uixstyles.iconfield
