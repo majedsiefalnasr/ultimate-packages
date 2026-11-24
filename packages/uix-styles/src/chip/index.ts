@@ -33,11 +33,6 @@ export const style = /*css*/ `
         padding-block-end: calc(dt('chip.padding.y') / 2);
     }
 
-    .u-chip-label {
-        line-height: 1.5;
-        padding: 0.25rem 0;
-    }
-
     .u-chip-remove-icon {
         cursor: pointer;
         font-size: dt('chip.remove.icon.size');
@@ -55,5 +50,10 @@ export const style = /*css*/ `
         box-shadow: dt('chip.remove.icon.focus.ring.shadow');
         outline: dt('chip.remove.icon.focus.ring.width') dt('chip.remove.icon.focus.ring.style') dt('chip.remove.icon.focus.ring.color');
         outline-offset: dt('chip.remove.icon.focus.ring.offset');
+    }
+
+    .u-chip-label {
+        line-height: 1.5;
+        padding: 0.25rem 0;
     }
 `;
