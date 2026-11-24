@@ -2,11 +2,13 @@
   <textarea
     ref="textarea"
     :class="cx('root', styleParams)"
+    :data-p="dataP"
     :value="dValue"
     :name="name"
     :placeholder="placeholder"
     :disabled="disabled"
     :aria-invalid="invalid || undefined"
+    v-bind="ptmi('root', { context: { filled, disabled } })"
     @input="onInput"
     @focus="onFocus"
     @blur="onBlur"
@@ -14,6 +16,7 @@
 </template>
 
 <script>
+import { cn } from "@ultimate/uix-utils/classnames";
 import { createBaseTextarea } from "./BaseTextarea";
 
 // Real rendered DOM verified against .vendor-extracted PrimeVue Textarea.vue:
@@ -29,10 +32,14 @@ import { createBaseTextarea } from "./BaseTextarea";
 // port (not a stub) using the same shrink-then-grow two-step, same
 // `requestAnimationFrame`-wrapped observer callback (documented upstream as
 // a Firefox `ResizeObserver`-loop workaround), and the same
-// `beforeUnmount`-time `observer.disconnect()` cleanup.
+// `beforeUnmount`-time `observer.disconnect()` cleanup. `p-filled` follows
+// the value (`filled`, from the editable holder), like PrimeVue; `data-p`
+// carries the variant-derived `filled`, as PrimeVue's. `pt`, `unstyled` and
+// `dt` come from the base chain.
 export default {
   name: "UTextarea",
   extends: createBaseTextarea(),
+  inheritAttrs: false,
   emits: ["focus", "blur"],
   data() {
     return { observer: null };
@@ -42,9 +49,19 @@ export default {
       return {
         invalid: this.invalid,
         fluid: this.resolvedFluid,
+        filled: this.filled,
         variantFilled: this.resolvedVariant === "filled",
         autoResize: this.autoResize,
+        size: this.size,
       };
+    },
+    dataP() {
+      return cn({
+        invalid: this.invalid,
+        fluid: this.resolvedFluid,
+        filled: this.resolvedVariant === "filled",
+        [this.size]: this.size,
+      });
     },
   },
   mounted() {

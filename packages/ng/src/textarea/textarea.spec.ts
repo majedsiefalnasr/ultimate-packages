@@ -4,6 +4,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { describe, expect, it } from "vitest";
 import { UFluid } from "../fluid/fluid";
 import { UTextarea } from "./textarea";
+import { textareaStyleModule } from "./textarea-style";
 
 describe("UTextarea", () => {
   it("applies to a native textarea via the [uTextarea] selector", () => {
@@ -185,5 +186,152 @@ describe("UTextarea", () => {
     fixture.detectChanges();
     expect(fixture.componentInstance.value).toBe("changed");
     expect(directive.modelValue()).toBe("changed");
+  });
+
+  it("grows to scrollHeight when no max-height is set (the Prime NaN-comparison case)", () => {
+    @Component({
+      standalone: true,
+      imports: [UTextarea],
+      template: `<textarea uTextarea [autoResize]="true"></textarea>`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const textarea: HTMLTextAreaElement = fixture.nativeElement.querySelector("textarea");
+    Object.defineProperty(textarea, "scrollHeight", { value: 120, configurable: true });
+
+    textarea.value = "line1\nline2\nline3";
+    textarea.dispatchEvent(new Event("input"));
+
+    expect(textarea.style.height).toBe("120px");
+    expect(textarea.style.overflow).toBe("hidden");
+  });
+
+  it("caps the height at max-height and scrolls once the content is taller", () => {
+    @Component({
+      standalone: true,
+      imports: [UTextarea],
+      template: `<textarea uTextarea [autoResize]="true" style="max-height: 100px"></textarea>`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const textarea: HTMLTextAreaElement = fixture.nativeElement.querySelector("textarea");
+    Object.defineProperty(textarea, "scrollHeight", { value: 300, configurable: true });
+
+    textarea.dispatchEvent(new Event("input"));
+
+    expect(textarea.style.height).toBe("100px");
+    expect(textarea.style.overflowY).toBe("scroll");
+  });
+
+  it("resizes when the form control value changes programmatically", () => {
+    @Component({
+      standalone: true,
+      imports: [UTextarea, ReactiveFormsModule],
+      template: `<textarea uTextarea [autoResize]="true" [formControl]="control"></textarea>`,
+    })
+    class HostComponent {
+      control = new FormControl("one");
+    }
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const textarea: HTMLTextAreaElement = fixture.nativeElement.querySelector("textarea");
+    Object.defineProperty(textarea, "scrollHeight", { value: 200, configurable: true });
+
+    fixture.componentInstance.control.setValue("one\ntwo\nthree\nfour");
+
+    expect(textarea.style.height).toBe("200px");
+  });
+
+  it("emits onResize with the triggering event", () => {
+    @Component({
+      standalone: true,
+      imports: [UTextarea],
+      template: `<textarea
+        uTextarea
+        [autoResize]="true"
+        (onResize)="count = count + 1"
+      ></textarea>`,
+    })
+    class HostComponent {
+      count = 0;
+    }
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const textarea: HTMLTextAreaElement = fixture.nativeElement.querySelector("textarea");
+    const before = fixture.componentInstance.count;
+
+    textarea.dispatchEvent(new Event("input"));
+
+    expect(fixture.componentInstance.count).toBe(before + 1);
+  });
+
+  it("adds p-filled from the value, not from the variant", () => {
+    @Component({
+      standalone: true,
+      imports: [UTextarea],
+      template: `<textarea uTextarea></textarea>`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const textarea: HTMLTextAreaElement = fixture.nativeElement.querySelector("textarea");
+    expect(textarea.classList.contains("p-filled")).toBe(false);
+
+    textarea.value = "hello";
+    textarea.dispatchEvent(new Event("input"));
+    fixture.detectChanges();
+    expect(textarea.classList.contains("p-filled")).toBe(true);
+    expect(textarea.classList.contains("p-variant-filled")).toBe(false);
+  });
+
+  it("uSize emits the shared sm/lg classes and the data-p size token", () => {
+    @Component({
+      standalone: true,
+      imports: [UTextarea],
+      template: `<textarea uTextarea uSize="small"></textarea
+        ><textarea uTextarea uSize="large"></textarea>`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const [small, large] = Array.from(
+      fixture.nativeElement.querySelectorAll("textarea")
+    ) as HTMLTextAreaElement[];
+    expect(small.classList.contains("u-textarea-sm")).toBe(true);
+    expect(small.getAttribute("data-p")).toContain("small");
+    expect(large.classList.contains("u-textarea-lg")).toBe(true);
+  });
+
+  it("keeps the Angular-only .ng-invalid.ng-dirty rules in the style module", () => {
+    expect(textareaStyleModule.css).toContain(".u-textarea.ng-invalid.ng-dirty {");
+    expect(textareaStyleModule.css).toContain(".u-textarea.ng-invalid.ng-dirty::placeholder {");
+  });
+
+  it("pt root attributes reach the textarea", () => {
+    @Component({
+      standalone: true,
+      imports: [UTextarea],
+      template: `<textarea uTextarea [pt]="{ root: { 'data-test': 'x' } }"></textarea>`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("textarea").getAttribute("data-test")).toBe("x");
+  });
+
+  it("unstyled drops the Ultimate classes", () => {
+    @Component({
+      standalone: true,
+      imports: [UTextarea],
+      template: `<textarea uTextarea [unstyled]="true"></textarea>`,
+    })
+    class HostComponent {}
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector("textarea").classList.contains("u-textarea")).toBe(
+      false
+    );
   });
 });
