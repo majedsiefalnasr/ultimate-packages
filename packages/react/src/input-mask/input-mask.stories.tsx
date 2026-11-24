@@ -34,3 +34,18 @@ export const Invalid: Story = {
   args: { value: "", mask: "999-99-9999", invalid: true },
   render: (args) => <InputMaskHarness {...args} />,
 };
+
+export const Small: Story = {
+  args: { value: "", mask: "999-99-9999", size: "small" },
+  render: (args) => <InputMaskHarness {...args} />,
+};
+
+export const KeepBuffer: Story = {
+  args: { value: "", mask: "999-99-9999", keepBuffer: true },
+  render: (args) => <InputMaskHarness {...args} />,
+};
+
+export const Unstyled: Story = {
+  args: { value: "", mask: "999-99-9999", unstyled: true },
+  render: (args) => <InputMaskHarness {...args} />,
+};
