@@ -1719,7 +1719,7 @@ Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://git
 
 ## ADR-097 — Textarea: one shared stylesheet on the Aura `textarea` tokens, `autoResize` without a `max-height`, `size` and value-derived `p-filled`, `pt` and `unstyled`, and React `keyfilter`/`tooltip` and Vue `formField` stay out (L0a, ticket #189)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#189](https://github.com/majedsiefalnasr/ultimate-packages/issues/189)). User rulings recorded before implementation: Q1 A (fix Angular `autoResize` and match Prime's triggers), Q2 A (`size` and value-derived `p-filled` on the shared module), Q3 A (React `keyfilter` and `tooltip` are composition, Vue `formField` belongs to the Vue Forms spec), Q4 A (Angular `.ng-invalid.ng-dirty` and the missing Vue CSS).
+Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#189](https://github.com/majedsiefalnasr/ultimate-packages/issues/189)). User rulings recorded before implementation: Q1 A (fix Angular `autoResize` and match Prime's triggers), Q2 A (`size` and value-derived `p-filled` on the shared module), Q3 A (React `keyfilter` and `tooltip` are composition, Vue `formField` belongs to the Vue Forms spec), Q4 A (Angular `.ng-invalid.ng-dirty` and the missing Vue CSS).
 
 **Context.**
 
@@ -1761,7 +1761,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-098 — Chip: one shared stylesheet on the Aura chip tokens, `pt`, `unstyled` and `dt` in all three frameworks, remove-icon customization, a visible-state fix in Angular, and four recorded exclusions (L0a, ticket #203)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#203](https://github.com/majedsiefalnasr/ultimate-packages/issues/203)). User rulings (2026-11-24, "all by recommendation"): Q5 A (custom content and remove-icon customization), Q6 B (React keeps the native remove event, no veto), Q7 B (Angular `chipProps` excluded), Q8 A (remove label is a prop with an English default), Q9 B (`UTimesIcon` stays, no TimesCircle icon).
+Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#203](https://github.com/majedsiefalnasr/ultimate-packages/issues/203)). User rulings (2026-11-24, "all by recommendation"): Q5 A (custom content and remove-icon customization), Q6 B (React keeps the native remove event, no veto), Q7 B (Angular `chipProps` excluded), Q8 A (remove label is a prop with an English default), Q9 B (`UTimesIcon` stays, no TimesCircle icon).
 
 **Context.**
 
@@ -1807,7 +1807,7 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 
 ## ADR-099 — MultiStateCheckbox: React only, a `role="checkbox"` box with a live region, no synthetic change on mount, upstream's event shape, and `pt` and `unstyled` (L0a, ticket #208)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#208](https://github.com/majedsiefalnasr/ultimate-packages/issues/208)). User rulings: Angular and Vue stay n/a, and the work is React only (Q10 A); the mount behaviour stays as it is and is recorded as intentional (Q11 B); the control exposes `role="checkbox"` with a live region and an accessible name (Q12 A); the surface adds `autoFocus`, a ref with `focus()` and `getElement()`, `invalid`, `variant`, `style`, `unstyled`, `pt` and `ptOptions`, and `tooltip` stays composition (Q13 A).
+Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#208](https://github.com/majedsiefalnasr/ultimate-packages/issues/208)). User rulings: Angular and Vue stay n/a, and the work is React only (Q10 A); the mount behaviour stays as it is and is recorded as intentional (Q11 B); the control exposes `role="checkbox"` with a live region and an accessible name (Q12 A); the surface adds `autoFocus`, a ref with `focus()` and `getElement()`, `invalid`, `variant`, `style`, `unstyled`, `pt` and `ptOptions`, and `tooltip` stays composition (Q13 A).
 
 **Context.**
 
