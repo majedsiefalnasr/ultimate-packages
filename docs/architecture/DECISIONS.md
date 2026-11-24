@@ -1716,3 +1716,51 @@ Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://git
 - Callers that relied on the old live-region text `true`, `false` or `none` see `True`, `False` or `Not Selected`, or set the three label props.
 - Callers that passed only `event.key` in a test must pass `code` too.
 - Tests assert values, classes, DOM, events and pass-through in jsdom. They do not measure pixels, real pointer hit-testing or screen-reader output.
+
+## ADR-099 — MultiStateCheckbox: React only, a `role="checkbox"` box with a live region, no synthetic change on mount, upstream's event shape, and `pt` and `unstyled` (L0a, ticket #208)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#208](https://github.com/majedsiefalnasr/ultimate-packages/issues/208)). User rulings: Angular and Vue stay n/a, and the work is React only (Q10 A); the mount behaviour stays as it is and is recorded as intentional (Q11 B); the control exposes `role="checkbox"` with a live region and an accessible name (Q12 A); the surface adds `autoFocus`, a ref with `focus()` and `getElement()`, `invalid`, `variant`, `style`, `unstyled`, `pt` and `ptOptions`, and `tooltip` stays composition (Q13 A).
+
+**Context.**
+
+- MultiStateCheckbox cycles a value through a list of `options`. Only PrimeReact 10.9.9 ships it. PrimeNG 21.1.9 and PrimeVue 4.5.5 do not, so Angular and Vue have no component and no entry.
+- The Phase 4 report found `UMultiStateCheckbox` complete on the cycle, the `empty` wrap, the guards and Space, and found 26 rows. The control was a plain function with `role="button"`, no checked state, no live region, no ref, no `pt`, no `unstyled`, no `invalid` or `variant`, and a hard-coded `none` label.
+
+**Decision.**
+
+1. **Angular and Vue stay n/a (Q10 A).** Prime ships no such control there, and this ticket adds none. The PR body states it.
+2. **`role="checkbox"` box (Q12 A).** The focusable box carries `role="checkbox"`, `aria-checked` (`true` when an option is selected, `false` otherwise), `aria-invalid`, `aria-disabled` and `aria-readonly` where they apply. Its accessible name is the selected option's label, or `nullLabel` when nothing is selected. A caller's `aria-*` props go on the box and replace those defaults, as PrimeReact forwards them.
+3. **Live region.** A polite span announces the same text. PrimeReact renders it only while the control has focus. Here it is always rendered, as in TriStateCheckbox (ADR-096).
+4. **`nullLabel` is a prop** with the English default `Not Selected`, PrimeReact's locale string. It replaces the hard-coded `none`.
+5. **No synthetic change on mount (Q11 B).** PrimeReact calls `onChange` once on mount when `empty` is false and the value is null. The control stays fully controlled and does not. The caller sets a non-null initial `value`. Row 3 is I.
+6. **Event shape.** The change event carries `stopPropagation`, `preventDefault` and `target {name, id, value}`, as PrimeReact does.
+7. **Guards.** `disabled` and `readOnly` block both click and Space. PrimeReact's Space handler ignores `readOnly`, which is recorded as a reference defect and not carried.
+8. **Surface added (Q13 A).** `onFocus`, `onBlur`, `name`, `autoFocus`, `invalid`, `variant` (`filled` adds `p-variant-filled`, and a rule reads the Aura `checkbox.filled.background` token), `style` and native attributes on the root, and a ref with `focus()` and `getElement()`.
+9. **`pt`, `ptOptions` and `unstyled`.** The sections are `root`, `box`, `icon` and `srOnlyAria`. The component is registered under `multistatecheckbox` (it was `multi-state-checkbox`), matching the pass-through name. The icon wrapper span is rendered only when an option icon is shown.
+10. **`tooltip` is composition.** Callers wrap the control in `UTooltip`, as for InputText (ADR-086), InputMask (ADR-095) and TriStateCheckbox (ADR-096). Row 20 is I.
+11. **Colours stay hand-authored** (ADR-067(c)), with the filled background read from the Aura token. The cursor moved from the root to the box.
+
+**Divergences from Prime.**
+
+1. No synthetic `onChange` on mount (decision 5), so row 3 is I.
+2. `tooltip` and `tooltipOptions` are not props (decision 10), so row 20 is I.
+3. PrimeReact nests a real `<Checkbox>` with a native input. Here the box is the only focusable element and there is no hidden input, so `inputId` is not carried.
+4. `optionIcon` stays a function `(option) => ReactNode`. PrimeReact's `optionIcon` is a field name and `iconTemplate` is a separate prop. The function receives only the option.
+5. `optionValue` and `optionLabel` resolve top-level properties only. PrimeReact resolves dotted paths. Equality is strict `===`, and PrimeReact's `dataKey` deep comparison is not carried. Rows 4 and 5 stay P.
+6. A per-option `style` is not applied to the box (row 8 stays M). `style` is the root's, as PrimeReact's `style` is.
+7. The live region is always rendered (decision 3).
+8. `ptOptions` has no visible effect until the global `pt` source exists (ADR-080), so row 22a stays P.
+9. The CSS adds invalid and filled rules but still has no hover, focus-visible or checked rules, so row 24 stays P.
+
+**Classification after this ticket** (C complete, P partial, M missing, I intentional, N/A not applicable; from a source re-read of the 26 rows; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+- **React:** C 17, P 5, M 1, I 2, N/A 1. Open: rows 4 and 5 (P), 8 (M), 21 (P, no `inputId`), 22a (P, ADR-080) and 24 (P). Rows 3 and 20 are I. Row 23a is N/A (PrimeReact has no scoped `dt`).
+- **Angular:** N/A 26.
+- **Vue:** N/A 26.
+
+**Consequences.**
+
+- Assistive technology sees a checkbox with a checked state, a name and a live announcement, instead of a button with a fixed label.
+- Callers that queried `getByRole("button")` use `getByRole("checkbox")`, and callers that read the `none` label see `Not Selected` or set `nullLabel`.
+- `onChange` is now optional, and callers can read `event.target.name` and `event.target.id`.
+- Tests assert values, classes, DOM, events and pass-through in jsdom. They do not measure pixels, focus rings or screen-reader output.
