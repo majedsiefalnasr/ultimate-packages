@@ -598,5 +598,23 @@
     "ultimateDestination": "packages/react/src/input-mask/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064). Barrel re-export shaped like PrimeReact's `inputmask` entry point, with no shared implementation."
+  },
+  {
+    "originalPath": "components/lib/tristatecheckbox/TriStateCheckbox.js",
+    "ultimateDestination": "packages/react/src/tri-state-checkbox/tri-state-checkbox.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 TriStateCheckbox.js for #209 (ADR-096): the null -> true -> false -> null cycle, the disabled and readOnly guards, the Enter, NumpadEnter and Space handling by `event.code`, the three-section markup (input, live region, box), the change event shape with `stopPropagation`, `preventDefault` and `target`, the ARIA props forwarded to the box, the check and uncheck icons, the focus and blur callbacks, autoFocus, and the `focus`/`getElement` ref handle are upstream's. PrimeReactContext, the base `getProps`, useHandleStyle and the internal `checkBoxValue` state are replaced by useComponentBase, createPassThrough, useMergeProps and a value derived from the prop. Differences recorded in ADR-096: the hidden input ignores pointer events and hands focus to the box, the live-region labels are props with English defaults instead of locale keys, `aria-checked` is `mixed` for null (user ruling), and `tooltip` and `tooltipOptions` are not carried (composition, I). `p-highlight` is not emitted. Existing file, rewritten in #209."
+  },
+  {
+    "originalPath": "components/lib/tristatecheckbox/TriStateCheckboxBase.js",
+    "ultimateDestination": "packages/react/src/tri-state-checkbox/tri-state-checkbox-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 TriStateCheckboxBase.js `classes.root`: `p-tristatecheckbox p-checkbox p-component` with the `p-disabled`, `p-invalid` and `p-variant-filled` modifiers becomes `u-tri-state-checkbox` with the matching modifiers, and `p-variant-filled` is kept so it matches the shared checkbox selectors. The CSS stays hand-authored (ADR-067(c)) and reads `checkbox.filled.background` for the filled variant. The input no longer takes pointer events. Existing file, changed in #209."
+  },
+  {
+    "originalPath": "components/lib/tristatecheckbox/TriStateCheckbox.js",
+    "ultimateDestination": "packages/react/src/tri-state-checkbox/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UTriStateCheckbox and its prop, change-event and handle types; it shares only the exported component name with PrimeReact's tristatecheckbox entry point."
   }
 ]

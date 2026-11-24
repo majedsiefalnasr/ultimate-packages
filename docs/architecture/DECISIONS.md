@@ -1669,3 +1669,50 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 - Vue Backspace now shifts the remaining characters left across a separator, as PrimeVue does (`123-456` with the caret at 3 gives `124-56_`), where the earlier port cleared one slot.
 - React and Vue render with the InputText classes, so the InputMask stories can change their browser baselines. They are not verified in a browser here.
 - Tests assert values, classes, DOM, emitted events and pass-through. They do not measure pixels, real caret movement in a browser, or real IME and Android input.
+
+## ADR-096 — TriStateCheckbox: React only, label-driven cycling, forwarded ARIA on the focusable box, localizable live-region labels, `pt` and `unstyled`, and `tooltip` stays composition (L0a, ticket #209)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#209](https://github.com/majedsiefalnasr/ultimate-packages/issues/209)). User rulings: Angular and Vue stay n/a, and the work is React only (1A); the live-region labels are props with English defaults (2A); `unstyled`, `variant` and `pt`/`ptOptions` are added in the same shape as the other L0a ports (3A); `tooltip` stays composition and is recorded as I (A).
+
+**Context.**
+
+- TriStateCheckbox is a control that cycles `null -> true -> false -> null`. Only PrimeReact 10.9.9 ships it. PrimeNG 21.1.9 and PrimeVue 4.5.5 do not, and their migration guidance points to an indeterminate Checkbox, which is not a three-value cycle. A check of `packages/ng`, `packages/vue`, `ng-core`, `vue-core` and `uix-styles` found no TriStateCheckbox in any of them.
+- The Phase 4 report found `UTriStateCheckbox` complete on the cycle, the guards, the keyboard and the icons, and found 15 gap rows. The control was a plain function with no ref, no `pt`, no `unstyled`, no variant, no name, no focus callbacks and no custom icons. Its hidden input overlaid the root with no change handler, so a `<label htmlFor>` could not cycle it. `aria-invalid` sat on the hidden input instead of the focusable role, and the live-region text was hard-coded.
+
+**Decision.**
+
+1. **Angular and Vue stay n/a (ruling 1A).** Prime ships no such control there. A three-value control in either framework would be a separate ticket with its own design, and this ticket adds none.
+2. **Label-driven cycling.** The hidden input now has the change handler, so a `<label htmlFor={inputId}>` cycles the value. The input ignores pointer events, so mouse clicks reach the box, and when the input receives focus (a label activation) it hands focus to the box. The box stays the only focusable element.
+3. **ARIA on the focusable box.** Every `aria-*` prop goes on the `role="checkbox"` box, including `aria-label` and `aria-labelledby`, as PrimeReact does. `aria-invalid` moves there from the hidden input. The remaining props go on the root, so native attributes, `style`, `className` and `data-*` work.
+4. **Live-region labels are props (ruling 2A).** `trueLabel`, `falseLabel` and `nullLabel` default to `True`, `False` and `Not Selected`, which are PrimeReact's English locale strings. The earlier hard-coded text (`true`, `false`, `none`) is replaced. React has no locale API in Ultimate, so the labels are plain props.
+5. **Surface added.** `name`, `variant`, `onFocus`, `onBlur`, `autoFocus`, `checkIcon`, `uncheckIcon`, `style` and native attributes, plus a ref with `focus()` and `getElement()`. The change event now carries `stopPropagation`, `preventDefault` and `target {name, id, value}`.
+6. **`pt`, `ptOptions` and `unstyled` (ruling 3A).** The sections are `root`, `box`, `input`, `srOnlyAria`, `checkIcon` and `uncheckIcon`, the names PrimeReact uses. The component is registered under `tristatecheckbox` (it was `tri-state-checkbox`), matching the pass-through name.
+7. **Variant.** `variant="filled"` adds `p-variant-filled`, and a rule reads the Aura `checkbox.filled.background` token.
+8. **`tooltip` is composition.** Callers wrap the control in `UTooltip`. PrimeReact's `tooltip` and `tooltipOptions` props are not carried, as `tooltip` is not for InputText (ADR-086) and InputMask (ADR-095).
+9. **`aria-checked` stays `mixed` for `null`** (user ruling of 2026-11-19). PrimeReact reports `false`, which loses the third state, and that is recorded as a reference defect.
+
+**Divergences from Prime.**
+
+1. `tooltip` and `tooltipOptions` are not props (decision 8), so row 15 is I.
+2. PrimeReact's input overlays the box and takes mouse clicks. Here the input ignores pointer events and the box takes them (decision 2). The result for the user is the same, and the box is the only tab stop.
+3. Keyboard handling reads `event.code` (`Enter`, `NumpadEnter`, `Space`) as PrimeReact does. The earlier port also accepted `event.key`, and that fallback is gone, so a synthetic event with only `key` no longer cycles.
+4. The live-region labels are props with English defaults, where PrimeReact reads them from its locale (decision 4).
+5. `checkIcon` and `uncheckIcon` are `ReactNode`. PrimeReact's `IconUtils` also takes a function or a class string. `UCheckIcon` and `UTimesIcon` accept only a class name, so `pt.checkIcon` and `pt.uncheckIcon` reach the default icons through their class name only.
+6. The root does not carry `p-highlight` for a non-null value, because no Ultimate rule reads it.
+7. The root carries `data-p-disabled` only while disabled (PrimeReact writes the attribute with a boolean value).
+8. `ptOptions` has no visible effect until the global `pt` source exists (ADR-080), so row 21 stays P.
+9. There is no global `inputStyle` fallback for `variant`, because Ultimate's config has no such setting, so row 12 stays P.
+
+**Classification after this ticket** (C complete, P partial, M missing, I intentional, N/A not applicable; from a source re-read of the 21 rows; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+- **React:** C 17, P 2, I 1, N/A 1. Open: row 12 (P, no global `inputStyle`) and row 21 (P, ADR-080). Row 15 is I. Row 20 is N/A (PrimeReact has no scoped `dt`). Row 5 is C on a jsdom label click; pointer hit-testing is not browser-verified.
+- **Angular:** N/A 21.
+- **Vue:** N/A 21.
+
+**Consequences.**
+
+- A `<label htmlFor>` now cycles the control, and a caller can read `event.target.name` and `event.target.id`.
+- Assistive technology sees `aria-label`, `aria-labelledby` and `aria-invalid` on the same element that holds the role and the focus.
+- Callers that relied on the old live-region text `true`, `false` or `none` see `True`, `False` or `Not Selected`, or set the three label props.
+- Callers that passed only `event.key` in a test must pass `code` too.
+- Tests assert values, classes, DOM, events and pass-through in jsdom. They do not measure pixels, real pointer hit-testing or screen-reader output.
