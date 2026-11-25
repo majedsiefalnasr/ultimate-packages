@@ -1956,7 +1956,7 @@ Status: Accepted (user approval, 2026-11-25, as written, including the implement
 
 ## ADR-102 — Rating: one shared stylesheet on the Aura rating tokens, the PrimeIcons star glyphs, the native radio group in Angular and Vue, an opt-in cancel item in React, `invalid`, custom icons, `pt`, `unstyled` and `dt` in all three frameworks, and recorded exclusions (L0a, ticket #199)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#199](https://github.com/majedsiefalnasr/ultimate-packages/issues/199)). User rulings for this ticket, all option A: React gets PrimeReact's `cancel` item with the default `false`; Angular and Vue use the native radio group as Prime does, a native change only selects, and clicking the selected star with a pointer clears it; `invalid` and `aria-invalid` in all three frameworks, with the icon stroke on the form-field invalid token.
+Status: Accepted (user approval, 2026-11-25, as written, including the implementation choices and rows 12 and 13 as I in Angular and Vue; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#199](https://github.com/majedsiefalnasr/ultimate-packages/issues/199)). User rulings for this ticket, all option A: React gets PrimeReact's `cancel` item with the default `false`; Angular and Vue use the native radio group as Prime does, a native change only selects, and clicking the selected star with a pointer clears it; `invalid` and `aria-invalid` in all three frameworks, with the icon stroke on the form-field invalid token.
 
 **Context.**
 
