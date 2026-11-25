@@ -1896,7 +1896,7 @@ Status: Accepted (user approval, 2026-11-24; gap-closing spec [#167](https://git
 
 ## ADR-101 — Slider: one shared stylesheet on the Aura slider tokens, logical RTL placement, touch dragging, Prime's step rule, a configurable tab stop, accessible names, `invalid`, `pt`, `unstyled` and `dt` in all three frameworks, and recorded exclusions (L0a, ticket #198)
 
-Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#198](https://github.com/majedsiefalnasr/ultimate-packages/issues/198)). User rulings for this ticket, all option A: logical placement and RTL mirroring in all three frameworks; a configurable tab stop that is removed when the slider is disabled; touch dragging with separate touch handlers; Prime's relative step-snapping rule. Standing rulings applied: PageUp and PageDown move ten steps, the change payload stays `{originalEvent, value}`, Vue keeps emitting `slideend` on a track click, and N rows get no work.
+Status: Accepted (user approval, 2026-11-25, as written, including the implementation choices; gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#198](https://github.com/majedsiefalnasr/ultimate-packages/issues/198)). User rulings for this ticket, all option A: logical placement and RTL mirroring in all three frameworks; a configurable tab stop that is removed when the slider is disabled; touch dragging with separate touch handlers; Prime's relative step-snapping rule. Standing rulings applied: PageUp and PageDown move ten steps, the change payload stays `{originalEvent, value}`, Vue keeps emitting `slideend` on a track click, and N rows get no work.
 
 **Context.**
 
@@ -1935,14 +1935,14 @@ Status: Proposed for user approval in the PR (gap-closing spec [#167](https://gi
 3. Page keys move ten steps where Prime source moves one step in single mode, and Home and End target `min` and `max` where PrimeReact's spin calculation can leave the range (decision 10), so row 6 is I in all three.
 4. The change payload is an object where PrimeVue emits the raw value and PrimeNG emits `values` for a range (decision 10), so row 9 is I in Angular and Vue.
 5. Vue emits `slideend` on a track click where PrimeVue emits it only on drag end (decision 10), so row 10 is I in Vue.
-6. The range model is unsorted (choice 1), so Angular row 1 stays P. If this ADR is approved as written, that row becomes I.
+6. The range model is unsorted (choice 1), where PrimeNG emits a sorted `[min, max]`, so Angular row 1 is I (user approval of this ADR as written).
 7. Dropped, not carried: `animate` in Angular (the pinned stylesheet has no rule for `p-slider-animate`), `styleClass` (deprecated), `autofocus`, and the `$pcSlider` and `SLIDER_INSTANCE` instance tokens (no consumer).
 8. Vue forms registration (row 13) stays M. It belongs to the separate Vue Forms spec. Angular row 13 stays P because touched and validation fidelity were not re-assessed here.
 9. `ptOptions` has no visible effect until the global `pt` source exists (ADR-080), so row 15 stays P in all three.
 
 **Classification after this ticket** (C complete, P partial, M missing, I intentional, N absent from the corresponding Prime; rows in the Phase 4 matrix order, 1 to 18; from a re-read of the pinned sources and the specs in this ticket; the Phase 4 report is not edited, and nothing here is browser-verified).
 
-- **Angular:** C 12, P 3, M 0, I 2, N 1. Open: row 1 (P, choice 1), row 13 (P, not re-assessed) and row 15 (P, ADR-080). Rows 6 and 9 are I. Row 12 is N.
+- **Angular:** C 12, P 2, M 0, I 3, N 1. Open: row 13 (P, not re-assessed) and row 15 (P, ADR-080). Rows 1, 6 and 9 are I. Row 12 is N.
 - **React:** C 10, P 1, M 0, I 3, N 4. Open: row 15 (P, ADR-080). Rows 3, 6 and 8 are I. N rows: 11, 12, 13, 17. Row 7 is C with a recorded reference defect: PrimeReact supplies a percentage as `aria-valuenow`, and Ultimate supplies the actual value.
 - **Vue:** C 11, P 1, M 1, I 4, N 1. Open: row 13 (M, Vue Forms spec) and row 15 (P, ADR-080). Rows 6, 8, 9 and 10 are I. Row 12 is N.
 
