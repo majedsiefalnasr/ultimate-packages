@@ -1,40 +1,42 @@
 import type { StyleModule } from "@ultimate/react-core";
+import { style as ratingStyle } from "@ultimate/uix-styles/rating";
 
 /**
- * Hand-authored CSS matching `select-button-style.ts`'s established React
- * convention (no `dt()` tokens — React has no `@ultimate/uix-styles`
- * subpath dependency the way Angular/Vue's style modules do).
+ * Ultimate-owned adaptation of PrimeReact's `RatingBase` classes (see
+ * `.vendor-extracted/react/rating/RatingBase.js`), shaped to match
+ * `useComponentBase`'s `styleModule: {css, classes}` contract. The structural
+ * CSS is the shared `@ultimate/uix-styles/rating` module (ADR-082), so it
+ * reads the Aura `rating` tokens (ADR-067) and matches Angular and Vue.
+ *
+ * PrimeReact's `p-rating-item` and `p-focus` become the shared
+ * `u-rating-option` and `p-focus-visible`, and the cancel item reuses the
+ * option and icon classes, as PrimeReact's `p-rating-item p-rating-cancel-item`
+ * does.
  */
 const css = /*css*/ `
-.u-rating { display: flex; align-items: center; gap: 0.25rem; }
-.u-rating-option { display: inline-flex; align-items: center; cursor: pointer; }
-.u-rating-disabled .u-rating-option { cursor: default; }
-.u-rating-option-focused { outline: 2px solid #3b82f6; outline-offset: 2px; border-radius: 50%; }
-.u-rating-on-icon { color: #f59e0b; }
-.u-rating-off-icon { color: #9ca3af; }
-.u-rating-disabled .u-rating-on-icon,
-.u-rating-disabled .u-rating-off-icon { color: #d1d5db; }
+    ${ratingStyle}
 `;
 
-export interface RatingClassesParams {
-  disabled?: boolean;
-}
-
-export interface RatingOptionClassesParams {
-  focused?: boolean;
-}
-
 const classes = {
-  root: (params: RatingClassesParams = {}) => [
+  root: (params: { disabled?: boolean; readOnly?: boolean } = {}) => [
     "u-rating u-component",
-    { "u-rating-disabled": Boolean(params.disabled) },
+    { "p-disabled": params.disabled, "p-readonly": params.readOnly },
   ],
-  option: (params: RatingOptionClassesParams = {}) => [
+  item: (params: { active?: boolean; focusVisible?: boolean } = {}) => [
     "u-rating-option",
-    { "u-rating-option-focused": Boolean(params.focused) },
+    { "u-rating-option-active": params.active, "p-focus-visible": params.focusVisible },
   ],
-  onIcon: "u-rating-on-icon",
-  offIcon: "u-rating-off-icon",
+  onIcon: (params: { invalid?: boolean } = {}) => [
+    "u-rating-icon u-rating-on-icon",
+    { "p-invalid": params.invalid },
+  ],
+  offIcon: (params: { invalid?: boolean } = {}) => [
+    "u-rating-icon u-rating-off-icon",
+    { "p-invalid": params.invalid },
+  ],
+  cancelItem: "u-rating-option u-rating-cancel-option",
+  cancelIcon: "u-rating-icon u-rating-cancel-icon",
 };
 
+/** `useComponentBase`-shaped style module for `URating`. */
 export const ratingStyleModule: StyleModule = { css, classes };

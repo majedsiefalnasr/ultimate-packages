@@ -98,6 +98,8 @@ test("accessors, outputs, composition, accessibility and style facts are recorde
       "stars",
       "u-hidden-accessible",
       "generated id",
+      "native radio group",
+      "#onicon",
     ],
     "angular.slider": [
       "onSlideEnd",

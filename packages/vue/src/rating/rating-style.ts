@@ -1,70 +1,55 @@
 import type { StyleModule } from "@ultimate/vue-core";
+import { style as ratingStyle } from "@ultimate/uix-styles/rating";
 
 /**
- * Ultimate-owned adaptation of PrimeVue's `RatingStyle` (see
- * `.vendor-extracted/vue/rating/style/RatingStyle.js`, sourced from
- * `@primeuix/styles/rating`), shaped to match `createBaseComponent`'s
- * `styleModule: {css, classes}` contract. Hand-ported directly, same reason
- * documented in `packages/vue/src/password/password-style.ts`.
+ * `createBaseComponent`-shaped style module for `URating`, adapted from
+ * PrimeVue's `RatingStyle` (see `.vendor-extracted/vue/rating/style/RatingStyle.js`).
+ * The structural CSS is the shared `@ultimate/uix-styles/rating` module
+ * (ADR-082), the same module Angular and React consume, so it reads the Aura
+ * `rating` tokens. The modifier classes below are the ones that module's
+ * selectors reference.
  */
 const css = /*css*/ `
-    .u-rating {
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: dt('rating.gap');
-    }
-
-    .u-rating-option {
-        display: inline-flex;
-        align-items: center;
-        cursor: pointer;
-    }
-
-    .u-rating.u-rating-disabled .u-rating-option {
-        cursor: default;
-    }
-
-    .u-rating-option-focused {
-        outline: 2px solid dt('focus.ring.color');
-        outline-offset: 2px;
-        border-radius: 50%;
-    }
-
-    .u-rating-on-icon {
-        color: dt('rating.icon.active.color');
-    }
-
-    .u-rating-off-icon {
-        color: dt('rating.icon.color');
-    }
-
-    .u-rating.u-rating-disabled .u-rating-on-icon,
-    .u-rating.u-rating-disabled .u-rating-off-icon {
-        color: dt('rating.icon.disabled.color');
-    }
+    ${ratingStyle}
 `;
 
-export interface RatingClassesParams {
+/** Params `URating` passes into `cx('root', params)`. */
+export interface RatingRootClassesParams {
+  readonly?: boolean;
   disabled?: boolean;
 }
 
+/** Params `URating` passes into `cx('option', params)`. */
 export interface RatingOptionClassesParams {
-  focused?: boolean;
+  active?: boolean;
+  focusVisible?: boolean;
+}
+
+/** Params `URating` passes into `cx('onIcon' | 'offIcon', params)`. */
+export interface RatingIconClassesParams {
+  invalid?: boolean;
 }
 
 const classes = {
-  root: (params: RatingClassesParams = {}) => [
+  root: (params: RatingRootClassesParams = {}) => [
     "u-rating u-component",
-    { "u-rating-disabled": Boolean(params.disabled) },
+    { "p-readonly": Boolean(params.readonly), "p-disabled": Boolean(params.disabled) },
   ],
   option: (params: RatingOptionClassesParams = {}) => [
     "u-rating-option",
-    { "u-rating-option-focused": Boolean(params.focused) },
+    {
+      "u-rating-option-active": Boolean(params.active),
+      "p-focus-visible": Boolean(params.focusVisible),
+    },
   ],
-  onIcon: "u-rating-on-icon",
-  offIcon: "u-rating-off-icon",
+  onIcon: (params: RatingIconClassesParams = {}) => [
+    "u-rating-icon u-rating-on-icon",
+    { "p-invalid": Boolean(params.invalid) },
+  ],
+  offIcon: (params: RatingIconClassesParams = {}) => [
+    "u-rating-icon u-rating-off-icon",
+    { "p-invalid": Boolean(params.invalid) },
+  ],
 };
 
-/** `createBaseComponent`-shaped style module for `URating`. */
 export const ratingStyleModule: StyleModule = { css, classes };

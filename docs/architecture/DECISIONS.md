@@ -1953,3 +1953,64 @@ Status: Accepted (user approval, 2026-11-25, as written, including the implement
 - A touch drag works on touch screens, a drag no longer leaves listeners on the document, and a right-to-left page drags in the right direction.
 - A disabled slider has only the `cursor: default` rule from the shared module. No registered rule gives `p-disabled` an opacity, so a disabled slider is not dimmed. That gap is shared by every component that emits `p-disabled` and belongs to the family tickets.
 - Tests assert values, classes, attributes, events, pass-through and listener removal in jsdom (Angular 35, React 33, Vue 34, and the shared module in `uix-styles`). They do not measure pixels, run on a real touch device, or read screen-reader output.
+
+## ADR-102 — Rating: one shared stylesheet on the Aura rating tokens, the PrimeIcons star glyphs, the native radio group in Angular and Vue, an opt-in cancel item in React, `invalid`, custom icons, `pt`, `unstyled` and `dt` in all three frameworks, and recorded exclusions (L0a, ticket #199)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#199](https://github.com/majedsiefalnasr/ultimate-packages/issues/199)). User rulings for this ticket, all option A: React gets PrimeReact's `cancel` item with the default `false`; Angular and Vue use the native radio group as Prime does, a native change only selects, and clicking the selected star with a pointer clears it; `invalid` and `aria-invalid` in all three frameworks, with the icon stroke on the form-field invalid token.
+
+**Context.**
+
+- Rating is a row of star options. PrimeNG 21.1.9 and PrimeVue 4.5.5 render each star as a visually hidden native radio plus an icon. PrimeReact 10.9.9 renders focusable `div` items and an optional cancel item. All three call it `Rating`.
+- The Phase 4 report (`docs/architecture/research/phase4/batch6/rating.md`) found 26 rows per framework: Angular C 7, P 9, M 7, N 3; React C 4, P 3, M 8, N 11; Vue C 5, P 6, M 10, N 5. None of the three had custom icons, `pt` or `ptOptions`. Angular and Vue intercepted the arrow keys and Space and changed the value without moving focus, had no generated group name and no invalid state, and emitted constructed focus and blur events. Vue had no wrapper click, so clicking a star neither moved focus nor cleared the selected value. React had no cancel item, no forwarded ref, no root forwarding of other props, and a hand-written stylesheet with no Aura token. Angular and Vue requested `rating.icon.disabled.color`, which Aura does not define.
+- Reading the pinned sources again showed that PrimeNG and PrimeVue route every native change through `onOptionSelect`, which clears the value when the changed star is the focused one. A keyboard selection focuses the star before its change fires, so by source reading Prime would clear instead of select on the arrow keys and Space. This is not browser-verified.
+
+**Decision.**
+
+1. **One shared stylesheet (ADR-082).** `@ultimate/uix-styles/rating` holds the structural CSS on the Aura `rating` tokens with `.u-rating*` selectors. `p-focus-visible`, `p-disabled`, `p-readonly` and `p-invalid` are kept unrenamed. The broken `rating.icon.disabled.color` rule is dropped. Angular, React and Vue import the module. React no longer hard-codes colours (ADR-067).
+2. **Icons.** The default icons are the PrimeIcons `star` and `star-fill` glyphs on a 14 by 14 view box, and React's cancel item uses `ban`. The path data is copied from the pinned Prime icon sources. This replaces the hand-drawn SVGs, so a star looks different from before.
+3. **Native radio group in Angular and Vue (ruling 2).** The custom key handler is removed. Tab reaches the group, and the arrow keys and Space are the browser's radio behaviour. Every radio shares `name` or a generated group name. A native change only selects. Clicking a star selects it and moves focus to its radio, and clicking the selected star clears the value.
+4. **React keyboard and pointer.** Each star is a focusable `role="radio"` item with `aria-checked`. Enter and Space select the focused star, and the arrow keys step the value and wrap, as in PrimeReact. The keyboard never clears. The tab stop is removed when the rating is disabled or read-only, as in PrimeReact.
+5. **Cancel item in React (ruling 1).** `cancel` renders PrimeReact's clear item before the stars and is `false` by default.
+6. **`invalid` (ruling 3).** All three frameworks take `invalid`, put `aria-invalid` on each star and add `p-invalid` to the icons. The icon stroke reads `form.field.invalid.border.color`, because Aura has no rating invalid token and Prime's own rule is marked `@todo`.
+7. **Custom icons.** Angular takes `#onicon` and `#officon` templates with the context `{$implicit: value, class}`, plus `iconOnClass`, `iconOnStyle`, `iconOffClass` and `iconOffStyle`. React takes `onIcon`, `offIcon` and `cancelIcon` as a class string, an element or a function, with `onIconProps`, `offIconProps` and `cancelIconProps`. Vue takes `onicon` and `officon` slots with `value`, `class` and `toggleCallback`, plus the `onIcon` and `offIcon` class props.
+8. **Events.** Angular emits `onRate` with `{originalEvent, value}` and the native focus and blur events through `onFocus` and `onBlur`. Vue keeps `rate` with the same payload and emits the native `focus` and `blur` events. React's change event carries `stopPropagation`, `preventDefault` and `target` `{name, id, value}`, every other prop goes on the root, so `onFocus` and `onBlur` reach it, and the ref exposes `getElement()`.
+9. **Angular form surface.** The radios carry `required` and `autofocus`, and a change marks the control touched, as in PrimeNG.
+10. **Focus ring.** The ring shows only for keyboard focus in all three frameworks.
+11. **`pt`, `ptOptions`, `unstyled` and `dt`.** Angular binds the root through `UBind`, provides itself as `U_PARENT_INSTANCE`, sets the root attributes in `ngAfterViewChecked`, and binds `option` (with the context `{active, focused}`), `hiddenOptionInputContainer`, `hiddenOptionInput`, `onIcon` and `offIcon`. Vue builds the base with `createBaseEditableHolder({componentName: "rating", styleModule})`, uses `ptmi('root')` with `inheritAttrs` off and `ptm` for the same sections as Angular. React uses `createPassThrough` and `useMergeProps` with `root`, `item`, `onIcon`, `offIcon`, `cancelItem` and `cancelIcon`. The component name is `rating` in all three, which is the Aura key.
+
+**Choices made while implementing (not separately ruled; they stay as written unless this ADR is amended).**
+
+1. Angular puts `autofocus` on the selected star, or the first one. PrimeNG puts it on every radio, so the last one wins.
+2. The focus ring is suppressed after a pointer press through a flag set on the click or mouse down. Prime reads `event.sourceCapabilities`, which only Chromium supports.
+3. In Angular and Vue the wrapper click handler skips a click whose target is the radio itself, so the native change handles it once. Prime handles that click twice.
+4. When `readonly` blocks a native change, Angular and Vue put the radios' checked state back on the model.
+5. Angular adds `.u-rating.ng-invalid.ng-dirty .u-rating-icon`. PrimeNG's own rule expects a `.p-rating` child under the host, which its template does not render, so by source reading it never matches.
+6. React clears the value when the selected star is clicked with a pointer, where PrimeReact keeps it. This matches Angular and Vue.
+7. React's cancel item has `role="button"` and `aria-label="Clear"`, and clears on Enter and Space. PrimeReact's item has no role or name and clears on Enter only.
+8. React emits `u-rating-option` and `p-focus-visible` on the items, the same classes as Angular and Vue, where PrimeReact emits `p-rating-item` and `p-focus`.
+
+**Divergences from Prime.**
+
+1. In Angular and Vue a native change only selects, where Prime clears when the changed star is the focused one (ruling 2), so rows 12 and 13 are I in both.
+2. The invalid icon stroke reads the form-field token, where Prime reads `rating.invalid.icon.color`, which Aura does not define (ruling 3), so row 16 is I in Angular and Vue. In React it is an extra; PrimeReact has no `invalid`.
+3. Angular `autofocus` targets one radio (choice 1), so Angular row 17 is I.
+4. React `cancel` is `false` by default, where PrimeReact defaults to `true` (ruling 1), so React row 4 is I.
+5. React has no built-in `tooltip`. A tooltip is composed with `UTooltip`, as for InputText (ADR-086), so React row 18 is I.
+6. React extras on rows that PrimeReact does not implement: the radio role and checked state (row 9), the English star labels (row 11), Space activation (row 13), `invalid` (row 16) and the pointer clear (row 3, choice 6). They stay N, because the classification compares against PrimeReact.
+7. Dropped, not carried: PrimeNG's `PrimeTemplate` lookup (named templates replace it), the locale-driven star labels (no core locale surface; the labels stay English), the `props` entry of PrimeReact's ref handle, and the `$pcRating` and `RATING_INSTANCE` instance tokens (no consumer).
+8. Vue forms registration (row 20) stays M. It belongs to the separate Vue Forms spec.
+9. `ptOptions` has no visible effect until the global `pt` source exists (ADR-080), so row 22 stays P in all three.
+
+**Classification after this ticket** (C complete, P partial, M missing, I intentional, N absent from the corresponding Prime; rows in the Phase 4 matrix order, 1 to 26; from a re-read of the pinned sources and the specs in this ticket; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+- **Angular:** C 17, P 2, M 0, I 4, N 3. Open: row 11 (P, English labels) and row 22 (P, ADR-080). Rows 12, 13, 16 and 17 are I. N rows: 4, 18, 19.
+- **React:** C 12, P 1, M 0, I 2, N 11. Open: row 22 (P, ADR-080). Rows 4 and 18 are I. N rows: 2, 3, 9, 10, 11, 13, 15, 16, 17, 20, 24.
+- **Vue:** C 15, P 2, M 1, I 3, N 5. Open: row 11 (P, English labels), row 20 (M, Vue Forms spec) and row 22 (P, ADR-080). Rows 12, 13 and 16 are I. N rows: 4, 15, 17, 18, 19.
+
+**Consequences.**
+
+- The three ratings read the Aura `rating` tokens and draw the same PrimeIcons stars, so gap, icon size, colours and the focus ring match across frameworks and the preset. Rating has no browser visual baseline, so the new glyphs are not covered by a screenshot check.
+- In Angular and Vue the keyboard behaves as a native radio group: the arrow keys move focus and select, and screen readers announce the group as radios. Callers that relied on the old intercepted keys, where Space on the selected star cleared it, no longer get that.
+- React callers that relied on the old behaviour get no cancel item unless they set `cancel`, and clicking the selected star now clears it.
+- A disabled rating gets no opacity, because no registered rule styles `p-disabled`. That gap is shared by every component that emits `p-disabled` and belongs to the family tickets.
+- Tests assert values, classes, attributes, events, icons and pass-through in jsdom (Angular 26, React 23, Vue 24, and the shared module in `uix-styles`). They do not run the browser's radio navigation, measure pixels, or read screen-reader output.

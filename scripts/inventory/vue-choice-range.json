@@ -555,13 +555,14 @@
       "name": "Vue URating",
       "framework": "vue",
       "availability": "public",
-      "purpose": "Row of star options backed by visually hidden radio inputs, with keyboard stepping.",
-      "surface": "URating (Options API SFC Rating.vue, name \"URating\") and createBaseRating (BaseRating.ts) plus ratingStyleModule, RatingClassesParams and RatingOptionClassesParams (rating-style.ts; not re-exported from index.ts). Base factory chain: createBaseX extends createBaseEditableHolder directly (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue), not createBaseInput, so there is no pcFluid injection or inherited variant prop; because the holder is created with its empty default style module, the factory shadows cx() and mounted() locally over its own style module. Declared props: stars (5), readonly, disabled, name, ariaLabelledby plus modelValue and defaultValue. Emits rate ({ originalEvent, value }), focus and blur; focus and blur carry new synthetic FocusEvent objects, not the native event. Template: root div role=\"group\" with aria-labelledby; one option div (tabindex \"-1\") per star containing a hidden-accessible span with an input type=\"radio\" (value, name, disabled, readonly, checked when dValue === star, aria-label \"1 star\" or \"N stars\") bound to @focus, @blur, @change and @keydown, followed by an aria-hidden SVG star, the on icon when dValue is neither null nor undefined and star <= dValue, otherwise the off icon; no slots and no cancel icon. onOptionSelect returns when readonly or disabled; it writes null when the chosen star equals dValue and the star otherwise, sets focusedIndex to -1 for null and the star otherwise, and emits rate. onInputFocus returns when readonly or disabled; onInputBlur always resets focusedIndex and emits blur, with no readonly or disabled guard. onStarKeyDown returns when readonly or disabled; Enter and Space select the star; ArrowLeft and ArrowUp step to dValue - 1 (to stars when dValue is falsy or the result is below 1); ArrowRight and ArrowDown step to dValue + 1 (to 1 when dValue is falsy or the result exceeds stars). The source comment says the keyboard stepping was added to match the React realization. styleParams: the root receives { disabled } and each option receives { focused }, rendering u-rating (with u-rating-disabled) and u-rating-option (with u-rating-option-focused). writeValue sets dValue and emits update:modelValue only when the component is controlled (modelValue passed, or neither modelValue nor defaultValue passed); value-change is always emitted. The css is hand-ported rather than imported from uix-styles. Style module registered as rating.",
+      "purpose": "Row of star options backed by visually hidden native radio inputs in one radio group, with pointer clearing, an invalid state, icon slots and pass-through.",
+      "surface": "URating (Options API SFC Rating.vue, name \"URating\", inheritAttrs false) and createBaseRating (BaseRating.ts) plus ratingStyleModule, RatingRootClassesParams, RatingOptionClassesParams and RatingIconClassesParams (rating-style.ts; not re-exported from index.ts). Base factory chain: createBaseRating extends createBaseEditableHolder({componentName: \"rating\", styleModule}) (modelValue, defaultValue, update:modelValue, value-change, dValue, writeValue), so cx, style registration under the Aura rating key, unstyled, dt and pt come from the shared base chain; it does not shadow cx or mounted. Declared props: stars (5), readonly, disabled, invalid, name, onIcon and offIcon (class strings) and ariaLabelledby, plus modelValue and defaultValue. Emits rate ({ originalEvent, value }), focus and blur, carrying the native radio focus and blur events. Template: root div role=\"group\" with aria-labelledby, cx root (p-readonly, p-disabled), data-p and ptmi('root'); one option div per star (cx option with active and focusVisible, data-p-active, data-p-focused, ptm('option') with the context { active, focused }) with a click handler, containing a hidden-accessible span (ptm hiddenOptionInputContainer) with an input type=\"radio\" (value, name, checked when the value equals the star, disabled, readonly, aria-label \"1 star\" or \"N stars\", aria-invalid when invalid, ptm hiddenOptionInput) bound to @focus, @blur and @change, followed by the onicon or officon slot (scope value, class and toggleCallback) whose fallback is a span with the onIcon or offIcon class, else an aria-hidden 14 by 14 svg with the PrimeIcons star-fill or star path from rating-icons.ts (RATING_STAR_FILL_PATH and RATING_STAR_PATH); the icons carry p-invalid when invalid. When name is omitted every radio shares a generated group name, uuid('u_id_') + '_name'. Keyboard is the native radio group: there is no keydown handler. A native change only selects; when readonly or disabled blocks it, the radios' checked state is put back. A pointer click on an option selects that star, clears the value when the star is already selected, skips clicks whose target is the radio itself and moves focus to the radio. The focus ring shows only for keyboard focus, through a focusFromPointer flag. onFocus returns when readonly or disabled; onBlur always resets focusedOptionIndex and emits blur, with no readonly or disabled guard. writeValue sets dValue and emits update:modelValue only when the component is controlled (modelValue passed, or neither modelValue nor defaultValue passed); value-change is always emitted. The CSS is the shared @ultimate/uix-styles/rating module. Forms registration is not provided.",
       "files": [
         "packages/vue/src/rating/BaseRating.ts",
         "packages/vue/src/rating/Rating.vue",
         "packages/vue/src/rating/index.ts",
-        "packages/vue/src/rating/rating-style.ts"
+        "packages/vue/src/rating/rating-style.ts",
+        "packages/vue/src/rating/rating-icons.ts"
       ],
       "exports": [
         "@ultimate/vue#URating",
@@ -580,27 +581,39 @@
         },
         {
           "path": "packages/vue/src/rating/Rating.vue",
-          "contains": "this.$emit(\"blur\", new FocusEvent(\"blur\"));"
+          "contains": "this.$emit(\"blur\", event);"
         },
         {
           "path": "packages/vue/src/rating/Rating.vue",
-          "contains": "const newValue = this.dValue === value ? null : value;"
+          "contains": "this.select(event, value === this.current ? null : value);"
         },
         {
           "path": "packages/vue/src/rating/Rating.vue",
-          "contains": "const prev = this.dValue ? this.dValue - 1 : this.stars;"
+          "contains": "generatedName: `${uuid(\"u_id_\")}_name`,"
+        },
+        {
+          "path": "packages/vue/src/rating/Rating.vue",
+          "contains": "v-bind=\"ptmi('root')\""
+        },
+        {
+          "path": "packages/vue/src/rating/Rating.vue",
+          "contains": "name=\"onicon\""
         },
         {
           "path": "packages/vue/src/rating/BaseRating.ts",
-          "contains": "extends: createBaseEditableHolder(),"
+          "contains": "extends: createBaseEditableHolder({"
+        },
+        {
+          "path": "packages/vue/src/rating/rating-style.ts",
+          "contains": "@ultimate/uix-styles/rating"
         },
         {
           "path": "packages/vue/src/rating/rating-style.ts",
           "contains": "export const ratingStyleModule"
         },
         {
-          "path": "packages/vue/src/rating/rating-style.ts",
-          "contains": "export interface RatingOptionClassesParams"
+          "path": "packages/vue/src/rating/rating-icons.ts",
+          "contains": "export const RATING_STAR_PATH"
         },
         {
           "path": "packages/vue/src/rating/index.ts",
@@ -624,7 +637,7 @@
       "claims": [
         {
           "state": "implemented",
-          "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+          "behavior": "Component, declared props and shared style module exist in source with a colocated spec; source inspection is not a passing test."
         },
         {
           "state": "not-run",

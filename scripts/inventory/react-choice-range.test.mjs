@@ -121,7 +121,7 @@ test("props, refs, state, composition, styles and source-only quirks are recorde
       "readOnly",
       "sibling",
     ],
-    rating: ["stars", 'role="radio"', "data-testid", "1 star", "focusedIndex", "toggles"],
+    rating: ["stars", 'role="radio"', "1 star", "cancel", "getElement", "pointerDown"],
     slider: [
       "onSlideEnd",
       "range",

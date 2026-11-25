@@ -1276,5 +1276,35 @@
     "ultimateDestination": "packages/vue/src/slider/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of USlider and createBaseSlider; it shares only the exported names with PrimeVue's slider entry point."
+  },
+  {
+    "originalPath": "packages/primevue/src/rating/Rating.vue",
+    "ultimateDestination": "packages/vue/src/rating/Rating.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 Rating.vue for #199 (ADR-102): the option template with the visually hidden native radio, the `onicon` and `officon` slots scoped with `value`, `class` and `toggleCallback`, the group name with its generated fallback, the wrapper click that selects and moves focus to the radio, the native `focus` and `blur` emits, the `aria-label` on each radio and the `option`, `hiddenOptionInputContainer`, `hiddenOptionInput`, `onIcon` and `offIcon` sections are upstream's. Added: `invalid` with `aria-invalid`, the `onIcon` and `offIcon` class props and the restoring of the checked state after a blocked change. A native change only selects (PrimeVue clears when the changed star is the focused one), the focus ring uses a pointer flag instead of `sourceCapabilities`, the wrapper skips a click on the radio itself, and the value event stays `rate`. Not carried: the locale-driven star labels (no core locale surface), forms registration (Vue Forms spec) and `$pcRating` (no consumer). Changed for #199."
+  },
+  {
+    "originalPath": "packages/primevue/src/rating/BaseRating.vue",
+    "ultimateDestination": "packages/vue/src/rating/BaseRating.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate base factory that shares only interface facts with PrimeVue 4.5.5 BaseRating.vue for #199 (ADR-102): the prop names `stars`, `readonly`, `name`, `onIcon` and `offIcon`. It is built with `createBaseEditableHolder` under the Aura `rating` key and adds `invalid`. The custom `cx` and `mounted` are removed. Changed for #199."
+  },
+  {
+    "originalPath": "packages/primevue/src/rating/style/RatingStyle.js",
+    "ultimateDestination": "packages/vue/src/rating/rating-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver (ADR-064). Side-by-side with PrimeVue 4.5.5 rating/style/RatingStyle.js for #199 (ADR-102): the root class with the readonly and disabled states, the option class with the active and focus-visible states and the on and off icon classes with the invalid state are upstream's, with the `p-rating*` names renamed to `u-rating*`. The hand-ported CSS copy is replaced by the shared `@ultimate/uix-styles/rating` module (ADR-082), which drops the broken `rating.icon.disabled.color` reference. Changed for #199."
+  },
+  {
+    "originalPath": "packages/icons/src/star/StarIcon.vue",
+    "ultimateDestination": "packages/vue/src/rating/rating-icons.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "SVG path data of the PrimeIcons `star` glyph, and of `starfill` from packages/icons/src/starfill/StarFillIcon.vue, copied verbatim from PrimeVue 4.5.5 and confirmed byte for byte (#199, ADR-102). Only the path strings are carried; the icon components are not."
+  },
+  {
+    "originalPath": "packages/primevue/src/rating/Rating.vue",
+    "ultimateDestination": "packages/vue/src/rating/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of URating and createBaseRating; it shares only the exported names with PrimeVue's rating entry point."
   }
 ]

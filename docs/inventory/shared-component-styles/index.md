@@ -17,6 +17,7 @@ Scoped sample only; not platform completeness.
 - [Input text styles](uixstyles.inputtext.md)
 - [Menu styles](uixstyles.menu.md)
 - [Paginator styles](uixstyles.paginator.md)
+- [Rating styles](uixstyles.rating.md)
 - [Shared styles package entry and type](uixstyles.root.md)
 - [Slider styles](uixstyles.slider.md)
 - [Table styles](uixstyles.table.md)

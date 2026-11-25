@@ -33,3 +33,12 @@ export const Readonly: Story = {
     readonly: true,
   },
 };
+
+/** Invalid — the icons take the form-field invalid colour. */
+export const Invalid: Story = {
+  args: {
+    modelValue: 2,
+    stars: 5,
+    invalid: true,
+  },
+};

@@ -136,5 +136,11 @@
     "ultimateDestination": "packages/uix-styles/src/slider/index.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/slider/index.ts, recovered from dist/slider/index.mjs (ADR-082, #198). The `.p-slider*` selectors are renamed to `.u-slider*`, the names Ultimate emits. The state classes `p-disabled` and `p-invalid` are kept, because the siblings emit them unrenamed. The rules read the Aura `slider` tokens, with `position: absolute` added on the handle and the range, which Prime sets inline. Shared by the Angular, React and Vue slider style modules."
+  },
+  {
+    "originalPath": "src/rating/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/rating/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/rating/index.ts, recovered from dist/rating/index.mjs (ADR-082, #199). The `.p-rating*` selectors are renamed to `.u-rating*`, the names Ultimate emits. The state classes `p-focus-visible`, `p-disabled`, `p-readonly` and `p-invalid` are kept, because the siblings emit them unrenamed. The rules read the Aura `rating` tokens. The invalid icon stroke reads `form.field.invalid.border.color`, because Aura defines no `rating.invalid.icon.color` and upstream marks that rule `@todo`. Shared by the Angular, React and Vue Rating."
   }
 ]
