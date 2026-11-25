@@ -131,7 +131,15 @@ test("props, refs, state, composition, styles and source-only quirks are recorde
       "SliderClassesParams",
       "stale",
     ],
-    knob: ["onChange(value", "valueTemplate", "PageUp", "offsetX", "touch handling", "KnobProps"],
+    knob: [
+      "onChange(value",
+      "valueTemplate",
+      "PageUp",
+      "offsetX",
+      "touchstart",
+      "KnobProps",
+      "forwardRef",
+    ],
   }))
     for (const term of terms) assert.ok(by(`react.${id}`).surface.includes(term), `${id}: ${term}`);
   const themed = [

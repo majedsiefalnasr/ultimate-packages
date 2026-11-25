@@ -102,6 +102,10 @@
     {
       "id": "package.ultimate.uix-styles.rating",
       "record": "uixstyles.rating"
+    },
+    {
+      "id": "package.ultimate.uix-styles.knob",
+      "record": "uixstyles.knob"
     }
   ],
   "packages": [
@@ -172,6 +176,10 @@
         {
           "subpath": "./rating",
           "source": "packages/uix-styles/src/rating/index.ts"
+        },
+        {
+          "subpath": "./knob",
+          "source": "packages/uix-styles/src/knob/index.ts"
         },
         {
           "subpath": "./inputnumber",
@@ -447,6 +455,41 @@
         {
           "state": "not-run",
           "behavior": "This inventory update ran no browser checks. The module has a unit test under packages/uix-styles/test that checks the style string and the token names; it does not render the CSS."
+        }
+      ]
+    },
+    {
+      "id": "uixstyles.knob",
+      "name": "Knob styles",
+      "framework": "shared",
+      "purpose": "Shared CSS for the knob component.",
+      "surface": "See [authored signatures and interpretation](README.md). The module exports one named string constant, style, a CSS template (/*css*/) with embedded dt('...') design-token placeholders and no imports or runtime logic. It is available at the subpath @ultimate/uix-styles/knob only (it is not re-exported from the package root). Selectors: .u-knob-range (fill none, stroke transition), .u-knob-value (the u-knob-dash-frame animation, fill none), .u-knob-text, .u-knob svg (round, with transitions) and .u-knob svg:focus-visible with the focus ring, plus @keyframes u-knob-dash-frame. Tokens use the knob.* names (transition duration and the focus ring shadow, width, style, color and offset). It is the @primeuix/styles 2.0.3 knob module with .p-knob* and the p-knob-dash-frame keyframes renamed to u-knob* (ADR-103).",
+      "files": ["packages/uix-styles/src/knob/index.ts"],
+      "availability": "public",
+      "exports": ["@ultimate/uix-styles/knob#style"],
+      "evidence": [
+        {
+          "path": "packages/uix-styles/src/knob/index.ts",
+          "contains": "export const style = /*css*/ `"
+        },
+        {
+          "path": "packages/uix-styles/src/knob/index.ts",
+          "contains": ".u-knob svg:focus-visible {"
+        },
+        {
+          "path": "packages/uix-styles/src/knob/index.ts",
+          "contains": "@keyframes u-knob-dash-frame {"
+        }
+      ],
+      "relationships": ["uixstyles.root", "package.ultimate.uix-styled.root"],
+      "claims": [
+        {
+          "state": "implemented",
+          "behavior": "Source implementation for Knob styles is present and is consumed by the Angular, React and Vue knob style modules; this record describes the current source without asserting framework parity."
+        },
+        {
+          "state": "not-run",
+          "behavior": "This inventory update ran no browser checks. The module has a unit test under packages/uix-styles/test that compares the style string with the pinned G3-A fixture; it does not render the CSS."
         }
       ]
     },
@@ -1154,6 +1197,7 @@
         "uixstyles.toggleswitch",
         "uixstyles.slider",
         "uixstyles.rating",
+        "uixstyles.knob",
         "uixstyles.table",
         "uixstyles.tooltip",
         "uixstyles.virtualscroller"
