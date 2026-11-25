@@ -104,6 +104,11 @@
       "import": "./dist/toggleswitch/index.mjs",
       "default": "./dist/toggleswitch/index.mjs"
     },
+    "./slider": {
+      "types": "./dist/slider/index.d.mts",
+      "import": "./dist/slider/index.mjs",
+      "default": "./dist/slider/index.mjs"
+    },
     "./textarea": {
       "types": "./dist/textarea/index.d.mts",
       "import": "./dist/textarea/index.mjs",

@@ -6,11 +6,11 @@ Framework: react; availability: public
 
 ## Authored interpretation
 
-Controlled single-handle or two-handle range slider with mouse and keyboard interaction and an optional slide-end callback.
+Controlled single-handle or two-handle range slider with mouse and touch drag, keyboard stepping, an invalid state, pass-through and an optional slide-end callback.
 
 ## Framework surface
 
-USlider is a plain function component, not a forwardRef. USliderProps requires value:number|number[] and onChange and adds min (default 0), max (default 100), step (no default), range (default false), orientation "horizontal"|"vertical" (default horizontal), disabled, className and onSlideEnd; USliderChangeEvent is {originalEvent: Event|React.SyntheticEvent, value:number|number[]}. There is no name, id or aria-label prop and no ref prop. State is fully controlled; internal refs hold the active handle index, the bar rect and a dragging flag. Value is read by type, not by the range flag: an array gives the pair (otherwise [min, max]) and a number gives the single value (otherwise min). applyStep floors the raw value when step is falsy, else rounds to the step with decimal correction; updateValue clamps and, in range mode, copies the array and replaces the active handle. onMouseDown (skipped when disabled) focuses the target, calls preventDefault and adds document mousemove and mouseup listeners that are removed only on mouseup, with no unmount cleanup. Those listeners are closures from the render in which mousedown ran, so they capture that render's value (stale after later renders) and onSlideEnd after a drag reports that captured value. onSlideEnd is also emitted after a bar click, which ignores clicks on role=slider elements and picks the nearest handle in range mode. Keyboard (event.key): ArrowDown/ArrowLeft subtract step, ArrowUp/ArrowRight add step (step ?? 1), PageDown/PageUp change by ten steps, Home sets min, End sets max. Handles are span elements with role="slider", tabIndex={0}, aria-valuemin, aria-valuenow, aria-valuemax and aria-orientation; there is no aria-label or aria-labelledby and no aria-disabled, and disabled does not change tabIndex. No touch event handlers exist, and when max equals min and the value equals min, toPercent evaluates 0 / 0 (NaN). sliderStyleModule is exported with the SliderClassesParams interface (orientation, disabled); classes root, range, handle. componentName slider matches the Aura components registry key slider. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/slider; the root barrel line and manifest subpath are both present. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.
+USlider is a React.forwardRef function component; the ref is the root div element. USliderProps extends React.HTMLAttributes<HTMLDivElement> (without onChange and defaultValue), requires value:number|number[] and onChange, and adds min (default 0), max (default 100), step (no default), range (default false), orientation "horizontal"|"vertical" (default horizontal), disabled, invalid, tabIndex (default 0), className, onSlideEnd, unstyled, pt and ptOptions; USliderChangeEvent is {originalEvent: Event|React.SyntheticEvent, value:number|number[]}. aria-label and aria-labelledby are forwarded to the handles; every other attribute goes to the root. State is fully controlled, and the latest props are read through a ref so drag callbacks never use a stale value. Value is read by type, not by the range flag: an array gives the pair (otherwise [min, max]) and a number gives the single value (otherwise min). snapToStep applies Prime's rule relative to the current value (floor when step is falsy); updateValue rounds with toFixed(10), clamps and, in range mode, copies the array and replaces the active handle. onMouseDown and onTouchStart (skipped when disabled) focus the handle and add document mousemove and mouseup, or touchmove, touchend and touchcancel, listeners that are removed when the drag ends and when the component unmounts; touch follows the identifier that started the drag. The pointer is mirrored when the element direction is rtl, a zero-size track is ignored, and max less than or equal to min gives 0 per cent. onSlideEnd reports the latest value at the end of a drag and after a bar click, which ignores the click that follows a drag and clicks on role=slider elements and picks the nearest handle in range mode. Keyboard (event.key): ArrowDown/ArrowLeft subtract step, ArrowUp/ArrowRight add step (step ?? 1), PageDown/PageUp change by ten steps, Home sets min, End sets max. Handles are span elements with role="slider", tabIndex (removed when disabled), aria-valuemin, aria-valuenow (the actual value), aria-valuemax and aria-orientation, placed with inset-inline-start (horizontal) or bottom (vertical); there is no aria-disabled. Pass-through sections are root, range, handle, startHandler and endHandler through createPassThrough and useMergeProps; unstyled drops the Ultimate classes. sliderStyleModule is exported with the SliderClassesParams interface (orientation, disabled, invalid); classes root, range, handle. componentName slider matches the Aura components registry key slider. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/slider; the root barrel line and manifest subpath are both present. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. The CSS is the shared @ultimate/uix-styles/slider module (ADR-082, ADR-101). The manifest advertises dist entry/type paths; this does not prove a built or published package.
 
 ## Public exports
 
@@ -29,12 +29,12 @@ packages/react/src/slider/slider-style.ts
 
 ```text
 packages/react/src/slider/index.ts: export { USlider } from
-packages/react/src/slider/slider.tsx: export function USlider({
+packages/react/src/slider/slider.tsx: export const USlider = React.forwardRef
 packages/react/src/slider/slider.tsx: export interface USliderChangeEvent
 packages/react/src/slider/slider.tsx: onSlideEnd?: (event: USliderChangeEvent) => void;
-packages/react/src/slider/slider.tsx: document.addEventListener("mousemove", move);
-packages/react/src/slider/slider.tsx: tabIndex={0}
-packages/react/src/slider/slider.tsx: role="slider"
+packages/react/src/slider/slider.tsx: document.addEventListener("mousemove", move
+packages/react/src/slider/slider.tsx: tabIndex = 0,
+packages/react/src/slider/slider.tsx: role: "slider",
 packages/react/src/slider/slider-style.ts: export interface SliderClassesParams
 packages/react/src/slider/slider-style.ts: export const sliderStyleModule
 packages/themes/src/presets/aura/index.ts:     slider,
@@ -42,6 +42,9 @@ packages/react/src/index.ts: export * from "./slider";
 packages/react/package.json: "./slider": {
 .github/workflows/ci.yml: run: pnpm run test
 packages/react/package.json: "test": "vitest run"
+packages/react/src/slider/slider.tsx: unstyled?: boolean;
+packages/react/src/slider/slider.tsx: document.addEventListener("touchmove"
+packages/react/src/slider/slider-style.ts: @ultimate/uix-styles/slider
 ```
 
 ## Relationships
@@ -57,7 +60,7 @@ package.ultimate.themes.presets (pending cross-batch)
 [
   {
     "state": "implemented",
-    "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+    "behavior": "Component, declared props and shared style module exist in source with a colocated spec; source inspection is not a passing test."
   },
   {
     "state": "not-run",

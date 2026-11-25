@@ -1144,5 +1144,23 @@
     "ultimateDestination": "packages/ng/src/toggle-switch/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel that re-exports `UToggleSwitch` and its change-event and handle-context types. No upstream source. Entry added in #197."
+  },
+  {
+    "originalPath": "packages/primeng/src/slider/slider.ts",
+    "ultimateDestination": "packages/ng/src/slider/slider.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG 21.1.9 slider/slider.ts for #198 (ADR-101): the handle and range markup, the `role=slider` handles with `aria-valuemin`, `aria-valuenow`, `aria-valuemax` and `aria-orientation`, `aria-label` and `aria-labelledby` on every handle, the tab stop that is removed when disabled, the touchstart, touchmove and touchend handlers, `inset-inline-start` placement, the keyboard map and the `onChange` and `onSlideEnd` outputs are upstream's. The step rule is Prime's relative rule. Added: the `UBind` host directive, the parent instance token, `invalid`, a horizontal pointer mirror for right-to-left, listener removal on destroy, and a zero-size track guard. Not ported (recorded in ADR-101): `animate` (the pinned stylesheet has no rule for it), `styleClass` (deprecated), `autofocus` and the `SLIDER_INSTANCE` token (no consumer). The touch handler uses the absolute position like the mouse handler, where PrimeNG adds a floored delta from the touch start. Changed for #198."
+  },
+  {
+    "originalPath": "packages/primeng/src/slider/style/sliderstyle.ts",
+    "ultimateDestination": "packages/ng/src/slider/slider-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver (ADR-064). Side-by-side with PrimeNG 21.1.9 slider/style/sliderstyle.ts for #198 (ADR-101): the root class resolver with the orientation, `p-disabled` and `p-invalid` states and the `range` and `handle` class keys are upstream's, with the `p-slider*` names renamed to `u-slider*`. The structural CSS is replaced by the shared `@ultimate/uix-styles/slider` module (ADR-082). The `p-slider-animate` class is not carried. Changed for #198."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/slider/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel that re-exports `USlider` and its change-event type. It shares only the exported component name with the compared upstream entry point."
   }
 ]

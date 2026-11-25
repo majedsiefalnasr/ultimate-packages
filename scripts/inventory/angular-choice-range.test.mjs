@@ -99,7 +99,14 @@ test("accessors, outputs, composition, accessibility and style facts are recorde
       "u-hidden-accessible",
       "generated id",
     ],
-    "angular.slider": ["onSlideEnd", "range", "orientation", "no aria-label", "mousemove"],
+    "angular.slider": [
+      "onSlideEnd",
+      "range",
+      "orientation",
+      "mousemove",
+      "touchmove",
+      "inset-inline-start",
+    ],
     "angular.knob": ["valueTemplate", "event.code", "aria-valuenow", "no aria-label", "p-disabled"],
   }))
     for (const term of terms) assert.ok(by(id).surface.includes(term), `${id}: ${term}`);

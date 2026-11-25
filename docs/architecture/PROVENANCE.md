@@ -440,3 +440,16 @@ Ticket #197 (spec #167, ADR-100) brings ToggleSwitch, and React's InputSwitch, t
 - **Specs and stories.** The ToggleSwitch and InputSwitch specs and stories are Ultimate-authored.
 
 The ten ToggleSwitch and InputSwitch source files that were in `known-missing.json` (Angular 3, React 3, Vue 4) now have manifest entries and are removed from it, and one entry is added for the shared module. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json`, `vue.json` and `uix-styles.json`.
+
+### L0a Slider source disclosure
+
+Ticket #198 (spec #167, ADR-101) brings Slider to parity across the three frameworks against the pinned oracles PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5. No Prime package is a dependency (ADR-004); the sources were read from the checksum-verified archives in `.vendor-cache` (ADR-064).
+
+- **`packages/uix-styles/src/slider/index.ts` (source class COPY, sub-label `adapted`).** Recovered from `@primeuix/styles` 2.0.3 `slider`. The `.p-slider*` selectors are renamed to `.u-slider*`. Every declaration and token is upstream's, with `position: absolute` added on the handle and the range, which Prime sets inline. `p-disabled` and `p-invalid` are kept unrenamed.
+- **Angular `slider.ts` and `slider-style.ts` (source class COPY, sub-label `adapted`).** Compared side by side with PrimeNG `slider.ts` and `sliderstyle.ts`. The handle and range markup, the `role=slider` handles with their value attributes, the name attributes, the tab stop that is removed when disabled, the touch handlers, the `inset-inline-start` placement, the step rule and the keyboard map are upstream's. `animate`, `styleClass`, `autofocus` and the instance token are not carried. The touch handler uses the absolute position as Ultimate's mouse handler does, where PrimeNG adds a delta from the touch start.
+- **React `slider.tsx` and `slider-style.ts` (source class COPY, sub-label `adapted`).** Compared with PrimeReact `Slider.js` and `SliderBase.js`. The controlled value, the range handles, the touch identifier, the track click, the keyboard map and the aria wiring are upstream's. Placement uses `inset-inline-start` where PrimeReact uses `left`, and the tab stop is removed when disabled. The hand-written CSS is replaced by the shared module.
+- **Vue `Slider.vue`, `BaseSlider.ts` and `slider-style.ts` (source class COPY, sub-label `adapted`; the base factory is `reimplemented-with-reference`).** Compared with PrimeVue `Slider.vue`, `BaseSlider.vue` and `SliderStyle.js`. The template, the touch handlers, the `inset-inline-start` placement, the name attributes and the cleanup on unmount are upstream's. The tab stop is removed when disabled, and `$pcSlider` is not carried. The hand-ported CSS copy is replaced by the shared module.
+- **Barrels (source class REFERENCE; the Angular barrel is `authored`).** They share only the exported names with the compared upstream entry points.
+- **Specs and stories.** The Slider specs and stories are Ultimate-authored.
+
+The ten Slider source files that were in `known-missing.json` (Angular 3, React 3, Vue 4) now have manifest entries and are removed from it, and one entry is added for the shared module. Per-file records are in `docs/architecture/provenance/ng.json`, `react.json`, `vue.json` and `uix-styles.json`.

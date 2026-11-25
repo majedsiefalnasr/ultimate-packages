@@ -670,5 +670,23 @@
     "ultimateDestination": "packages/react/src/input-switch/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UInputSwitch and its prop, change-event and handle types; it shares only the exported component name with PrimeReact's inputswitch entry point."
+  },
+  {
+    "originalPath": "components/lib/slider/Slider.js",
+    "ultimateDestination": "packages/react/src/slider/slider.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 Slider.js for #198 (ADR-101): the controlled value, the single and range handles, the touch identifier that follows the starting touch, the track click, the keyboard map, the `onSlideEnd` callback and the aria and tabIndex wiring are upstream's. Added: `createPassThrough`, `useMergeProps`, `pt`, `ptOptions`, `unstyled`, `invalid`, forwarded refs, the latest props through a ref so drag callbacks do not close over a stale value, document listener removal on unmount, a zero-size track guard and `max` equal to `min` handling. Changed from upstream (recorded as I): placement uses `inset-inline-start` with a right-to-left mirror where PrimeReact uses `left`, and the tab stop is removed when disabled. `aria-valuenow` carries the actual value where PrimeReact carries a percentage. Changed for #198."
+  },
+  {
+    "originalPath": "components/lib/slider/SliderBase.js",
+    "ultimateDestination": "packages/react/src/slider/slider-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the root class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 SliderBase.js for #198 (ADR-101): the root, range and handle class keys with the orientation state are upstream's, with the `p-slider*` names renamed to `u-slider*`. The hand-written CSS is replaced by the shared `@ultimate/uix-styles/slider` module on the Aura `slider` tokens (ADR-067, ADR-082). Changed for #198."
+  },
+  {
+    "originalPath": "components/lib/slider/Slider.js",
+    "ultimateDestination": "packages/react/src/slider/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of USlider and its prop and change-event types; it shares only the exported component name with PrimeReact's slider entry point."
   }
 ]
