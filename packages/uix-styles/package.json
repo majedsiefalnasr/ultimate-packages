@@ -109,6 +109,11 @@
       "import": "./dist/slider/index.mjs",
       "default": "./dist/slider/index.mjs"
     },
+    "./knob": {
+      "types": "./dist/knob/index.d.mts",
+      "import": "./dist/knob/index.mjs",
+      "default": "./dist/knob/index.mjs"
+    },
     "./rating": {
       "types": "./dist/rating/index.d.mts",
       "import": "./dist/rating/index.mjs",

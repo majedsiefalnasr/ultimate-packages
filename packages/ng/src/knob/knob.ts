@@ -1,15 +1,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ViewEncapsulation,
   booleanAttribute,
   numberAttribute,
   computed,
+  inject,
   input,
   output,
 } from "@angular/core";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
-import { UBaseEditableHolder } from "@ultimate/ng-core";
+import { UBaseEditableHolder, UBind, U_PARENT_INSTANCE } from "@ultimate/ng-core";
+import { $dt } from "@ultimate/uix-styled";
 import { knobStyleModule } from "./knob-style";
 
 const RADIUS = 40;
@@ -18,32 +21,61 @@ const MID_Y = 50;
 const MIN_RADIANS = (4 * Math.PI) / 3;
 const MAX_RADIANS = -Math.PI / 3;
 
+/** A `{value}` placeholder string, or a function that formats the value. */
+export type UKnobValueTemplate = string | ((value: number) => string);
+
+function pointFromEvent(
+  event: MouseEvent | TouchEvent,
+  touchId: number | undefined
+): { x: number; y: number } | null {
+  if ("changedTouches" in event) {
+    const touches = Array.from(event.changedTouches);
+    const touch =
+      touchId === undefined ? touches[0] : touches.find((item) => item.identifier === touchId);
+    return touch ? { x: touch.clientX, y: touch.clientY } : null;
+  }
+  return { x: event.clientX, y: event.clientY };
+}
+
 /**
  * Ultimate-owned adaptation of PrimeNG's `Knob` component (see
  * `.vendor-extracted/ng/knob/knob.ts`). Real source extends
- * `BaseEditableHolder<KnobPassThrough>` — confirmed against `export class
- * Knob extends BaseEditableHolder<...>` — same tier `URating`/`USlider`
+ * `BaseEditableHolder<KnobPassThrough>` — same tier `URating`/`USlider`
  * already extend, not `UBaseInput`.
  *
- * NOT overlay-based — real source renders a single inline SVG `<svg>` with
- * two arc `<path>`s (range track + value arc) computed from trigonometry
- * (`Math.cos`/`Math.atan2`) mapping a click/drag position to an angle, then
- * an angle to a value — no panel/dropdown, no genuinely novel architectural
- * pattern relative to the existing `UBaseEditableHolder` + inline-template
- * shape every sibling in this batch already uses; only the amount of
- * trigonometric math inside the component body differs.
+ * NOT overlay-based — a single inline SVG with two arc `<path>`s (range track
+ * and value arc) computed with trigonometry, mapping a pointer position to an
+ * angle and the angle to a value.
  *
- * Deliberately excludes real source's much larger surface: touch-event
- * handling (mouse/keyboard interaction only, matching every sibling
- * component's established "smaller surface than upstream" precedent) and
- * passthrough (`pt`).
+ * Pointer input is mouse and touch. Both bind document listeners that are
+ * removed when the drag ends or the component is destroyed. The arrow keys
+ * move by `step`; PageUp and PageDown move by 10, as in PrimeNG.
+ *
+ * The colour defaults are the theme variables of the `knob` tokens, read with
+ * `$dt()` as PrimeNG does, so they follow the installed preset and prefix.
+ *
+ * `pt`, `unstyled` and `dt` come from `UBaseComponent`. The root section is
+ * bound through the `UBind` host directive, the component provides itself as
+ * `U_PARENT_INSTANCE`, and `svg`, `range`, `value` and `text` bind their own
+ * sections. The CSS is the shared `@ultimate/uix-styles/knob` module
+ * (ADR-082).
+ *
+ * Deliberately excludes PrimeNG's `styleClass` (deprecated), the `name` and
+ * `required` attributes PrimeNG writes onto the `<text>` and `<svg>` elements
+ * (no form reads them there), and the `$pcKnob` instance token (no consumer);
+ * each is recorded in the Knob ADR.
  */
 @Component({
   standalone: true,
   selector: "u-knob",
-  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: UKnob, multi: true }],
+  imports: [UBind],
+  providers: [
+    { provide: NG_VALUE_ACCESSOR, useExisting: UKnob, multi: true },
+    { provide: U_PARENT_INSTANCE, useExisting: UKnob },
+  ],
   template: `
     <svg
+      [uBind]="ptm('svg')"
       viewBox="0 0 100 100"
       role="slider"
       [style.width.px]="size()"
@@ -51,18 +83,23 @@ const MAX_RADIANS = -Math.PI / 3;
       [attr.aria-valuemin]="min()"
       [attr.aria-valuemax]="max()"
       [attr.aria-valuenow]="_value()"
-      [attr.tabindex]="readonly() || $disabled() ? -1 : 0"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-labelledby]="ariaLabelledBy()"
+      [attr.tabindex]="readonly() || $disabled() ? -1 : tabindex()"
       (click)="onClick($event)"
       (keydown)="onKeyDown($event)"
       (mousedown)="onMouseDown($event)"
+      (touchstart)="onTouchStart($event)"
     >
       <path
+        [uBind]="ptm('range')"
         [attr.d]="rangePath()"
         [attr.stroke-width]="strokeWidth()"
         [attr.stroke]="rangeColor()"
         [class]="cx('range')"
       ></path>
       <path
+        [uBind]="ptm('value')"
         [attr.d]="valuePath()"
         [attr.stroke-width]="strokeWidth()"
         [attr.stroke]="valueColor()"
@@ -70,19 +107,22 @@ const MAX_RADIANS = -Math.PI / 3;
       ></path>
       @if (showValue()) {
         <!-- prettier-ignore -->
-        <text x="50" y="57" text-anchor="middle" [attr.fill]="textColor()" [class]="cx('text')">{{ valueToDisplay() }}</text>
+        <text [uBind]="ptm('text')" x="50" y="57" text-anchor="middle" [attr.fill]="textColor()" [class]="cx('text')">{{ valueToDisplay() }}</text>
       }
     </svg>
   `,
   host: {
-    "[class]": "cx('root')",
+    "[class]": "cx('root', classesParams())",
   },
+  hostDirectives: [UBind],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class UKnob extends UBaseEditableHolder {
   protected override readonly componentName = "knob";
   protected override readonly styleModule = knobStyleModule;
+
+  private readonly bindDirective = inject(UBind, { self: true });
 
   /** Size of the component in pixels. */
   size = input(100, { transform: numberAttribute });
@@ -98,22 +138,46 @@ export class UKnob extends UBaseEditableHolder {
   showValue = input(true, { transform: booleanAttribute });
   /** When present, the component value cannot be edited. */
   readonly = input(false, { transform: booleanAttribute });
-  /** Template string of the value — `{value}` is replaced with the current value. */
-  valueTemplate = input("{value}");
-  /** Background color of the value arc. */
-  valueColor = input("var(--p-knob-value-background, #3B82F6)");
-  /** Background color of the range arc. */
-  rangeColor = input("var(--p-knob-range-background, #D1D5DB)");
-  /** Color of the value text. */
-  textColor = input("var(--p-knob-text-color, #374151)");
+  /** Adds the `p-invalid` class to the root. */
+  invalid = input(false, { transform: booleanAttribute });
+  /** Tab index of the dial. A disabled or readonly knob uses `-1`. */
+  tabindex = input(0, { transform: numberAttribute });
+  /** Accessible name of the dial. */
+  ariaLabel = input<string>();
+  /** IDs of the elements that name the dial. */
+  ariaLabelledBy = input<string>();
+  /** Every `{value}` in a string is replaced with the value; a function formats it. */
+  valueTemplate = input<UKnobValueTemplate>("{value}");
+  /** Background color of the value arc. Defaults to the `knob.value.background` token. */
+  valueColor = input<string>($dt("knob.value.background").variable);
+  /** Background color of the range arc. Defaults to the `knob.range.background` token. */
+  rangeColor = input<string>($dt("knob.range.background").variable);
+  /** Color of the value text. Defaults to the `knob.text.color` token. */
+  textColor = input<string>($dt("knob.text.color").variable);
 
   /** Callback to invoke on value change. */
   onChange = output<number>();
+
+  private stopDrag: (() => void) | null = null;
+
+  private readonly destroyRegistration = inject(DestroyRef).onDestroy(() => this.stopDrag?.());
 
   protected readonly _value = computed(() => {
     const value = this.modelValue();
     return typeof value === "number" ? value : this.min();
   });
+
+  ngAfterViewChecked(): void {
+    this.bindDirective.setAttrs(this.ptms(["host", "root"]));
+  }
+
+  protected classesParams() {
+    return { disabled: this.$disabled(), invalid: this.invalid() };
+  }
+
+  private get interactive(): boolean {
+    return !this.$disabled() && !this.readonly();
+  }
 
   private mapRange(
     x: number,
@@ -156,7 +220,11 @@ export class UKnob extends UBaseEditableHolder {
   }
 
   protected valueToDisplay(): string {
-    return this.valueTemplate().replace("{value}", this._value().toString());
+    const template = this.valueTemplate();
+    const value = this._value();
+    return typeof template === "function"
+      ? template(value)
+      : template.replace(/{value}/g, value.toString());
   }
 
   private updateModelValue(newValue: number): void {
@@ -197,32 +265,65 @@ export class UKnob extends UBaseEditableHolder {
   }
 
   protected onClick(event: MouseEvent): void {
-    if (this.$disabled() || this.readonly()) {
+    if (!this.interactive) {
       return;
     }
     this.updateFromOffset(event.offsetX, event.offsetY);
   }
 
   protected onMouseDown(event: MouseEvent): void {
-    if (this.$disabled() || this.readonly()) {
+    this.beginDrag(event, false);
+  }
+
+  protected onTouchStart(event: TouchEvent): void {
+    this.beginDrag(event, true);
+  }
+
+  private beginDrag(event: MouseEvent | TouchEvent, touch: boolean): void {
+    if (!this.interactive) {
       return;
     }
-    const svg = (this.el.nativeElement as HTMLElement).querySelector("svg") as SVGSVGElement;
-    const move = (moveEvent: MouseEvent) => {
+    this.stopDrag?.();
+    const svg = event.currentTarget as SVGSVGElement;
+    const touchId = touch ? (event as TouchEvent).changedTouches[0]?.identifier : undefined;
+    if (!touch) {
+      event.preventDefault();
+    }
+
+    const move = (moveEvent: MouseEvent | TouchEvent) => {
+      if (!this.interactive) return;
+      const point = pointFromEvent(moveEvent, touchId);
+      if (!point) return;
+      if (moveEvent.cancelable) moveEvent.preventDefault();
       const rect = svg.getBoundingClientRect();
-      this.updateFromOffset(moveEvent.clientX - rect.left, moveEvent.clientY - rect.top);
+      this.updateFromOffset(point.x - rect.left, point.y - rect.top);
     };
-    const up = () => {
+    const stop = () => {
+      this.stopDrag = null;
       document.removeEventListener("mousemove", move);
-      document.removeEventListener("mouseup", up);
+      document.removeEventListener("mouseup", end);
+      document.removeEventListener("touchmove", move);
+      document.removeEventListener("touchend", end);
+      document.removeEventListener("touchcancel", end);
     };
-    document.addEventListener("mousemove", move);
-    document.addEventListener("mouseup", up);
-    event.preventDefault();
+    const end = (endEvent: MouseEvent | TouchEvent) => {
+      stop();
+      if (touch && endEvent.cancelable) endEvent.preventDefault();
+    };
+
+    if (touch) {
+      document.addEventListener("touchmove", move, { passive: false });
+      document.addEventListener("touchend", end);
+      document.addEventListener("touchcancel", end);
+    } else {
+      document.addEventListener("mousemove", move);
+      document.addEventListener("mouseup", end);
+    }
+    this.stopDrag = stop;
   }
 
   protected onKeyDown(event: KeyboardEvent): void {
-    if (this.$disabled() || this.readonly()) {
+    if (!this.interactive) {
       return;
     }
     switch (event.code) {

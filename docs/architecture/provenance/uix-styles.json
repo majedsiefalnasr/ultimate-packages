@@ -142,5 +142,11 @@
     "ultimateDestination": "packages/uix-styles/src/rating/index.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/rating/index.ts, recovered from dist/rating/index.mjs (ADR-082, #199). The `.p-rating*` selectors are renamed to `.u-rating*`, the names Ultimate emits. The state classes `p-focus-visible`, `p-disabled`, `p-readonly` and `p-invalid` are kept, because the siblings emit them unrenamed. The rules read the Aura `rating` tokens. The invalid icon stroke reads `form.field.invalid.border.color`, because Aura defines no `rating.invalid.icon.color` and upstream marks that rule `@todo`. Shared by the Angular, React and Vue Rating."
+  },
+  {
+    "originalPath": "src/knob/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/knob/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/knob/index.ts, recovered from dist/knob/index.mjs (ADR-082, #200). The `.p-knob*` selectors and the `p-knob-dash-frame` keyframes are renamed to `u-knob*`, the names Ultimate emits; every declaration and token is upstream's, and a test compares the module with the pinned fixture. Shared by the Angular, React and Vue Knob."
   }
 ]

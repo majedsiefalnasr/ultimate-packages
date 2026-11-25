@@ -6,11 +6,11 @@ Framework: react; availability: public
 
 ## Authored interpretation
 
-Controlled circular SVG dial adjusted by click, drag and keyboard.
+Controlled circular SVG dial adjusted by click, mouse and touch drag and keyboard, with an invalid state, accessible names and pass-through.
 
 ## Framework surface
 
-UKnob is a plain function component, not a forwardRef; index.ts exports only UKnob and UKnobProps (no change-event type). UKnobProps requires value:number and onChange(value: number) which receives a bare number, not an event object, and adds size (100), min (0), max (100), step (1), strokeWidth (14), showValue (true), readOnly, disabled, valueTemplate ("{value}"), valueColor ("#3B82F6"), rangeColor ("#D1D5DB"), textColor ("#374151") and className. There is no name, id or aria-label prop and no ref prop; an internal svgRef is used only for pointer geometry. State is fully controlled. updateModelValue clamps to [min, max] before onChange. Click maps event.nativeEvent.offsetX and offsetY to an angle; mousedown adds document mousemove and mouseup listeners (removed on mouseup, no unmount cleanup) and uses svg getBoundingClientRect. Keyboard (event.code): ArrowRight/ArrowUp add step, ArrowLeft/ArrowDown subtract step, Home sets min, End sets max, PageUp and PageDown change by a fixed 10 regardless of step. The enabled flag (!disabled && !readOnly) gates the handlers. Markup: a root div (cx root only, so disabled and readOnly are not reflected in a class) around an svg with role="slider", width and height equal to size, viewBox 0 0 100 100, tabIndex 0 when enabled else -1, aria-valuemin, aria-valuemax and aria-valuenow; there is no aria-label, aria-labelledby, aria-disabled or aria-readonly. Two paths draw the range and value arcs, and an optional text element shows valueTemplate with {value} replaced. The source header comment states touch handling is excluded; no touch handling exists. knobStyleModule is exported; classes root (plain string), range, value, text; there is no ClassesParams interface. componentName knob matches the Aura components registry key knob. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/knob; the root barrel line and manifest subpath are both present. useComponentBase from @ultimate/react-core resolves cx classes and delegates style registration to useComponentStyle; those hooks are external foundation records, not duplicated here. Local style CSS is hand-authored and registered; no scoped style module imports @ultimate/uix-styles. The manifest advertises dist entry/type paths; this does not prove a built or published package.
+UKnob is a forwardRef component whose ref is the root div element (no handle object); index.ts exports UKnob, UKnobProps and UKnobValueTemplate (no change-event type). UKnobProps extends the div HTML attributes without onChange and defaultValue, requires value:number and onChange(value: number), which receives a bare number, not an event object, and adds size (100), min (0), max (100), step (1), strokeWidth (14), showValue (true), readOnly, disabled, invalid, tabIndex (0), valueTemplate (UKnobValueTemplate: a string in which every {value} is replaced, or a function of the value; default "{value}"), valueColor, rangeColor and textColor (defaulting to $dt('knob.value.background').variable, $dt('knob.range.background').variable and $dt('knob.text.color').variable from @ultimate/uix-styled, no literal fallback), className, unstyled, pt and ptOptions. aria-label and aria-labelledby go to the svg; every other prop, including id and style, is merged onto the root div with the pt root section. There is no name prop. State is fully controlled; the latest props are read through a propsRef so a drag never works from a stale value. updateModelValue clamps to [min, max] before onChange. Click maps event.nativeEvent.offsetX and offsetY to an angle. mousedown and touchstart begin a drag that adds document listeners (mousemove and mouseup, or a non-passive touchmove plus touchend and touchcancel), reads the pointer against the svg getBoundingClientRect, follows only the touch that started it, ignores moves while the knob is disabled or read-only, and removes the listeners when the drag ends or the component unmounts. Keyboard (event.code): ArrowRight/ArrowUp add step, ArrowLeft/ArrowDown subtract step, Home sets min, End sets max, PageUp and PageDown change by a fixed 10 regardless of step. The enabled flag (!disabled && !readOnly) gates every handler, the keyboard included. Markup: a root div (cx root with p-disabled and p-invalid) around an svg (pt svg) with role="slider", width and height equal to size, viewBox 0 0 100 100, tabIndex from the prop when enabled else -1, aria-valuemin, aria-valuemax and aria-valuenow; two paths (pt range and value) draw the range and value arcs, and an optional text element shows the value template, merged with PrimeReact's label section and then the text section. knobStyleModule is a StyleModule with the KnobClassesParams interface; classes root, range, value, text, and its CSS is the shared @ultimate/uix-styles/knob module on the Aura knob tokens. componentName knob matches the Aura components registry key knob. createPassThrough('knob') and useMergeProps from @ultimate/react-core build the pass-through; useComponentBase resolves cx and registers the style. Public runtime and types are named exports from both @ultimate/react and @ultimate/react/knob; the root barrel line and manifest subpath are both present. The manifest advertises dist entry/type paths; this does not prove a built or published package.
 
 ## Public exports
 
@@ -18,6 +18,8 @@ UKnob is a plain function component, not a forwardRef; index.ts exports only UKn
 @ultimate/react/knob#UKnob
 @ultimate/react#UKnobProps
 @ultimate/react/knob#UKnobProps
+@ultimate/react#UKnobValueTemplate
+@ultimate/react/knob#UKnobValueTemplate
 
 ## Owned source and evidence
 
@@ -27,13 +29,17 @@ packages/react/src/knob/knob-style.ts
 
 ```text
 packages/react/src/knob/index.ts: export { UKnob } from
-packages/react/src/knob/knob.tsx: export function UKnob({
-packages/react/src/knob/knob.tsx: export interface UKnobProps
+packages/react/src/knob/knob.tsx: export const UKnob = React.forwardRef<HTMLDivElement, UKnobProps>
+packages/react/src/knob/knob.tsx: export interface UKnobProps extends Omit<
 packages/react/src/knob/knob.tsx: onChange: (value: number) => void;
 packages/react/src/knob/knob.tsx: event.nativeEvent.offsetX
 packages/react/src/knob/knob.tsx: case "PageUp":
-packages/react/src/knob/knob.tsx: valueTemplate.replace("{value}", value.toString())
-packages/react/src/knob/knob.tsx: role="slider"
+packages/react/src/knob/knob.tsx: valueTemplate.replace(/{value}/g, value.toString())
+packages/react/src/knob/knob.tsx: role: "slider",
+packages/react/src/knob/knob.tsx: document.addEventListener("touchmove", move, { passive: false });
+packages/react/src/knob/knob.tsx: createPassThrough("knob"
+packages/react/src/knob/knob.tsx: ptm("label"),
+packages/react/src/knob/knob-style.ts: @ultimate/uix-styles/knob
 packages/react/src/knob/knob-style.ts: export const knobStyleModule
 packages/themes/src/presets/aura/index.ts:     knob,
 packages/react/src/index.ts: export * from "./knob";
@@ -55,7 +61,7 @@ package.ultimate.themes.presets (pending cross-batch)
 [
   {
     "state": "implemented",
-    "behavior": "Component, declared props and local style module exist in source with a colocated spec; source inspection is not a passing test."
+    "behavior": "Component, declared props and shared style module exist in source with a colocated spec; source inspection is not a passing test."
   },
   {
     "state": "not-run",

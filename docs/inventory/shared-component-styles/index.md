@@ -15,6 +15,7 @@ Scoped sample only; not platform completeness.
 - [InputGroup styles](uixstyles.inputgroup.md)
 - [Input number styles](uixstyles.inputnumber.md)
 - [Input text styles](uixstyles.inputtext.md)
+- [Knob styles](uixstyles.knob.md)
 - [Menu styles](uixstyles.menu.md)
 - [Paginator styles](uixstyles.paginator.md)
 - [Rating styles](uixstyles.rating.md)

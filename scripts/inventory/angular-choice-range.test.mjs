@@ -109,7 +109,14 @@ test("accessors, outputs, composition, accessibility and style facts are recorde
       "touchmove",
       "inset-inline-start",
     ],
-    "angular.knob": ["valueTemplate", "event.code", "aria-valuenow", "no aria-label", "p-disabled"],
+    "angular.knob": [
+      "valueTemplate",
+      "event.code",
+      "aria-valuenow",
+      "touchstart",
+      "p-disabled",
+      "DestroyRef",
+    ],
   }))
     for (const term of terms) assert.ok(by(id).surface.includes(term), `${id}: ${term}`);
 });

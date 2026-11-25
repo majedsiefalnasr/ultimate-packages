@@ -1,41 +1,46 @@
-import { defineComponent } from "vue";
-import { createBaseEditableHolder, registerComponentStyle } from "@ultimate/vue-core";
+import { defineComponent, type PropType } from "vue";
+import { createBaseEditableHolder } from "@ultimate/vue-core";
+import { $dt } from "@ultimate/uix-styled";
 import { knobStyleModule } from "./knob-style";
-import type { ClassValue } from "@ultimate/vue-core";
+
+/** A `{value}` placeholder string, or a function that formats the value. */
+export type UKnobValueTemplate = string | ((value: number) => string);
 
 // extends: createBaseEditableHolder(), matching verified BaseKnob.vue's real
 // chain exactly: `export default { name: 'BaseKnob', extends:
-// BaseEditableHolder, ... }` — confirmed against
-// .vendor-extracted/vue/knob/BaseKnob.vue — same tier URating/USlider
-// already extend, NOT BaseInput.
+// BaseEditableHolder, ... }` — same tier URating/USlider already extend,
+// NOT BaseInput.
+//
+// `componentName` and `styleModule` go through createBaseEditableHolder, so
+// `cx`, style registration under the Aura `knob` key, `unstyled`,
+// per-instance `dt` and `pt` all come from the shared base chain. The colour
+// defaults are the `knob` token variables, read with `$dt()` as PrimeVue does.
 export function createBaseKnob() {
   return defineComponent({
-    extends: createBaseEditableHolder(),
+    extends: createBaseEditableHolder({
+      componentName: "knob",
+      styleModule: knobStyleModule,
+    }),
     props: {
       size: { type: Number, default: 100 },
       readonly: { type: Boolean, default: false },
       step: { type: Number, default: 1 },
       min: { type: Number, default: 0 },
       max: { type: Number, default: 100 },
+      valueColor: { type: String, default: () => $dt("knob.value.background").variable },
+      rangeColor: { type: String, default: () => $dt("knob.range.background").variable },
+      textColor: { type: String, default: () => $dt("knob.text.color").variable },
       strokeWidth: { type: Number, default: 14 },
       showValue: { type: Boolean, default: true },
-      valueTemplate: { type: String, default: "{value}" },
+      valueTemplate: {
+        type: [String, Function] as PropType<UKnobValueTemplate>,
+        default: "{value}",
+      },
+      tabindex: { type: Number, default: 0 },
       disabled: { type: Boolean, default: false },
-      valueColor: { type: String, default: "#3B82F6" },
-      rangeColor: { type: String, default: "#D1D5DB" },
-      textColor: { type: String, default: "#374151" },
+      invalid: { type: Boolean, default: false },
       ariaLabelledby: { type: String, default: null },
       ariaLabel: { type: String, default: null },
-    },
-    methods: {
-      cx(key: string, params?: Record<string, unknown>): ClassValue | undefined {
-        const resolver = knobStyleModule.classes[key];
-        if (resolver === undefined) return undefined;
-        return typeof resolver === "function" ? resolver(params) : resolver;
-      },
-    },
-    mounted() {
-      registerComponentStyle("knob", knobStyleModule);
     },
   });
 }

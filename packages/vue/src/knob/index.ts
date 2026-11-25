@@ -1,2 +1,2 @@
 export { default as UKnob } from "./Knob.vue";
-export { createBaseKnob } from "./BaseKnob";
+export { createBaseKnob, type UKnobValueTemplate } from "./BaseKnob";

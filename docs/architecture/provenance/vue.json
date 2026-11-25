@@ -474,10 +474,10 @@
     "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 overlaybadge, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
   },
   {
-    "originalPath": "src/knob/index.ts",
+    "originalPath": "packages/primevue/src/knob/style/KnobStyle.js",
     "ultimateDestination": "packages/vue/src/knob/knob-style.ts",
-    "modificationStatus": "reference-derived",
-    "modificationDescription": "Ported (Option B \u2014 reference, not verbatim copy) from @primeuix/styles@2.0.3 knob, selectors adapted to Ultimate's DOM per the GAP-064 G3-A mapping (packages/themes/test/utils/g3a-port.mjs); exceptions none."
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver (ADR-064). Side-by-side with PrimeVue 4.5.5 knob/style/KnobStyle.js for #200 (ADR-103): the root class with `p-disabled` and `p-invalid`, and the range, value and text classes, are upstream's with `p-knob` renamed to `u-knob`. The CSS is the shared `@ultimate/uix-styles/knob` module (ADR-082), which replaces the G3-A port this file held. Changed for #200."
   },
   {
     "originalPath": "src/progressbar/index.ts",
@@ -1306,5 +1306,23 @@
     "ultimateDestination": "packages/vue/src/rating/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of URating and createBaseRating; it shares only the exported names with PrimeVue's rating entry point."
+  },
+  {
+    "originalPath": "packages/primevue/src/knob/Knob.vue",
+    "ultimateDestination": "packages/vue/src/knob/Knob.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 Knob.vue for #200 (ADR-103): the SVG with the range and value arcs and their geometry, the click, mouse and touch handlers that map a point to an angle and a stepped value, the arrow, Home, End and PageUp/PageDown keys, the tab index that is -1 when disabled or readonly, `aria-label`, `aria-labelledby`, the string or function `valueTemplate` that replaces every `{value}`, `ptmi('root')` and the `svg`, `range`, `value` and `text` sections are upstream's. Added: `invalid`, a drag that follows only the touch that started it and reads the point against the SVG box (PrimeVue reads the mouse-move `offsetX`), listener cleanup on unmount, and the `change` event on the keyboard too. Not carried: forms registration (Vue Forms spec) and `$pcKnob` (no consumer). Changed for #200."
+  },
+  {
+    "originalPath": "packages/primevue/src/knob/BaseKnob.vue",
+    "ultimateDestination": "packages/vue/src/knob/BaseKnob.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate base factory that shares only interface facts with PrimeVue 4.5.5 BaseKnob.vue for #200 (ADR-103): the prop names and defaults, including `tabindex`, the `[String, Function]` `valueTemplate` and the colour defaults read with `$dt()` from the `knob` tokens. It is built with `createBaseEditableHolder` under the Aura `knob` key and adds `disabled` and `invalid`. The custom `cx` and `mounted` are removed. Changed for #200."
+  },
+  {
+    "originalPath": "packages/primevue/src/knob/Knob.vue",
+    "ultimateDestination": "packages/vue/src/knob/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UKnob, createBaseKnob and the value-template type; it shares only the exported names with PrimeVue's knob entry point."
   }
 ]

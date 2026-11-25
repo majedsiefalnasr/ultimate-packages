@@ -110,7 +110,15 @@ test("props, emits, slots, v-model, composition and source-only quirks are recor
       "slideend",
       "ariaLabel",
     ],
-    "vue.knob": ["bare clamped number", "event.code", "fixed 10", "without a guard", "{value}"],
+    "vue.knob": [
+      "bare clamped number",
+      "event.code",
+      "fixed 10",
+      "without a guard",
+      "{value}",
+      "ptmi('root')",
+      "touchstart",
+    ],
   };
   for (const [id, list] of Object.entries(terms))
     for (const term of list) assert.ok(by(id).surface.includes(term), `${id}: ${term}`);

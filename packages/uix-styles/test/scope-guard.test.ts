@@ -13,6 +13,7 @@ import { style as iconfieldStyle } from "../src/iconfield";
 import { style as inputgroupStyle } from "../src/inputgroup";
 import { style as inputnumberStyle } from "../src/inputnumber";
 import { style as inputtextStyle } from "../src/inputtext";
+import { style as knobStyle } from "../src/knob";
 import { style as menuStyle } from "../src/menu";
 import { style as paginatorStyle } from "../src/paginator";
 import { style as ratingStyle } from "../src/rating";
@@ -71,6 +72,7 @@ describe("component style modules — exactly 18 exist alongside base", () => {
         "inputgroup",
         "inputnumber",
         "inputtext",
+        "knob",
         "menu",
         "paginator",
         "rating",
@@ -142,6 +144,9 @@ describe("component style modules — exactly 18 exist alongside base", () => {
   });
   it("rating style uses only .u-rating* selectors", () => {
     expect(ratingStyle).not.toMatch(/\.p-rating/);
+  });
+  it("knob style uses only .u-knob* selectors", () => {
+    expect(knobStyle).not.toMatch(/\.p-knob/);
   });
 
   it("virtualscroller style uses only .u-scroller* selectors", () => {
