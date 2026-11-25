@@ -1,70 +1,59 @@
+import { style as ratingStyle } from "@ultimate/uix-styles/rating";
+
 /**
  * Ultimate-owned adaptation of PrimeNG's `RatingStyle` (see
- * `.vendor-extracted/ng/rating/style/ratingstyle.ts`, sourced from
- * `@primeuix/styles/rating`), shaped to match `UBaseComponent`'s
- * `styleModule: {css, classes}` contract. Hand-ported directly, same reason
- * documented in `password-style.ts`: no `@ultimate/uix-styles/rating`
- * subpath exists yet and this task may not add one.
+ * `.vendor-extracted/ng/rating/style/ratingstyle.ts`), shaped to match
+ * `UBaseComponent`'s `styleModule: {css, classes}` contract. The structural
+ * CSS is the shared `@ultimate/uix-styles/rating` module (ADR-082), so it
+ * reads the Aura `rating` tokens and matches React and Vue.
  *
- * `.p-rating*` selectors renamed to `.u-rating*`; `p-disabled`/`p-focus-visible`
- * kept unrenamed, matching established precedent.
+ * The `.ng-invalid.ng-dirty` rule is Angular-only, as in PrimeNG. PrimeNG's
+ * selector (`p-rating.ng-invalid.ng-dirty > .p-rating > .p-rating-icon`)
+ * never matches, because the host is the `.p-rating` root; this one targets
+ * the icons inside the host and uses the shared form-field invalid colour.
  */
 const css = /*css*/ `
-    .u-rating {
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: dt('rating.gap');
-    }
+    ${ratingStyle}
 
-    .u-rating-option {
-        display: inline-flex;
-        align-items: center;
-        cursor: pointer;
-    }
-
-    .u-rating.p-disabled .u-rating-option {
-        cursor: default;
-    }
-
-    .u-rating-option.p-focus-visible {
-        outline: 2px solid dt('focus.ring.color');
-        outline-offset: 2px;
-        border-radius: 50%;
-    }
-
-    .u-rating-on-icon {
-        color: dt('rating.icon.active.color');
-    }
-
-    .u-rating-off-icon {
-        color: dt('rating.icon.color');
-    }
-
-    .u-rating.p-disabled .u-rating-on-icon,
-    .u-rating.p-disabled .u-rating-off-icon {
-        color: dt('rating.icon.disabled.color');
+    .u-rating.ng-invalid.ng-dirty .u-rating-icon {
+        stroke: dt('form.field.invalid.border.color');
     }
 `;
 
+/** Params `URating` passes into `cx('root', params)`. */
+export interface RatingRootClassesParams {
+  readonly?: boolean;
+  disabled?: boolean;
+}
+
 /** Params `URating` passes into `cx('option', params)`. */
-export interface RatingClassesParams {
-  star?: number;
-  value?: number | null;
-  focused?: boolean;
+export interface RatingOptionClassesParams {
+  active?: boolean;
+  focusVisible?: boolean;
+}
+
+/** Params `URating` passes into `cx('onIcon' | 'offIcon', params)`. */
+export interface RatingIconClassesParams {
+  invalid?: boolean;
 }
 
 const classes = {
-  root: (params: { disabled?: boolean } = {}) => [
+  root: (params: RatingRootClassesParams = {}) => [
     "u-rating u-component",
-    { "p-disabled": params.disabled },
+    { "p-readonly": params.readonly, "p-disabled": params.disabled },
   ],
-  option: (params: RatingClassesParams = {}) => [
+  option: (params: RatingOptionClassesParams = {}) => [
     "u-rating-option",
-    { "p-focus-visible": params.focused },
+    { "u-rating-option-active": params.active, "p-focus-visible": params.focusVisible },
   ],
-  onIcon: "u-rating-on-icon",
-  offIcon: "u-rating-off-icon",
+  onIcon: (params: RatingIconClassesParams = {}) => [
+    "u-rating-icon u-rating-on-icon",
+    { "p-invalid": params.invalid },
+  ],
+  offIcon: (params: RatingIconClassesParams = {}) => [
+    "u-rating-icon u-rating-off-icon",
+    { "p-invalid": params.invalid },
+  ],
 };
 
 /** `UBaseComponent`-shaped style module for `URating`. */

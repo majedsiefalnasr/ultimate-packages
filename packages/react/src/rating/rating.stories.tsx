@@ -29,3 +29,13 @@ export const ThreeStars: Story = {
 export const ReadOnly: Story = {
   render: () => <URating value={4} onChange={() => {}} stars={5} readOnly />,
 };
+
+/** Invalid — the icons take the form-field invalid colour. */
+export const Invalid: Story = {
+  render: () => <RatingHarness stars={5} invalid />,
+};
+
+/** Cancel — a clear item before the stars (off by default). */
+export const Cancel: Story = {
+  render: () => <RatingHarness stars={5} cancel />,
+};

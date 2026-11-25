@@ -1,62 +1,187 @@
 import * as React from "react";
-import { useComponentBase } from "@ultimate/react-core";
+import {
+  createPassThrough,
+  useComponentBase,
+  useMergeProps,
+  type PassThrough,
+  type PassThroughOptions,
+} from "@ultimate/react-core";
+import { RATING_BAN_PATH, RATING_STAR_FILL_PATH, RATING_STAR_PATH } from "./rating-icons";
 import { ratingStyleModule } from "./rating-style";
 
 export interface URatingChangeEvent {
   originalEvent: React.SyntheticEvent;
   value: number | null;
+  stopPropagation: () => void;
+  preventDefault: () => void;
+  target: { name?: string; id?: string; value: number | null };
 }
 
-export interface URatingProps {
-  value: number | null;
-  onChange: (event: URatingChangeEvent) => void;
+export interface URatingHandle {
+  /** Returns the root element. */
+  getElement: () => HTMLDivElement | null;
+}
+
+/** Props an icon receives: the classes and pass-through attributes of its slot. */
+export type URatingIconProps = React.HTMLAttributes<HTMLElement> & Record<string, unknown>;
+
+/**
+ * An icon: a class string rendered on a `span`, an element that receives the
+ * icon props, or a function of the icon props.
+ */
+export type URatingIcon =
+  string | React.ReactElement | ((iconProps: URatingIconProps) => React.ReactNode);
+
+export interface URatingProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "onChange" | "children"
+> {
+  value?: number | null;
+  onChange?: (event: URatingChangeEvent) => void;
   stars?: number;
   readOnly?: boolean;
   disabled?: boolean;
-  className?: string;
-  "aria-labelledby"?: string;
+  /** Shows the invalid state. */
+  invalid?: boolean;
+  /** Renders a clear item before the stars. */
+  cancel?: boolean;
+  /** Name reported in the change event's `target`. */
+  name?: string;
+  onIcon?: URatingIcon;
+  offIcon?: URatingIcon;
+  cancelIcon?: URatingIcon;
+  onIconProps?: URatingIconProps;
+  offIconProps?: URatingIconProps;
+  cancelIconProps?: URatingIconProps;
+  /** Renders the component with no Ultimate classes or styles. */
+  unstyled?: boolean;
+  /** Attributes for the `root`, `item`, `onIcon`, `offIcon`, `cancelItem` and `cancelIcon` sections. */
+  pt?: PassThrough;
+  ptOptions?: PassThroughOptions;
+}
+
+function renderIcon(icon: URatingIcon, iconProps: URatingIconProps): React.ReactNode {
+  if (typeof icon === "function") return icon(iconProps);
+  if (typeof icon === "string") {
+    return (
+      <span
+        {...iconProps}
+        className={[iconProps.className, icon].filter(Boolean).join(" ") || undefined}
+      />
+    );
+  }
+  const own = icon.props as { className?: string };
+  return React.cloneElement(icon as React.ReactElement<Record<string, unknown>>, {
+    ...iconProps,
+    className: [iconProps.className, own.className].filter(Boolean).join(" ") || undefined,
+  });
+}
+
+function svgIcon(path: string, iconProps: URatingIconProps): React.ReactElement {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      aria-hidden="true"
+      {...(iconProps as React.SVGAttributes<SVGSVGElement>)}
+    >
+      <path d={path} fill="currentColor" />
+    </svg>
+  );
 }
 
 /**
- * Ultimate-owned adaptation of PrimeReact's `Rating` (real source:
- * `components/lib/rating/Rating.js`/`RatingBase.js`, extracted this session
- * via `scripts/provenance/extract-primereact-source.mjs`). Fully controlled
- * (`value`/`onChange`), per React's established no-shared-form-state-base-
- * class convention — same shape every sibling React component in this batch
- * follows.
+ * Ultimate-owned adaptation of PrimeReact's `Rating` (see
+ * `.vendor-extracted/react/rating/Rating.js` and `RatingBase.js`). Fully
+ * controlled through `value` and `onChange`.
  *
- * NOT overlay-based — real source renders a flat row of star options (each a
- * clickable `div` with an on/off SVG icon plus a hidden focus target), no
- * panel/dropdown.
+ * Each star is a focusable `role="radio"` element with `aria-checked`, an
+ * English `aria-label` and, when `invalid`, `aria-invalid`. Enter and Space
+ * select the focused star and the arrow keys step the value and wrap, as in
+ * PrimeReact; the keyboard never clears. Clicking the selected star with a
+ * pointer clears it, and `cancel` adds PrimeReact's clear item (off by
+ * default). The focus ring shows only for keyboard focus.
  *
- * Keyboard stepping matches real source's own `onStarKeyDown`:
- * ArrowLeft/ArrowUp moves to the previous star (wrapping to `stars` at the
- * low end), ArrowRight/ArrowDown to the next (wrapping to 1 past the max).
+ * The change event carries `stopPropagation`, `preventDefault` and `target`.
+ * Every other prop, including `onFocus` and `onBlur`, goes on the root, and
+ * the ref exposes `getElement()`. `onIcon`, `offIcon` and `cancelIcon` (with
+ * their `*IconProps`) replace the default icons. `pt`, `ptOptions` and
+ * `unstyled` come from the shared foundations, and the CSS is the shared
+ * `@ultimate/uix-styles/rating` module on the Aura `rating` tokens.
  *
- * Deliberately excludes real source's much larger surface: the `cancel`
- * clear-icon affordance, icon prop overrides, tooltip integration, and
- * PrimeReact's global `context` config lookup — matching every sibling
- * component's established "smaller surface than upstream" precedent.
+ * Deliberately excludes the `tooltip` props (composition through `UTooltip`)
+ * and the `props` entry of PrimeReact's ref handle; both are recorded in the
+ * Rating ADR.
  */
-export function URating({
-  value,
-  onChange,
-  stars = 5,
-  readOnly = false,
-  disabled = false,
-  className,
-  "aria-labelledby": ariaLabelledBy,
-}: URatingProps): React.ReactElement {
-  const { cx } = useComponentBase({ componentName: "rating", styleModule: ratingStyleModule });
-  const [focusedIndex, setFocusedIndex] = React.useState(-1);
+export const URating = React.forwardRef<URatingHandle, URatingProps>(function URating(props, ref) {
+  const {
+    value = null,
+    onChange,
+    stars = 5,
+    readOnly = false,
+    disabled = false,
+    invalid = false,
+    cancel = false,
+    name,
+    id,
+    onIcon,
+    offIcon,
+    cancelIcon,
+    onIconProps,
+    offIconProps,
+    cancelIconProps,
+    className,
+    unstyled,
+    pt,
+    ptOptions,
+    ...rest
+  } = props;
+  const { cx } = useComponentBase({
+    componentName: "rating",
+    styleModule: ratingStyleModule,
+    unstyled,
+  });
+  const { ptm } = createPassThrough("rating", { props: { pt, ptOptions } });
+  const mergeProps = useMergeProps();
+  const rootRef = React.useRef<HTMLDivElement | null>(null);
+  const pointerDown = React.useRef(false);
+  const [focusedOptionIndex, setFocusedOptionIndex] = React.useState(-1);
+  const [isFocusVisibleItem, setFocusVisibleItem] = React.useState(true);
+
+  React.useImperativeHandle(ref, () => ({ getElement: () => rootRef.current }));
 
   const enabled = !disabled && !readOnly;
+  const tabIndex = enabled ? 0 : undefined;
+  const current = value ?? 0;
 
-  const rate = (event: React.SyntheticEvent, newValue: number) => {
-    if (!enabled) return;
-    const next = value === newValue ? null : newValue;
-    setFocusedIndex(next ?? -1);
-    onChange({ originalEvent: event, value: next });
+  const emit = (event: React.SyntheticEvent, next: number | null) => {
+    if (!enabled || !onChange) return;
+    onChange({
+      originalEvent: event,
+      value: next,
+      stopPropagation: () => event.stopPropagation(),
+      preventDefault: () => event.preventDefault(),
+      target: { name, id, value: next },
+    });
+  };
+
+  const rate = (event: React.SyntheticEvent, next: number) => {
+    emit(event, next);
+    setFocusedOptionIndex(next);
+    event.preventDefault();
+  };
+
+  const onItemClick = (event: React.MouseEvent, starValue: number) => {
+    pointerDown.current = false;
+    setFocusVisibleItem(false);
+    if (enabled && starValue === value) {
+      emit(event, null);
+      event.preventDefault();
+      return;
+    }
+    rate(event, starValue);
   };
 
   const onStarKeyDown = (event: React.KeyboardEvent, starValue: number) => {
@@ -65,70 +190,135 @@ export function URating({
       case "Enter":
       case " ":
         rate(event, starValue);
-        event.preventDefault();
         break;
       case "ArrowLeft":
       case "ArrowUp":
-        event.preventDefault();
-        rate(event, (value ?? 0) - 1 < 1 ? stars : (value ?? 0) - 1);
+        rate(event, current - 1 < 1 ? stars : current - 1);
         break;
       case "ArrowRight":
       case "ArrowDown":
-        event.preventDefault();
-        rate(event, (value ?? 0) + 1 > stars ? 1 : (value ?? 0) + 1);
+        rate(event, current + 1 > stars ? 1 : current + 1);
         break;
       default:
         break;
     }
   };
 
+  const onItemFocus = (starValue: number) => {
+    setFocusedOptionIndex(starValue);
+    setFocusVisibleItem(!pointerDown.current);
+    pointerDown.current = false;
+  };
+
+  const onCancelKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter" || event.key === " ") {
+      emit(event, null);
+      event.preventDefault();
+    }
+  };
+
+  const iconParams = { invalid };
+
+  const createCancelItem = () => {
+    if (!cancel) return null;
+    const iconProps = mergeProps(
+      { className: cx("cancelIcon") },
+      ptm("cancelIcon"),
+      cancelIconProps
+    ) as URatingIconProps;
+    const content = cancelIcon
+      ? renderIcon(cancelIcon, iconProps)
+      : svgIcon(RATING_BAN_PATH, iconProps);
+    return (
+      <div
+        {...mergeProps(
+          {
+            className: cx("cancelItem"),
+            role: "button",
+            "aria-label": "Clear",
+            tabIndex,
+            onClick: (event: React.MouseEvent) => {
+              emit(event, null);
+              event.preventDefault();
+            },
+            onKeyDown: onCancelKeyDown,
+          },
+          ptm("cancelItem")
+        )}
+      >
+        {content}
+      </div>
+    );
+  };
+
+  const createItems = () =>
+    Array.from({ length: stars }, (_, index) => index + 1).map((starValue) => {
+      const active = starValue <= current;
+      const ptParams = { context: { active } };
+      const iconProps = (
+        active
+          ? mergeProps(
+              { className: cx("onIcon", iconParams) },
+              ptm("onIcon", ptParams),
+              onIconProps
+            )
+          : mergeProps(
+              { className: cx("offIcon", iconParams) },
+              ptm("offIcon", ptParams),
+              offIconProps
+            )
+      ) as URatingIconProps;
+      const custom = active ? onIcon : offIcon;
+      const content = custom
+        ? renderIcon(custom, iconProps)
+        : svgIcon(active ? RATING_STAR_FILL_PATH : RATING_STAR_PATH, iconProps);
+
+      return (
+        <div
+          key={starValue}
+          {...mergeProps(
+            {
+              className: cx("item", {
+                active,
+                focusVisible: starValue === focusedOptionIndex && isFocusVisibleItem,
+              }),
+              "data-p-focused": starValue === focusedOptionIndex,
+              tabIndex,
+              role: "radio",
+              "aria-checked": value === starValue,
+              "aria-label": starValue === 1 ? "1 star" : `${starValue} stars`,
+              "aria-invalid": invalid || undefined,
+              onMouseDown: () => {
+                pointerDown.current = true;
+              },
+              onClick: (event: React.MouseEvent) => onItemClick(event, starValue),
+              onKeyDown: (event: React.KeyboardEvent) => onStarKeyDown(event, starValue),
+              onFocus: () => onItemFocus(starValue),
+              onBlur: () => setFocusedOptionIndex(-1),
+            },
+            ptm("item", ptParams)
+          )}
+        >
+          {content}
+        </div>
+      );
+    });
+
   return (
     <div
-      role="group"
-      aria-labelledby={ariaLabelledBy}
-      className={[cx("root", { disabled: !enabled }), className].filter(Boolean).join(" ")}
+      ref={rootRef}
+      {...mergeProps(
+        {
+          id,
+          role: "group",
+          className: [cx("root", { disabled, readOnly }), className].filter(Boolean).join(" "),
+        },
+        rest,
+        ptm("root")
+      )}
     >
-      {Array.from({ length: stars }, (_, i) => i + 1).map((starValue) => {
-        const active = value !== null && starValue <= value;
-        return (
-          <div
-            key={starValue}
-            className={cx("option", { focused: focusedIndex === starValue })}
-            tabIndex={enabled ? 0 : -1}
-            role="radio"
-            aria-checked={value === starValue}
-            aria-label={starValue === 1 ? "1 star" : `${starValue} stars`}
-            onClick={(event) => rate(event, starValue)}
-            onKeyDown={(event) => onStarKeyDown(event, starValue)}
-            onFocus={() => enabled && setFocusedIndex(starValue)}
-            onBlur={() => setFocusedIndex(-1)}
-          >
-            {active ? (
-              <svg
-                className={cx("onIcon")}
-                viewBox="0 0 16 16"
-                aria-hidden="true"
-                data-testid={`star-on-${starValue}`}
-              >
-                <path d="M8 1l2.163 4.279 4.837.626-3.5 3.279.882 4.816L8 11.7l-4.382 2.3.882-4.816-3.5-3.279 4.837-.626z" />
-              </svg>
-            ) : (
-              <svg
-                className={cx("offIcon")}
-                viewBox="0 0 16 16"
-                aria-hidden="true"
-                data-testid={`star-off-${starValue}`}
-              >
-                <path
-                  d="M8 1l2.163 4.279 4.837.626-3.5 3.279.882 4.816L8 11.7l-4.382 2.3.882-4.816-3.5-3.279 4.837-.626z"
-                  fill="none"
-                  stroke="currentColor"
-                />
-              </svg>
-            )}
-          </div>
-        );
-      })}
+      {createCancelItem()}
+      {createItems()}
     </div>
   );
-}
+});

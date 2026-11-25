@@ -1,119 +1,201 @@
 <template>
-  <div :class="cx('root', { disabled })" role="group" :aria-labelledby="ariaLabelledby">
+  <div
+    :class="cx('root', { readonly, disabled })"
+    role="group"
+    :aria-labelledby="ariaLabelledby"
+    :data-p="dataP"
+    v-bind="ptmi('root')"
+  >
     <div
-      v-for="star in stars"
-      :key="star"
-      :class="cx('option', { focused: focusedIndex === star })"
-      tabindex="-1"
+      v-for="value in stars"
+      :key="value"
+      :class="cx('option', optionParams(value))"
+      :data-p-active="value <= current"
+      :data-p-focused="value === focusedOptionIndex"
+      v-bind="getPTOptions('option', value)"
+      @click="onOptionClick($event, value)"
     >
-      <span class="u-hidden-accessible">
+      <span
+        class="u-hidden-accessible"
+        :data-p-hidden-accessible="true"
+        v-bind="ptm('hiddenOptionInputContainer')"
+      >
         <input
           type="radio"
-          :value="star"
-          :name="name"
+          :value="value"
+          :name="namex"
+          :checked="current === value"
           :disabled="disabled"
           :readonly="readonly"
-          :checked="dValue === star"
-          :aria-label="starAriaLabel(star)"
-          @focus="onInputFocus(star)"
-          @blur="onInputBlur"
-          @change="onOptionSelect($event, star)"
-          @keydown="onStarKeyDown($event, star)"
+          :aria-label="starAriaLabel(value)"
+          :aria-invalid="invalid || undefined"
+          v-bind="ptm('hiddenOptionInput')"
+          @focus="onFocus($event, value)"
+          @blur="onBlur"
+          @change="onChange($event, value)"
         />
       </span>
-      <svg
-        v-if="dValue !== null && dValue !== undefined && star <= dValue"
-        :class="cx('onIcon')"
-        viewBox="0 0 16 16"
-        aria-hidden="true"
+      <slot
+        v-if="value <= current"
+        name="onicon"
+        :value="value"
+        :class="cx('onIcon', iconParams)"
+        :toggleCallback="(event) => onChange(event, value)"
       >
-        <path
-          d="M8 1l2.163 4.279 4.837.626-3.5 3.279.882 4.816L8 11.7l-4.382 2.3.882-4.816-3.5-3.279 4.837-.626z"
-        />
-      </svg>
-      <svg v-else :class="cx('offIcon')" viewBox="0 0 16 16" aria-hidden="true">
-        <path
-          d="M8 1l2.163 4.279 4.837.626-3.5 3.279.882 4.816L8 11.7l-4.382 2.3.882-4.816-3.5-3.279 4.837-.626z"
+        <span v-if="onIcon" :class="[cx('onIcon', iconParams), onIcon]" v-bind="ptm('onIcon')" />
+        <svg
+          v-else
+          :class="cx('onIcon', iconParams)"
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
           fill="none"
-          stroke="currentColor"
+          aria-hidden="true"
+          v-bind="ptm('onIcon')"
+        >
+          <path :d="starFillPath" fill="currentColor" />
+        </svg>
+      </slot>
+      <slot
+        v-else
+        name="officon"
+        :value="value"
+        :class="cx('offIcon', iconParams)"
+        :toggleCallback="(event) => onChange(event, value)"
+      >
+        <span
+          v-if="offIcon"
+          :class="[cx('offIcon', iconParams), offIcon]"
+          v-bind="ptm('offIcon')"
         />
-      </svg>
+        <svg
+          v-else
+          :class="cx('offIcon', iconParams)"
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
+          fill="none"
+          aria-hidden="true"
+          v-bind="ptm('offIcon')"
+        >
+          <path :d="starPath" fill="currentColor" />
+        </svg>
+      </slot>
     </div>
   </div>
 </template>
 
 <script>
+import { cn } from "@ultimate/uix-utils/classnames";
+import { uuid } from "@ultimate/uix-utils/uuid";
 import { createBaseRating } from "./BaseRating";
+import { RATING_STAR_FILL_PATH, RATING_STAR_PATH } from "./rating-icons";
 
-// Real PrimeVue Rating (.vendor-extracted/vue/rating/Rating.vue) renders a
-// flat row of star options, each a hidden radio input plus an on/off SVG
-// icon — NOT overlay-based, no panel/dropdown. This port matches that shape
-// directly (no sibling composition needed, unlike SelectButton).
+// Adapted from PrimeVue's Rating (.vendor-extracted/vue/rating/Rating.vue):
+// a flat row of star options, each a visually hidden native radio plus an on
+// or off icon (the `onicon` and `officon` slots, or the `onIcon`/`offIcon`
+// class props, replace the default star).
 //
-// Keyboard stepping matches real PrimeReact's own onStarKeyDown (real
-// PrimeVue source has no equivalent handler, relying on native radio-group
-// arrow behavior) — this batch's task requires explicit keyboard arrow-key
-// stepping for Rating, so this port adds the same stepping the React
-// realization in this same batch establishes.
+// Keyboard use is the native radio group, as in PrimeVue: the arrow keys move
+// to the next or previous star and select it, Space selects the focused star.
+// Every radio shares `name` or a generated group name. A native change only
+// ever selects; PrimeVue's clearing when the changed star is the focused one
+// is not ported, because arrowing focuses the star before its change fires.
+// Clicking the selected star with a pointer clears the value, and a click
+// moves focus to the star's radio. The focus ring shows only for keyboard
+// focus (PrimeVue reads `sourceCapabilities`, which only Chromium has).
+//
+// `focus` and `blur` emit the native events; `rate` emits the event with the
+// new value. `pt`, `unstyled` and `dt` come from the base chain, and
+// `inheritAttrs` is off because `ptmi('root')` places the attributes on the
+// root. The star labels stay English: there is no core locale surface.
 export default {
   name: "URating",
   extends: createBaseRating(),
+  inheritAttrs: false,
   emits: ["rate", "focus", "blur"],
   data() {
-    // Base tier's own data() (createBaseEditableHolder) initializes dValue
-    // independently of this child's own data() — same corrected pattern
-    // documented in Select.vue's own data(). focusedIndex is independent of
-    // dValue, so no derivation pitfall applies here, but this comment
-    // documents the same known pitfall was checked.
     return {
-      focusedIndex: -1,
+      focusedOptionIndex: -1,
+      isFocusVisibleItem: true,
+      focusFromPointer: false,
+      generatedName: `${uuid("u_id_")}_name`,
+      starPath: RATING_STAR_PATH,
+      starFillPath: RATING_STAR_FILL_PATH,
     };
   },
+  computed: {
+    current() {
+      return typeof this.dValue === "number" ? this.dValue : 0;
+    },
+    editable() {
+      return !this.readonly && !this.disabled;
+    },
+    namex() {
+      return this.name || this.generatedName;
+    },
+    iconParams() {
+      return { invalid: this.invalid };
+    },
+    dataP() {
+      return cn({ readonly: this.readonly, disabled: this.disabled });
+    },
+  },
   methods: {
+    optionParams(value) {
+      return {
+        active: value <= this.current,
+        focusVisible: value === this.focusedOptionIndex && this.isFocusVisibleItem,
+      };
+    },
+    getPTOptions(key, value) {
+      return this.ptm(key, {
+        context: {
+          active: value <= this.current,
+          focused: value === this.focusedOptionIndex,
+        },
+      });
+    },
     starAriaLabel(value) {
       return value === 1 ? "1 star" : `${value} stars`;
     },
-    onOptionSelect(event, value) {
-      if (this.readonly || this.disabled) return;
-      const newValue = this.dValue === value ? null : value;
-      this.focusedIndex = newValue === null ? -1 : value;
-      this.writeValue(newValue, event);
-      this.$emit("rate", { originalEvent: event, value: newValue });
+    onOptionClick(event, value) {
+      if (!this.editable || event.target?.tagName === "INPUT") return;
+      this.select(event, value === this.current ? null : value);
+      const radio = event.currentTarget.querySelector("input:not([disabled])");
+      this.focusFromPointer = true;
+      radio?.focus();
+      this.focusFromPointer = false;
+      this.isFocusVisibleItem = false;
     },
-    onInputFocus(value) {
-      if (this.readonly || this.disabled) return;
-      this.focusedIndex = value;
-      this.$emit("focus", new FocusEvent("focus"));
-    },
-    onInputBlur() {
-      this.focusedIndex = -1;
-      this.$emit("blur", new FocusEvent("blur"));
-    },
-    onStarKeyDown(event, value) {
-      if (this.readonly || this.disabled) return;
-      switch (event.key) {
-        case "Enter":
-        case " ":
-          this.onOptionSelect(event, value);
-          event.preventDefault();
-          break;
-        case "ArrowLeft":
-        case "ArrowUp": {
-          event.preventDefault();
-          const prev = this.dValue ? this.dValue - 1 : this.stars;
-          this.onOptionSelect(event, prev < 1 ? this.stars : prev);
-          break;
-        }
-        case "ArrowRight":
-        case "ArrowDown": {
-          event.preventDefault();
-          const next = this.dValue ? this.dValue + 1 : 1;
-          this.onOptionSelect(event, next > this.stars ? 1 : next);
-          break;
-        }
-        default:
-          break;
+    onChange(event, value) {
+      if (!this.editable) {
+        this.syncRadios();
+        return;
       }
+      this.select(event, value);
+      this.isFocusVisibleItem = true;
+    },
+    onFocus(event, value) {
+      if (!this.editable) return;
+      this.focusedOptionIndex = value;
+      this.isFocusVisibleItem = !this.focusFromPointer;
+      this.$emit("focus", event);
+    },
+    onBlur(event) {
+      this.focusedOptionIndex = -1;
+      this.$emit("blur", event);
+    },
+    select(event, value) {
+      this.focusedOptionIndex = value === null ? -1 : value;
+      this.writeValue(value, event);
+      this.$emit("rate", { originalEvent: event, value });
+    },
+    syncRadios() {
+      const radios = this.$el.querySelectorAll("input[type=radio]");
+      radios.forEach((radio, index) => {
+        radio.checked = index + 1 === this.current;
+      });
     },
   },
 };

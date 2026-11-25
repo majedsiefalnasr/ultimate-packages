@@ -1,36 +1,31 @@
 import { defineComponent } from "vue";
-import { createBaseEditableHolder, registerComponentStyle } from "@ultimate/vue-core";
+import { createBaseEditableHolder } from "@ultimate/vue-core";
 import { ratingStyleModule } from "./rating-style";
-import type { ClassValue } from "@ultimate/vue-core";
 
 // extends: createBaseEditableHolder(), matching verified BaseRating.vue's
-// real chain exactly: `export default { name: 'BaseRating', extends:
-// BaseEditableHolder, ... }` — confirmed against
-// .vendor-extracted/vue/rating/BaseRating.vue — same tier
-// UToggleButton/USelectButton already extend, NOT BaseInput.
+// real chain: `export default { name: 'BaseRating', extends:
+// BaseEditableHolder, ... }` (.vendor-extracted/vue/rating/BaseRating.vue).
 //
-// Same createBaseInput()-parameterless-signature cx()/mounted()-shadow fix
-// documented in packages/vue/src/checkbox/BaseCheckbox.ts/
-// packages/vue/src/select-button/BaseSelectButton.ts applies identically here.
+// `componentName` and `styleModule` go through createBaseEditableHolder, so
+// `cx`, style registration under the Aura `rating` key, `unstyled`,
+// per-instance `dt` and `pt` all come from the shared base chain.
+//
+// The `$pcRating` provide is not ported: nothing injects it.
 export function createBaseRating() {
   return defineComponent({
-    extends: createBaseEditableHolder(),
+    extends: createBaseEditableHolder({
+      componentName: "rating",
+      styleModule: ratingStyleModule,
+    }),
     props: {
       stars: { type: Number, default: 5 },
       readonly: { type: Boolean, default: false },
       disabled: { type: Boolean, default: false },
+      invalid: { type: Boolean, default: false },
       name: { type: String, default: null },
+      onIcon: { type: String, default: undefined },
+      offIcon: { type: String, default: undefined },
       ariaLabelledby: { type: String, default: null },
-    },
-    methods: {
-      cx(key: string, params?: Record<string, unknown>): ClassValue | undefined {
-        const resolver = ratingStyleModule.classes[key];
-        if (resolver === undefined) return undefined;
-        return typeof resolver === "function" ? resolver(params) : resolver;
-      },
-    },
-    mounted() {
-      registerComponentStyle("rating", ratingStyleModule);
     },
   });
 }

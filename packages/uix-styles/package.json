@@ -109,6 +109,11 @@
       "import": "./dist/slider/index.mjs",
       "default": "./dist/slider/index.mjs"
     },
+    "./rating": {
+      "types": "./dist/rating/index.d.mts",
+      "import": "./dist/rating/index.mjs",
+      "default": "./dist/rating/index.mjs"
+    },
     "./textarea": {
       "types": "./dist/textarea/index.d.mts",
       "import": "./dist/textarea/index.mjs",

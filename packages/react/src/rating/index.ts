@@ -1,2 +1,8 @@
 export { URating } from "./rating";
-export type { URatingProps, URatingChangeEvent } from "./rating";
+export type {
+  URatingChangeEvent,
+  URatingHandle,
+  URatingIcon,
+  URatingIconProps,
+  URatingProps,
+} from "./rating";
