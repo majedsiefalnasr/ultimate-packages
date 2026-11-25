@@ -1,17 +1,25 @@
 import type { StyleModule } from "@ultimate/react-core";
+import { style as knobStyle } from "@ultimate/uix-styles/knob";
 
 /**
- * Hand-authored CSS matching `select-button-style.ts`'s established React
- * convention (no `dt()` tokens).
+ * `useComponentBase`-shaped style module for `UKnob`. The structural CSS is
+ * the shared `@ultimate/uix-styles/knob` module (ADR-082), so it reads the
+ * Aura `knob` tokens (ADR-067) and matches Angular and Vue.
  */
 const css = /*css*/ `
-.u-knob-range { fill: none; }
-.u-knob-value { fill: none; }
-.u-knob-text { font-size: 1.3rem; text-align: center; }
+    ${knobStyle}
 `;
 
+export interface KnobClassesParams {
+  disabled?: boolean;
+  invalid?: boolean;
+}
+
 const classes = {
-  root: "u-knob u-component",
+  root: (params: KnobClassesParams = {}) => [
+    "u-knob u-component",
+    { "p-disabled": Boolean(params.disabled), "p-invalid": Boolean(params.invalid) },
+  ],
   range: "u-knob-range",
   value: "u-knob-value",
   text: "u-knob-text",

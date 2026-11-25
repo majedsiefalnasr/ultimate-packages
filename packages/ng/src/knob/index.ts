@@ -1,1 +1,1 @@
-export { UKnob } from "./knob";
+export { UKnob, type UKnobValueTemplate } from "./knob";
