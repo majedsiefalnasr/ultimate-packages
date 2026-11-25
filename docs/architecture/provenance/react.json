@@ -688,5 +688,29 @@
     "ultimateDestination": "packages/react/src/slider/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of USlider and its prop and change-event types; it shares only the exported component name with PrimeReact's slider entry point."
+  },
+  {
+    "originalPath": "components/lib/rating/Rating.js",
+    "ultimateDestination": "packages/react/src/rating/rating.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 Rating.js for #199 (ADR-102): the controlled value, the focusable `role=radio` items with `aria-checked`, the Enter, Space and arrow keyboard map that steps and wraps, the tab stop that is removed when disabled or read-only, the cancel item, the change event with `stopPropagation`, `preventDefault` and `target`, the root forwarding of other props, the `onIcon`, `offIcon` and `cancelIcon` props with their icon props and the `getElement` handle are upstream's. Added: `createPassThrough`, `useMergeProps`, `pt`, `ptOptions`, `unstyled`, `invalid` with `aria-invalid`, English star labels and a keyboard-only focus ring. `cancel` defaults to `false`, the cancel item gets `role=button`, an `aria-label` and Space, clicking the selected star clears it, and the items emit `u-rating-option` and `p-focus-visible`. Not carried: the `tooltip` props (composition through `UTooltip`, ADR-086) and the `props` entry of the ref handle. Changed for #199."
+  },
+  {
+    "originalPath": "components/lib/rating/RatingBase.js",
+    "ultimateDestination": "packages/react/src/rating/rating-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 RatingBase.js for #199 (ADR-102): the root class with the disabled and read-only states, the item class with the active and focus states, the cancel item and the on, off and cancel icon classes are upstream's, renamed to the `u-rating*` names Angular and Vue emit, with `p-focus-visible` and an invalid state on the icons. The hand-written CSS, which had no Aura values, is replaced by the shared `@ultimate/uix-styles/rating` module on the Aura `rating` tokens (ADR-067, ADR-082). Changed for #199."
+  },
+  {
+    "originalPath": "components/lib/icons/star/index.js",
+    "ultimateDestination": "packages/react/src/rating/rating-icons.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "SVG path data of the PrimeIcons `star` glyph, and of `starfill` and `ban` from components/lib/icons/starfill/index.js and components/lib/icons/ban/index.js, copied verbatim from PrimeReact 10.9.9 and confirmed byte for byte (#199, ADR-102). Only the path strings are carried; the icon components and their pass-through spread are not."
+  },
+  {
+    "originalPath": "components/lib/rating/Rating.js",
+    "ultimateDestination": "packages/react/src/rating/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of URating and its prop, change-event, handle and icon types; it shares only the exported component name with PrimeReact's rating entry point."
   }
 ]

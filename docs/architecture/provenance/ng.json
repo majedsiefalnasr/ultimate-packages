@@ -1162,5 +1162,29 @@
     "ultimateDestination": "packages/ng/src/slider/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel that re-exports `USlider` and its change-event type. It shares only the exported component name with the compared upstream entry point."
+  },
+  {
+    "originalPath": "packages/primeng/src/rating/rating.ts",
+    "ultimateDestination": "packages/ng/src/rating/rating.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG 21.1.9 rating/rating.ts for #199 (ADR-102): the option markup with the visually hidden native radio, the group name with its generated `_name` fallback, the wrapper click that selects and moves focus to the radio, the `required`, `autofocus` and `aria-label` bindings on the radios, the native `onFocus` and `onBlur` events, the touched marking on change and the `option`, `hiddenOptionInputContainer`, `hiddenOptionInput`, `onIcon` and `offIcon` sections are upstream's. Added: `invalid` with `aria-invalid`, `#onicon` and `#officon` templates with a `{$implicit, class}` context, `iconOnClass`, `iconOnStyle`, `iconOffClass` and `iconOffStyle`, `UBind`, `U_PARENT_INSTANCE`, and the restoring of the checked state after a blocked change. A native change only selects (PrimeNG clears when the changed star is the focused one), the focus ring uses a pointer flag instead of `sourceCapabilities`, `autofocus` targets the selected or first radio instead of every radio, and the wrapper skips a click on the radio itself. Not carried: `PrimeTemplate`, the locale-driven star labels (no core locale surface) and the `RATING_INSTANCE` token (no consumer). Changed for #199."
+  },
+  {
+    "originalPath": "packages/primeng/src/rating/style/ratingstyle.ts",
+    "ultimateDestination": "packages/ng/src/rating/rating-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver (ADR-064). Side-by-side with PrimeNG 21.1.9 rating/style/ratingstyle.ts for #199 (ADR-102): the root class with the readonly and disabled states, the option class with the active and focus-visible states and the on and off icon classes with the invalid state are upstream's, with the `p-rating*` names renamed to `u-rating*`. The Angular-only `ng-invalid.ng-dirty` rule is kept, rewritten as `.u-rating.ng-invalid.ng-dirty .u-rating-icon` because PrimeNG's selector expects a `.p-rating` child that its template does not render. The structural CSS is replaced by the shared `@ultimate/uix-styles/rating` module (ADR-082), which drops the broken `rating.icon.disabled.color` reference. Changed for #199."
+  },
+  {
+    "originalPath": "packages/primeng/src/icons/star/star.ts",
+    "ultimateDestination": "packages/ng/src/rating/rating-icons.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "SVG path data of the PrimeIcons `star` glyph, and of `starfill` from packages/primeng/src/icons/starfill/starfill.ts, copied verbatim from PrimeNG 21.1.9 and confirmed byte for byte (#199, ADR-102). Only the path strings are carried; the icon components are not. The same strings are used by the React and Vue Rating."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/rating/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel that re-exports `URating` and its rate-event and icon-template context types. It shares only the exported component name with the compared upstream entry point."
   }
 ]
