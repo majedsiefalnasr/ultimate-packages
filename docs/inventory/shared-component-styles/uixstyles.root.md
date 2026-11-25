@@ -49,6 +49,7 @@ uixstyles.paginator
 uixstyles.textarea
 uixstyles.toggleswitch
 uixstyles.slider
+uixstyles.rating
 uixstyles.table
 uixstyles.tooltip
 uixstyles.virtualscroller

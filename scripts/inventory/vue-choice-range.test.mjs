@@ -95,11 +95,12 @@ test("props, emits, slots, v-model, composition and source-only quirks are recor
       "never applied",
     ],
     "vue.rating": [
-      "synthetic FocusEvent",
+      "native radio focus and blur events",
       "rate",
       "no readonly or disabled guard",
-      "dValue - 1",
+      "onicon",
       "hidden-accessible",
+      "ptmi('root')",
     ],
     "vue.slider": [
       "touchmove",
