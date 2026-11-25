@@ -712,5 +712,23 @@
     "ultimateDestination": "packages/react/src/rating/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of URating and its prop, change-event, handle and icon types; it shares only the exported component name with PrimeReact's rating entry point."
+  },
+  {
+    "originalPath": "components/lib/knob/Knob.js",
+    "ultimateDestination": "packages/react/src/knob/knob.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 Knob.js for #200 (ADR-103): the controlled value, the SVG with the range and value arcs and their geometry, the click, mouse and touch handlers that map a point to an angle and a stepped value, the Home, End and PageUp/PageDown keys, the tab index that is -1 when disabled or read-only, `aria-label`, `aria-labelledby`, the root `id`, `style` and `className`, and the `root`, `svg`, `range`, `value` and `label` sections are upstream's. Added: `invalid`, `unstyled`, a `text` section beside `label`, a function `valueTemplate` that replaces every `{value}`, root forwarding of the other props, a ref that is the root element, a drag that reads the latest props and follows only the touch that started it, listener cleanup on unmount, arrow keys that move by `step` (PrimeReact uses a literal 1) and `readOnly` honoured by the keyboard (PrimeReact reads a lowercase `readonly` there). The colour defaults are the `knob` token variables read with `$dt()` instead of PrimeReact's `var(--primary-color, Black)` family (ADR-067). Not carried: the global `context` lookup, the `getElement` and `props` ref handle and the `name` attribute PrimeReact writes onto the `<text>` element. Changed for #200."
+  },
+  {
+    "originalPath": "components/lib/knob/KnobBase.js",
+    "ultimateDestination": "packages/react/src/knob/knob-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 KnobBase.js for #200 (ADR-103): the root class with `p-disabled`, and the range, value and text classes, are upstream's, renamed to the `u-knob*` names Angular and Vue emit; `p-invalid` is added. The hand-written CSS, which had no Aura values, is replaced by the shared `@ultimate/uix-styles/knob` module on the Aura `knob` tokens (ADR-067, ADR-082). Changed for #200."
+  },
+  {
+    "originalPath": "components/lib/knob/Knob.js",
+    "ultimateDestination": "packages/react/src/knob/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UKnob and its prop and value-template types; it shares only the exported component name with PrimeReact's knob entry point."
   }
 ]

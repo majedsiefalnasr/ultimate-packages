@@ -2014,3 +2014,60 @@ Status: Accepted (user approval, 2026-11-25, as written, including the implement
 - React callers that relied on the old behaviour get no cancel item unless they set `cancel`, and clicking the selected star now clears it.
 - A disabled rating gets no opacity, because no registered rule styles `p-disabled`. That gap is shared by every component that emits `p-disabled` and belongs to the family tickets.
 - Tests assert values, classes, attributes, events, icons and pass-through in jsdom (Angular 26, React 23, Vue 24, and the shared module in `uix-styles`). They do not run the browser's radio navigation, measure pixels, or read screen-reader output.
+
+## ADR-103 — Knob: one shared stylesheet on the Aura knob tokens, touch drag, a configurable tab index, accessible names, `invalid`, colour defaults from the knob token variables, a string or function value template, `pt`, `unstyled` and `dt` in all three frameworks, and recorded exclusions (L0a, ticket #200)
+
+Status: Proposed for user approval in the PR (gap-closing spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167), Stage 2 layer L0a, ticket [#200](https://github.com/majedsiefalnasr/ultimate-packages/issues/200)). User rulings for this ticket, all option A: touch drag as in Prime in all three frameworks; a configurable tab index that is `-1` when disabled or readonly, with `p-disabled` on the root; `aria-label`, `aria-labelledby` and `invalid` in all three, React forwarding its ref and other props to the root, and no `name` on the `<text>` element; colour defaults from the knob token variables with no literal fallback; a string or function value template that replaces every placeholder; the same pass-through section names in all three, with React also accepting PrimeReact's `label`.
+
+**Context.**
+
+- Knob is a dial drawn as one inline SVG with a range arc, a value arc and an optional value text. PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5 all call it `Knob`.
+- The Phase 4 report (`docs/architecture/research/phase4/batch2/knob.md`) found 18 rows per framework: Angular C 8, P 6, M 4; React C 6, P 5, M 5, N 2; Vue C 9, P 3, M 6. None of the three had touch, a configurable tab index, the disabled root class, `pt` or `ptOptions`. Angular and React had no accessible-name props. React removed its drag listeners only on mouse up and had a hand-written stylesheet with no Aura token. Vue's value template took a string only and replaced the first placeholder.
+- Reading the sources again settled the report's unresolved colour check. Angular's defaults were `var(--p-knob-*, #hex)`, but the Ultimate theme emits variables with the `u` prefix (`packages/themes/src/apply-theme.ts`), so the variable never resolved and the literal fallback always applied. React and Vue used the literals directly.
+- The arrow keys moving by `step` was already ruled for this family (report §4, decision 4). PrimeNG and PrimeReact use a literal 1, which is a reference defect, not a behaviour to copy.
+
+**Decision.**
+
+1. **One shared stylesheet (ADR-082).** `@ultimate/uix-styles/knob` is the `@primeuix/styles` 2.0.3 `knob` module with `.p-knob*` and the `p-knob-dash-frame` keyframes renamed to `u-knob*`. Every declaration and token is upstream's, and a test compares the module with the pinned G3-A fixture. Angular, React and Vue import it, so React gains the range transition, the value animation and the focus ring, and no longer has a stylesheet without tokens (ADR-067).
+2. **Touch (ruling 1).** A touch start on the dial begins a drag; touch moves update the value with the same angle math as the mouse, and touch end or cancel stops it. The document listeners are removed when the drag ends or the component is destroyed or unmounted. React no longer leaves its listeners bound after an unmount.
+3. **Tab index and disabled (ruling 2).** `tabindex` (`tabIndex` in React) defaults to 0 and becomes `-1` when the knob is disabled or readonly, as in Prime. The root gets `p-disabled` when disabled.
+4. **Accessibility, state and root (ruling 3).** All three put `aria-label` and `aria-labelledby` on the dial and take `invalid`, which adds `p-invalid` to the root. React forwards its ref to the root element and every other prop, including `id` and `style`, to the root. The `name` attribute that PrimeNG and PrimeReact write onto the `<text>` element, and the `required` attribute PrimeNG writes onto the `<svg>`, are not carried: no form reads them there.
+5. **Colour defaults (ruling 4).** `valueColor`, `rangeColor` and `textColor` default to `$dt('knob.value.background').variable`, `$dt('knob.range.background').variable` and `$dt('knob.text.color').variable` from `@ultimate/uix-styled`, which give `var(--u-knob-value-background)` and so on with the configured prefix, as PrimeNG and PrimeVue do. There is no literal fallback, so without an installed theme the arcs and text have no colour, as in Prime.
+6. **Value template (ruling 5).** `valueTemplate` is a string, where every `{value}` is replaced, or a function that receives the value and returns the text, in all three frameworks, as in PrimeVue.
+7. **`pt`, `ptOptions`, `unstyled` and `dt` (ruling 6).** The sections are `root`, `svg`, `range`, `value` and `text` in all three. React also accepts PrimeReact's `label` for the text, merged before `text`. Angular binds the root through `UBind`, provides itself as `U_PARENT_INSTANCE` and sets the root attributes in `ngAfterViewChecked`. Vue builds the base with `createBaseEditableHolder({componentName: "knob", styleModule})` and uses `ptmi('root')` with `inheritAttrs` off. React uses `createPassThrough` and `useMergeProps`. The component name is `knob` in all three, which is the Aura key.
+
+**Choices made while implementing (not separately ruled; they stay as written unless this ADR is amended).**
+
+1. PageUp and PageDown move the value by 10, as Prime does in all three frameworks, not by 10 steps as Slider does.
+2. A touch start neither sets the value nor cancels the event. Touch moves cancel scrolling through a non-passive document listener, and touch end cancels the emulated mouse events, so a tap without a move does not set a value. In Prime a tap also sets no value, because PrimeNG and PrimeVue cancel the touch start.
+3. A drag follows only the touch that started it, and `touchcancel` ends it like `touchend`.
+4. Every drag reads the pointer against the SVG's bounding box. PrimeVue reads the mouse-move `offsetX`, which is relative to whatever element is under the pointer.
+5. A drag stops changing the value if the knob becomes disabled or readonly while it runs.
+6. Vue emits `change` for keyboard changes too. PrimeVue emits it only for pointer changes. Angular and React notify on every change, as before.
+7. React keeps the scalar `onChange(value)` callback. PrimeReact passes `{value}`. The Phase 4 report classified the row complete with this difference.
+8. Angular keeps the size as the CSS width and height of the SVG, and React and Vue as its `width` and `height` attributes, as before.
+
+**Divergences from Prime.**
+
+1. `name` and `required` are not written onto the SVG elements (ruling 3), so Angular row 11 is I. PrimeNG's `styleClass` is not carried (deprecated), so Angular row 12 is I.
+2. React's ref is the root element instead of PrimeReact's `getElement` and `props` handle, and `name` is not carried (ruling 3), so React row 12 is I.
+3. React extras on rows PrimeReact does not have: `invalid` (row 11) stays N. React has no per-instance `dt` (row 16), as PrimeReact has none.
+4. React's colour defaults are the Aura knob token variables instead of PrimeReact's `var(--primary-color, Black)` family (ADR-067). Angular and React take a function value template, which PrimeNG and PrimeReact do not.
+5. The arrow keys move by `step` in all three, and React's keyboard honours `readOnly`. Both are reference defects in Prime (report §5), not copied.
+6. Dropped, not carried: PrimeReact's global `context` lookup and the `$pcKnob` instance token (no consumer).
+7. Vue forms registration stays open in row 11. It belongs to the separate Vue Forms spec.
+8. `ptOptions` has no visible effect until the global `pt` source exists (ADR-080), so row 14 stays P in all three.
+
+**Classification after this ticket** (C complete, P partial, M missing, I intentional, N absent from the corresponding Prime; rows in the Phase 4 matrix order, 1 to 18; from a re-read of the pinned sources and the specs in this ticket; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+- **Angular:** C 15, P 1, M 0, I 2, N 0. Open: row 14 (P, ADR-080). Rows 11 and 12 are I.
+- **React:** C 14, P 1, M 0, I 1, N 2. Open: row 14 (P, ADR-080). Row 12 is I. N rows: 11, 16.
+- **Vue:** C 16, P 2, M 0, I 0, N 0. Open: row 11 (P, forms registration in the Vue Forms spec) and row 14 (P, ADR-080).
+
+**Consequences.**
+
+- The three knobs read the Aura `knob` tokens and the same structural CSS, so the arcs, the text and the focus ring follow the preset in every framework. The Angular colours now come from the theme instead of the fallback literals, so a knob under Aura looks different from before. Its visual baselines may change and are reviewed with before and after images before any update.
+- A page without an installed theme gets uncoloured arcs and text, as in Prime. Callers can still pass explicit colours.
+- Knob works with touch on all three frameworks, and screen-reader users get an accessible name when the caller provides one.
+- A disabled knob gets `p-disabled` but no opacity, because no registered rule styles `p-disabled`. That gap is shared by every component that emits it and belongs to the family tickets.
+- Tests assert values, classes, attributes, colours, templates, touch and mouse drags, listener cleanup and pass-through in jsdom (Angular 20, React 22, Vue 21, and the shared module in `uix-styles`). They do not run real touch devices, measure pixels, or read screen-reader output.
