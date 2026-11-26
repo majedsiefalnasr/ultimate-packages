@@ -827,6 +827,8 @@ Status: Accepted (user approval of the Workstream 1 Specification, decision D1, 
 
 **Amended by ADR-078 (2026-11-21):** the rejection of "Normalizing names inside `registerThemeVariables`" no longer holds. Decision (b)'s "registers under the preset key" is met for the lookup by normalization, and the registration name of a React component stays kebab-case. Additional preset keys stay a family-ticket concern. Original text stays as history.
 
+**Amended by ADR-105 (2026-11-26):** `mention` leaves decision (c)'s exception list. React `UMention` reads the Aura `autocomplete` overlay, list and option tokens through the new react-core `additionalPresetKeys` support that decision (b) named, and its textarea is `UInputTextarea` on the `textarea` tokens. The other exceptions stand. Original text stays as history.
+
 ## ADR-068 — Gitflow branching model and a required fast `ci` check
 
 Status: Accepted (user decisions GF-1 to GF-11 and CI-1 to CI-5, 2026-10-19).
@@ -2153,3 +2155,118 @@ Standing rulings applied: React `tooltip` and `tooltipOptions` stay composition 
 - The panel closes or realigns on scroll and resize, and no listener outlives the component.
 - The panel is still not keyboard-operable and has no role, as in Prime. Screen-reader users get only the input's label.
 - Tests assert values, formats, events, overlay placement, dismissal, motion end, inline mode, mouse and touch drags, listener cleanup, `pt` and `unstyled` in jsdom (Angular 17, React 18, Vue 19, the shared module 7, the scroll handler 6, and two new `UOverlay` cases). They do not run real touch devices, measure pixels, check right-to-left placement, or read screen-reader output.
+
+## ADR-105 — Mention: React only, built on `UInputTextarea` and the Stage 1 overlay foundations, PrimeReact's change event, a plain-text `getCursorOffset`, the Aura autocomplete tokens through additional preset keys, `pt` and `unstyled`, and recorded exclusions (L0a, ticket #207)
+
+Status: Proposed for user approval in the PR (gap-closing spec #167, Stage 2 layer L0a, ticket #207).
+
+User rulings for this ticket ([#207](https://github.com/majedsiefalnasr/ultimate-packages/issues/207), spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167)):
+
+- **D1-A, frameworks.** Mention is React only. PrimeNG 21.1.9 and PrimeVue 4.5.5 ship no Mention, so Angular and Vue stay N in all 29 rows and get no component. The source check is posted on #207.
+- **D2-A, change event.** `onChange` hands back PrimeReact's event: its `target` is the textarea, and the text is read from `event.target.value`, both on typing and on picking a suggestion. This breaks existing `UMention` callers, which received the new text as a string.
+- **D3-A, caret measurement.** The shared uix-utils `getCursorOffset` inserts the text before the caret as plain text with real line breaks, with no `innerHTML`. This fixes a Prime defect: `@primeuix/utils` and PrimeReact's `DomHandler.getCursorOffset` write that text through `innerHTML`, so markup typed into the textarea became elements in the measuring element. Its uix-utils provenance record is no longer `unmodified`.
+- **D4-B, styling.** The panel, list and items read the Aura `autocomplete` overlay, list and option tokens. react-core `useComponentStyle` and `useComponentBase` gain an optional `additionalPresetKeys` argument, mirroring vue-core's `registerComponentStyle`. ADR-067 decision (c) is amended to drop `mention` from its exception list. Row 25 becomes C.
+
+Standing rulings applied: `transitionOptions` takes `@ultimate/uix-motion` options, as ADR-104 ruling D5-A did for ColorPicker, so row 13 is I; `ptOptions` stays P until the global `pt` source exists (ADR-080); the ARIA that the PrimeReact documentation promises is N against the pinned source (user ruling of 2026-11-18, row 23). React `tooltip` does not apply, because PrimeReact's Mention has none.
+
+**Context.**
+
+- Mention is a textarea that calls `onSearch` when a trigger character such as `@` is typed and shows the returned suggestions in a panel at the caret. Only PrimeReact 10.9.9 ships it (`components/lib/mention/Mention.js`, `MentionBase.js`); PrimeNG 21.1.9 and PrimeVue 4.5.5 have no Mention source folder, export or documentation page (`docs/prime-reference/components/mention.md`).
+- The Phase 4 report (`docs/architecture/research/phase4/batch5/mention.md`) found 29 React rows: C 4, P 9, M 13, I 1, N 2. Ultimate's `UMention` accepted only one string trigger and a top-level field, called `onChange` with a string, wrapped the arrow keys, had no templates, `ref`, `onInput`, `autoResize`, `variant`, uncontrolled mode, motion, `pt` or `unstyled`, placed a plain list below the textarea with a fixed z-index of 1000, never cleared its search timer, and painted itself with hand-written colours that ADR-067 (c) had kept because Aura has no `mention` module. The report's header says "all 28 rows N" for Angular and Vue while its distribution counts 29; 29 is right.
+- PrimeReact's documentation promises `combobox`, `listbox`, `aria-controls` and Home/End keys, but `Mention.js` sets no `role` or `aria-*` attribute (row 23).
+
+**Decision.**
+
+1. **Textarea.** The input is `UInputTextarea`, so `autoResize`, `variant`, `invalid` and every native textarea attribute work as on the textarea itself, and the textarea keeps its own `textarea` tokens. `value` makes Mention controlled and `defaultValue` leaves it uncontrolled.
+2. **Search and insertion (ruling D2).** `trigger` and `field` take one value or an array, one field per trigger. The trigger is searched on every keystroke and again on ArrowLeft and ArrowRight, after `delay`. The panel opens only when `onSearch` returns a non-empty `suggestions` list, and closes on a typed space, when the caret leaves the trigger's word, or when the search returns nothing. Picking a suggestion inserts its resolved `field` (a dot path is resolved), adds one space unless one follows, moves the caret after it, and calls `onChange` with the textarea as `target` and then `onSelect`.
+3. **Keys.** ArrowDown and ArrowUp move the highlight without wrapping and scroll it into view, Enter picks the highlighted suggestion, Escape closes, and Backspace over the trigger closes, as PrimeReact does.
+4. **Overlay.** The panel is rendered in place through the react-core `Portal` (`appendTo="self"`, PrimeReact's only mode), placed at the caret with the uix-utils `getCursorOffset` and PrimeReact's `1rem` and `1.2rem` offsets, stacked through the `overlay` bucket of `useZIndex`, closed on an outside click through `useOverlayListener`, and realigned on a window resize or a scroll of any scrollable ancestor through the uix-utils `ConnectedOverlayScrollHandler` from #206. PrimeReact's global `hideOverlaysOnDocumentScrolling` does not exist in Ultimate, so scrolling realigns, as for ColorPicker.
+5. **Motion.** The panel enters and leaves with `useMotion` under `u-anchored-overlay`; `transitionOptions` is merged over it. `onShow` fires when the enter motion ends and `onHide` when the leave motion ends.
+6. **Styling (ruling D4).** `mention-style.ts` keeps PrimeReact's structural rules renamed to `u-mention*` and paints the panel, list and items with the `@primeuix/styles` 2.0.3 `autocomplete` overlay, list and option declarations on the Aura `autocomplete` tokens. `UMention` registers `autocomplete` as an additional preset key, which registers its variables only, never AutoComplete's structural CSS. The root carries PrimeReact's `p-inputwrapper`, `p-inputwrapper-filled` and `p-inputwrapper-focus` classes, or `data-p-inputwrapper-filled` when unstyled.
+7. **`pt`, `ptOptions` and `unstyled`.** The sections are PrimeReact's `root`, `input`, `panel`, `items` and `item`; `item` receives the `trigger` context and the `selected` state. `unstyled` drops every Ultimate class from the root, textarea, panel, list and items.
+8. **Caret measurement (ruling D3).** `getCursorOffset` builds its measuring text from text nodes and `br` elements.
+
+**Choices made while implementing (not separately ruled; they stay as written unless this ADR is amended).** Items 1 to 13 were listed with the plan and approved with it; items 14 to 27 came up while implementing.
+
+1. Mention is built on `UInputTextarea` rather than a plain `textarea`.
+2. Props that Mention does not name go to the textarea only. The root takes `id`, `className`, `style` and `pt.root`; PrimeReact also spreads the other props on the root.
+3. The style module stays in `@ultimate/react` and is not moved to `@ultimate/uix-styles` (ADR-082 exception), because only one framework has Mention.
+4. The trigger is detected on every keystroke, also for an array of triggers, and the panel hides when the caret leaves the trigger's word or no trigger is found. PrimeReact keeps the first trigger it found until the panel closes.
+5. A `field` array with a single string `trigger` uses its first field. PrimeReact calls `findIndex` on the string there and throws.
+6. `autoHighlight` highlights the first item of every new list. PrimeReact applies it only when the panel enters.
+7. The textarea also gets `aria-controls` and `aria-haspopup="listbox"` next to the existing `combobox`, `aria-autocomplete`, `aria-expanded` and `aria-activedescendant`. Home and End are not added, because the PrimeReact source has neither.
+8. The ref handle is `{show, hide, focus, getElement, getOverlay, getInput}`, without PrimeReact's `props` entry. `UMention` stays generic in the suggestion type through a typed cast of `React.forwardRef`.
+9. No `Ripple` on the items.
+10. No `overlay-click` bus event; Ultimate has no overlay bus.
+11. The search timer, the z-index and every listener are cleared on unmount.
+12. The previous `rows={3}` default is dropped; the textarea's own default applies, as in PrimeReact.
+13. The `getCursorOffset` measuring element copies the input's `direction`, `font` and `letterSpacing`, so the offset follows right-to-left text and the input's font.
+14. It also copies `boxSizing`.
+15. A trigger longer than one character ends at its last character: the query and the insertion start after the whole trigger. PrimeReact adds one to the trigger's position, which suits single characters only.
+16. `scrollHeight` (default `200px`) and `defaultValue` are carried, and an uncontrolled Mention tracks its filled state from typing and from picking.
+17. Header and footer templates receive the component props, and the item template receives `{trigger, index}`, as in PrimeReact.
+18. The highlighted item gets `u-mention-item-selected` (PrimeReact's `p-highlight`) and the AutoComplete option focus tokens, which hovering also shows, as an AutoComplete option does.
+19. The native textarea `onSelect` is left out of the props, because Mention's `onSelect` reports a picked suggestion.
+20. The barrel exports the `UMentionChangeEvent`, `UMentionRef` and `UMentionItemTemplateOptions` types next to the existing ones. `mentionPresetKeys` stays internal to `mention-style.ts`.
+21. The `additionalPresetKeys` of a component are fixed for its life, like its name and style module, so the registration effect still depends on `unstyled` only.
+22. Enter with no highlighted item picks nothing and still prevents a line break while the panel is open, as in PrimeReact.
+23. A new list resets the highlight whenever `suggestions` is a new array, as in PrimeReact. A parent that builds the array inline on every render resets it on every render.
+24. The stories are Default, WithInitialText, MultipleTriggers, ItemTemplate and FilledAutoResize; the last three are new.
+25. The `ptOptions` test passes a `mergeProps` function, the only effect `ptOptions` has without a global `pt` source.
+26. The react-core spec reads the registered styles from `reactCoreStyleSheet`, because the React sheet does not tag its style elements.
+27. Each test names the Phase 4 row it covers as `[row N]`.
+
+**Divergences from Prime.**
+
+1. Row 13 is I: `transitionOptions` takes `@ultimate/uix-motion` options, not react-transition-group props (ADR-104 ruling D5-A).
+2. Row 23 stays N: Ultimate's combobox and listbox ARIA is an extra over the pinned source.
+3. `getCursorOffset` does not parse the text as HTML (ruling D3). Text without markup measures as before.
+4. `ptOptions` has no visible effect beyond a `mergeProps` function until the global `pt` source exists (ADR-080), so row 27 stays P.
+5. `variant` has no fallback to a global `inputStyle`, because Ultimate's config has none, so row 17 stays P, as for the other input families.
+6. Rows 18 and 19 are C with choices 2 and 8 recorded, as ADR-104 recorded the same omissions for ColorPicker (choice 19).
+
+**Classification after this ticket** (C complete, P partial, M missing, I intentional, N absent from the corresponding Prime; rows in the Phase 4 matrix order, 1 to 29; from a re-read of the pinned PrimeReact source and the specs in this ticket; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+| Row | Capability                               | Before | After | Evidence                                                                                     |
+| --- | ---------------------------------------- | ------ | ----- | -------------------------------------------------------------------------------------------- |
+| 1   | Single trigger, search, delay            | C      | C     | `Mention.js:179-214`; spec `[row 1]`                                                         |
+| 2   | Multiple triggers, per-trigger field     | M      | C     | `Mention.js:131-177,244-252`; spec `[row 2]`                                                 |
+| 3   | Re-search on ArrowLeft and ArrowRight    | M      | C     | `Mention.js:284-288`; spec `[row 3]`                                                         |
+| 4   | Panel visibility driven by suggestions   | P      | C     | `Mention.js:414-428`; spec `[row 4]`                                                         |
+| 5   | Insertion and change event               | P      | C     | `Mention.js:216-252`; spec `[row 5]` (ruling D2)                                             |
+| 6   | `onSelect`                               | C      | C     | `Mention.js:241`; spec `[row 6]`                                                             |
+| 7   | Keyboard navigation                      | P      | C     | `Mention.js:296-395`; spec `[row 7]`                                                         |
+| 8   | `autoHighlight`                          | C      | C     | `Mention.js:85-95`; spec `[row 8]` (choice 6)                                                |
+| 9   | Item, header and footer templates        | M      | C     | `Mention.js:447-467,487-489`; spec `[row 9]`                                                 |
+| 10  | Caret-anchored placement                 | P      | C     | `Mention.js:112-122`; spec `[row 10]`, `get-cursor-offset.test.ts`                           |
+| 11  | Outside-click, scroll and resize         | M      | C     | `Mention.js:54-67`; spec `[row 11]`                                                          |
+| 12  | z-index and in-place panel               | P      | C     | `Mention.js:80,107,531`; spec `[row 12]`                                                     |
+| 13  | Transition, `onShow` and `onHide`        | M      | I     | `Mention.js:99,109,505-529`; spec `[row 13]` (ADR-104 D5-A)                                  |
+| 14  | Panel and input sizing and customization | M      | C     | `Mention.js:487-503`, `MentionBase.js:64-96`; spec `[row 14]`                                |
+| 15  | Native textarea attributes               | P      | C     | `Mention.js:534-558`; spec `[row 15]` (choice 2)                                             |
+| 16  | `autoResize`                             | M      | C     | `Mention.js:546`; spec `[row 16]`                                                            |
+| 17  | `variant` and `invalid`                  | M      | P     | `Mention.js:545`, `InputTextareaBase.js:10-11`; spec `[row 17]`; no global `inputStyle`      |
+| 18  | Ref handle and `inputRef`                | M      | C     | `Mention.js:400-412`; spec `[row 18]` (choice 8)                                             |
+| 19  | Root `id`, `className`, `style`, rest    | P      | C     | `Mention.js:560-569`; spec `[row 19]` (choice 2)                                             |
+| 20  | Controlled and uncontrolled              | P      | C     | `Mention.js:397-398`; spec `[row 20]`                                                        |
+| 21  | Focus and blur events                    | C      | C     | `Mention.js:259-267`; spec `[row 21]`                                                        |
+| 22  | `onInput`                                | M      | C     | `Mention.js:269-282`; spec `[row 22]`                                                        |
+| 23  | Combobox and listbox ARIA                | N      | N     | no `role` or `aria-*` in `Mention.js`; spec `[row 23, Ultimate extra]`                       |
+| 24  | State classes                            | P      | C     | `MentionBase.js:12-16`, `Mention.js:269-282,430-441`; spec `[row 24]`                        |
+| 25  | Styling and theme                        | I      | C     | `MentionBase.js:20-61`, `@primeuix/styles` 2.0.3 `autocomplete`; spec `[row 25]` (ruling D4) |
+| 26  | `pt`                                     | M      | C     | `Mention.js:41-52,452-569`; spec `[row 26]`                                                  |
+| 27  | `ptOptions`                              | M      | P     | `componentbase/ComponentBase.js:420-423`; spec `[row 27]` (ADR-080)                          |
+| 28  | `unstyled`                               | M      | C     | `Mention.js:273-281,544`; spec `[row 28]`                                                    |
+| 29  | Per-instance `dt`                        | N      | N     | PrimeReact has no per-instance `dt` (`componentbase/ComponentBase.js:420-423`)               |
+
+- **Angular:** N 29 (ruling D1). **Vue:** N 29 (ruling D1).
+- **React:** C 24, P 2, M 0, I 1, N 2. Open: row 17 (P, no global `inputStyle`) and row 27 (P, ADR-080). Row 13 is I. N rows: 23, 29.
+- `Mention.js` paths are under PrimeReact 10.9.9 `components/lib/mention/`; the spec is `packages/react/src/mention/mention.spec.tsx`.
+
+**Consequences.**
+
+- **Breaking for existing `UMention` callers (ruling D2).** `onChange` receives an event instead of a string; read `event.target.value`. The previous `rows={3}` default is gone, and the panel moves from below the textarea to the caret.
+- Mention now follows the Aura theme: the panel, list and items read the `autocomplete` tokens and the textarea the `textarea` tokens, so its look changes. No Mention visual baseline exists, and no other baseline is expected to change, because `additionalPresetKeys` is opt-in and `getCursorOffset` has no other caller.
+- Typed markup no longer creates elements while the caret is measured.
+- Any later React component whose Aura key differs from its own name can register the extra key through `additionalPresetKeys`.
+- Tests assert the rows above in jsdom (Mention 37, `getCursorOffset` 4, `additionalPresetKeys` 8). They do not measure real caret pixels, check right-to-left placement in a browser, run the motion in a real browser or read screen-reader output; browser end-to-end tests were not run.

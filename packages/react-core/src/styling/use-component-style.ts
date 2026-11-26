@@ -15,11 +15,17 @@ import type { StyleModule } from "../base/component-base";
  * turns off. An unstyled instance registers only the shared hidden-accessible
  * rule, like PrimeReact's `useHandleStyle`, which always loads its base and
  * global styles and skips the common and component styles when unstyled.
+ *
+ * `additionalPresetKeys` (ADR-051, ADR-067 (b)) names further Aura preset
+ * keys whose theme VARIABLES the component's structural CSS reads. Only their
+ * variables are registered, never structural CSS under those keys, which
+ * belong to their own components.
  */
 export function useComponentStyle(
   componentName: string,
   styleModule: StyleModule,
-  unstyled = false
+  unstyled = false,
+  additionalPresetKeys: readonly string[] = []
 ): void {
   useEffect(() => {
     registerHiddenAccessible(reactCoreStyleSheet);
@@ -31,6 +37,9 @@ export function useComponentStyle(
     // unless something also defines the properties. Idempotent per its own
     // has() guards; see registerThemeVariables' doc comment.
     registerThemeVariables(reactCoreStyleSheet, componentName);
+    for (const presetKey of additionalPresetKeys) {
+      registerThemeVariables(reactCoreStyleSheet, presetKey);
+    }
 
     // A6 (ADR-081): the shared `u-*` base rules, once per sheet.
     registerSharedBase(reactCoreStyleSheet);
@@ -40,7 +49,8 @@ export function useComponentStyle(
     registerBoxModel(reactCoreStyleSheet, componentName, scopeRootsOf(styleModule.classes));
 
     registerComponentCss(reactCoreStyleSheet, componentName, styleModule.css);
-    // The component name and style module are fixed for a component's life, as
-    // they were under a mount-only effect; only `unstyled` can change.
+    // The component name, style module and additional keys are fixed for a
+    // component's life, as they were under a mount-only effect; only
+    // `unstyled` can change.
   }, [unstyled]);
 }

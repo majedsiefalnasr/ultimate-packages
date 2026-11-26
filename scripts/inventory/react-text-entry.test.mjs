@@ -87,7 +87,7 @@ test("props, refs, composition, events, hooks and source-only quirks are recorde
       "never",
     ],
     "react.input-chips": ["onAdd", "paste", "not emitted", "max", "separator"],
-    "react.mention": ["trigger", "onSearch", "not a forwardRef", "setTimeout", "aria-controls"],
+    "react.mention": ["trigger", "onSearch", "React.forwardRef", "setTimeout", "aria-controls"],
     "react.float-label": ["variant", "over", "u-input-text", ":has", "does not match"],
     "react.icon-field": ["iconPosition", "u-icon-field-left", "UInputIcon", "aria-hidden"],
   }))
@@ -95,7 +95,7 @@ test("props, refs, composition, events, hooks and source-only quirks are recorde
   const themed = by("react.input-text").relationships;
   assert.ok(themed.includes("package.ultimate.themes.presets"));
   assert.ok(!by("react.input-mask").relationships.includes("package.ultimate.themes.presets"));
-  assert.ok(!by("react.mention").relationships.includes("package.ultimate.themes.presets"));
+  assert.ok(by("react.mention").relationships.includes("package.ultimate.themes.presets"));
   for (const record of load().records)
     assert.ok(
       !record.relationships.includes("package.ultimate.component-metadata.records"),

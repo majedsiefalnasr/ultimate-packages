@@ -748,5 +748,23 @@
     "ultimateDestination": "packages/react/src/color-picker/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UColorPicker and its prop, value, change-event and ref types; it shares only the exported component name with PrimeReact's colorpicker entry point."
+  },
+  {
+    "originalPath": "components/lib/mention/Mention.js",
+    "ultimateDestination": "packages/react/src/mention/mention.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 Mention.js for #207 (ADR-105): the trigger search with `delay`, `onSearch` with `originalEvent`, `trigger` and `query`, the re-search on ArrowLeft and ArrowRight, the panel that opens only when the search returns suggestions, the insertion of the resolved `field` with one field per trigger, the change event whose `target` is the textarea on typing and on picking, `onSelect`, ArrowUp and ArrowDown without wrapping, Enter, Escape and Backspace over the trigger, `autoHighlight`, the item, header and footer templates, the caret placement from `getCursorOffset` with the `1rem` and `1.2rem` offsets, the outside-click dismissal and the realignment on resize and scroll, the panel rendered in place, `onShow` and `onHide`, `scrollHeight`, `panelClassName`, `panelStyle`, `inputId`, `inputRef`, `inputClassName`, `inputStyle`, `autoResize`, `variant`, `value` and `defaultValue`, `onFocus`, `onBlur`, `onInput`, the `p-inputwrapper` state classes and `data-p-inputwrapper-filled`, the `root`, `input`, `panel`, `items` and `item` sections with the item's `trigger` context and `selected` state, the `show`, `hide`, `focus`, `getElement`, `getOverlay` and `getInput` ref handle and the root `id`, `className` and `style` are upstream's. Adapted: the textarea is `UInputTextarea`; the panel uses the react-core `Portal`, `useOverlayListener`, `useZIndex` and `useMotion` (`u-anchored-overlay`) and the uix-utils `getCursorOffset`, `scrollInView` and `ConnectedOverlayScrollHandler`; `transitionOptions` takes `@ultimate/uix-motion` options instead of react-transition-group props (ADR-105); the trigger is detected on every keystroke for one or several triggers, and the panel closes when the caret leaves the trigger's word; a field array with one trigger uses its first field; other props go to the textarea only. Added: `unstyled`, the `combobox`, `aria-haspopup`, `aria-expanded`, `aria-controls` and `aria-activedescendant` attributes over a `listbox` of `option` items, `autoHighlight` applied to every new list, and the cleanup of the search timer, z-index and listeners on unmount. Not carried: `Ripple`, the `overlay-click` bus event, the global `context` lookup and the `props` ref entry. Changed for #207."
+  },
+  {
+    "originalPath": "components/lib/mention/MentionBase.js",
+    "ultimateDestination": "packages/react/src/mention/mention-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the styles and class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 MentionBase.js for #207 (ADR-105): the root, panel, items and item rules and the root, input, panel, items and item classes with the `p-inputwrapper`, `p-inputwrapper-filled` and `p-inputwrapper-focus` root classes are upstream's, `.p-mention*` renamed to `.u-mention*` and `p-highlight` to `u-mention-item-selected`. The panel, list and item colours, borders, spacing and transitions are the `@primeuix/styles` 2.0.3 `autocomplete` overlay, list and option declarations on the Aura `autocomplete` tokens, which the component registers as an additional preset key (ADR-067 as amended by ADR-105). The leftover `.p-autocomplete-loader` and `.p-fluid` rules and the `p-connected-overlay` transition class are not carried. The module stays in `@ultimate/react` because only PrimeReact ships Mention (ADR-082 exception, ADR-105). Changed for #207."
+  },
+  {
+    "originalPath": "components/lib/mention/Mention.js",
+    "ultimateDestination": "packages/react/src/mention/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UMention and its prop, search-event, select-event, change-event, item-template-option and ref types; it shares only the exported component name with PrimeReact's mention entry point."
   }
 ]

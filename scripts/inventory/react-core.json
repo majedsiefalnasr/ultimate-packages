@@ -136,7 +136,7 @@
       "name": "Component base hook",
       "framework": "react",
       "purpose": "Hook that registers a component style module and returns a cx resolver turning style-module class entries into class strings.",
-      "surface": "See [authored signatures and interpretation](README.md). Root exports useComponentBase and the types ClassValue, StyleModule and ComponentBaseOptions. cx(key, params) resolves a function or string entry of styleModule.classes through classNames and returns undefined for unknown keys. ComponentBaseOptions gains unstyled; useComponentBase returns { cx, isUnstyled } and cx returns undefined while unstyled (ADR-085). React has no per-instance dt. createPassThrough(componentName, { props, state, parent, hostName }) returns ptm and ptmo, and getPassThroughValue resolves one section from props.pt, in passthrough.ts (ADR-077). React has no automatic host lookup: the caller passes parent (ADR-079). The global and default pt sources, usePassThrough and pt.hooks are not implemented (ADR-080), so ptOptions has no visible effect yet.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports useComponentBase and the types ClassValue, StyleModule and ComponentBaseOptions. cx(key, params) resolves a function or string entry of styleModule.classes through classNames and returns undefined for unknown keys. ComponentBaseOptions gains unstyled; useComponentBase returns { cx, isUnstyled } and cx returns undefined while unstyled (ADR-085). ComponentBaseOptions also takes an optional additionalPresetKeys list, which useComponentBase passes to useComponentStyle (ticket #207, ADR-105). React has no per-instance dt. createPassThrough(componentName, { props, state, parent, hostName }) returns ptm and ptmo, and getPassThroughValue resolves one section from props.pt, in passthrough.ts (ADR-077). React has no automatic host lookup: the caller passes parent (ADR-079). The global and default pt sources, usePassThrough and pt.hooks are not implemented (ADR-080), so ptOptions has no visible effect yet.",
       "files": [
         "packages/react-core/src/base/index.ts",
         "packages/react-core/src/base/component-base.ts",
@@ -159,7 +159,11 @@
       "evidence": [
         {
           "path": "packages/react-core/src/base/component-base.ts",
-          "contains": "export function useComponentBase({ componentName, styleModule, unstyled }: ComponentBaseOptions): {"
+          "contains": "export function useComponentBase({"
+        },
+        {
+          "path": "packages/react-core/src/base/component-base.ts",
+          "contains": "additionalPresetKeys?: readonly string[];"
         },
         {
           "path": "packages/react-core/src/base/index.ts",
@@ -659,7 +663,7 @@
       "name": "Style sheet and component style hook",
       "framework": "react",
       "purpose": "SSR-guarded style sheet instance and a hook that registers theme variables, hidden-accessible, box-model, shared base and component CSS on mount.",
-      "surface": "See [authored signatures and interpretation](README.md). Root exports reactCoreStyleSheet and useComponentStyle. The sheet creates style elements in document.head and returns undefined when document is unavailable. useComponentStyle registers once on mount and adds component css only if the sheet has no entry for the name. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions. useComponentStyle(name, module, unstyled = false) registers only the hidden-accessible rule while unstyled and registers the rest when unstyled turns false. With cssLayer on, the layer-order statement is placed first in document.head (ticket #173, F6). A styled instance also registers the shared @ultimate/uix-styles base module once per sheet through registerSharedBase, under the key u-base (ticket #176, F10, ADR-081); an unstyled instance does not.",
+      "surface": "See [authored signatures and interpretation](README.md). Root exports reactCoreStyleSheet and useComponentStyle. The sheet creates style elements in document.head and returns undefined when document is unavailable. useComponentStyle registers once on mount and adds component css only if the sheet has no entry for the name. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions. useComponentStyle(name, module, unstyled = false, additionalPresetKeys = []) registers only the hidden-accessible rule while unstyled and registers the rest when unstyled turns false. Each additional preset key registers only its theme variables, never structural css, as vue-core's registerComponentStyle does (ticket #207, ADR-051, ADR-067 (b), ADR-105). With cssLayer on, the layer-order statement is placed first in document.head (ticket #173, F6). A styled instance also registers the shared @ultimate/uix-styles base module once per sheet through registerSharedBase, under the key u-base (ticket #176, F10, ADR-081); an unstyled instance does not.",
       "files": [
         "packages/react-core/src/styling/index.ts",
         "packages/react-core/src/styling/react-style-sheet.ts",
@@ -678,6 +682,10 @@
         {
           "path": "packages/react-core/src/styling/use-component-style.ts",
           "contains": "export function useComponentStyle("
+        },
+        {
+          "path": "packages/react-core/src/styling/use-component-style.ts",
+          "contains": "additionalPresetKeys: readonly string[] = []"
         }
       ],
       "relationships": [
@@ -833,6 +841,10 @@
     },
     {
       "path": "packages/react-core/src/styling/layer-order.spec.tsx",
+      "reason": "Supporting behavioral tests; presence alone is not passing execution."
+    },
+    {
+      "path": "packages/react-core/src/styling/additional-preset-keys.spec.tsx",
       "reason": "Supporting behavioral tests; presence alone is not passing execution."
     }
   ],
