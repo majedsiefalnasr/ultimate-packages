@@ -20,3 +20,10 @@ export const RgbFormat: Story = {
     format: "rgb",
   },
 };
+
+/** The panel rendered in place, without the preview input. */
+export const Inline: Story = {
+  args: {
+    inline: true,
+  },
+};

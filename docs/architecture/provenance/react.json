@@ -730,5 +730,23 @@
     "ultimateDestination": "packages/react/src/knob/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UKnob and its prop and value-template types; it shares only the exported component name with PrimeReact's knob entry point."
+  },
+  {
+    "originalPath": "components/lib/colorpicker/ColorPicker.js",
+    "ultimateDestination": "packages/react/src/color-picker/color-picker.tsx",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeReact 10.9.9 ColorPicker.js and ColorPickerPanel.js for #206 (ADR-104): the controlled value, the readonly preview input, the panel with the saturation/brightness selector and the hue strip, `inline`, `format` (`hex` written as `rrggbb` without `#`, `rgb`, `hsb`), `defaultColor`, `appendTo`, `autoFocus`, `inputId`, `inputRef`, `inputClassName`, `inputStyle`, `panelClassName`, `panelStyle`, `tabIndex`, `onShow`, `onHide`, the Space, Escape and Tab keys, the outside-click dismissal, the realignment on resize and on a scroll of any scrollable ancestor, the change event with `originalEvent`, `value`, `target {name, id, value}`, `preventDefault` and `stopPropagation`, the `show`, `hide`, `focus`, `getElement`, `getOverlay` and `getInput` ref handle, the HSB maths and the root `id`, `className` and `style` are upstream's. Adapted: the panel uses the react-core `Portal`, `useOverlayListener`, `useZIndex` and `useMotion` (`u-anchored-overlay`) and the uix-utils `alignOverlay` and `ConnectedOverlayScrollHandler`; `transitionOptions` takes `@ultimate/uix-motion` options instead of react-transition-group props (ADR-104). Added: `unstyled`, `pt` with the PrimeNG/PrimeVue section names and PrimeReact's `input`, `selector` and `color` merged first, the `aria-label` \"Select a color\", `aria-haspopup` and `aria-expanded`, the `u-color-picker-dragging` root class, a drag that follows only the touch that started it and ends on `touchcancel`, no prop-to-HSB sync while a drag runs, show and hide outside the state updater, and listener cleanup on unmount. Not carried: `tooltip` and `tooltipOptions` (compose `UTooltip`), the global `context` lookup, the `props` ref entry and the `p-inputtext` preview class. Changed for #206."
+  },
+  {
+    "originalPath": "components/lib/colorpicker/ColorPickerBase.js",
+    "ultimateDestination": "packages/react/src/color-picker/color-picker-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver (ADR-064). Side-by-side with PrimeReact 10.9.9 ColorPickerBase.js for #206 (ADR-104): the root class with the overlay modifier, the preview and panel classes with `p-disabled`, and the content, selector, color, color-handle, hue and hue-handle classes are upstream's, renamed to the `u-color-picker*` names and section keys Angular and Vue use. The dragging root modifier, the inline panel modifier and the `colorBackground` class follow PrimeNG; PrimeReact's `p-inputtext`, `p-colorpicker-overlay-panel`, `p-input-filled`, `p-ripple-disabled` and `p-connected-overlay` classes are not carried. The hand-written inline CSS is replaced by the shared `@ultimate/uix-styles/colorpicker` module on the Aura `colorpicker` tokens (ADR-067, ADR-082). Changed for #206."
+  },
+  {
+    "originalPath": "components/lib/colorpicker/ColorPicker.js",
+    "ultimateDestination": "packages/react/src/color-picker/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UColorPicker and its prop, value, change-event and ref types; it shares only the exported component name with PrimeReact's colorpicker entry point."
   }
 ]

@@ -32,8 +32,14 @@
   {
     "originalPath": "src/dom/index.ts",
     "ultimateDestination": "packages/uix-utils/src/dom/index.ts",
-    "modificationStatus": "unmodified",
-    "modificationDescription": "none"
+    "modificationStatus": "adapted",
+    "modificationDescription": "Copy of @primeuix/utils src/dom/index.ts with one added export: `ConnectedOverlayScrollHandler` from `./helpers/ConnectedOverlayScrollHandler`, the shared scroll handler the Angular, React and Vue ColorPicker use (#206, ADR-104). Every other export is upstream's."
+  },
+  {
+    "originalPath": "packages/primeng/src/dom/connectedoverlayscrollhandler.ts",
+    "ultimateDestination": "packages/uix-utils/src/dom/helpers/ConnectedOverlayScrollHandler.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Port of the identical PrimeNG 21.1.9 dom/connectedoverlayscrollhandler.ts and PrimeVue 4.5.5 core/src/utils/ConnectedOverlayScrollHandler.js classes for #206 (ADR-104): `bindScrollListener` adds the listener to every scrollable ancestor found with `getScrollableParents`, `unbindScrollListener` removes it, and `destroy` unbinds and releases the element, listener and ancestor list. Adapted to TypeScript and to the uix-utils `getScrollableParents` import; the listener defaults to a no-op. One shared copy replaces a framework-local handler in each package."
   },
   {
     "originalPath": "src/dom/methods/absolutePosition.ts",

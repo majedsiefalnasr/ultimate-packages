@@ -56,7 +56,7 @@ const CASES: readonly Case[] = [
     component: UColorPicker,
     key: "colorpicker",
     oldKey: "color-picker",
-    unresolved: ["--u-colorpicker-preview-border-color"],
+    unresolved: ["--u-colorpicker-preview-focus-border-color"],
   },
   {
     name: "UDatePicker",

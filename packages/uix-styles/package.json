@@ -114,6 +114,11 @@
       "import": "./dist/knob/index.mjs",
       "default": "./dist/knob/index.mjs"
     },
+    "./colorpicker": {
+      "types": "./dist/colorpicker/index.d.mts",
+      "import": "./dist/colorpicker/index.mjs",
+      "default": "./dist/colorpicker/index.mjs"
+    },
     "./rating": {
       "types": "./dist/rating/index.d.mts",
       "import": "./dist/rating/index.mjs",

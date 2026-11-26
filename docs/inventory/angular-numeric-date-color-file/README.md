@@ -29,8 +29,10 @@ relationships here do not complete those tickets. The Aura registry keys were ch
 against `packages/themes/src/presets/aura/index.ts`: they are `inputnumber`, `datepicker`,
 `colorpicker` and `fileupload`, which differ from the hyphenated folder and selector names.
 No component-metadata record exists for any of the four families. Only input-number has
-an `@ultimate/uix-styles` export (`inputnumber`) and is linked to it; the other three have
-no dedicated export, so no uix-styles relationship is linked for them.
+an `@ultimate/uix-styles` export (`inputnumber`) and is linked to it. color-picker imports
+the shared `@ultimate/uix-styles/colorpicker` module (ADR-104); the dependency is described
+in its surface and not linked, as in the choice-range Knob record. date-picker and
+file-upload have no dedicated export, so no uix-styles relationship is linked for them.
 
 Regenerate and validate from a checkout with dependencies, under Node 24.15.0:
 
@@ -72,10 +74,11 @@ Each item is recorded in the named record's surface, read from source and not re
   `onModelChange`, and an invalid `Date` renders `NaN/NaN/NaN` with an empty day grid.
   No focus call exists, keyboard navigation can land on disabled dates, and there is no
   Home, End, PageUp or PageDown handling.
-- color-picker never reads `autoZIndex`. Escape and Tab call `hide()` unconditionally, so
-  `onHide` is emitted even when the panel is closed. Selection is mouse-only, there is no
-  click-outside handling, and document drag listeners have no destroy cleanup.
-  `hexToRgb` does not validate or expand short hex values.
+- color-picker selection is pointer-only (mouse and touch): the panel, square and strip
+  have no role, ARIA attribute or key handler, as in PrimeNG source (ADR-104). `invalid`,
+  `required` and `name` are accepted and never read, as in PrimeNG. `writeControlValue`
+  does not call `onModelChange`, and `hexToRgb` does not validate or expand short hex
+  values.
 - file-upload has no `ControlValueAccessor`. A drop of several files in single mode is
   ignored silently, `onSelect` also reports rejected files, `clear()` emits `onClear`
   even when empty, and `formatSize` caps the unit label at TB without capping the

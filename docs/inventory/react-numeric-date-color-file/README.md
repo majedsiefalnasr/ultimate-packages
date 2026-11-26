@@ -20,10 +20,11 @@ identities owned elsewhere: `react-core` base and styling (#149), theme presets 
 and, for file-upload only, `react.progress-bar` (#141), because file-upload imports
 `UProgressBar`. Links are recorded only where source supports them. The Aura registry
 (`packages/themes/src/presets/aura/index.ts`) has keys `inputnumber`, `datepicker`,
-`colorpicker` and `fileupload`; the componentNames `input-number`, `date-picker`,
-`color-picker` and `file-upload` differ from those keys. No component-metadata record
-exists for any of the four families, so no metadata relationship is recorded. None of the
-four imports `@ultimate/uix-styles`, so no such link is recorded.
+`colorpicker` and `fileupload`; the componentNames `input-number`, `date-picker` and
+`file-upload` differ from those keys, while color-picker uses `colorpicker`. No
+component-metadata record exists for any of the four families, so no metadata relationship
+is recorded. Only color-picker imports `@ultimate/uix-styles` (`./colorpicker`); the
+dependency is described in its surface and not linked, as in the choice-range Knob record.
 
 Regenerate and validate from a checkout with dependencies, under Node 24.15.0:
 
@@ -61,14 +62,17 @@ gap judgment is made.
 Each item is recorded in the named record's surface and was checked against the usage
 sites in all four components:
 
-- Among the four, only input-number is a forwardRef.
-  date-picker, color-picker and file-upload are plain function components.
-  None of the four uses a portal, `useImperativeHandle`, `aria-controls`, `useId`,
-  `useEffect`, `focus(`, `window.` or `aria-live`.
-- Only color-picker registers document listeners (`mousemove` and `mouseup`, added on each
-  mousedown, removed on mouseup, no unmount cleanup).
-  date-picker and color-picker have no outside-click or blur handler
-  and stay open when `disabled` becomes true.
+- Among the four, only input-number and color-picker are forwardRefs.
+  date-picker and file-upload are plain function components.
+  None of the four uses `createPortal`, `aria-controls`, `useId`, `useEffect`, `window.`
+  or `aria-live`; only color-picker uses `useImperativeHandle` (its ref handle) and
+  `focus(` (`autoFocus` and the handle's `focus`).
+- Only color-picker registers document listeners (`mousemove` and `mouseup`, or `touchmove`,
+  `touchend` and `touchcancel`, added on each press and removed when the drag ends or on
+  unmount).
+  Among the two overlay components only date-picker has no outside-click or blur handler;
+  color-picker closes on an outside click through `useOverlayListener`. Both stay open
+  when `disabled` becomes true.
   input-number and file-upload are inline and have no overlay.
 - input-number: every blur emits `onValueChange`; the focus text is `String(value)`, which
   a locale with `.` group and `,` decimal separators parses as a different number (12345 for
@@ -81,14 +85,15 @@ sites in all four components:
   the 1900s, no `focus()` call so DOM focus does not follow the roving cell, clear and icon
   controls are not keyboard operable.
 - color-picker: 3-digit hex misparses (`#fff` gives 0, 15, 255), gray and black convert to
-  `h = 300`, `onShow`/`onHide` run inside a state updater, color changes are mouse-only,
-  panel has no role or label.
+  `h = 300`, hex is emitted without `#` as in PrimeReact, color changes are pointer-only
+  and the panel has no role or label, as in PrimeReact source (ADR-104).
 - file-upload: accept `*/*` rejects every file, `formatSize` yields `512.00 TB` for 0.5 and
   `NaN TB` for negatives, `onSelect` fires even when every file is rejected, Cancel does not
   abort an in-flight request, the Upload and Cancel buttons do not read `disabled`, there is
   no `onerror` or `onabort` handler, and messages have no role or `aria-live`.
 - Only input-number's CSS reads custom properties (`var(--u-inputtext-*)`); date-picker,
-  color-picker and file-upload CSS are hand-authored without `var(--`. The class names
+  color-picker and file-upload style modules contain no `var(--` (color-picker imports the
+  shared module, whose tokens are `dt()` placeholders). The class names
   `u-inputnumber-focus`, `u-inputnumber-button-up` and `u-inputnumber-button-down` have no
   CSS rule, and `FileUploadClassesParams.disabled` is never read by any class resolver.
 

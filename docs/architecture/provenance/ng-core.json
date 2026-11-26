@@ -81,13 +81,13 @@
     "originalPath": "packages/primeng/src/overlay/overlay.ts",
     "ultimateDestination": "packages/ng-core/src/overlay/overlay.ts",
     "modificationStatus": "adapted",
-    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Overlay→UOverlay, adapted to append/restore the host element relative to document.body or a configurable target, assign z-index via @ultimate/uix-utils/zindex's real ZIndex object (.set/.clear, not a plain function as an early plan draft assumed), and guard all DOM manipulation behind isPlatformBrowser() for SSR safety."
+    "modificationDescription": "Extracted via extract-primeng-source.mjs from primeng@21.1.9. Overlay→UOverlay, adapted to append/restore the host element relative to document.body or a configurable target, assign z-index via @ultimate/uix-utils/zindex's real ZIndex object (.set/.clear, not a plain function as an early plan draft assumed), and guard all DOM manipulation behind isPlatformBrowser() for SSR safety. For #206 (ADR-104) it also accepts PrimeNG's `appendTo` `'self'`, which keeps the host in place, and the `autoZIndex` and `baseZIndex` inputs (default `true` and 1000)."
   },
   {
     "originalPath": "n/a",
     "ultimateDestination": "packages/ng-core/src/overlay/overlay.spec.ts",
     "modificationStatus": "authored",
-    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies body-append behavior and z-index assignment under this project's zoneless TestBed."
+    "modificationDescription": "Ultimate-authored test, not derived from upstream. Verifies body-append behavior, `appendTo` `'self'`, `autoZIndex` and z-index assignment under this project's zoneless TestBed."
   },
   {
     "originalPath": "n/a",

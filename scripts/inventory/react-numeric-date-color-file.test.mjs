@@ -101,17 +101,18 @@ test("props, state, overlay, accessibility, parsing, upload and source-only quir
       "DatePickerClassesParams",
     ],
     "color-picker": [
-      "not a forwardRef",
+      "forwardRef<UColorPickerRef",
       "0x0fff",
       "h = 300",
       "defaultColor",
-      "mousemove",
-      "no unmount cleanup",
-      "updater function",
-      "no outside-click",
+      "touchmove",
+      "useUnmountEffect",
+      "useOverlayListener",
+      "ConnectedOverlayScrollHandler",
+      "without '#'",
       "stays open when disabled becomes true",
-      "mouse-only",
-      "aria-label 'Select color'",
+      "pointer-only",
+      "aria-label 'Select a color'",
       "UColorPickerValue",
       "ColorPickerPreviewClassesParams",
       "validateHsb",
@@ -134,14 +135,21 @@ test("props, state, overlay, accessibility, parsing, upload and source-only quir
     ],
   }))
     for (const term of terms) assert.ok(by(`react.${id}`).surface.includes(term), `${id}: ${term}`);
-  // forwardRef exists in exactly input-number; the others state they are not forwardRef.
+  // forwardRef exists in exactly input-number and color-picker; the others state they are not.
+  const forwardRefs = ["input-number", "color-picker"];
   assert.deepEqual(
     families.filter((f) => src(f).includes("forwardRef")),
-    ["input-number"]
+    forwardRefs
   );
   for (const f of families)
-    assert.equal(by(`react.${f}`).surface.includes("not a forwardRef"), f !== "input-number", f);
-  // Absent-pattern claims hold for every scoped component.
+    assert.equal(
+      by(`react.${f}`).surface.includes("not a forwardRef"),
+      !forwardRefs.includes(f),
+      f
+    );
+  // Absent-pattern claims hold for every scoped component; color-picker's ref handle
+  // (useImperativeHandle) and its focus() calls are the recorded exceptions.
+  const present = { "color-picker": ["useImperativeHandle", "focus("] };
   for (const f of families)
     for (const pattern of [
       "createPortal",
@@ -153,21 +161,25 @@ test("props, state, overlay, accessibility, parsing, upload and source-only quir
       "window.",
       "aria-live",
     ])
-      assert.ok(!src(f).includes(pattern), `${f}: ${pattern}`);
-  // Document listeners exist only in color-picker (drag), and only for mousemove and mouseup.
+      assert.equal(
+        src(f).includes(pattern),
+        Boolean(present[f]?.includes(pattern)),
+        `${f}: ${pattern}`
+      );
+  // Document listeners exist only in color-picker (drag): touch first, then mouse.
   assert.deepEqual(
     families.filter((f) => /document\./.test(src(f))),
     ["color-picker"]
   );
   assert.deepEqual(
     [...src("color-picker").matchAll(/document\.addEventListener\("(\w+)"/g)].map((m) => m[1]),
-    ["mousemove", "mouseup"]
+    ["touchmove", "touchend", "touchcancel", "mousemove", "mouseup"]
   );
-  // The overlay components with no outside-click handler are exactly date-picker and color-picker.
+  // The only overlay component with no outside-click handler is date-picker.
   const overlays = load()
     .records.filter((r) => r.surface.includes("no outside-click"))
     .map((r) => r.id);
-  assert.deepEqual(overlays, ["react.date-picker", "react.color-picker"]);
+  assert.deepEqual(overlays, ["react.date-picker"]);
   for (const f of ["input-number", "file-upload"]) assert.ok(!src(f).includes("overlayVisible"), f);
   // Only input-number style uses CSS custom properties.
   for (const f of families)
@@ -248,13 +260,13 @@ test("README observations are derived from the JSON records", () => {
   const forwardRef = input.records
     .filter((r) => !r.surface.includes("not a forwardRef"))
     .map((r) => r.id);
-  assert.deepEqual(forwardRef, ["react.input-number"]);
-  assert.ok(readme.includes("only input-number is a forwardRef"));
+  assert.deepEqual(forwardRef, ["react.input-number", "react.color-picker"]);
+  assert.ok(readme.includes("only input-number and color-picker are forwardRefs"));
   const noOutside = input.records
     .filter((r) => r.surface.includes("no outside-click"))
     .map((r) => r.id.slice(6));
-  assert.deepEqual(noOutside, ["date-picker", "color-picker"]);
-  assert.ok(readme.includes("date-picker and color-picker have no outside-click"));
+  assert.deepEqual(noOutside, ["date-picker"]);
+  assert.ok(readme.includes("only date-picker has no outside-click"));
 });
 
 test("React numeric, date, color and file inputs reconcile scope, preserve authorship and generated views are byte-exact", () => {

@@ -83,6 +83,7 @@ export { default as setAttributes } from "./methods/setAttributes";
 export { default as setCSSProperty } from "./methods/setCSSProperty";
 export { default as toElement } from "./methods/toElement";
 export { default as blockBodyScroll } from "./helpers/blockBodyScroll";
+export { default as ConnectedOverlayScrollHandler } from "./helpers/ConnectedOverlayScrollHandler";
 export { default as exportCSV } from "./helpers/exportCSV";
 export { default as saveAs } from "./helpers/saveAs";
 export { default as unblockBodyScroll } from "./helpers/unblockBodyScroll";

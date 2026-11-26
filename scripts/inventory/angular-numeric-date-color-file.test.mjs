@@ -106,13 +106,15 @@ test("inputs, outputs, accessors, overlay, composition, accessibility and edge-c
     ],
     "angular.color-picker": [
       "autoZIndex",
-      "never read",
       "UOverlay",
       "hexToRgb",
       "Tab",
       "onHide",
       "outside",
-      "mousemove",
+      "touchmove",
+      "DestroyRef",
+      "ConnectedOverlayScrollHandler",
+      "@ultimate/uix-styles/colorpicker",
       "UColorPickerChangeEvent",
       "colorPickerStyleModule",
     ],
@@ -156,6 +158,9 @@ test("aliases, pending targets and product checks keep ticket boundaries and hon
     assert.ok(record.surface.includes("no component-metadata record"), record.id);
     if (record.id === "angular.input-number") {
       assert.ok(record.relationships.includes("package.ultimate.uix-styles.inputnumber"));
+    } else if (record.id === "angular.color-picker") {
+      assert.ok(record.surface.includes("@ultimate/uix-styles/colorpicker"), record.id);
+      assert.ok(!record.relationships.some((r) => r.includes("uix-styles")), record.id);
     } else {
       assert.ok(record.surface.includes("No dedicated @ultimate/uix-styles"), record.id);
       assert.ok(!record.relationships.some((r) => r.includes("uix-styles")), record.id);

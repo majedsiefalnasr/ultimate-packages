@@ -10,7 +10,7 @@ DOM and browser utilities exported through the UIX utility package root and DOM 
 
 ## Framework surface
 
-The DOM barrel exposes 84 method defaults and four helper defaults as named exports. [The authored README](README.md) lists each call signature, source path, purpose, and observed runtime boundary. The source files do not access DOM/browser globals during module initialization; functions may access them when invoked, so this does not establish blanket SSR safety. Helper option interfaces are exported only from helper modules and omitted from the barrel; BrowserType is local to getBrowser.ts.
+The DOM barrel exposes 84 method defaults and five helper defaults as named exports; the ConnectedOverlayScrollHandler helper is a class, the others are functions. [The authored README](README.md) lists each call signature, source path, purpose, and observed runtime boundary. The source files do not access DOM/browser globals during module initialization; functions may access them when invoked, so this does not establish blanket SSR safety. Helper option interfaces are exported only from helper modules and omitted from the barrel; BrowserType is local to getBrowser.ts.
 
 ## Public exports
 
@@ -99,6 +99,7 @@ The DOM barrel exposes 84 method defaults and four helper defaults as named expo
 @ultimate/uix-utils#setCSSProperty
 @ultimate/uix-utils#toElement
 @ultimate/uix-utils#blockBodyScroll
+@ultimate/uix-utils#ConnectedOverlayScrollHandler
 @ultimate/uix-utils#exportCSV
 @ultimate/uix-utils#saveAs
 @ultimate/uix-utils#unblockBodyScroll
@@ -187,6 +188,7 @@ The DOM barrel exposes 84 method defaults and four helper defaults as named expo
 @ultimate/uix-utils/dom#setCSSProperty
 @ultimate/uix-utils/dom#toElement
 @ultimate/uix-utils/dom#blockBodyScroll
+@ultimate/uix-utils/dom#ConnectedOverlayScrollHandler
 @ultimate/uix-utils/dom#exportCSV
 @ultimate/uix-utils/dom#saveAs
 @ultimate/uix-utils/dom#unblockBodyScroll
@@ -194,6 +196,7 @@ The DOM barrel exposes 84 method defaults and four helper defaults as named expo
 ## Owned source and evidence
 
 packages/uix-utils/src/dom/helpers/blockBodyScroll.ts
+packages/uix-utils/src/dom/helpers/ConnectedOverlayScrollHandler.ts
 packages/uix-utils/src/dom/helpers/exportCSV.ts
 packages/uix-utils/src/dom/helpers/saveAs.ts
 packages/uix-utils/src/dom/helpers/unblockBodyScroll.ts
@@ -285,6 +288,7 @@ packages/uix-utils/src/dom/methods/toElement.ts
 
 ```text
 packages/uix-utils/src/dom/index.ts: export { default as absolutePosition } from "./methods/absolutePosition";
+packages/uix-utils/src/dom/index.ts: export { default as ConnectedOverlayScrollHandler } from "./helpers/ConnectedOverlayScrollHandler";
 packages/uix-utils/src/index.ts: export * from "./dom";
 packages/uix-utils/package.json: "./*": {
 packages/uix-utils/tsup.config.ts: `${name}/index`, `src/${name}/index.ts`

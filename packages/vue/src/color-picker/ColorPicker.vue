@@ -1,46 +1,91 @@
 <template>
-  <div :class="cx('root')">
+  <div ref="container" :class="cx('root', { inline, dragging })" v-bind="ptmi('root')">
     <input
+      v-if="!inline"
+      ref="input"
+      :id="inputId"
       type="text"
-      readonly
       :class="cx('preview', { disabled })"
-      :tabindex="disabled ? -1 : 0"
+      readonly
+      :tabindex="tabindex"
       :disabled="disabled"
       :style="{ backgroundColor: inputBgColor }"
-      aria-label="Select color"
+      :aria-label="ariaLabel"
+      :aria-labelledby="ariaLabelledby"
       aria-haspopup="true"
       :aria-expanded="overlayVisible"
+      v-bind="ptm('preview')"
       @click="onInputClick"
       @keydown="onInputKeydown"
     />
-    <UPortal v-if="overlayVisible" :appendTo="appendTo">
-      <div :class="cx('panel')">
-        <div :class="cx('content')">
-          <div
-            ref="colorSelectorRef"
-            :class="cx('colorSelector')"
-            :style="{ backgroundColor: colorSelectorBg }"
-            @mousedown="onColorMouseDown"
-          >
-            <div :class="cx('colorBackground')">
+    <UPortal :appendTo="appendTo" :disabled="inline">
+      <transition
+        :css="false"
+        name="u-anchored-overlay"
+        @enter="onOverlayEnter"
+        @leave="onOverlayLeave"
+        @after-leave="onOverlayAfterLeave"
+      >
+        <div
+          v-if="inline ? true : overlayVisible"
+          ref="panel"
+          :class="[cx('panel', { inline, disabled, invalid }), overlayClass]"
+          v-bind="{ ...ptm('panel'), ...ptm('overlay') }"
+        >
+          <div :class="cx('content')" v-bind="ptm('content')">
+            <div
+              :class="cx('colorSelector')"
+              :style="{ backgroundColor: colorSelectorBg }"
+              v-bind="ptm('colorSelector')"
+              @mousedown="onDragStart($event, 'color')"
+              @touchstart="onDragStart($event, 'color')"
+            >
+              <div :class="cx('colorBackground')" v-bind="ptm('colorBackground')">
+                <div
+                  :class="cx('colorHandle')"
+                  :style="{ left: colorHandleLeft + 'px', top: colorHandleTop + 'px' }"
+                  v-bind="ptm('colorHandle')"
+                ></div>
+              </div>
+            </div>
+            <div
+              :class="cx('hue')"
+              v-bind="ptm('hue')"
+              @mousedown="onDragStart($event, 'hue')"
+              @touchstart="onDragStart($event, 'hue')"
+            >
               <div
-                :class="cx('colorHandle')"
-                :style="{ left: colorHandleLeft + 'px', top: colorHandleTop + 'px' }"
+                :class="cx('hueHandle')"
+                :style="{ top: hueHandleTop + 'px' }"
+                v-bind="ptm('hueHandle')"
               ></div>
             </div>
           </div>
-          <div ref="hueRef" :class="cx('hue')" @mousedown="onHueMouseDown">
-            <div :class="cx('hueHandle')" :style="{ top: hueHandleTop + 'px' }"></div>
-          </div>
         </div>
-      </div>
+      </transition>
     </UPortal>
   </div>
 </template>
 
 <script>
-import { Portal as UPortal } from "@ultimate/vue-core";
+import {
+  Portal as UPortal,
+  useZIndex,
+  Z_INDEX_KEYS,
+  createMotionTransitionHooks,
+} from "@ultimate/vue-core";
+import {
+  ConnectedOverlayScrollHandler,
+  absolutePosition,
+  isTouchDevice,
+  relativePosition,
+} from "@ultimate/uix-utils/dom";
 import { createBaseColorPicker } from "./BaseColorPicker";
+
+const { set: setZIndex, clear: clearZIndex } = useZIndex();
+// JS-driven motion (`:css="false"`), as UMenu does: the leave wait of a
+// CSS-driven <transition> never resolves in jsdom.
+const motionHooks = createMotionTransitionHooks(() => ({ name: "u-anchored-overlay" }));
 
 function validateHsb(hsb) {
   return {
@@ -51,7 +96,6 @@ function validateHsb(hsb) {
 }
 
 function hexToRgb(hex) {
-  if (!hex) return { r: 0, g: 0, b: 0 };
   const hexValue = parseInt(hex.indexOf("#") > -1 ? hex.substring(1) : hex, 16);
   return { r: hexValue >> 16, g: (hexValue & 0x00ff00) >> 8, b: hexValue & 0x0000ff };
 }
@@ -77,44 +121,39 @@ function rgbToHsb(rgb) {
   return hsb;
 }
 
-function hexToHsb(hex) {
-  return rgbToHsb(hexToRgb(hex));
-}
-
 function hsbToRgb(hsb) {
   let rgb = { r: 0, g: 0, b: 0 };
-  const h = hsb.h;
-  const s = (hsb.s * 255) / 100;
-  const v = (hsb.b * 255) / 100;
+  let h = Math.round(hsb.h);
+  const s = Math.round((hsb.s * 255) / 100);
+  const v = Math.round((hsb.b * 255) / 100);
   if (s === 0) {
     rgb = { r: v, g: v, b: v };
   } else {
     const t1 = v;
     const t2 = ((255 - s) * v) / 255;
     const t3 = ((t1 - t2) * (h % 60)) / 60;
-    let hh = h;
-    if (hh === 360) hh = 0;
-    if (hh < 60) {
+    if (h === 360) h = 0;
+    if (h < 60) {
       rgb.r = t1;
       rgb.b = t2;
       rgb.g = t2 + t3;
-    } else if (hh < 120) {
+    } else if (h < 120) {
       rgb.g = t1;
       rgb.b = t2;
       rgb.r = t1 - t3;
-    } else if (hh < 180) {
+    } else if (h < 180) {
       rgb.g = t1;
       rgb.r = t2;
       rgb.b = t2 + t3;
-    } else if (hh < 240) {
+    } else if (h < 240) {
       rgb.b = t1;
       rgb.r = t2;
       rgb.g = t1 - t3;
-    } else if (hh < 300) {
+    } else if (h < 300) {
       rgb.b = t1;
       rgb.g = t2;
       rgb.r = t2 + t3;
-    } else if (hh < 360) {
+    } else if (h < 360) {
       rgb.r = t1;
       rgb.g = t2;
       rgb.b = t1 - t3;
@@ -135,42 +174,79 @@ function hsbToHex(hsb) {
   return rgbToHex(hsbToRgb(hsb));
 }
 
+function pointFromEvent(event, touchId) {
+  if ("changedTouches" in event) {
+    const touches = Array.from(event.changedTouches);
+    const touch =
+      touchId === undefined ? touches[0] : touches.find((item) => item.identifier === touchId);
+    return touch ? { x: touch.clientX, y: touch.clientY } : null;
+  }
+  return { x: event.clientX, y: event.clientY };
+}
+
 // Real PrimeVue ColorPicker (.vendor-extracted/vue/colorpicker/ColorPicker.vue)
-// composes its own Portal + transition around a color-selector square
-// (saturation/brightness drag) plus a hue strip (vertical drag). This port
-// composes UPortal the same way Select.vue does
-// (packages/vue/src/select/Select.vue), matching real source's own
-// "preview input trigger + Portal-rendered overlay panel" shape.
+// renders a preview input and a panel with a saturation/brightness square and
+// a hue strip; `inline` renders the panel in place without the input. The
+// panel goes through UPortal (`appendTo`, default body), is positioned with
+// absolutePosition/relativePosition, stacked with ZIndex under the `overlay`
+// key, and closed on an outside click, a window resize (not on touch
+// devices) or a scroll of any scrollable ancestor
+// (ConnectedOverlayScrollHandler), as PrimeVue does. `show` and `hide` are
+// emitted when the panel starts to enter and to leave.
 //
-// Value format matches real source's own `format` prop: 'hex' (default, a
-// #rrggbb string), 'rgb' ({r,g,b}), or 'hsb' ({h,s,b}) — same HSB/RGB/HEX
-// conversion math as real source's own HSBtoRGB/RGBtoHSB/HSBtoHEX/HEXtoHSB.
+// Pointer input is mouse and touch. A drag binds document listeners, follows
+// only the touch that started it, ends on `touchcancel`, and is removed when
+// it ends or the component unmounts. While a drag runs the picker keeps its
+// own colour and ignores model updates. The hue of a grey, white or black
+// colour is kept in `localHue`, as PrimeVue does. The value is `rrggbb` (no
+// `#`) for 'hex', {r,g,b} for 'rgb' and {h,s,b} for 'hsb'; hex is read with
+// or without `#`. `change` carries `{ originalEvent, value, event }`.
 //
-// Deliberately excludes real source's much larger surface: inline mode,
-// touch-event handling (mouse/keyboard interaction only, matching every
-// sibling component's established "smaller surface than upstream"
-// precedent), and passthrough.
+// `pt`, `unstyled` and `dt` come from the base chain; `inheritAttrs` is off
+// because `ptmi('root')` places the attributes on the root. The CSS is the
+// shared `@ultimate/uix-styles/colorpicker` module (ADR-082). Excluded
+// (ADR-104): `panelClass` (use `overlayClass`), the @primevue/forms
+// coupling, and the OverlayEventBus `overlay-click` emit.
 export default {
   name: "UColorPicker",
   extends: createBaseColorPicker(),
-  components: { UPortal },
+  inheritAttrs: false,
   emits: ["change", "show", "hide"],
+  components: { UPortal },
   data() {
-    // Base tier's own data() (createBaseEditableHolder) initializes dValue
-    // independently of this child's own data() — same corrected pattern
-    // documented in Select.vue's own data(). overlayVisible/drag flags are
-    // all independent of dValue, so no derivation pitfall applies here, but
-    // this comment documents the same known pitfall was checked.
     return {
       overlayVisible: false,
-      colorDragging: false,
-      hueDragging: false,
+      dragging: false,
+      hsbValue: { h: 0, s: 0, b: 0 },
     };
   },
-  computed: {
-    hsbValue() {
-      return this.toHsb(this.dValue);
+  created() {
+    this.localHue = null;
+    this.stopDrag = null;
+    this.outsideClickListener = null;
+    this.resizeListener = null;
+    this.scrollHandler = null;
+    this.hsbValue = this.toHsb(this.dValue);
+  },
+  watch: {
+    dValue(newValue) {
+      if (!this.dragging) this.hsbValue = this.toHsb(newValue);
     },
+    format() {
+      this.hsbValue = this.toHsb(this.dValue);
+    },
+  },
+  beforeUnmount() {
+    if (this.stopDrag) this.stopDrag();
+    this.unbindOutsideClickListener();
+    this.unbindResizeListener();
+    if (this.scrollHandler) {
+      this.scrollHandler.destroy();
+      this.scrollHandler = null;
+    }
+    if (this.$refs.panel && this.autoZIndex) clearZIndex(this.$refs.panel);
+  },
+  computed: {
     inputBgColor() {
       return "#" + hsbToHex(this.hsbValue);
     },
@@ -189,20 +265,28 @@ export default {
   },
   methods: {
     toHsb(value) {
+      let hsb;
       if (value) {
         switch (this.format) {
           case "rgb":
-            return rgbToHsb(value);
+            hsb = rgbToHsb(value);
+            break;
           case "hsb":
-            return value;
+            hsb = { ...value };
+            break;
           case "hex":
           default:
-            return hexToHsb(value);
+            hsb = rgbToHsb(hexToRgb(value));
+            break;
         }
+      } else {
+        hsb = rgbToHsb(hexToRgb(this.defaultColor));
       }
-      return hexToHsb(this.defaultColor);
+      if (hsb.s === 0 || hsb.b === 0) hsb.h = this.localHue ?? 0;
+      else this.localHue = hsb.h;
+      return hsb;
     },
-    getValueToUpdate(hsb) {
+    toValue(hsb) {
       switch (this.format) {
         case "rgb":
           return hsbToRgb(hsb);
@@ -210,79 +294,161 @@ export default {
           return { ...hsb };
         case "hex":
         default:
-          return "#" + hsbToHex(hsb);
+          return hsbToHex(hsb);
       }
     },
     updateModel(hsb, event) {
-      const value = this.getValueToUpdate(hsb);
+      this.hsbValue = hsb;
+      const value = this.toValue(hsb);
       this.writeValue(value, event);
-      this.$emit("change", { originalEvent: event, value });
-    },
-    togglePanel() {
-      if (this.disabled) return;
-      this.overlayVisible = !this.overlayVisible;
-      this.$emit(this.overlayVisible ? "show" : "hide");
+      this.$emit("change", { originalEvent: event, value, event });
     },
     onInputClick() {
-      this.togglePanel();
+      if (this.disabled) return;
+      this.overlayVisible = !this.overlayVisible;
     },
     onInputKeydown(event) {
       switch (event.code) {
         case "Space":
-          this.togglePanel();
+          this.overlayVisible = !this.overlayVisible;
           event.preventDefault();
           break;
         case "Escape":
         case "Tab":
-          if (this.overlayVisible) {
-            this.overlayVisible = false;
-            this.$emit("hide");
-          }
+          this.overlayVisible = false;
           break;
         default:
           break;
       }
     },
-    pickColor(clientX, clientY, event) {
-      const rect = this.$refs.colorSelectorRef?.getBoundingClientRect();
-      if (!rect) return;
-      const saturation = Math.floor((100 * Math.max(0, Math.min(150, clientX - rect.left))) / 150);
-      const brightness = Math.floor(
-        (100 * (150 - Math.max(0, Math.min(150, clientY - rect.top)))) / 150
-      );
-      this.updateModel(validateHsb({ h: this.hsbValue.h, s: saturation, b: brightness }), event);
+    pick(element, point, part, event) {
+      const rect = element.getBoundingClientRect();
+      if (part === "color") {
+        const saturation = Math.floor(
+          (100 * Math.max(0, Math.min(150, point.x - rect.left))) / 150
+        );
+        const brightness = Math.floor(
+          (100 * (150 - Math.max(0, Math.min(150, point.y - rect.top)))) / 150
+        );
+        this.updateModel(
+          validateHsb({ h: this.localHue ?? 0, s: saturation, b: brightness }),
+          event
+        );
+      } else {
+        this.localHue = Math.floor(
+          (360 * (150 - Math.max(0, Math.min(150, point.y - rect.top)))) / 150
+        );
+        this.updateModel(
+          validateHsb({ h: this.localHue, s: this.hsbValue.s, b: this.hsbValue.b }),
+          event
+        );
+      }
     },
-    pickHue(clientY, event) {
-      const rect = this.$refs.hueRef?.getBoundingClientRect();
-      if (!rect) return;
-      const hue = Math.floor((360 * (150 - Math.max(0, Math.min(150, clientY - rect.top)))) / 150);
-      this.updateModel(validateHsb({ h: hue, s: this.hsbValue.s, b: this.hsbValue.b }), event);
-    },
-    onColorMouseDown(event) {
+    onDragStart(event, part) {
       if (this.disabled) return;
-      this.colorDragging = true;
-      this.pickColor(event.clientX, event.clientY, event);
-      this.bindDragListeners();
-    },
-    onHueMouseDown(event) {
-      if (this.disabled) return;
-      this.hueDragging = true;
-      this.pickHue(event.clientY, event);
-      this.bindDragListeners();
-    },
-    bindDragListeners() {
-      const move = (event) => {
-        if (this.colorDragging) this.pickColor(event.clientX, event.clientY, event);
-        if (this.hueDragging) this.pickHue(event.clientY, event);
+      if (this.stopDrag) this.stopDrag();
+      const element = event.currentTarget;
+      const touch = "changedTouches" in event;
+      const touchId = touch ? event.changedTouches[0]?.identifier : undefined;
+      if (!touch) event.preventDefault();
+
+      const move = (moveEvent) => {
+        if (this.disabled) return;
+        const point = pointFromEvent(moveEvent, touchId);
+        if (!point) return;
+        if (moveEvent.cancelable) moveEvent.preventDefault();
+        this.pick(element, point, part, moveEvent);
       };
-      const up = () => {
-        this.colorDragging = false;
-        this.hueDragging = false;
+      const stop = () => {
+        this.stopDrag = null;
+        this.dragging = false;
         document.removeEventListener("mousemove", move);
-        document.removeEventListener("mouseup", up);
+        document.removeEventListener("mouseup", stop);
+        document.removeEventListener("touchmove", move);
+        document.removeEventListener("touchend", stop);
+        document.removeEventListener("touchcancel", stop);
       };
-      document.addEventListener("mousemove", move);
-      document.addEventListener("mouseup", up);
+
+      if (touch) {
+        document.addEventListener("touchmove", move, { passive: false });
+        document.addEventListener("touchend", stop);
+        document.addEventListener("touchcancel", stop);
+      } else {
+        document.addEventListener("mousemove", move);
+        document.addEventListener("mouseup", stop);
+      }
+      this.stopDrag = stop;
+      this.dragging = true;
+      const point = pointFromEvent(event, touchId);
+      if (point) this.pick(element, point, part, event);
+    },
+    onOverlayEnter(el, done) {
+      this.alignOverlay();
+      this.bindOutsideClickListener();
+      this.bindScrollListener();
+      this.bindResizeListener();
+      if (this.autoZIndex) setZIndex(Z_INDEX_KEYS.overlay, el, this.baseZIndex || 1000);
+      this.$emit("show");
+      motionHooks.onEnter(el, done);
+    },
+    onOverlayLeave(el, done) {
+      this.unbindOutsideClickListener();
+      this.unbindScrollListener();
+      this.unbindResizeListener();
+      this.$emit("hide");
+      motionHooks.onLeave(el, done);
+    },
+    onOverlayAfterLeave(el) {
+      if (this.autoZIndex) clearZIndex(el);
+    },
+    alignOverlay() {
+      if (!this.$refs.panel || !this.$refs.input) return;
+      if (this.appendTo === "self") relativePosition(this.$refs.panel, this.$refs.input);
+      else absolutePosition(this.$refs.panel, this.$refs.input);
+    },
+    bindOutsideClickListener() {
+      if (this.outsideClickListener) return;
+      this.outsideClickListener = (event) => {
+        const panel = this.$refs.panel;
+        const input = this.$refs.input;
+        if (
+          this.overlayVisible &&
+          panel &&
+          !panel.contains(event.target) &&
+          !(input && input.isSameNode(event.target))
+        ) {
+          this.overlayVisible = false;
+        }
+      };
+      document.addEventListener("click", this.outsideClickListener, true);
+    },
+    unbindOutsideClickListener() {
+      if (!this.outsideClickListener) return;
+      document.removeEventListener("click", this.outsideClickListener, true);
+      this.outsideClickListener = null;
+    },
+    bindScrollListener() {
+      if (!this.scrollHandler) {
+        this.scrollHandler = new ConnectedOverlayScrollHandler(this.$refs.container, () => {
+          if (this.overlayVisible) this.overlayVisible = false;
+        });
+      }
+      this.scrollHandler.bindScrollListener();
+    },
+    unbindScrollListener() {
+      if (this.scrollHandler) this.scrollHandler.unbindScrollListener();
+    },
+    bindResizeListener() {
+      if (this.resizeListener) return;
+      this.resizeListener = () => {
+        if (this.overlayVisible && !isTouchDevice()) this.overlayVisible = false;
+      };
+      window.addEventListener("resize", this.resizeListener);
+    },
+    unbindResizeListener() {
+      if (!this.resizeListener) return;
+      window.removeEventListener("resize", this.resizeListener);
+      this.resizeListener = null;
     },
   },
 };

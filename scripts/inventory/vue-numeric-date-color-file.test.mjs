@@ -121,15 +121,17 @@ test("props, emits, model, overlay, accessibility, math, upload and source-only 
       "0x0fff",
       "h = 300",
       "defaultColor",
-      "mousemove",
-      "no unmount cleanup",
-      "no outside-click",
+      "touchmove",
+      "beforeUnmount",
+      "outside-click listener",
+      "ConnectedOverlayScrollHandler",
+      "localHue",
+      '"rrggbb" without "#"',
       "stays open when disabled becomes true",
-      "mouse-only",
-      'aria-label "Select color"',
+      'aria-label "Select a color"',
       "ColorPickerPreviewClassesParams",
       "validateHsb",
-      "z-index: 1000",
+      "no z-index rule",
       "UPortal",
     ],
     "file-upload": [
@@ -155,7 +157,12 @@ test("props, emits, model, overlay, accessibility, math, upload and source-only 
   for (const [family, list] of Object.entries(terms))
     for (const term of list)
       assert.ok(by(`vue.${family}`).surface.includes(term), `${family}: ${term}`);
-  // Absent-pattern claims hold for every scoped component and its base/style sources.
+  // Absent-pattern claims hold for every scoped component and its base/style sources;
+  // color-picker's overlay lifecycle (unmount cleanup, watchers, ptmi root attributes,
+  // ZIndex and the window resize listener) is the recorded exception.
+  const present = {
+    "color-picker": ["beforeUnmount", "watch:", "inheritAttrs", "ZIndex", "window."],
+  };
   for (const f of families)
     for (const pattern of [
       "aria-controls",
@@ -171,7 +178,11 @@ test("props, emits, model, overlay, accessibility, math, upload and source-only 
       "window.",
       'lang="ts"',
     ])
-      assert.ok(!all(f).includes(pattern), `${f}: ${pattern}`);
+      assert.equal(
+        all(f).includes(pattern),
+        Boolean(present[f]?.includes(pattern)),
+        `${f}: ${pattern}`
+      );
   // v-model is checked on the SFCs only: a base-factory comment mentions it.
   for (const f of families) assert.ok(!src(f).includes("v-model"), `${f}: v-model`);
   // UPortal composed only by date-picker and color-picker.
@@ -185,21 +196,21 @@ test("props, emits, model, overlay, accessibility, math, upload and source-only 
       f
     );
   }
-  // No scoped family handles outside clicks; the two overlay families record it.
+  // Among the two overlay families only date-picker has no outside-click handling.
   assert.deepEqual(
     load()
       .records.filter((r) => r.surface.includes("no outside-click"))
       .map((r) => r.id.slice(4)),
-    portal
+    ["date-picker"]
   );
-  // document listeners only in color-picker, only mousemove and mouseup.
+  // document listeners only in color-picker: drag (touch, then mouse) and the outside click.
   assert.deepEqual(
     families.filter((f) => /document\./.test(all(f))),
     ["color-picker"]
   );
   assert.deepEqual(
     [...src("color-picker").matchAll(/document\.addEventListener\("(\w+)"/g)].map((m) => m[1]),
-    ["mousemove", "mouseup"]
+    ["touchmove", "touchend", "touchcancel", "mousemove", "mouseup", "click"]
   );
   // $refs read only by color-picker and file-upload; input-number declares ref and never reads it.
   assert.deepEqual(
@@ -207,12 +218,12 @@ test("props, emits, model, overlay, accessibility, math, upload and source-only 
     ["color-picker", "file-upload"]
   );
   assert.ok(src("input-number").includes('ref="input"'));
-  // z-index only in color-picker among the four.
+  // No z-index in any of the four style modules (color-picker's z-index is set by ZIndex).
   assert.deepEqual(
     families.filter((f) =>
       readFileSync(`packages/vue/src/${f}/${f}-style.ts`, "utf8").includes("z-index")
     ),
-    ["color-picker"]
+    []
   );
   // Only input-number passes extra preset keys; only date-picker has clear; only color-picker emits change.
   assert.deepEqual(
@@ -232,7 +243,7 @@ test("props, emits, model, overlay, accessibility, math, upload and source-only 
     readFileSync(`packages/vue/src/${f}/Base${sfc[f].replace(".vue", "")}.ts`, "utf8");
   assert.ok(base("input-number").includes("extends: createBaseInput()"));
   assert.ok(base("date-picker").includes("extends: createBaseInput()"));
-  assert.ok(base("color-picker").includes("extends: createBaseEditableHolder()"));
+  assert.ok(base("color-picker").includes("extends: createBaseEditableHolder({"));
   assert.ok(base("file-upload").includes("createBaseComponent({"));
   // Aura registry keys and metadata: names differ from keys; no metadata records.
   const registry = readFileSync("packages/themes/src/presets/aura/index.ts", "utf8");
@@ -327,12 +338,12 @@ test("README observations are derived from the JSON records", () => {
   const noOutside = input.records
     .filter((r) => r.surface.includes("no outside-click"))
     .map((r) => r.id.slice(4));
-  assert.deepEqual(noOutside, ["date-picker", "color-picker"]);
-  assert.ok(readme.includes("date-picker and color-picker have no outside-click"));
+  assert.deepEqual(noOutside, ["date-picker"]);
+  assert.ok(readme.includes("only date-picker has no outside-click"));
   const leaks = input.records
     .filter((r) => r.surface.includes("no unmount cleanup"))
     .map((r) => r.id.slice(4));
-  assert.deepEqual(leaks, ["color-picker"]);
+  assert.deepEqual(leaks, []);
   assert.ok(readme.includes("only color-picker registers document listeners"));
   const portals = input.records
     .filter((r) => !r.surface.includes("no UPortal"))
