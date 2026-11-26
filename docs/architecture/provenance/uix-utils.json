@@ -188,8 +188,8 @@
   {
     "originalPath": "src/dom/methods/getCursorOffset.ts",
     "ultimateDestination": "packages/uix-utils/src/dom/methods/getCursorOffset.ts",
-    "modificationStatus": "unmodified",
-    "modificationDescription": "none"
+    "modificationStatus": "adapted",
+    "modificationDescription": "Copy of @primeuix/utils src/dom/methods/getCursorOffset.ts with one defect fixed for #207 (ADR-105): upstream writes `prevText` into the measuring element through `innerHTML`, so markup typed into a textarea became elements there. The text is now inserted as text nodes with a `br` element for each line break, and an HTML payload creates no element. The measuring element also copies `boxSizing`, `direction`, `font` and `letterSpacing` from the input so that the caret offset follows them. The rest of the measurement is upstream's."
   },
   {
     "originalPath": "src/dom/methods/getFirstFocusableElement.ts",
