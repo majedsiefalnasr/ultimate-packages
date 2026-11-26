@@ -2158,7 +2158,7 @@ Standing rulings applied: React `tooltip` and `tooltipOptions` stay composition 
 
 ## ADR-105 — Mention: React only, built on `UInputTextarea` and the Stage 1 overlay foundations, PrimeReact's change event, a plain-text `getCursorOffset`, the Aura autocomplete tokens through additional preset keys, `pt` and `unstyled`, and recorded exclusions (L0a, ticket #207)
 
-Status: Proposed for user approval in the PR (gap-closing spec #167, Stage 2 layer L0a, ticket #207).
+Status: Accepted (user approval, 2026-11-26, as written, including the implementation choices; gap-closing spec #167, Stage 2 layer L0a, ticket #207).
 
 User rulings for this ticket ([#207](https://github.com/majedsiefalnasr/ultimate-packages/issues/207), spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167)):
 
