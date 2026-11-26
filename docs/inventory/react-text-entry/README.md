@@ -20,15 +20,19 @@ Root and secondary entries resolve to the same records; #106 family identities
 are aliases, never same-ticket pending entries. Foundation (`react-core`
 base, styling, icons, escape; #149) and theme presets (#151) remain explicitly
 pending, linked only where source imports or registry keys support it: the
-Aura registry has no inputmask, mention or inputicon key, so those records do
-not link presets. No metadata record exists for these families.
+Aura registry has no inputmask, mention or inputicon key, so input-mask does
+not link presets; mention links them because it registers the Aura
+`autocomplete` key as an additional preset key (#207, ADR-105). Mention also
+links the input-textarea record, whose `UInputTextarea` it renders. No
+metadata record exists for these families.
 
 Source facts recorded without repair include: `filled` class params never passed
 (input-text, input-textarea; password does pass it); `clearIcon` class unused; input-chips
-`onAdd` not emitted on paste; mention lacks `aria-controls`, is not a forwardRef
-and its debounce timer is not cleared; input-mask accepts no native attributes;
+`onAdd` not emitted on paste; input-mask accepts no native attributes;
 float-label and icon-field CSS selectors do not match the class names the
 sibling inputs render; password toggle icons are not keyboard reachable.
+Mention's earlier source facts (no `aria-controls`, not a forwardRef, an uncleared
+debounce timer) were closed by #207 and its record is refreshed from the current source.
 
 Regenerate and validate from the checkout root under Node 24.15.0:
 

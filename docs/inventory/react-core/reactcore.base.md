@@ -10,7 +10,7 @@ Hook that registers a component style module and returns a cx resolver turning s
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). Root exports useComponentBase and the types ClassValue, StyleModule and ComponentBaseOptions. cx(key, params) resolves a function or string entry of styleModule.classes through classNames and returns undefined for unknown keys. ComponentBaseOptions gains unstyled; useComponentBase returns { cx, isUnstyled } and cx returns undefined while unstyled (ADR-085). React has no per-instance dt. createPassThrough(componentName, { props, state, parent, hostName }) returns ptm and ptmo, and getPassThroughValue resolves one section from props.pt, in passthrough.ts (ADR-077). React has no automatic host lookup: the caller passes parent (ADR-079). The global and default pt sources, usePassThrough and pt.hooks are not implemented (ADR-080), so ptOptions has no visible effect yet.
+See [authored signatures and interpretation](README.md). Root exports useComponentBase and the types ClassValue, StyleModule and ComponentBaseOptions. cx(key, params) resolves a function or string entry of styleModule.classes through classNames and returns undefined for unknown keys. ComponentBaseOptions gains unstyled; useComponentBase returns { cx, isUnstyled } and cx returns undefined while unstyled (ADR-085). ComponentBaseOptions also takes an optional additionalPresetKeys list, which useComponentBase passes to useComponentStyle (ticket #207, ADR-105). React has no per-instance dt. createPassThrough(componentName, { props, state, parent, hostName }) returns ptm and ptmo, and getPassThroughValue resolves one section from props.pt, in passthrough.ts (ADR-077). React has no automatic host lookup: the caller passes parent (ADR-079). The global and default pt sources, usePassThrough and pt.hooks are not implemented (ADR-080), so ptOptions has no visible effect yet.
 
 ## Public exports
 
@@ -33,7 +33,8 @@ packages/react-core/src/base/component-base.ts
 packages/react-core/src/base/passthrough.ts
 
 ```text
-packages/react-core/src/base/component-base.ts: export function useComponentBase({ componentName, styleModule, unstyled }: ComponentBaseOptions): {
+packages/react-core/src/base/component-base.ts: export function useComponentBase({
+packages/react-core/src/base/component-base.ts: additionalPresetKeys?: readonly string[];
 packages/react-core/src/base/index.ts: export { useComponentBase } from "./component-base";
 packages/react-core/src/base/passthrough.ts: export function createPassThrough(
 ```

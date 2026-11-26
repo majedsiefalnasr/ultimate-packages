@@ -10,7 +10,7 @@ SSR-guarded style sheet instance and a hook that registers theme variables, hidd
 
 ## Framework surface
 
-See [authored signatures and interpretation](README.md). Root exports reactCoreStyleSheet and useComponentStyle. The sheet creates style elements in document.head and returns undefined when document is unavailable. useComponentStyle registers once on mount and adds component css only if the sheet has no entry for the name. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions. useComponentStyle(name, module, unstyled = false) registers only the hidden-accessible rule while unstyled and registers the rest when unstyled turns false. With cssLayer on, the layer-order statement is placed first in document.head (ticket #173, F6). A styled instance also registers the shared @ultimate/uix-styles base module once per sheet through registerSharedBase, under the key u-base (ticket #176, F10, ADR-081); an unstyled instance does not.
+See [authored signatures and interpretation](README.md). Root exports reactCoreStyleSheet and useComponentStyle. The sheet creates style elements in document.head and returns undefined when document is unavailable. useComponentStyle registers once on mount and adds component css only if the sheet has no entry for the name. Registered variable and component css are rewritten in place after Theme.setTheme, setPreset and setOptions. useComponentStyle(name, module, unstyled = false, additionalPresetKeys = []) registers only the hidden-accessible rule while unstyled and registers the rest when unstyled turns false. Each additional preset key registers only its theme variables, never structural css, as vue-core's registerComponentStyle does (ticket #207, ADR-051, ADR-067 (b), ADR-105). With cssLayer on, the layer-order statement is placed first in document.head (ticket #173, F6). A styled instance also registers the shared @ultimate/uix-styles base module once per sheet through registerSharedBase, under the key u-base (ticket #176, F10, ADR-081); an unstyled instance does not.
 
 ## Public exports
 
@@ -26,6 +26,7 @@ packages/react-core/src/styling/use-component-style.ts
 ```text
 packages/react-core/src/styling/react-style-sheet.ts: export const reactCoreStyleSheet = new ReactStyleSheet();
 packages/react-core/src/styling/use-component-style.ts: export function useComponentStyle(
+packages/react-core/src/styling/use-component-style.ts: additionalPresetKeys: readonly string[] = []
 ```
 
 ## Relationships

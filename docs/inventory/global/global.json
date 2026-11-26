@@ -12065,6 +12065,22 @@
     {
       "from": "scripts/inventory/react-text-entry.json",
       "origin": "relationship",
+      "source": "react.mention",
+      "target": "package.ultimate.themes.presets",
+      "resolution": "scripts/inventory/theme-contract.json#themes.aura",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/react-text-entry.json",
+      "origin": "relationship",
+      "source": "react.mention",
+      "target": "react.input-textarea",
+      "resolution": "scripts/inventory/react-text-entry.json#react.input-textarea",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/react-text-entry.json",
+      "origin": "relationship",
       "source": "react.password",
       "target": "package.ultimate.react-core.base",
       "resolution": "scripts/inventory/react-core.json#reactcore.base",
