@@ -92,6 +92,8 @@ Re-baselined rows (`uix-styled`, `vue-core`), measured 2026-11-22 against commit
 
 Re-baselined row (`ng-core`), measured 2026-11-26 against commit `3cefa218` (Node v24.15.0, pnpm 9.6.0) via a build of `packages/*` and `pnpm run size:measure`: `index.mjs` gzip went from 16.53 KB to 19.18 KB (+16.0%), past the 15% gate. Measured per commit, `develop` (`1e4eab58`) and `feat/gap-l0a` before ticket #206 (`85796708`) were already at 18.96 KB (+14.7%), and #206 (the ColorPicker overlay inputs on `UOverlay`, ADR-104) added 0.22 KB (+1.3 points). The growth up to 18.96 KB was not measured per commit. All other rows are unchanged.
 
+Re-baselined row (`react-core`), measured 2026-11-26 against commit `8bc56f06` (Node v24.15.0, pnpm 9.6.0) via a build of `packages/*` and `pnpm run size:measure`: `index.mjs` gzip went from 6.76 KB to 7.65 KB (+13.1%). The row was still inside the 15% gate. It is re-baselined because the code of ticket #195 (Checkbox, which adds the shared `renderIcon` helper to `react-core` and extends its check icon) measures 7.82 KB (+15.6%) against the old value. Measured per commit, `develop` (`1e4eab58`) and `feat/gap-l0a` before ticket #207 (`77ffe3cd`) were already at 7.60 KB, and #207 added 0.05 KB. The growth up to 7.60 KB was not measured per commit. All other rows are unchanged.
+
 ### Package size
 
 | Package                     | dist/ size | dist/ file count | index.mjs gzip size |
@@ -103,7 +105,7 @@ Re-baselined row (`ng-core`), measured 2026-11-26 against commit `3cefa218` (Nod
 | packages/mcp                | 93.0 KB    | 5                | 2.97 KB             |
 | packages/ng-core            | 224.6 KB   | 6                | 19.18 KB            |
 | packages/ng                 | 5281.3 KB  | 286              | 202.86 KB           |
-| packages/react-core         | 73.8 KB    | 3                | 6.76 KB             |
+| packages/react-core         | 89.6 KB    | 3                | 7.65 KB             |
 | packages/react              | 3390.8 KB  | 439              | 87.16 KB            |
 | packages/themes             | 482.9 KB   | 3                | 13.55 KB            |
 | packages/uix-data           | 7.0 KB     | 3                | 0.34 KB             |
