@@ -2074,7 +2074,7 @@ Status: Accepted (user approval, 2026-11-25, as written, including the implement
 
 ## ADR-104 — ColorPicker: one shared stylesheet on the Aura colorpicker tokens, the overlay on the Stage 1 foundations with one shared scroll handler, inline mode, touch drag, each Prime's hex format, a superset change event, `pt`, `unstyled` and `dt` in all three frameworks, and recorded exclusions (L0a, ticket #206)
 
-Status: Proposed for user approval in the PR (gap-closing spec #167, Stage 2 layer L0a, ticket #206).
+Status: Accepted (user approval, 2026-11-26, as written, including the implementation choices; gap-closing spec #167, Stage 2 layer L0a, ticket #206).
 
 User rulings for this ticket ([#206](https://github.com/majedsiefalnasr/ultimate-packages/issues/206), spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167)), option A unless stated:
 
