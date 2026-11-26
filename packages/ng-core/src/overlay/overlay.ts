@@ -17,6 +17,10 @@ import { ZIndex } from "@ultimate/uix-utils/zindex";
  * original DOM position and clearing the z-index once `visible` becomes
  * `false`.
  *
+ * `appendTo="self"` leaves the host where it is (PrimeNG's `appendTo`
+ * `'self'`), and `autoZIndex`/`baseZIndex` control the z-index, as the
+ * PrimeNG overlay options do.
+ *
  * Z-indexes are assigned via `@ultimate/uix-utils`'s `ZIndex` handler
  * (`packages/uix-utils/src/zindex/index.ts`'s exported `ZIndex` object —
  * `ZIndex.set(key, element, baseZIndex)` / `ZIndex.clear(element)`), the
@@ -47,12 +51,19 @@ export class UOverlay {
   visible = input(false);
   visibleChange = output<boolean>();
 
-  /** Where to move the host element to when shown: "body" or a given element. */
-  appendTo = input<"body" | HTMLElement>("body");
+  /** Where to move the host element to when shown: "body", a given element, or "self" to keep it in place. */
+  appendTo = input<"body" | "self" | HTMLElement>("body");
+
+  /** Whether to assign a z-index while shown. */
+  autoZIndex = input(true);
+
+  /** Base z-index of the overlay layer. */
+  baseZIndex = input(1000);
 
   private originalParent: Node | null = null;
   private originalNextSibling: Node | null = null;
   private appended = false;
+  private moved = false;
 
   constructor() {
     effect(() => {
@@ -73,13 +84,17 @@ export class UOverlay {
       return;
     }
     const hostEl = this.el.nativeElement;
-    this.originalParent = hostEl.parentNode;
-    this.originalNextSibling = hostEl.nextSibling;
-
     const appendTo = this.appendTo();
-    const target = appendTo === "body" ? this.document.body : appendTo;
-    this.renderer.appendChild(target, hostEl);
-    ZIndex.set("overlay", hostEl, 1000);
+    if (appendTo !== "self") {
+      this.originalParent = hostEl.parentNode;
+      this.originalNextSibling = hostEl.nextSibling;
+      const target = appendTo === "body" ? this.document.body : appendTo;
+      this.renderer.appendChild(target, hostEl);
+      this.moved = true;
+    }
+    if (this.autoZIndex()) {
+      ZIndex.set("overlay", hostEl, this.baseZIndex());
+    }
     this.appended = true;
   }
 
@@ -89,12 +104,13 @@ export class UOverlay {
     }
     const hostEl = this.el.nativeElement;
     ZIndex.clear(hostEl);
-    if (this.originalParent) {
+    if (this.moved && this.originalParent) {
       this.renderer.insertBefore(this.originalParent, hostEl, this.originalNextSibling);
     }
     this.originalParent = null;
     this.originalNextSibling = null;
     this.appended = false;
+    this.moved = false;
   }
 
   /**
@@ -119,11 +135,12 @@ export class UOverlay {
     const hostEl = this.el.nativeElement;
     ZIndex.clear(hostEl);
     const parent = hostEl.parentNode;
-    if (parent) {
+    if (this.moved && parent) {
       this.renderer.removeChild(parent, hostEl);
     }
     this.originalParent = null;
     this.originalNextSibling = null;
     this.appended = false;
+    this.moved = false;
   }
 }

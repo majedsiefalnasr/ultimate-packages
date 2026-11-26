@@ -1,31 +1,36 @@
-import { defineComponent } from "vue";
-import { createBaseEditableHolder, registerComponentStyle } from "@ultimate/vue-core";
+import { defineComponent, type PropType } from "vue";
+import { createBaseEditableHolder } from "@ultimate/vue-core";
 import { colorPickerStyleModule } from "./color-picker-style";
-import type { ClassValue } from "@ultimate/vue-core";
 
-// extends: createBaseEditableHolder(), matching verified
-// BaseColorPicker.vue's real chain exactly: `export default { name:
-// 'BaseColorPicker', extends: BaseEditableHolder, ... }` — confirmed against
-// .vendor-extracted/vue/colorpicker/BaseColorPicker.vue — same tier
-// URating/USlider/UKnob already extend, NOT BaseInput.
+// extends: createBaseEditableHolder(), matching verified BaseColorPicker.vue's
+// real chain: `export default { name: 'BaseColorPicker', extends:
+// BaseEditableHolder, ... }` — the tier UKnob/USlider already extend.
+//
+// `componentName` and `styleModule` go through createBaseEditableHolder, so
+// `cx`, style registration under the Aura `colorpicker` key, `unstyled`,
+// per-instance `dt` and `pt` all come from the shared base chain. The props
+// are PrimeVue's, except the deprecated `panelClass` (ADR-104), plus
+// `invalid` and the preview input's `ariaLabel`/`ariaLabelledby`.
 export function createBaseColorPicker() {
   return defineComponent({
-    extends: createBaseEditableHolder(),
+    extends: createBaseEditableHolder({
+      componentName: "colorpicker",
+      styleModule: colorPickerStyleModule,
+    }),
     props: {
-      format: { type: String, default: "hex" },
-      defaultColor: { type: String, default: "ff0000" },
+      defaultColor: { type: null as unknown as PropType<string>, default: "ff0000" },
+      inline: { type: Boolean, default: false },
+      format: { type: String as PropType<"hex" | "rgb" | "hsb">, default: "hex" },
+      tabindex: { type: String, default: null },
+      autoZIndex: { type: Boolean, default: true },
+      baseZIndex: { type: Number, default: 0 },
+      appendTo: { type: [String, Object] as PropType<string | HTMLElement>, default: "body" },
+      inputId: { type: String, default: null },
+      overlayClass: { type: null as unknown as PropType<unknown>, default: null },
       disabled: { type: Boolean, default: false },
-      appendTo: { type: [String, Object], default: "body" },
-    },
-    methods: {
-      cx(key: string, params?: Record<string, unknown>): ClassValue | undefined {
-        const resolver = colorPickerStyleModule.classes[key];
-        if (resolver === undefined) return undefined;
-        return typeof resolver === "function" ? resolver(params) : resolver;
-      },
-    },
-    mounted() {
-      registerComponentStyle("colorpicker", colorPickerStyleModule);
+      invalid: { type: Boolean, default: false },
+      ariaLabel: { type: String, default: "Select a color" },
+      ariaLabelledby: { type: String, default: null },
     },
   });
 }

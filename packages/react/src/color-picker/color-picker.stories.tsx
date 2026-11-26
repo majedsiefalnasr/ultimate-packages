@@ -27,3 +27,8 @@ export const Default: Story = {
 export const RgbFormat: Story = {
   render: () => <ColorPickerHarness format="rgb" />,
 };
+
+/** The panel rendered in place, without the preview input. */
+export const Inline: Story = {
+  render: () => <ColorPickerHarness inline />,
+};

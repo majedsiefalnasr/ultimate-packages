@@ -59,6 +59,51 @@ describe("UOverlay", () => {
     expect(Number(overlayEl.style.zIndex)).toBeGreaterThan(0);
   });
 
+  it('keeps the host in place with appendTo="self" and still assigns a z-index', async () => {
+    @Component({
+      standalone: true,
+      imports: [UOverlay],
+      template: `<section><div uOverlay [visible]="visible" appendTo="self"></div></section>`,
+    })
+    class SelfHostComponent {
+      visible = true;
+    }
+
+    const fixture = TestBed.createComponent(SelfHostComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const overlayEl = fixture.debugElement.query(By.directive(UOverlay))
+      .nativeElement as HTMLElement;
+    expect(overlayEl.parentElement?.tagName).toBe("SECTION");
+    expect(Number(overlayEl.style.zIndex)).toBeGreaterThan(0);
+
+    fixture.componentInstance.visible = false;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges(false);
+    await fixture.whenStable();
+    expect(overlayEl.parentElement?.tagName).toBe("SECTION");
+    expect(overlayEl.style.zIndex).toBe("");
+
+    fixture.destroy();
+  });
+
+  it("assigns no z-index when autoZIndex is false", async () => {
+    @Component({
+      standalone: true,
+      imports: [UOverlay],
+      template: `<div uOverlay [visible]="true" [autoZIndex]="false"></div>`,
+    })
+    class NoZIndexHostComponent {}
+
+    const fixture = TestBed.createComponent(NoZIndexHostComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const overlayEl = fixture.debugElement.query(By.directive(UOverlay))
+      .nativeElement as HTMLElement;
+    expect(overlayEl.style.zIndex).toBe("");
+    fixture.destroy();
+  });
+
   it("assigns a strictly higher z-index to a second overlay instance appended while the first is still visible", async () => {
     @Component({
       standalone: true,

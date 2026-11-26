@@ -6,6 +6,7 @@ import { style as avatarStyle } from "../src/avatar";
 import { style as badgeStyle } from "../src/badge";
 import { style as buttonStyle } from "../src/button";
 import { style as checkboxStyle } from "../src/checkbox";
+import { style as colorpickerStyle } from "../src/colorpicker";
 import { style as dialogStyle } from "../src/dialog";
 import { style as floatlabelStyle } from "../src/floatlabel";
 import { style as iftalabelStyle } from "../src/iftalabel";
@@ -65,6 +66,7 @@ describe("component style modules — exactly 18 exist alongside base", () => {
         "button",
         "checkbox",
         "chip",
+        "colorpicker",
         "dialog",
         "floatlabel",
         "iconfield",
@@ -147,6 +149,9 @@ describe("component style modules — exactly 18 exist alongside base", () => {
   });
   it("knob style uses only .u-knob* selectors", () => {
     expect(knobStyle).not.toMatch(/\.p-knob/);
+  });
+  it("colorpicker style uses only .u-color-picker* selectors", () => {
+    expect(colorpickerStyle).not.toMatch(/\.p-colorpicker/);
   });
 
   it("virtualscroller style uses only .u-scroller* selectors", () => {
