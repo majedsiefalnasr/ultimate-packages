@@ -1198,5 +1198,23 @@
     "ultimateDestination": "packages/ng/src/knob/index.ts",
     "modificationStatus": "authored",
     "modificationDescription": "Ultimate-authored barrel that re-exports `UKnob` and its value-template type. It shares only the exported component name with the compared upstream entry point."
+  },
+  {
+    "originalPath": "packages/primeng/src/colorpicker/colorpicker.ts",
+    "ultimateDestination": "packages/ng/src/color-picker/color-picker.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeNG 21.1.9 colorpicker/colorpicker.ts for #206 (ADR-104): the readonly preview input, the panel with the saturation/brightness selector and the hue strip, `inline`, `format` (`hex` written as `#rrggbb`, `rgb`, `hsb`), `defaultColor`, `tabindex`, `inputId`, `autofocus`, `autoZIndex`, `appendTo` with the `'self'` default, `motionOptions`, the Space, Escape and Tab keys on the input, the outside-click, scrollable-ancestor and non-touch resize dismissal, `onChange` with `originalEvent` and `value`, `onShow`, `onHide`, the public `show()` and `hide()`, the HSB maths and the `preview`, `panel`, `content`, `colorSelector`, `colorBackground`, `colorHandle`, `hue` and `hueHandle` sections are upstream's. Adapted: the panel sits in the ng-core `UOverlay` with `relativePosition`/`absolutePosition`, the uix-utils `ConnectedOverlayScrollHandler` and `@ultimate/uix-motion` (`u-anchored-overlay`) instead of `p-overlay`. Added: `UBind`, `U_PARENT_INSTANCE`, the `aria-label` \"Select a color\", `aria-haspopup` and `aria-expanded` on the input, the `u-color-picker-dragging` root class, a drag measured with `clientX`/`getBoundingClientRect` that follows only the touch that started it and ends on `touchcancel`, and listener cleanup on destroy. `invalid`, `required` and `name` are accepted and render nothing, as in PrimeNG. Not carried: `styleClass`, `showTransitionOptions` and `hideTransitionOptions` (deprecated), `overlayOptions` and the `pcOverlay` section (no Ultimate overlay-options API) and the `$pcColorPicker` token (no consumer). Changed for #206."
+  },
+  {
+    "originalPath": "packages/primeng/src/colorpicker/style/colorpickerstyle.ts",
+    "ultimateDestination": "packages/ng/src/color-picker/color-picker-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver (ADR-064). Side-by-side with PrimeNG 21.1.9 colorpicker/style/colorpickerstyle.ts for #206 (ADR-104): the root class with the overlay and dragging modifiers, the preview class with `p-disabled`, the panel class with the inline modifier and `p-disabled`, and the content, selector, background, handle, hue and hue-handle classes are upstream's with `p-colorpicker` renamed to `u-color-picker`. The CSS is the shared `@ultimate/uix-styles/colorpicker` module (ADR-082), which replaces the hand-written CSS this file held. Changed for #206."
+  },
+  {
+    "originalPath": "n/a",
+    "ultimateDestination": "packages/ng/src/color-picker/index.ts",
+    "modificationStatus": "authored",
+    "modificationDescription": "Ultimate-authored barrel that re-exports `UColorPicker` and its change-event type. It shares only the exported component name with the compared upstream entry point."
   }
 ]

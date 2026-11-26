@@ -148,5 +148,11 @@
     "ultimateDestination": "packages/uix-styles/src/knob/index.ts",
     "modificationStatus": "adapted",
     "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/knob/index.ts, recovered from dist/knob/index.mjs (ADR-082, #200). The `.p-knob*` selectors and the `p-knob-dash-frame` keyframes are renamed to `u-knob*`, the names Ultimate emits; every declaration and token is upstream's, and a test compares the module with the pinned fixture. Shared by the Angular, React and Vue Knob."
+  },
+  {
+    "originalPath": "src/colorpicker/index.ts",
+    "ultimateDestination": "packages/uix-styles/src/colorpicker/index.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Copy of @primeuix/styles 2.0.3 src/colorpicker/index.ts, recovered from dist/colorpicker/index.mjs (ADR-082, #206). The `.p-colorpicker*` selectors are renamed to `.u-color-picker*`, the names Ultimate emits; every declaration and token is upstream's (whitespace-normalised comparison with the pinned dist), including the `colorpicker.preview.focus.border.color` reference that Aura does not define. The `p-disabled` and `p-invalid` state classes are not renamed. Shared by the Angular, React and Vue ColorPicker."
   }
 ]

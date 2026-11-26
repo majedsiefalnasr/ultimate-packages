@@ -1324,5 +1324,29 @@
     "ultimateDestination": "packages/vue/src/knob/index.ts",
     "modificationStatus": "reimplemented-with-reference",
     "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UKnob, createBaseKnob and the value-template type; it shares only the exported names with PrimeVue's knob entry point."
+  },
+  {
+    "originalPath": "packages/primevue/src/colorpicker/ColorPicker.vue",
+    "ultimateDestination": "packages/vue/src/color-picker/ColorPicker.vue",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY (ADR-064). Side-by-side with PrimeVue 4.5.5 ColorPicker.vue for #206 (ADR-104): the readonly preview input, the panel in `Portal` with the saturation/brightness selector and the hue strip, `inline`, `format` (`hex` written as `rrggbb` without `#`, `rgb`, `hsb`), the Space, Escape and Tab keys, `absolutePosition`/`relativePosition`, the `overlay` z-index, the outside-click, scrollable-ancestor and non-touch resize dismissal, `show` and `hide` as the panel enters and leaves, the hue kept in `localHue` for grey, white and black, the HSB maths, `inheritAttrs: false`, `ptmi('root')` and the `preview`, `panel`/`overlay`, `content`, `colorSelector`, `colorBackground`, `colorHandle`, `hue` and `hueHandle` sections are upstream's. Adapted: the vue-core `Portal`, `useZIndex` and `createMotionTransitionHooks` (`u-anchored-overlay`) and the uix-utils `ConnectedOverlayScrollHandler`; the handles are positioned by template bindings instead of direct style writes. Added: `change` carries `originalEvent` beside `event` and `value`, the `aria-label` \"Select a color\", `aria-labelledby`, `aria-haspopup` and `aria-expanded` on the input, a drag measured with `clientX`/`getBoundingClientRect` that follows only the touch that started it and ends on `touchcancel`, no model-to-HSB sync while a drag runs, and drag-listener cleanup on unmount. Not carried: `panelClass` (deprecated; `overlayClass` is kept), forms registration (Vue Forms spec), the OverlayEventBus `overlay-click` emit (no Ultimate bus), the `transition` pass-through section and the `p-colorpicker-dragging` data attribute. Changed for #206."
+  },
+  {
+    "originalPath": "packages/primevue/src/colorpicker/BaseColorPicker.vue",
+    "ultimateDestination": "packages/vue/src/color-picker/BaseColorPicker.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "Ultimate base factory that shares only interface facts with PrimeVue 4.5.5 BaseColorPicker.vue for #206 (ADR-104): the prop names and defaults `defaultColor`, `inline`, `format`, `tabindex`, `autoZIndex`, `baseZIndex`, `appendTo`, `inputId` and `overlayClass`. It is built with `createBaseEditableHolder` under the Aura `colorpicker` key and adds `disabled`, `invalid`, `ariaLabel` and `ariaLabelledby`. `panelClass` (deprecated) is not carried. Changed for #206."
+  },
+  {
+    "originalPath": "packages/primevue/src/colorpicker/style/ColorPickerStyle.js",
+    "ultimateDestination": "packages/vue/src/color-picker/color-picker-style.ts",
+    "modificationStatus": "adapted",
+    "modificationDescription": "Source class COPY for the class resolver (ADR-064). Side-by-side with PrimeVue 4.5.5 colorpicker/style/ColorPickerStyle.js for #206 (ADR-104): the preview class with `p-disabled`, the panel class with the inline modifier, `p-disabled` and `p-invalid`, and the selector, background, handle, hue and hue-handle classes are upstream's with `p-colorpicker` renamed to `u-color-picker`. Added: the `content` class (missing from PrimeVue's map, a reference defect) and the overlay and dragging root modifiers PrimeNG emits. The CSS is the shared `@ultimate/uix-styles/colorpicker` module (ADR-082). Changed for #206."
+  },
+  {
+    "originalPath": "packages/primevue/src/colorpicker/ColorPicker.vue",
+    "ultimateDestination": "packages/vue/src/color-picker/index.ts",
+    "modificationStatus": "reimplemented-with-reference",
+    "modificationDescription": "REFERENCE (ADR-064 barrel rule). Barrel re-export of UColorPicker and createBaseColorPicker; it shares only the exported names with PrimeVue's colorpicker entry point."
   }
 ]

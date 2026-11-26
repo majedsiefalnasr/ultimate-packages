@@ -2071,3 +2071,85 @@ Status: Accepted (user approval, 2026-11-25, as written, including the implement
 - Knob works with touch on all three frameworks, and screen-reader users get an accessible name when the caller provides one.
 - A disabled knob gets `p-disabled` but no opacity, because no registered rule styles `p-disabled`. That gap is shared by every component that emits it and belongs to the family tickets.
 - Tests assert values, classes, attributes, colours, templates, touch and mouse drags, listener cleanup and pass-through in jsdom (Angular 20, React 22, Vue 21, and the shared module in `uix-styles`). They do not run real touch devices, measure pixels, or read screen-reader output.
+
+## ADR-104 — ColorPicker: one shared stylesheet on the Aura colorpicker tokens, the overlay on the Stage 1 foundations with one shared scroll handler, inline mode, touch drag, each Prime's hex format, a superset change event, `pt`, `unstyled` and `dt` in all three frameworks, and recorded exclusions (L0a, ticket #206)
+
+Status: Proposed for user approval in the PR (gap-closing spec #167, Stage 2 layer L0a, ticket #206).
+
+User rulings for this ticket ([#206](https://github.com/majedsiefalnasr/ultimate-packages/issues/206), spec [#167](https://github.com/majedsiefalnasr/ultimate-packages/issues/167)), option A unless stated:
+
+- **D1-A, hex format.** Angular writes `#rrggbb`; React and Vue write `rrggbb` without `#`, as each Prime does. All three read hex with or without `#`.
+- **D2-C, panel keyboard and ARIA.** No panel keyboard or ARIA beyond what the Prime source has. The Prime documentation promises more (see Context); a follow-up ticket is proposed, not yet created (needs user approval).
+- **D3-B, change event.** The payload is a superset. All three keep `originalEvent` and `value`; React also has PrimeReact's `target {name, id, value}`, `preventDefault` and `stopPropagation`; Vue also has PrimeVue's `event`.
+- **D4-A, overlay.** The panel is built on the existing shared pieces (uix-utils positioning and `ZIndex`, ng-core `UOverlay`, the React and Vue `Portal`, React `useOverlayListener`) plus one new shared `ConnectedOverlayScrollHandler` in uix-utils. Angular `appendTo` defaults to `'self'`. Angular `overlayOptions` is not carried (I).
+- **D5-A, motion.** Angular `motionOptions` and React `transitionOptions` take `@ultimate/uix-motion` options. For React this differs from PrimeReact's react-transition-group props (I, part of row 23).
+- **D6-A, deprecated props.** Vue `panelClass`, Angular `styleClass`, `showTransitionOptions` and `hideTransitionOptions` are not carried (I).
+- **D7-A, pass-through.** The sections are `root`, `preview`, `panel`, `content`, `colorSelector`, `colorBackground`, `colorHandle`, `hue` and `hueHandle` in all three. React also accepts PrimeReact's `input`, `selector` and `color`, merged first (the ADR-103 ruling 6 pattern).
+
+Standing rulings applied: React `tooltip` and `tooltipOptions` stay composition with `UTooltip` (I); `ptOptions` stays P until the global `pt` source exists (ADR-080); Vue forms registration stays M in the separate Vue Forms spec (R3).
+
+**Context.**
+
+- ColorPicker is a preview swatch that opens a panel with a saturation/brightness square and a vertical hue strip; `inline` shows the panel in place. PrimeNG 21.1.9, PrimeReact 10.9.9 and PrimeVue 4.5.5 all call it `ColorPicker`.
+- The Phase 4 report (`docs/architecture/research/phase4/batch4/colorpicker.md`) found 30 rows per framework: Angular C 8, P 7, M 12, N 3; React C 4, P 6, M 15, N 5; Vue C 8, P 5, M 13, N 4. None of the three had inline mode, touch, dismissal on scroll or resize, motion, `pt` or the Aura styles. React and Vue wrote `#rrggbb`, which neither PrimeReact nor PrimeVue does. React and Vue removed their drag listeners only on mouse up, React fired `onShow`/`onHide` from inside a state updater, and React had hand-written CSS with no Aura token.
+- The Prime documentation's keyboard tables promise arrow keys on the square and the hue strip, Space moving focus into the panel, and Enter or Space selecting and closing. The panel elements have no `tabindex`, key handlers or ARIA in any of the three sources (`docs/prime-reference/components/colorpicker.md`, section 7). The pinned source wins over the documentation, so this ticket implements the source behaviour (ruling D2).
+- PrimeNG, PrimeVue and PrimeReact each keep their own copy of the scroll handler. PrimeNG and PrimeVue have the same class; Ultimate had none.
+
+**Decision.**
+
+1. **One shared stylesheet (ADR-082).** `@ultimate/uix-styles/colorpicker` is the `@primeuix/styles` 2.0.3 `colorpicker` module with `.p-colorpicker*` renamed to `.u-color-picker*`. Every declaration and token is upstream's (compared after whitespace normalisation with the pinned dist), including the `colorpicker.preview.focus.border.color` reference that Aura does not define. Angular, React and Vue import it under the component name `colorpicker`, the Aura key. React loses its hand-written CSS (ADR-067).
+2. **Overlay (ruling D4).** Angular puts the panel in the ng-core `UOverlay`, which now also accepts `appendTo="self"` and the `autoZIndex` and `baseZIndex` inputs. React uses `Portal`, `useOverlayListener`, `useZIndex` and the uix-utils `alignOverlay`. Vue uses `Portal`, `useZIndex` and the uix-utils `absolutePosition`/`relativePosition`. All three bind the new uix-utils `ConnectedOverlayScrollHandler`, a port of the PrimeNG/PrimeVue class, to the scrollable ancestors while the panel is open, and remove every listener when the panel closes or the component is destroyed or unmounted.
+3. **Dismissal.** Each framework follows its own Prime. Angular and Vue close on an outside click, a scroll of a scrollable ancestor and a window resize on non-touch devices. React closes on an outside click and realigns on a scroll or resize, as PrimeReact does without its global `hideOverlaysOnDocumentScrolling`, which Ultimate does not have. Escape and Tab on the input close the panel and Space toggles it in all three.
+4. **Motion (ruling D5).** The panel enters and leaves with `@ultimate/uix-motion` under the name `u-anchored-overlay`. Angular `motionOptions` and React `transitionOptions` merge over that name; Vue uses the JS-driven `createMotionTransitionHooks`, as `UMenu` does.
+5. **Inline mode and touch.** `inline` renders the panel in place without the input, motion or overlay listeners. A mouse or touch drag on the square or the hue strip binds document listeners; a touch drag follows only the touch that started it and ends on `touchend` or `touchcancel`. The root carries `u-color-picker-dragging` while a drag runs.
+6. **Value and events (rulings D1 and D3).** Formats are `hex`, `rgb` (`{r,g,b}`) and `hsb` (`{h,s,b}`), with `defaultColor` `ff0000`. A drag keeps the picker's own colour and ignores incoming value updates until it ends, so the handles do not jump. Vue keeps the hue of a grey, white or black value in `localHue`, as PrimeVue does. `show` and `hide` are emitted in all three.
+7. **`pt`, `ptOptions`, `unstyled` and `dt` (ruling D7).** Angular binds the root through `UBind` and provides itself as `U_PARENT_INSTANCE`. Vue builds the base with `createBaseEditableHolder({componentName: "colorpicker", styleModule})` and uses `ptmi('root')` with `inheritAttrs` off. React uses `createPassThrough` and `useMergeProps`, and forwards its ref as a handle.
+
+**Choices made while implementing (not separately ruled; they stay as written unless this ADR is amended).** Items 1 to 10 were listed with the plan and approved with it; items 11 to 20 came up while implementing.
+
+1. The shared module is `@ultimate/uix-styles/colorpicker` with `.u-color-picker*` selectors and the component name `colorpicker` in all three.
+2. The `p-disabled` and `p-invalid` state classes are not renamed, as in the other shared modules.
+3. All three emit the `content` class (missing from PrimeVue's class map, a reference defect), and the stylesheet keeps upstream's `colorpicker.preview.focus.border.color` reference although Aura does not define it.
+4. The pointer position is read with `clientX`/`clientY` against the element's `getBoundingClientRect`, so page scroll does not shift it. A drag follows one touch, `touchcancel` ends it, and touch moves cancel scrolling through a non-passive document listener.
+5. The root gets `u-color-picker-dragging` during a drag in all three (PrimeNG and PrimeVue add it; PrimeReact does not).
+6. Escape and Tab close the panel from the input. PrimeReact's `closeOnEscape`, which it reads but never declares, is not carried.
+7. The React ref handle is `{show, hide, focus, getElement, getOverlay, getInput}`.
+8. The preview input's default `aria-label` is "Select a color", PrimeNG's English locale string, in all three; React and Vue also take `aria-labelledby`.
+9. Each framework keeps its own Prime's HSB maths.
+10. Angular accepts `invalid`, `required` and `name` and renders nothing for them, as PrimeNG does. Vue puts `p-invalid` on the panel, as PrimeVue does.
+11. Angular's label is a fixed English string: PrimeNG reads it from its locale, and Ultimate has no translation API, so Angular row 25 stays P.
+12. The ng-core `UOverlay` gains `appendTo="self"`, `autoZIndex` and `baseZIndex` (default 1000) instead of ColorPicker carrying its own overlay code.
+13. Vue keeps PrimeVue's non-deprecated `overlayClass` and binds `ptm('panel')` and `ptm('overlay')` on the panel, as PrimeVue does, so PrimeVue's documented `overlay` section name also works.
+14. Vue takes `ariaLabel` and `ariaLabelledby` as props so that they reach the input; every other attribute goes to the root through `ptmi('root')`.
+15. The z-index base is 1000 in all three: Angular through `UOverlay`, React through the `overlay` bucket of `useZIndex`, and Vue as `baseZIndex || 1000`, PrimeVue's configured overlay default.
+16. Event timing follows each implementation's overlay: Angular emits `onShow` once the panel is placed and `onHide` after the leave motion; React emits both after the motion ends, as PrimeReact's transition callbacks do; Vue emits them when the panel starts to enter and to leave, as PrimeVue does.
+17. Vue positions the handles and colours through template bindings instead of PrimeVue's direct style writes.
+18. React opens and closes outside the state updater, so `onShow` and `onHide` fire once even under React's double-invoked updaters.
+19. Not carried, with no consumer in Ultimate: Vue's OverlayEventBus `overlay-click` emit (no Ultimate overlay bus), the `transition` pass-through section and the `p-colorpicker-dragging` data attribute; PrimeReact's `p-inputtext` preview class, global `context` lookup and `props` ref entry; PrimeNG's `pcOverlay` section and `$pcColorPicker` token.
+20. The Vue spec turns off `@vue/test-utils`' default `<transition>` stub, as the Menu spec does, so the enter and leave hooks run under test.
+
+**Divergences from Prime.**
+
+1. Angular row 23 is I: `overlayOptions` and the `pcOverlay` section have no Ultimate overlay-options API (ruling D4), and `styleClass`, `showTransitionOptions` and `hideTransitionOptions` are deprecated (ruling D6).
+2. React row 23 is I: `transitionOptions` takes `@ultimate/uix-motion` options, not react-transition-group props (ruling D5). `panelClassName` and `panelStyle` are carried.
+3. Vue row 23 is I: the deprecated `panelClass` is not carried (ruling D6); `overlayClass` is.
+4. React row 24 is I: `tooltip` and `tooltipOptions` stay composition with `UTooltip` (standing ruling).
+5. The panel keyboard and ARIA that the Prime documentation promises are not implemented, because no Prime source has them (ruling D2). Follow-up ticket proposed, not yet created (needs user approval).
+6. React and Vue have a default `aria-label`, and Vue's `change` carries `originalEvent`, which their Prime counterparts do not; these rows stay N or C.
+7. `ptOptions` has no visible effect until the global `pt` source exists (ADR-080), so row 28 stays P in all three.
+8. Vue forms registration stays M in row 06. It belongs to the separate Vue Forms spec (R3).
+
+**Classification after this ticket** (C complete, P partial, M missing, I intentional, N absent from the corresponding Prime; rows in the Phase 4 matrix order, 01 to 30; from a re-read of the pinned sources and the specs in this ticket; the Phase 4 report is not edited, and nothing here is browser-verified).
+
+- **Angular:** C 24, P 2, M 0, I 1, N 3. Open: row 25 (P, no Ultimate translation API) and row 28 (P, ADR-080). Row 23 is I. N rows: 06, 12, 24.
+- **React:** C 22, P 1, M 0, I 2, N 5. Open: row 28 (P, ADR-080). Rows 23 and 24 are I. N rows: 04, 06, 12, 25, 30.
+- **Vue:** C 23, P 1, M 1, I 1, N 4. Open: row 06 (M, Vue Forms spec) and row 28 (P, ADR-080). Row 23 is I. N rows: 05, 20, 24, 25.
+- Row 13 (panel positioning) is C from the source re-read; the left-to-right and right-to-left browser check that the report asked for has not been run.
+
+**Consequences.**
+
+- The three pickers read the Aura `colorpicker` tokens and the same structural CSS. The preview swatch, the panel and the handles change appearance in all three, and React changes most, so the ColorPicker visual baselines are expected to change and are reviewed with before and after images before any update.
+- React and Vue now write `rrggbb` instead of `#rrggbb`. A caller that compared the emitted value with a `#` string must change; values with `#` are still read.
+- The panel closes or realigns on scroll and resize, and no listener outlives the component.
+- The panel is still not keyboard-operable and has no role, as in Prime. Screen-reader users get only the input's label.
+- Tests assert values, formats, events, overlay placement, dismissal, motion end, inline mode, mouse and touch drags, listener cleanup, `pt` and `unstyled` in jsdom (Angular 17, React 18, Vue 19, the shared module 7, the scroll handler 6, and two new `UOverlay` cases). They do not run real touch devices, measure pixels, check right-to-left placement, or read screen-reader output.
