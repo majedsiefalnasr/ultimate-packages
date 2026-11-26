@@ -11,7 +11,8 @@ This is bounded coverage of four families, not platform closeout.
 Edit `scripts/inventory/vue-numeric-date-color-file.json`, not generated details. The
 existing pilot pipeline is reused unchanged. Families: input-number, date-picker,
 color-picker and file-upload. Each record owns its SFC component, its `createBase*`
-factory (a public export) and its local style module. Specs and stories are explicit
+factory (a public export) and its style module (color-picker's imports the shared
+`@ultimate/uix-styles/colorpicker` CSS, not linked, as in the choice-range Knob record). Specs and stories are explicit
 supporting-file exclusions; every other scoped file has an owner.
 
 Root and secondary entries resolve to the same records; #121 family identities are
@@ -24,8 +25,8 @@ names: `inputnumber`, `datepicker`, `colorpicker` and `fileupload`, which are al
 registered style names.
 
 Source facts recorded without repair are in the generated detail files. Cross-family
-summary, each checked against all four components: date-picker and color-picker have no outside-click
-handling; only color-picker registers document listeners, and it has no unmount cleanup;
+summary, each checked against all four components: only date-picker has no outside-click
+handling; only color-picker registers document listeners, and it removes them in `beforeUnmount`;
 date-picker and color-picker compose `UPortal`, while input-number and file-upload
 render inline; only input-number passes an additional preset key to
 `registerComponentStyle`; file-upload has no model value; no component calls `.focus(`.

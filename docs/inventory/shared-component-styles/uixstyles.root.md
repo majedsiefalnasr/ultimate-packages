@@ -51,6 +51,7 @@ uixstyles.toggleswitch
 uixstyles.slider
 uixstyles.rating
 uixstyles.knob
+uixstyles.colorpicker
 uixstyles.table
 uixstyles.tooltip
 uixstyles.virtualscroller

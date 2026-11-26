@@ -310,8 +310,8 @@
       "scope": "shared-component-styles-146",
       "ticket": 146,
       "revision": "b9051a6668bf08b91654c23925a41cdcd9b84119",
-      "records": 24,
-      "aliases": 25,
+      "records": 25,
+      "aliases": 26,
       "pending": 1
     },
     {
@@ -1748,6 +1748,11 @@
       "id": "package.ultimate.uix-styles.chip",
       "owner": "#146",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.chip"
+    },
+    {
+      "id": "package.ultimate.uix-styles.colorpicker",
+      "owner": "#146",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.colorpicker"
     },
     {
       "id": "package.ultimate.uix-styles.dialog",
@@ -12204,6 +12209,22 @@
     {
       "from": "scripts/inventory/shared-component-styles.json",
       "origin": "relationship",
+      "source": "uixstyles.colorpicker",
+      "target": "package.ultimate.uix-styled.root",
+      "resolution": "scripts/inventory/styled-runtime.json#uixstyled.root",
+      "via": "alias"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.colorpicker",
+      "target": "uixstyles.root",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.root",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
       "source": "uixstyles.dialog",
       "target": "package.ultimate.uix-styled.root",
       "resolution": "scripts/inventory/styled-runtime.json#uixstyled.root",
@@ -12423,6 +12444,14 @@
       "source": "uixstyles.root",
       "target": "uixstyles.chip",
       "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.chip",
+      "via": "record"
+    },
+    {
+      "from": "scripts/inventory/shared-component-styles.json",
+      "origin": "relationship",
+      "source": "uixstyles.root",
+      "target": "uixstyles.colorpicker",
+      "resolution": "scripts/inventory/shared-component-styles.json#uixstyles.colorpicker",
       "via": "record"
     },
     {

@@ -4,11 +4,11 @@ This authored interpretation accompanies the generated [index](index.md), [DOM r
 
 ## Authored interpretation
 
-This record catalogs the named values exported by the DOM barrel, including its four helpers. They are low-level browser DOM utilities, not components. No DOM/browser global is accessed during module initialization in the 89 source files; globals are read only when a function runs. That means importing this module is safe from top-level DOM access, but does not make every helper SSR-safe. The names below are reconciled against the barrel. Purpose is inferred from source implementation, not a behavioral test or compatibility guarantee.
+This record catalogs the named values exported by the DOM barrel, including its five helpers. They are low-level browser DOM utilities, not components. No DOM/browser global is accessed during module initialization in the 90 source files; globals are read only when a function runs. That means importing this module is safe from top-level DOM access, but does not make every helper SSR-safe. The names below are reconciled against the barrel. Purpose is inferred from source implementation, not a behavioral test or compatibility guarantee.
 
 ## Public surface and availability
 
-`packages/uix-utils/src/index.ts` re-exports `./dom`, while `packages/uix-utils/src/dom/index.ts` re-exports 84 method defaults and four helper defaults as named exports. The manifest declares `.` and wildcard subpath artifacts, and `tsup.config.ts` builds the root and immediate source submodule indexes. The source barrel and build configuration therefore describe the DOM names at the root and `dom` entry points; installed-package or published-consumer resolution was not verified. The wildcard does not establish deep public paths for `dom/helpers/*` or `dom/methods/*`. `BlockBodyScrollOptions` and `UnblockBodyScrollOptions` are module-exported interfaces but are not re-exported by `dom/index.ts`. The private `BrowserType` alias in `getBrowser.ts` is also not exposed by the barrel.
+`packages/uix-utils/src/index.ts` re-exports `./dom`, while `packages/uix-utils/src/dom/index.ts` re-exports 84 method defaults and five helper defaults as named exports. The manifest declares `.` and wildcard subpath artifacts, and `tsup.config.ts` builds the root and immediate source submodule indexes. The source barrel and build configuration therefore describe the DOM names at the root and `dom` entry points; installed-package or published-consumer resolution was not verified. The wildcard does not establish deep public paths for `dom/helpers/*` or `dom/methods/*`. `BlockBodyScrollOptions` and `UnblockBodyScrollOptions` are module-exported interfaces but are not re-exported by `dom/index.ts`. The private `BrowserType` alias in `getBrowser.ts` is also not exposed by the barrel.
 
 ## Export catalog
 
@@ -130,12 +130,13 @@ Each row is one named export from `packages/uix-utils/src/dom/index.ts:1-88`. Th
 
 ## Helpers
 
-| Export              | Exact source signature and purpose                                                                                                                                                                                                                                                                               |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `blockBodyScroll`   | `(option: string \| BlockBodyScrollOptions \| undefined): void` — `packages/uix-utils/src/dom/helpers/blockBodyScroll.ts`; adds a body class (default `p-overflow-hidden`), optionally stores scrollbar width in a CSS variable. `BlockBodyScrollOptions` is exported by this helper module, not the DOM barrel. |
-| `unblockBodyScroll` | `(option: string \| UnblockBodyScrollOptions \| undefined): void` — `packages/uix-utils/src/dom/helpers/unblockBodyScroll.ts`; removes the body class and optional CSS variable. `UnblockBodyScrollOptions` is exported by this helper module, not the DOM barrel.                                               |
-| `exportCSV`         | `(csv: any, filename: string): void` — `packages/uix-utils/src/dom/helpers/exportCSV.ts`; creates a CSV Blob, uses `msSaveOrOpenBlob` when available, otherwise calls `saveAs`, falling back to a data URL and `window.open`; appends `.csv`.                                                                    |
-| `saveAs`            | `(file: { name: string; src: string }): boolean` — `packages/uix-utils/src/dom/helpers/saveAs.ts`; downloads through a temporary anchor and returns false if anchor download is unsupported.                                                                                                                     |
+| Export                          | Exact source signature and purpose                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `blockBodyScroll`               | `(option: string \| BlockBodyScrollOptions \| undefined): void` — `packages/uix-utils/src/dom/helpers/blockBodyScroll.ts`; adds a body class (default `p-overflow-hidden`), optionally stores scrollbar width in a CSS variable. `BlockBodyScrollOptions` is exported by this helper module, not the DOM barrel.                                                                                                                                   |
+| `unblockBodyScroll`             | `(option: string \| UnblockBodyScrollOptions \| undefined): void` — `packages/uix-utils/src/dom/helpers/unblockBodyScroll.ts`; removes the body class and optional CSS variable. `UnblockBodyScrollOptions` is exported by this helper module, not the DOM barrel.                                                                                                                                                                                 |
+| `exportCSV`                     | `(csv: any, filename: string): void` — `packages/uix-utils/src/dom/helpers/exportCSV.ts`; creates a CSV Blob, uses `msSaveOrOpenBlob` when available, otherwise calls `saveAs`, falling back to a data URL and `window.open`; appends `.csv`.                                                                                                                                                                                                      |
+| `saveAs`                        | `(file: { name: string; src: string }): boolean` — `packages/uix-utils/src/dom/helpers/saveAs.ts`; downloads through a temporary anchor and returns false if anchor download is unsupported.                                                                                                                                                                                                                                                       |
+| `ConnectedOverlayScrollHandler` | `new (element: Element, listener?: (event: Event) => void)` with `bindScrollListener(): void`, `unbindScrollListener(): void` and `destroy(): void` — `packages/uix-utils/src/dom/helpers/ConnectedOverlayScrollHandler.ts`; binds `listener` to the `scroll` event of every scrollable ancestor from `getScrollableParents`, removes it again, and `destroy` clears its references. A port of PrimeNG's and PrimeVue's identical class (ADR-104). |
 
 These helpers directly access `document.body`, `window`, `Blob`, `URL`, and/or `navigator`; no general SSR guard is present. `exportCSV` uses `URL.createObjectURL` without a visible `revokeObjectURL` call in this implementation.
 
@@ -149,7 +150,7 @@ These helpers directly access `document.body`, `window`, `Blob`, `URL`, and/or `
 ## Evidence and verification
 
 ```text
-packages/uix-utils/src/dom/index.ts:1-88 — 84 method exports and four helper exports.
+packages/uix-utils/src/dom/index.ts:1-89 — 84 method exports and five helper exports.
 packages/uix-utils/src/index.ts:1-9 — root barrel re-exports DOM exports.
 packages/uix-utils/package.json:8-21 — root and wildcard subpath maps.
 packages/uix-utils/tsup.config.ts:4-19 — root and immediate module entry generation.
@@ -157,6 +158,7 @@ packages/uix-utils/src/dom/helpers/blockBodyScroll.ts:4-16 — options and body 
 packages/uix-utils/src/dom/helpers/unblockBodyScroll.ts:3-15 — options and reversal.
 packages/uix-utils/src/dom/helpers/exportCSV.ts:3-16 — browser download branches.
 packages/uix-utils/src/dom/helpers/saveAs.ts:1-20 — anchor download and capability result.
+packages/uix-utils/src/dom/helpers/ConnectedOverlayScrollHandler.ts:9-43 — scroll listener binding, unbinding and reference release.
 packages/uix-utils/src/dom/methods/isClient.ts:1-3; isServer.ts:1-5 — environment probes.
 packages/uix-utils/src/dom/methods/isPrefersReducedMotion.ts:1-6; isCssSupported.ts:28-43 — guarded browser feature probes.
 ```

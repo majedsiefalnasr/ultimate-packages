@@ -8,6 +8,7 @@ Scoped sample only; not platform completeness.
 - [Button styles](uixstyles.button.md)
 - [Checkbox styles](uixstyles.checkbox.md)
 - [Chip styles](uixstyles.chip.md)
+- [ColorPicker styles](uixstyles.colorpicker.md)
 - [Dialog styles](uixstyles.dialog.md)
 - [FloatLabel styles](uixstyles.floatlabel.md)
 - [IconField styles](uixstyles.iconfield.md)
