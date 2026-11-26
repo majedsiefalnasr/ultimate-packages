@@ -21,7 +21,15 @@ export default function getCursorOffset(
     ghostDiv.style.overflowWrap = style.overflowWrap;
     ghostDiv.style.whiteSpace = style.whiteSpace;
     ghostDiv.style.lineHeight = style.lineHeight;
-    ghostDiv.innerHTML = prevText.replace(/\r\n|\r|\n/g, "<br />");
+    ghostDiv.style.boxSizing = style.boxSizing;
+    ghostDiv.style.direction = style.direction;
+    ghostDiv.style.font = style.font;
+    ghostDiv.style.letterSpacing = style.letterSpacing;
+
+    prevText.split(/\r\n|\r|\n/).forEach((line, index) => {
+      if (index > 0) ghostDiv.appendChild(document.createElement("br"));
+      ghostDiv.appendChild(document.createTextNode(line));
+    });
 
     const ghostSpan = document.createElement("span");
 

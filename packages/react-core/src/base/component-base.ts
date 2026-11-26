@@ -14,6 +14,11 @@ export interface ComponentBaseOptions {
   styleModule: StyleModule;
   /** Renders the instance without Ultimate's classes and styles (F15). */
   unstyled?: boolean;
+  /**
+   * Further Aura preset keys whose theme variables the style module reads
+   * (ADR-051, ADR-067 (b)); only their variables are registered.
+   */
+  additionalPresetKeys?: readonly string[];
 }
 
 function resolveClassValue(
@@ -25,12 +30,17 @@ function resolveClassValue(
   return Array.isArray(value) ? classNames(...value) : classNames(value);
 }
 
-export function useComponentBase({ componentName, styleModule, unstyled }: ComponentBaseOptions): {
+export function useComponentBase({
+  componentName,
+  styleModule,
+  unstyled,
+  additionalPresetKeys,
+}: ComponentBaseOptions): {
   cx: (key: string, params?: Record<string, unknown>) => string | undefined;
   isUnstyled: boolean;
 } {
   const isUnstyled = unstyled === true;
-  useComponentStyle(componentName, styleModule, isUnstyled);
+  useComponentStyle(componentName, styleModule, isUnstyled, additionalPresetKeys);
 
   const cx = (key: string, params?: Record<string, unknown>) =>
     isUnstyled ? undefined : resolveClassValue(styleModule.classes[key], params);
